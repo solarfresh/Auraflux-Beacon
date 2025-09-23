@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
+  <div class="h-screen overflow-y-auto bg-gray-50">
+    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <Text tag="h1" size="5xl" weight="bold" color="gray-800" class="tracking-tight mb-2">
           Knowledge Graph Search
@@ -14,8 +14,13 @@
         <slot name="search-form"></slot>
       </div>
 
-      <div class="mt-12">
-        <slot name="search-results"></slot>
+      <div class="lg:grid lg:grid-cols-3 lg:gap-12">
+        <div class="lg:col-span-2">
+          <slot name="search-results"></slot>
+        </div>
+        <div class="lg:col-span-1 mt-12 lg:mt-0">
+          <slot name="assistant-panel"></slot>
+        </div>
       </div>
     </div>
   </div>

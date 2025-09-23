@@ -7,17 +7,29 @@
     <template #search-results>
       <SearchResults :results="searchResults" />
     </template>
+
+    <template #assistant-panel>
+      <AssistantPanel
+        :query="searchQuery"
+        :related-topics="relatedTopics"
+        :next-actions="nextActions"
+      />
+    </template>
   </SearchPageTemplate>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import SearchPageTemplate from '@/components/templates/SearchPageTemplate.vue';
 import SearchForm from '@/components/molecules/SearchForm.vue';
+import AssistantPanel from '@/components/organisms/AssistantPanel.vue';
 import SearchResults from '@/components/organisms/SearchResults.vue';
+import SearchPageTemplate from '@/components/templates/SearchPageTemplate.vue';
 import { SearchResult } from '@/interfaces/search';
+import { ref } from 'vue';
 
+const searchQuery = ref<string>('');
 const searchResults = ref<SearchResult[]>([]);
+const relatedTopics = ref<string[]>([]);
+const nextActions = ref<string[]>([]);
 
 const mockApiData: SearchResult[] = [
   {
@@ -52,15 +64,46 @@ const mockApiData: SearchResult[] = [
   },
 ];
 
+const mockAssistantData = {
+  '創業': {
+    related: ['Business Plan', 'Venture Capital', 'Marketing Strategy'],
+    actions: [
+      'Research different business models for your idea.',
+      'Look for startup incubators in your area.',
+      'Find government grants for new businesses.'
+    ],
+  },
+  '幼兒成長': {
+    related: ['Sensory Play', 'Child Psychology', 'Early Education'],
+    actions: [
+      'Find parenting workshops near you.',
+      'Download our guide on developmental milestones.',
+      'Connect with other parents in our community forums.'
+    ],
+  }
+};
+
 const handleSearch = (query: string) => {
+  searchQuery.value = query;
   console.log(`Searching for: ${query}`);
-  // Simulate an API call with a delay
+
   setTimeout(() => {
-    // Filter mock data based on query for a more realistic demo
     const filteredResults = mockApiData.filter(result =>
       result.title.includes(query) || result.description.includes(query)
     );
     searchResults.value = filteredResults.length > 0 ? filteredResults : [];
+
+    // Update assistant data based on query
+    if (query.includes('創業')) {
+      relatedTopics.value = mockAssistantData['創業'].related;
+      nextActions.value = mockAssistantData['創業'].actions;
+    } else if (query.includes('幼兒成長')) {
+      relatedTopics.value = mockAssistantData['幼兒成長'].related;
+      nextActions.value = mockAssistantData['幼兒成長'].actions;
+    } else {
+      relatedTopics.value = [];
+      nextActions.value = [];
+    }
   }, 1000);
 };
 </script>
