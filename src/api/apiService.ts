@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { AcquisitionEndpoints, CompetitiveAnalysisEndpoints, ProductsEndpoints, VisionEndpoints } from './endpoints';
+import { SearchResult } from '@/interfaces/search'
+import { SearchEndpoints } from '@/api/endpoints'
 
 
 const apiClient = axios.create({
@@ -10,4 +12,9 @@ const apiClient = axios.create({
 
 
 export const apiService = {
+  search: {
+    create: (query: string): Promise<AxiosResponse<SearchResult[]>> => {
+      return apiClient.post(SearchEndpoints.create(), {query: query});
+    },
+  }
 }
