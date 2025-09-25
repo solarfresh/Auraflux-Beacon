@@ -55,18 +55,11 @@ const handleSearch = async (query: string) => {
   searchQuery.value = query;
   console.log(`Searching for: ${query}`);
 
-  const response = await apiService.search.create(query);
-  searchResults.value = response.data;
+  const searchResponse = await apiService.search.results.create(query);
+  searchResults.value = searchResponse.data;
 
-  if (query.includes('創業')) {
-    relatedTopics.value = mockAssistantData['創業'].related;
-    nextActions.value = mockAssistantData['創業'].actions;
-  } else if (query.includes('幼兒成長')) {
-    relatedTopics.value = mockAssistantData['幼兒成長'].related;
-    nextActions.value = mockAssistantData['幼兒成長'].actions;
-  } else {
-    relatedTopics.value = [];
-    nextActions.value = [];
-  }
+  const assistantResponse = await apiService.search.assistant.create(query);
+  relatedTopics.value = assistantResponse.data.related_topics;
+  nextActions.value = assistantResponse.data.next_actions;
 };
 </script>
