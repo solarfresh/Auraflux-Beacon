@@ -5,7 +5,7 @@ export interface SearchAssistant {
 
 export interface SearchResult {
   title: string;
-  description: string;
-  link: string;
+  snippet: string;
+  url: string;
   source: string;
 }
