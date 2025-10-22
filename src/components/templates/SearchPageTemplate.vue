@@ -3,10 +3,10 @@
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <Text tag="h1" size="5xl" weight="bold" color="gray-800" class="tracking-tight mb-2">
-          Knowledge Graph Search
+          AI Interactive Search
         </Text>
         <Text tag="p" size="lg" color="gray-600">
-          Search for a topic, and we'll build a personalized knowledge graph for you.
+          Search for a topic, and we'll build a personalized indication for you.
         </Text>
       </div>
 
