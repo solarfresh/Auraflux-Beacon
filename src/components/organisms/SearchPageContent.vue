@@ -8,9 +8,7 @@
         Knowledge Base Preview: {{ searchResults.length }} Sources Found
       </Text>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-        <SearchResults :results="searchResults" />
-      </div>
+      <SearchResults :results="searchResults" />
 
       <div class="flex justify-center mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <Button

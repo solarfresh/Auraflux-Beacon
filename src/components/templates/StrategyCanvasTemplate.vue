@@ -1,5 +1,5 @@
 <template>
-  <div class="strategy-canvas-layout relative min-h-screen pt-16">
+  <div class="relative min-h-screen pt-16">
     <HeaderToolbar :current-step="currentStep" class="fixed top-0 left-0 right-0 z-20" />
 
     <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
