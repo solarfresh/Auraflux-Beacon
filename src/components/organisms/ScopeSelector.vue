@@ -57,13 +57,13 @@
       <Text tag="label" size="base" weight="medium" color="gray-700" for="focused-question" class="block mb-2">
         Define the single, focused question for the Agents to answer:
       </Text>
-      <textarea
+      <Textarea
         id="focused-question"
         v-model="focusedQuestion"
-        rows="3"
+        :rows="3"
         placeholder="E.g., Given the Speed vs. Security tension, should we implement mandatory two-factor authentication for all new internal systems?"
-        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition-shadow"
-      ></textarea>
+        size="md"
+      />
 
       <Text v-if="questionValidation" tag="p" size="sm" color="red-500" class="mt-1">
         {{ questionValidation }}
@@ -86,11 +86,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import Textarea from '@/components/atoms/Textarea.vue';
 import type { Dichotomy } from '@/interfaces/search';
+import { computed, ref } from 'vue';
 
 // --- Component State ---
 const selectedDichotomyId = ref<string | null>(null);

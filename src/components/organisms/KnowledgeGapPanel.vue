@@ -93,20 +93,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import Textarea from '@/components/atoms/Textarea.vue';
 import type { KnowledgeGapRequest } from '@/interfaces/search';
-// Assuming the existence of a standard Textarea component
-// import Textarea from '@/components/atoms/Textarea.vue';
-
-// Placeholder for the Textarea component (using a div for simplicity since the component wasn't provided)
-const Textarea = {
-  name: 'Textarea',
-  props: ['modelValue', 'placeholder', 'rows'],
-  template: '<textarea :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" :placeholder="placeholder" :rows="rows" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>'
-};
+import { computed, ref } from 'vue';
 
 // --- State Management ---
 const isExpanded = ref(false);
