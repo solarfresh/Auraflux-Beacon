@@ -16,6 +16,12 @@ export interface KnowledgeGapRequest {
   selected: boolean; // UI state for selection
 }
 
+export interface ScopeData {
+  dichotomy: string;
+  roles: string[];
+  question: string;
+}
+
 export interface SearchAssistant {
   related_topics: string[];
   next_actions: string[];
