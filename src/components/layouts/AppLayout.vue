@@ -2,7 +2,7 @@
   <div class="min-h-screen flex flex-col">
 
     <HeaderToolbar
-      :currentStep="mockCurrentStep"
+      :currentStep="workflowStore.currentStep"
       :isLoggedIn="authStore.isLoggedIn"
       @login="handleLoginClick"
       @logout="authStore.logoutUser"
@@ -27,17 +27,15 @@
 <script setup lang="ts">
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
 import LoginModal from '@/components/molecules/LoginModal.vue';
-import type { WorkflowStep } from '@/interfaces/search';
+import { useWorkflowStore } from '@/stores/workflow';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 
+const workflowStore = useWorkflowStore();
 const authStore = useAuthStore();
 const isLoginModalOpen = ref(false);
 
 const handleLoginClick = () => {
   isLoginModalOpen.value = true;
 };
-
-// NOTE: You would need a WorkflowStore to provide currentStep here
-const mockCurrentStep = ref<WorkflowStep>('SEARCH');
 </script>
