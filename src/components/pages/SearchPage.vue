@@ -11,7 +11,7 @@
     @lock-data="workflowStore.lockData"
     @scope-defined="workflowStore.defineScope"
 
-    />
+  />
 </template>
 
 <script setup lang="ts">
@@ -30,15 +30,4 @@ onMounted(() => {
     // This is crucial: Fetch the persistent state from the backend store upon mounting the view.
     workflowStore.fetchStateFromBackend();
 });
-
-/* * The following local state and logic are REMOVED because they are now managed by the store:
- * * const searchQuery = ref<string>('');
- * const searchResults = ref<SearchResult[]>([]);
- * const isLoading = ref<boolean>(false);
- * const currentStep = ref<WorkflowStep>('SEARCH');
- * const handleSearch = async (query: string) => { ... };
- * const handleLockData = () => { ... };
- * * The data flow is now:
- * Template Emits Action (@lock-data) -> View Calls Store Action (workflowStore.lockData()) -> Store Mutates State -> Template Re-renders
- */
 </script>

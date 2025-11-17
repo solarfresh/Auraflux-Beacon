@@ -33,3 +33,11 @@ export interface SearchResult {
   url: string;
   source: string;
 }
+
+export interface WorkflowState {
+  current_step: WorkflowStep;
+  scope_data: ScopeData;
+  analysis_data: object | null;
+  knowledge_sources: any;
+  updated_at: string;
+}

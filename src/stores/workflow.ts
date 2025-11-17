@@ -7,10 +7,14 @@ import type { ScopeData, SearchResult, WorkflowStep } from '@/interfaces/search'
 
 export const useWorkflowStore = defineStore('workflow', () => {
     // --- State ---
-    const currentStep = ref<WorkflowStep>('SEARCH');
     const searchQuery = ref<string>('');
     const searchResults = ref<SearchResult[]>([]);
+
+    const currentStep = ref<WorkflowStep>('SEARCH');
     const scopeData = ref<ScopeData | null>(null);
+    const analysisData = ref<object | null>(null);
+    const knowledgeSources = ref<SearchResult[]>([]);
+    const updatedAt = ref<string>('')
     const isLoading = ref<boolean>(false);
 
     // --- Actions ---
@@ -22,13 +26,13 @@ export const useWorkflowStore = defineStore('workflow', () => {
     async function fetchStateFromBackend() {
         // This action uses the GET /api/fetch-state endpoint (your initial task)
         try {
-            // const response = await apiService.workflow.getState(); // Assuming apiService handles the endpoint
+            const response = await apiService.workflows.fetchState.get();
 
-            // // Assuming response contains the full state object from the backend
-            // currentStep.value = response.data.current_step || 'SEARCH';
-            // searchQuery.value = response.data.search_query || '';
-            // searchResults.value = response.data.search_results || [];
-            // scopeData.value = response.data.scope_data || null;
+            currentStep.value = response.data.current_step || 'SEARCH';
+            scopeData.value = response.data.scope_data || null;
+            analysisData.value = response.data.analysis_data || null;
+            knowledgeSources.value = response.data.knowledge_sources || []
+            updatedAt.value = response.data.updated_at || ''
 
         } catch (error) {
             console.error('Failed to load workflow state:', error);
