@@ -21,17 +21,6 @@
       <div class="flex items-center space-x-3">
 
         <Button
-          variant="secondary"
-          size="sm"
-          @click="$emit('openFlowHistory')"
-        >
-          <Icon name="clock-history" type="solid" size="sm" color="gray-700" class="mr-1" />
-          <Text tag="span" size="sm" weight="medium" color="gray-700">
-            Flow History
-          </Text>
-        </Button>
-
-        <Button
           variant="outline"
           size="sm"
           @click="$emit('exportShortcut')"
@@ -43,18 +32,22 @@
           </Text>
         </Button>
 
+        <AuthButton
+          :isLoggedIn="isLoggedIn"
+          @login="$emit('login')"
+          @logout="$emit('logout')"
+        />
       </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
-
-// --- Type Definitions (Must match the global workflow state) ---
-type WorkflowStep = 'SEARCH' | 'SCOPE' | 'COLLECTION' | 'ANALYSIS' | 'OUTPUT';
+import AuthButton from '@/components/molecules/AuthButton.vue';
+import type { WorkflowStep } from '@/interfaces/search';
 
 // --- Props ---
 const props = defineProps({
@@ -62,9 +55,13 @@ const props = defineProps({
     type: String as () => WorkflowStep,
     required: true,
   },
+  isLoggedIn: {
+    type: Boolean,
+    required: true,
+  },
 });
 
-const emit = defineEmits(['openFlowHistory', 'exportShortcut']);
+const emit = defineEmits(['exportShortcut', 'login', 'logout']);
 
 // --- Utility Map for Display ---
 const currentStepMap: Record<WorkflowStep, string> = {
