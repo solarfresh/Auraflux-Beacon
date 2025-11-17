@@ -5,6 +5,9 @@ import type { WorkflowState } from '@/interfaces/search'
 import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 
 const apiClient = axios.create({
+  // **Crucial for JWT Cookie Auth**
+  withCredentials: true,
+
   headers: {
     'Content-Type': 'application/json',
   },
@@ -33,7 +36,7 @@ export const apiService = {
   workflows: {
     fetchState: {
       get: (): Promise<AxiosResponse<WorkflowState>> => {
-        return apiClient.post(WorkflowsEndpoints.fetchState.get());
+        return apiClient.get(WorkflowsEndpoints.fetchState.get());
       }
     }
   }
