@@ -1,10 +1,5 @@
 <template>
-  <div class="relative min-h-screen pt-16">
-    <HeaderToolbar
-      :current-step="currentStep"
-      class="fixed top-0 left-0 right-0 z-20"
-      @toggle-reference-panel="isPanelVisible = !isPanelVisible"
-    />
+  <div class="relative min-h-full">
 
     <main class="max-w-7xl mx-auto px-4 py-8">
 
@@ -12,6 +7,7 @@
 
         <ReferencePanel
           v-if="isPanelVisible && currentStep !== 'SEARCH'"
+          :current-step="currentStep"
           :search-query="searchQuery"
           :search-results="searchResults"
           :scope-data="scopeData"
@@ -24,6 +20,7 @@
             isPanelVisible && currentStep !== 'SEARCH' ? 'col-span-3' : 'col-span-4'
           ]"
         >
+
           <TaskCard
             title="1. Search & Data Lock (Knowledge Base Setup)"
             :step-id="'SEARCH'"
@@ -37,8 +34,9 @@
               :search-results="searchResults"
               :is-loading="isLoading"
               @search="handleSearch"
-              @lock-data="handleLockData"
+              @lock-data="$emit('lock-data')"
             />
+
             <div v-else class="text-gray-600">
               Knowledge Base Locked: **{{ searchResults.length }}** sources for "**{{ searchQuery }}**".
             </div>
@@ -53,8 +51,9 @@
           >
             <ScopeSelector
               v-if="currentStep === 'SCOPE'"
-              @scope-defined="handleScopeDefined"
+              @scope-defined="$emit('scope-defined', $event)"
             />
+
             <div v-else-if="scopeData" class="text-gray-600">
               Tension defined: **{{ scopeData.dichotomy }}**. Question: "{{ scopeData.question }}"
             </div>
@@ -69,9 +68,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'; // Import ref for the new toggle state
+import { ref } from 'vue';
 
-import HeaderToolbar from '@/components/molecules/HeaderToolbar.vue';
 import KnowledgeGapPanel from '@/components/organisms/KnowledgeGapPanel.vue';
 import ReferencePanel from '@/components/organisms/ReferencePanel.vue';
 import ScopeSelector from '@/components/organisms/ScopeSelector.vue';
@@ -79,30 +77,34 @@ import SearchPageContent from '@/components/organisms/SearchPageContent.vue';
 import TaskCard from '@/components/organisms/TaskCard.vue';
 import type { ScopeData, SearchResult, WorkflowStep } from '@/interfaces/search';
 
-// --- Local State for UI ---
-const isPanelVisible = ref(true); // Default to visible
-const scopeData = ref<ScopeData | null>(null);
+// --- Local UI State ---
+// This state controls the internal layout of the template
+const isPanelVisible = ref(true);
 
-// --- Props (Received from main App Container) ---
+// --- Props (All workflow data is passed down from the store/container) ---
 const props = defineProps<{
+  // Authentication State (isLoggedIn prop is removed, AppLayout handles it)
+
+  // Workflow State Data
   currentStep: WorkflowStep;
   searchQuery: string;
   searchResults: SearchResult[];
-  isLoading?: boolean;
-  handleSearch?: (...args: any[]) => any;
-  handleLockData: (...args: any[]) => any;
-  // Other handlers for future steps
+  scopeData: ScopeData | null;
+  isLoading: boolean;
 }>();
 
-// --- Event Handlers (Emitting to the App Container) ---
-const emit = defineEmits(['updateStep']); // Assuming the parent App manages step transition
 
-const handleLockData = () => {
-  props.handleLockData(); // Call parent handler to transition state to 'SCOPE'
-};
+// --- Events (Actions emitted up to the parent container/store) ---
+const emit = defineEmits<{
+  (e: 'search', query: string): void;
+  (e: 'lock-data'): void;
+  (e: 'scope-defined', data: ScopeData): void;
+}>();
 
-const handleScopeDefined = (data: ScopeData) => {
-  scopeData.value = data;
-  emit('updateStep', 'COLLECTION'); // Transition state to Step 3
+// --- Methods (Internal handlers for component events) ---
+
+// Handle search event from SearchPageContent
+const handleSearch = (query: string) => {
+  emit('search', query);
 };
 </script>

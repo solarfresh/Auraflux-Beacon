@@ -11,7 +11,7 @@ const props = defineProps({
   tag: {
     type: String,
     default: 'p',
-    validator: (value: string) => ['p', 'span', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label'].includes(value),
+    validator: (value: string) => ['p', 'span', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'li'].includes(value),
   },
   size: {
     type: String,
