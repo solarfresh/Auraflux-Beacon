@@ -17,7 +17,11 @@ export const UsersEndpoints = {
   login: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/users/login/`,
-  }
+  },
+  refreshToken: {
+    create: () =>
+      `${AURAFLUX_NEXUS_URL}/users/token/refresh/`,
+  },
 }
 
 export const WorkflowsEndpoints = {
