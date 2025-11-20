@@ -41,6 +41,7 @@ export interface SearchResult {
 
 export interface WorkflowState {
   current_step: WorkflowStep;
+  query: string;
   scope_data: ScopeData;
   analysis_data: object | null;
   knowledge_sources: any;

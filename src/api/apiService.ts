@@ -115,8 +115,8 @@ export const apiService = {
   },
   workflows: {
     lockData: {
-      create: (): Promise<AxiosResponse<LockDataResponse>> => {
-        return apiClient.post(WorkflowsEndpoints.lockData.create());
+      create: (query: string): Promise<AxiosResponse<LockDataResponse>> => {
+        return apiClient.post(WorkflowsEndpoints.lockData.create(), {"query": query});
       }
     },
     fetchState: {

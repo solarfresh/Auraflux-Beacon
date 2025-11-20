@@ -13,7 +13,6 @@ export const useWorkflowStore = defineStore('workflow', () => {
     const currentStep = ref<WorkflowStep>('SEARCH');
     const scopeData = ref<ScopeData | null>(null);
     const analysisData = ref<object | null>(null);
-    const knowledgeSources = ref<SearchResult[]>([]);
     const updatedAt = ref<string>('')
     const isLoading = ref<boolean>(false);
 
@@ -31,7 +30,8 @@ export const useWorkflowStore = defineStore('workflow', () => {
             currentStep.value = response.data.current_step || 'SEARCH';
             scopeData.value = response.data.scope_data || null;
             analysisData.value = response.data.analysis_data || null;
-            knowledgeSources.value = response.data.knowledge_sources || []
+            searchQuery.value = response.data.query || ''
+            searchResults.value = response.data.knowledge_sources || []
             updatedAt.value = response.data.updated_at || ''
 
         } catch (error) {
@@ -69,7 +69,7 @@ export const useWorkflowStore = defineStore('workflow', () => {
         if (searchResults.value.length === 0 || currentStep.value !== 'SEARCH') return;
 
         // Persist the current state and step transition to the backend, and update local state
-        let response = await apiService.workflows.lockData.create();
+        let response = await apiService.workflows.lockData.create(searchQuery.value);
 
         // Update local state
         currentStep.value = response.data['new_step'];
