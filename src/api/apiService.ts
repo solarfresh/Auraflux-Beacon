@@ -1,6 +1,6 @@
 import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { WorkflowState } from '@/interfaces/search';
+import type { LockDataResponse, WorkflowState } from '@/interfaces/search';
 import { SearchAssistant, SearchResult } from '@/interfaces/search';
 import type { LoginResponse } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
@@ -114,10 +114,15 @@ export const apiService = {
     },
   },
   workflows: {
+    lockData: {
+      create: (query: string): Promise<AxiosResponse<LockDataResponse>> => {
+        return apiClient.post(WorkflowsEndpoints.lockData.create(), {"query": query});
+      }
+    },
     fetchState: {
       get: (): Promise<AxiosResponse<WorkflowState>> => {
         return apiClient.get(WorkflowsEndpoints.fetchState.get());
       }
-    }
+    },
   }
 }
