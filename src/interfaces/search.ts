@@ -16,6 +16,11 @@ export interface KnowledgeGapRequest {
   selected: boolean; // UI state for selection
 }
 
+export interface LockDataResponse {
+    message: string;
+    new_step: WorkflowStep;
+}
+
 export interface ScopeData {
   dichotomy: string;
   roles: string[];

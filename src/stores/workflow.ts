@@ -68,14 +68,11 @@ export const useWorkflowStore = defineStore('workflow', () => {
     async function lockData() {
         if (searchResults.value.length === 0 || currentStep.value !== 'SEARCH') return;
 
-        // 1. Persist the current state and step transition to the backend
-        // await apiService.workflow.lockData({
-        //     search_query: searchQuery.value,
-        //     search_results: searchResults.value,
-        // });
+        // Persist the current state and step transition to the backend, and update local state
+        let response = await apiService.workflows.lockData.create();
 
-        // 2. Update local state
-        currentStep.value = 'SCOPE';
+        // Update local state
+        currentStep.value = response.data['new_step'];
         console.log("Data Locked. Transitioning to Step 2.");
     }
 
