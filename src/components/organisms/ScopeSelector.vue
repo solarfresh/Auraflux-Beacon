@@ -146,14 +146,15 @@
 </template>
 
 <script setup lang="ts">
+import { apiService } from '@/api/apiService';
 import Button from '@/components/atoms/Button.vue';
+import Checkbox from '@/components/atoms/Checkbox.vue'; // <-- NEW IMPORT
 import Icon from '@/components/atoms/Icon.vue';
+import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import Input from '@/components/atoms/Input.vue';
-import Checkbox from '@/components/atoms/Checkbox.vue'; // <-- NEW IMPORT
 import type { Dichotomy } from '@/interfaces/search';
-import { computed, ref, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 // --- Component State ---
 const selectedDichotomyId = ref<string | null>(null);
@@ -164,38 +165,11 @@ const manualRolesInput = ref<string>('');
 const dynamicDichotomies = ref<Dichotomy[]>([]);
 const isLoading = ref<boolean>(true);
 
-
-// --- Mock API Call ---
-const mockFetchDichotomies = (): Promise<Dichotomy[]> => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve([
-                {
-                    id: 'speed_security',
-                    name: 'Speed vs. Security',
-                    description: 'Balancing rapid deployment/iteration with robust defense and compliance.',
-                    roles: ['CTO (Speed Focus)', 'Legal/Ethics Agent (Security Focus)', 'Strategy Analyst'],
-                },
-                {
-                    id: 'innovation_regulation',
-                    name: 'Innovation vs. Regulation',
-                    description: 'Pushing boundaries with new tech versus maintaining strict adherence to rules.',
-                    roles: ['Head of R&D', 'Chief Compliance Officer', 'Finance Director'],
-                },
-                {
-                    id: 'centralization_autonomy',
-                    name: 'Centralization vs. Autonomy',
-                    description: 'Managing control/efficiency from HQ versus empowering local team decision-making.',
-                    roles: ['COO', 'Regional Manager', 'HR Lead'],
-                },
-            ]);
-        }, 800);
-    });
-};
-
 onMounted(async () => {
     try {
-        dynamicDichotomies.value = await mockFetchDichotomies();
+        isLoading.value = true
+        let response = await apiService.workflows.dichotomies.get();
+        dynamicDichotomies.value = response.data;
     } catch (error) {
         console.error("Failed to load suggested dichotomies:", error);
     } finally {
