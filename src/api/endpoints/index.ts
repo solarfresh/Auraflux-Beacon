@@ -25,12 +25,16 @@ export const UsersEndpoints = {
 }
 
 export const WorkflowsEndpoints = {
-  lockData: {
-    create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/lock-data/`,
+  dichotomies: {
+    get: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/dichotomies/`,
   },
   fetchState: {
     get: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/fetch-state/`,
-  }
+  },
+  lockData: {
+    create: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/lock-data/`,
+  },
 }
