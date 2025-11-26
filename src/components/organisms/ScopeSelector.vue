@@ -154,7 +154,10 @@ import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
 import type { Dichotomy } from '@/interfaces/search';
-import { computed, onMounted, ref } from 'vue';
+import { useNotificationStore } from '@/stores/notification';
+import { computed, onMounted, ref, watch } from 'vue';
+
+const store = useNotificationStore();
 
 // --- Component State ---
 const selectedDichotomyId = ref<string | null>(null);
@@ -169,14 +172,22 @@ onMounted(async () => {
     try {
         isLoading.value = true
         let response = await apiService.workflows.dichotomies.get();
-        dynamicDichotomies.value = response.data;
+        if (response.data.length > 0) {
+          dynamicDichotomies.value = response.data;
+          isLoading.value = false
+        }
     } catch (error) {
         console.error("Failed to load suggested dichotomies:", error);
-    } finally {
-        isLoading.value = false;
     }
 });
 
+watch(() => store.notifications['dichotomy_suggestions_complete'], (newVal) => {
+  console.log('dichotomy_suggestions_complete results');
+  console.log(newVal);
+  if (newVal) {
+    isLoading.value = false;
+  }
+})
 
 // --- Computed Properties (Unchanged) ---
 
