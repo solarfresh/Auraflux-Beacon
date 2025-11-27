@@ -1,6 +1,7 @@
-import config from '@/config';
 import { useWebSocket } from '@/composables/useWebSocket';
-import type { NotificationPayload, WebSocketMessage } from '@/interfaces/notification';
+import config from '@/config';
+import type { WebSocketMessage } from '@/interfaces/notification';
+import type { Dichotomy } from '@/interfaces/search';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 
@@ -18,7 +19,8 @@ export const useNotificationStore = defineStore('notification', () => {
     } = useWebSocket(AURAFLUX_WS_URL);
 
     // --- Local State ---
-    const notifications = ref<{[key: string]: NotificationPayload;}>({});
+    const notifications = ref<{[key: string]: any;}>({});
+    const dynamicDichotomies = ref<Dichotomy[]>([]);
 
     // --- Actions ---
 
@@ -27,12 +29,13 @@ export const useNotificationStore = defineStore('notification', () => {
      * This is the main action triggered by the connection.
      */
     function processNewNotification(message: WebSocketMessage | null) {
-        if (message && message.type === 'send_notification') {
+        if (message) {
             // Add the new payload to the history
-            notifications.value[message.event_type] = message.data;
+            notifications.value[message.event_type] = message.payload;
 
-            // Optionally, trigger a temporary visual alert (e.g., toast) here
-            console.log('Processed new notification for history:', message.data.title);
+            if (message.event_type === 'dichotomy_suggestions_complete') {
+                dynamicDichotomies.value = message.payload.suggestions;
+            }
         }
     }
 
@@ -46,6 +49,7 @@ export const useNotificationStore = defineStore('notification', () => {
         isConnected,
         error,
         notifications,
+        dynamicDichotomies,
 
         // Actions (if you had any, e.g., mark_as_read)
         // markAsRead: (id: number) => { ... }

@@ -34,12 +34,7 @@ export function useWebSocket(url: string) {
             try {
                 // Assert the parsed data to be of the expected type
                 const message = JSON.parse(event.data) as WebSocketMessage;
-
-                // Check the internal 'type' property set by the Channel Layer
-                if (message.type === 'send_notification') {
-                    receivedMessage.value = message;
-                    console.log('🔔 Notification received:', message.event_type, message.data);
-                }
+                receivedMessage.value = message;
             } catch (e) {
                 console.error('Error parsing or handling WebSocket message:', e);
                 error.value = event;
