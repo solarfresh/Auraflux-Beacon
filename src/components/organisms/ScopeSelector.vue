@@ -37,16 +37,16 @@
 
         <div
           v-for="dichotomy in dynamicDichotomies"
-          :key="dichotomy.id"
+          :key="dichotomy.name"
           :class="[
             'p-4 rounded-lg border-2 cursor-pointer transition-all duration-200',
-            selectedDichotomyId === dichotomy.id
+            selectedDichotomyId === dichotomy.name
               ? 'border-indigo-600 ring-4 ring-indigo-100 bg-white shadow-lg'
               : 'border-gray-200 hover:border-gray-400'
           ]"
-          @click="selectedDichotomyId = dichotomy.id"
+          @click="selectedDichotomyId = dichotomy.name"
         >
-          <Text tag="h4" size="base" weight="bold" :color="selectedDichotomyId === dichotomy.id ? 'indigo-700' : 'gray-800'">
+          <Text tag="h4" size="base" weight="bold" :color="selectedDichotomyId === dichotomy.name ? 'indigo-700' : 'gray-800'">
             {{ dichotomy.name }}
           </Text>
           <Text tag="p" size="xs" color="gray-500" class="mt-1">
@@ -154,7 +154,10 @@ import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
 import type { Dichotomy } from '@/interfaces/search';
-import { computed, onMounted, ref } from 'vue';
+import { useNotificationStore } from '@/stores/notification';
+import { computed, onMounted, ref, watch } from 'vue';
+
+const store = useNotificationStore();
 
 // --- Component State ---
 const selectedDichotomyId = ref<string | null>(null);
@@ -169,14 +172,21 @@ onMounted(async () => {
     try {
         isLoading.value = true
         let response = await apiService.workflows.dichotomies.get();
-        dynamicDichotomies.value = response.data;
+        if (response.data.length > 0) {
+          dynamicDichotomies.value = response.data;
+          isLoading.value = false
+        }
     } catch (error) {
         console.error("Failed to load suggested dichotomies:", error);
-    } finally {
-        isLoading.value = false;
     }
 });
 
+watch(() => store.dynamicDichotomies, (newVal) => {
+  if (newVal) {
+    dynamicDichotomies.value = newVal;
+    isLoading.value = false;
+  }
+})
 
 // --- Computed Properties (Unchanged) ---
 
