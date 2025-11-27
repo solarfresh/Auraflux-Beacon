@@ -200,7 +200,7 @@ const selectedDichotomy = computed(() => {
             roles: rolesArray,
         } as Dichotomy;
     }
-    return dynamicDichotomies.value.find(d => d.id === selectedDichotomyId.value) || null;
+    return dynamicDichotomies.value.find(d => d.name === selectedDichotomyId.value) || null;
 });
 
 const manualDichotomyValidation = computed(() => {

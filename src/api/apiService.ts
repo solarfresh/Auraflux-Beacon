@@ -2,7 +2,7 @@ import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpo
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { Dichotomy, LockDataResponse, WorkflowState } from '@/interfaces/search';
 import { SearchAssistant, SearchResult } from '@/interfaces/search';
-import type { LoginResponse } from '@/interfaces/user';
+import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
 const apiClient = axios.create({
@@ -107,8 +107,13 @@ export const apiService = {
     }
   },
   users: {
+    check: {
+      get: (): Promise<AxiosResponse<User>> => {
+        return apiClient.get(UsersEndpoints.check.get());
+      }
+    },
     login: {
-      create: (username: string, password: string): Promise<AxiosResponse<LoginResponse>> => {
+      create: (username: string, password: string): Promise<AxiosResponse<User>> => {
         return apiClient.post(UsersEndpoints.login.create(), {username: username, password: password});
       },
     },

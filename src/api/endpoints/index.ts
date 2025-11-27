@@ -14,6 +14,10 @@ export const SearchEndpoints = {
 };
 
 export const UsersEndpoints = {
+  check: {
+    get: () =>
+      `${AURAFLUX_NEXUS_URL}/users/status/`,
+  },
   login: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/users/login/`,

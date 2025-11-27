@@ -13,6 +13,6 @@ const authStore = useAuthStore();
 
 onMounted(() => {
   // 1. Check for valid JWT cookie on initial load
-  // authStore.checkAuthStatus();
+  authStore.checkAuthStatus();
 });
 </script>
