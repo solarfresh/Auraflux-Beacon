@@ -28,21 +28,11 @@ export const useAuthStore = defineStore('auth', () => {
       // If the request succeeds (status 200) because the JWT cookie is valid, the user is authenticated.
 
       // MOCK: Simulate an initial check that finds a valid user
-      const response = await fetch('/api/fetch-state', { method: 'GET' });
+      const response = await apiService.users.check.get();
+      let user_info: User = response.data;
 
-      if (response.ok) {
-        // Assume successful response means user is authenticated and we get basic user info
-        // (In a real app, you might have a dedicated /api/me endpoint)
-        const stateData = await response.json();
-
-        // MOCK USER DATA based on successful cookie authentication
-        user.value = {
-            username: 'demo_user',
-        };
-
-        // Note: The workflow data (stateData) is then handled by the WorkflowStore,
-        // but this action confirms authentication.
-
+      if (user_info) {
+        user.value = user_info;
       } else {
         // 401 Unauthorized or other error means the user is not logged in or the token expired
         user.value = null;
@@ -63,18 +53,15 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       // 1. Call POST /api/login endpoint
       const response = await apiService.users.login.create(username, password);
-      // 2. Tokens are set as HttpOnly cookies (handled by the browser)
-      const data = await response.data;
+      let user_info = response.data;
 
-      if (data) {
+      if (user_info) {
         // 3. Update local user state
-        user.value = {
-            username: data.username,
-        };
+        user.value = user_info;
         return true;
       } else {
         // Handle failed login (e.g., invalid credentials)
-        throw new Error(response.data.message || 'Login failed.');
+        throw new Error('Login failed.');
       }
     } catch (error) {
       user.value = null;
