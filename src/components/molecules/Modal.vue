@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
+import { watch, onMounted, onUnmounted } from 'vue';
 
 // --- Props & Emits ---
 const props = defineProps({
@@ -46,47 +46,42 @@ const handleEscapeKey = (e: KeyboardEvent) => {
   }
 };
 
-// Watch for changes to 'isOpen' to handle key events and body scrolling
+// SIMPLIFICATION: Manage scrolling via watch, but manage the global key listener using onMounted/onUnmounted.
+
+// Manage body scrolling only (The core reason for the watch)
 watch(() => props.isOpen, (newVal) => {
-  if (newVal) {
-    // 1. Prevent scrolling on the body when modal is open
-    document.body.style.overflow = 'hidden';
-
-    // 2. Add key listener for Esc key to close the modal
-    document.addEventListener('keydown', handleEscapeKey);
-  } else {
-    // 1. Re-enable scrolling when modal is closed
-    document.body.style.overflow = '';
-
-    // 2. Remove the key listener
-    document.removeEventListener('keydown', handleEscapeKey);
-  }
+  // Prevent/re-enable scrolling on the body
+  document.body.style.overflow = newVal ? 'hidden' : '';
 }, { immediate: true });
+
+// Attach/Detach the key listener only when the component is mounted/unmounted.
+// Since the key listener uses 'emit("close")', it will rely on the watch above to handle the cleanup.
+onMounted(() => {
+  document.addEventListener('keydown', handleEscapeKey);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleEscapeKey);
+  // Important: Ensure scrolling is restored if component is destroyed while open
+  document.body.style.overflow = '';
+});
 </script>
 
 <style scoped>
-/* * --- Vue Transition Styles (CSS keyframes equivalent for class names) ---
- * Note: These are standard Vue transition classes applied to the <Transition> component.
- */
+/* * --- Vue Transition Styles (CSS keyframes equivalent for class names) --- */
 
 /* 1. Backdrop Opacity Transition */
-
-/* State when transition starts (before-enter, after-leave) */
 .modal-fade-enter-from,
 .modal-fade-leave-to {
   opacity: 0;
 }
 
-/* During transition (entering/leaving) */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  /* Use a longer duration for smooth opacity changes */
   transition: opacity 0.3s ease-in-out;
 }
 
 /* 2. Modal Content (Inner Transform/Scale) Transition */
-/* We target the inner <div> with the 'transform' class to apply scaling */
-
 /* Entry: starts small, ends at full size */
 .modal-fade-enter-from .transform {
   transform: scale(0.95);

@@ -1,6 +1,7 @@
 <template>
   <Modal :isOpen="isOpen" @close="$emit('close')">
     <div class="p-6">
+
       <Text tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-4">
         🔐 User Login
       </Text>
@@ -60,11 +61,12 @@
 <script setup lang="ts">
 import Button from '@/components/atoms/Button.vue';
 import Input from '@/components/atoms/Input.vue';
-import Text from '@/components/atoms/Text.vue'; // <-- Imported Text component
+import Text from '@/components/atoms/Text.vue';
 import Modal from '@/components/molecules/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 
+// --- Dependency Injection (Store) ---
 const authStore = useAuthStore();
 
 // --- Props & Emits ---
@@ -83,7 +85,7 @@ const password = ref('');
 const error = ref('');
 const isSubmitting = ref(false);
 
-// --- Methods ---
+// --- Methods (Business Logic) ---
 const handleLogin = async () => {
   error.value = '';
   isSubmitting.value = true;
@@ -103,6 +105,7 @@ const handleLogin = async () => {
     }
 
   } catch (err: any) {
+    // Note: Assuming 'err' has a 'message' property or fall back to generic error
     error.value = err.message || 'An unexpected error occurred during login.';
   } finally {
     isSubmitting.value = false;

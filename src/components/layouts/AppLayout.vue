@@ -14,28 +14,36 @@
     </main>
 
     <LoginModal
-      :isOpen="isLoginModalOpen"
-      @close="isLoginModalOpen = false"
+      :isOpen="loginStore.isOpen"
+      @close="loginStore.closeModal"
     />
 
-    <div v-if="authStore.loading" class="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
-      <p class="text-xl text-indigo-600">Loading application...</p>
-    </div>
+    <FullScreenLoader
+      v-if="authStore.loading"
+      message="Loading application..."
+      detail="Please wait while we initialize the research canvas."
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
-import LoginModal from '@/components/molecules/LoginModal.vue';
-import { useWorkflowStore } from '@/stores/workflow';
+// Pinia Stores
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
+import { useLoginStore } from '@/stores/login';
+import { useWorkflowStore } from '@/stores/workflow';
+
+// Organisms
+import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
+import LoginModal from '@/components/organisms/LoginModal.vue';
+
+// Molecules
+import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
 
 const workflowStore = useWorkflowStore();
 const authStore = useAuthStore();
-const isLoginModalOpen = ref(false);
+const loginStore = useLoginStore();
 
 const handleLoginClick = () => {
-  isLoginModalOpen.value = true;
+  loginStore.openModal();
 };
 </script>
