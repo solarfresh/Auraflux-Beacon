@@ -23,20 +23,23 @@
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 
-defineProps<{
+defineProps({
   /**
    * The main message displayed to the user (e.g., "Loading application...").
    */
   message: {
     type: String,
     required: true,
-  };
+  },
 
   /**
    * Optional secondary detail or context (e.g., "Authenticating user").
    */
-  detail?: string;
-}>();
+  detail: {
+    type: String,
+    required: false,
+  },
+});
 </script>
 
 <style scoped>

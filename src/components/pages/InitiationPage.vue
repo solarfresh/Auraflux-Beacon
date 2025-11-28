@@ -1,50 +1,69 @@
 <template>
-  <DualPaneWorkspaceTemplate>
+  <div class="h-screen">
+    <!-- Main Workspace Template: Utilizes the DualPane layout -->
+    <DualPaneWorkspaceTemplate>
 
-    <template #status-tracker>
-      <ProgressTracker :current-stage="currentStage" :completion-percentage="25" />
-    </template>
+      <!-- Slot: status-tracker (Shows ISP steps) -->
 
-    <template #sidebar>
-      <SidebarContent
-        :keywords="structuredOutput.keywords"
-        :scope="structuredOutput.scope"
-        :final-question="structuredOutput.finalQuestion"
-        @keyword-update="handleKeywordUpdate"
-        @question-finalize="handleFinalize"
-      />
-    </template>
+      <template #status-tracker>
+        <ProgressTracker
+          :current-stage="currentStep"
+          :completion-percentage="50"
+        />
+      </template>
 
-    <template #chat-interface>
-      <ChatInterface :messages="chatMessages" @send-message="handleSendMessage" />
-    </template>
+      <!-- Slot: sidebar (Displays structured output and progress) -->
+      <template #sidebar>
+        <SidebarContent
+          :keywords="keywords"
+          :scope="scope"
+          :final-question="searchQuery"
+          @keyword-update="handleKeywordUpdate"
+        />
+      </template>
 
-    <template #action-bar>
-      <ActionBar
-        :is-question-finalized="isQuestionFinalized"
-        @reflect-start="handleReflect"
-        @phase-transition="handlePhaseTransition"
-      />
-    </template>
+      <!-- Slot: chat-interface -->
+      <template #chat-interface>
+        <ChatInterface
+          :messages="chatMessages"
+          :is-loading="isLoading"
+          @send-message="handleSendMessage"
+        />
+      </template>
 
-  </DualPaneWorkspaceTemplate>
+      <!-- Slot: action-bar (Flow Control) -->
+      <template #action-bar>
+        <ActionBar
+          :final-question="searchQuery"
+          @reflect-start="handleReflect"
+          @transition-request="handlePhaseTransitionRequest"
+        />
+      </template>
 
-  <FullScreenModalTemplate
-    :is-open="isReflecting"
-    @close="isReflecting = false"
-  >
-    <template #header>
-      Log a Thought (Reflector Agent)
-    </template>
-    <template #default>
-      <ReflectionLogForm @log-thought="logThought" />
-    </template>
-  </FullScreenModalTemplate>
+    </DualPaneWorkspaceTemplate>
+
+    <!-- FullScreen Modal for Reflection Log -->
+    <FullScreenModalTemplate
+      :is-open="isReflecting"
+      @close="isReflecting = false"
+    >
+      <template #header>
+        Log a Thought (Reflector Agent)
+      </template>
+      <template #default>
+        <!-- ReflectionLogForm now emits the thought data -->
+        <ReflectionLogForm @log-thought="logThought" />
+      </template>
+    </FullScreenModalTemplate>
+  </div>
 </template>
 
-<script setup>
-import { computed, ref } from 'vue';
+<script setup lang="ts">
+import { computed, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useWorkflowStore } from '@/stores/workflow'; // Import Pinia Store
 
+// --- Component Imports ---
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
@@ -53,84 +72,98 @@ import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
-// --- Page State (Mock Data) ---
-const currentStage = ref('Initiation');
-const isReflecting = ref(false);
 
-const chatMessages = ref([
-  { id: 1, type: 'agent', content: "Welcome! I'm the Clarifier Agent. Tell me about the general topic you want to explore. Don't worry about being precise yet!" },
-  { id: 2, type: 'user', content: "I want to research Sustainable Fashion, maybe focusing on labor issues." },
-  { id: 3, type: 'agent', content: "Got it. To refine this, The Validator Agent suggests focusing on a specific **Scope (e.g., Southeast Asia)** or a **Mechanism (e.g., Auditing Standards)**. Which one interests you more?" },
-]);
+// --- Initialization ---
+const store = useWorkflowStore();
+const router = useRouter();
 
-const structuredOutput = ref({
-  keywords: [
-    { text: 'Sustainable Fashion', status: 'Locked', source: 'The Clarifier' },
-    { text: 'Labor Rights', status: 'Locked', source: 'User Input' },
-    { text: 'Southeast Asia', status: 'Draft', source: 'The Validator' },
-  ],
-  scope: [
-    { label: 'Geographical', value: 'Southeast Asia', status: 'Draft' },
-    { label: 'Timeframe', value: '2020 - Present', status: 'Draft' },
-  ],
-  finalQuestion: ''
+// --- Local UI State ---
+const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
+
+// --- Store State Mapping (Computed Properties) ---
+const currentStep = computed(() => store.currentStep);
+const isLoading = computed(() => store.isLoading);
+const chatMessages = computed(() => store.chatMessages);
+const searchQuery = computed(() => store.searchQuery);
+
+// Mock data mapping from store's placeholder results (as defined in workflow.ts)
+const keywords = computed(() => store.keywords);
+const scope = computed(() => store.scope);
+
+// --- Lifecycle ---
+onMounted(() => {
+    // Fetch initial state or resume persisted session when the page loads
+    store.fetchStateFromBackend();
 });
 
-// --- Computed Properties ---
-const isQuestionFinalized = computed(() => {
-  // Logic to check if the final question is sufficiently structured and locked
-  return structuredOutput.value.finalQuestion.includes('how') &&
-         structuredOutput.value.keywords.filter(k => k.status === 'Locked').length >= 3;
-});
+// --- Action Handlers (Orchestrating the Store) ---
 
-// --- Methods (Simulating Agent Interactions) ---
+/**
+ * A. Handles user message input and sends it to the workflow store.
+ */
+function handleSendMessage(content: string) {
+    if (isLoading.value || !content.trim()) return;
+    store.addMessage({
+        id: Date.now(),
+        type: 'user',
+        content: content
+    });
+    // Trigger agent response logic here if needed: store.getAgentResponse(content);
+}
 
-// A. Handle User Message
-const handleSendMessage = (content) => {
-  chatMessages.value.push({ id: Date.now(), type: 'user', content });
+/**
+ * B. Handles manual keyword updates from the Sidebar.
+ */
+function handleKeywordUpdate(payload: { index: number, newText: string }) {
+    // This action would update the structured data in the store
+    // Example: store.updateKeyword(payload);
+    console.log(`[INITIATION PAGE] Store Action: Updating keyword at index ${payload.index} to: ${payload.newText}`);
+}
 
-  // 2. Simulate Agent Response and Validator Update
-  setTimeout(() => {
-    if (content.toLowerCase().includes('auditing')) {
-      structuredOutput.value.keywords.push({ text: 'Factory Auditing', status: 'Locked', source: 'Validator Agent' });
-      structuredOutput.value.finalQuestion = "How effective are international brands' Factory Auditing Mechanisms in protecting labor rights in Southeast Asia?";
+/**
+ * C. Opens the reflection modal.
+ */
+function handleReflect() {
+    isReflecting.value = true;
+}
+
+/**
+ * D. Handles the submission of a thought from the Reflection form.
+ */
+function logThought(thought: string, category: string) {
+    store.logReflection(thought, category);
+    isReflecting.value = false;
+}
+
+/**
+ * E. Handles the core workflow transition request from the ActionBar.
+ * This combines the "Lock Data" and "Change Phase" actions.
+ */
+async function handlePhaseTransitionRequest() {
+    if (isLoading.value || !searchQuery.value) return;
+
+    store.isLoading = true;
+
+    try {
+        // 1. Data Lock (The finalization of structured data)
+        await store.lockData();
+
+        // 2. Phase Transition (The flow control change)
+        await store.transitionToNextPhase();
+
+        // 3. Navigation
+        // Assuming the next phase (SELECTION) is mapped to the '/selection' route
+        router.push('/selection');
+
+    } catch (error) {
+        console.error('Failed to transition phase:', error);
+        // Display user-friendly error message
+    } finally {
+        store.isLoading = false;
     }
-
-    chatMessages.value.push({ id: Date.now() + 1, type: 'agent', content: `The Validator Agent has updated your keywords based on your focus on **${content}**. Review the sidebar for the new **Final Question** draft.` });
-  }, 1000);
-};
-
-// B. Handle Sidebar Update (e.g., User manually corrects a keyword)
-const handleKeywordUpdate = ({ index, newText }) => {
-  if (structuredOutput.value.keywords[index]) {
-    structuredOutput.value.keywords[index].text = newText;
-    structuredOutput.value.keywords[index].status = 'Locked';
-  }
-};
-
-// C. Handle Final Question Lock/Finalize
-const handleFinalize = (question) => {
-  structuredOutput.value.finalQuestion = question;
-};
-
-// F. Handle Reflection Modal
-const handleReflect = () => {
-  isReflecting.value = true;
-};
-
-const logThought = (thought) => {
-  console.log('Thought logged by Reflector Agent:', thought);
-  isReflecting.value = false;
-};
-
-// H. Phase Transition
-const handlePhaseTransition = () => {
-  if (isQuestionFinalized.value) {
-    alert('Transitioning to Selection Phase with the final question: ' + structuredOutput.value.finalQuestion);
-  }
-};
+}
 </script>
 
 <style scoped>
-/* Tailwind utility classes are now mostly handled in the Template component */
+/* Scoped styles specific to the Initiation Page view */
 </style>

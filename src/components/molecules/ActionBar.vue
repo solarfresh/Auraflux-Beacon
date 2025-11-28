@@ -14,15 +14,15 @@
 
     <Button
       @click="handlePhaseTransition"
-      :disabled="!isQuestionFinalized"
+      :disabled="!finalQuestion || isTransitioning"
       variant="primary"
       class="px-6 py-2"
       :class="[
-        !isQuestionFinalized ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300' : ''
+        !finalQuestion ? 'bg-gray-300 text-gray-500 cursor-not-allowed hover:bg-gray-300' : ''
       ]"
     >
       <Text tag="span" size="sm" weight="semibold" color="current">
-        ✅ Proceed to Selection Phase
+        {{ isTransitioning ? 'Processing...' : '✅ Lock & Proceed to Selection Phase' }}
       </Text>
     </Button>
   </div>
@@ -32,32 +32,35 @@
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
+import { ref } from 'vue';
 import { useWorkflowAuth } from '@/composables/useWorkflowAuth'; // Import Auth Composable
 
 // --- Props ---
 const props = defineProps<{
   /**
-   * Flag indicating whether the final research question has been structured and finalized.
-   * Controls the enable/disable state of the phase transition button.
+   * The final synthesized research question string.
+   * Required to enable the transition button (Flow Gate).
    */
-  isQuestionFinalized: boolean;
+  finalQuestion: string;
 }>();
 
 // --- Events ---
 const emit = defineEmits<{
   /**
-   * Emitted when the user clicks the "I'm thinking..." button to start reflection.
+   * Emitted when the user clicks the reflection start button.
    */
   (e: 'reflectStart'): void;
 
   /**
-   * Emitted when the user clicks the "Proceed to Selection Phase" button (if enabled).
+   * Emitted to request the parent component to handle both
+   * data finalization (lock) and phase transition.
    */
-  (e: 'phaseTransition'): void;
+  (e: 'transitionRequest'): void;
 }>();
 
 // --- Initialization ---
-const { executeAuthAction } = useWorkflowAuth(); // Initialize the Composable
+const { executeAuthAction } = useWorkflowAuth();
+const isTransitioning = ref(false); // Local state to prevent rapid double-clicking
 
 // --- Handlers: Encapsulate actions with authentication check ---
 
@@ -65,22 +68,30 @@ const { executeAuthAction } = useWorkflowAuth(); // Initialize the Composable
  * Handles starting the reflection process, requiring authentication.
  */
 const handleReflectStart = () => {
-    // Ensure the user is logged in before allowing the reflection process to start.
     executeAuthAction(() => {
         emit('reflectStart');
     });
 };
 
 /**
- * Handles transitioning to the next ISP phase, requiring authentication and finalization.
+ * Handles the combined action of locking the data and requesting phase transition.
+ * Requires authentication and a finalized question.
  */
 const handlePhaseTransition = () => {
-    // Ensure the user is logged in before attempting to transition.
+    // Prevent execution if already processing or if the question is missing
+    if (isTransitioning.value || !props.finalQuestion) return;
+
+    // 1. Auth Check (Ensures user is logged in)
     executeAuthAction(() => {
-        // Only allow transition if the login check passed AND the question is finalized.
-        if (props.isQuestionFinalized) {
-            emit('phaseTransition');
-        }
+        // 2. If Auth passes, lock the button and request transition
+        isTransitioning.value = true;
+
+        // Emit single event for parent to handle sequential store actions (Lock Data -> Change Phase)
+        emit('transitionRequest');
+
+        // NOTE: isTransitioning should be reset by the parent component or by
+        // watching a global loading state (e.g., workflowStore.isLoading).
+        // For simplicity here, the parent will handle the loading state.
     });
 };
 </script>

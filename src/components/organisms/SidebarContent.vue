@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col h-full space-y-6">
+  <div class="flex flex-col space-y-6">
 
     <Text tag="h2" size="xl" weight="bold" color="gray-900" class="border-b pb-3 flex items-center space-x-2">
       <Icon name="Target" type="solid" size="md" color="indigo-600" />
@@ -28,6 +28,7 @@
           :key="index"
           class="flex items-center justify-between p-3 border rounded-lg transition"
           :class="{
+            // Highlight Locked state
             'bg-indigo-50 border-indigo-200': keyword.status === 'Locked',
             'bg-white border-gray-200': keyword.status === 'Draft'
           }"
@@ -81,22 +82,11 @@
         :class="finalQuestion ? 'border-green-400 bg-green-50' : 'border-gray-300 bg-gray-100'"
       >
         <Text tag="p" size="base" :weight="finalQuestion ? 'semibold' : 'normal'" :color="finalQuestion ? 'green-800' : 'gray-500'">
-          {{ finalQuestion || 'Question not yet finalized. Keep refining in the chat.' }}
+          {{ finalQuestion || 'Question not yet finalized. Refine in the chat to see the draft here.' }}
         </Text>
       </div>
 
-      <Button
-        @click="finalizeQuestion"
-        :disabled="!finalQuestion || isQuestionLocked"
-        variant="primary"
-        class="w-full"
-      >
-        <Text tag="span" size="base" weight="medium" color="current">
-          <Text tag="span" size="base" weight="medium" color="current" v-if="isQuestionLocked">Question Locked ✅</Text>
-          <Text tag="span" size="base" weight="medium" color="current" v-else>Lock Final Question</Text>
-        </Text>
-      </Button>
-    </div>
+      </div>
 
   </div>
 </template>
@@ -105,34 +95,50 @@
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import ProgressDisplay from '@/components/molecules/ProgressDisplay.vue'; // 🌟 NEW IMPORT
-import { computed, ref } from 'vue';
-import type { Keyword, ScopeItem } from '@/interfaces/search';
+import ProgressDisplay from '@/components/molecules/ProgressDisplay.vue';
+import { computed } from 'vue';
 
-// Local state for demonstration (In a real app, this should probably come from the store)
-const isQuestionLocked = ref(false);
+// --- Interface Types ---
+interface Keyword {
+  text: string;
+  status: 'Locked' | 'Draft';
+  source: string;
+}
+
+interface ScopeItem {
+  label: string;
+  value: string;
+  status: 'Locked' | 'Draft';
+}
 
 // --- Props ---
 const props = defineProps<{
+  /** List of keywords, status, and source. */
   keywords: Keyword[];
+
+  /** List of scope items (e.g., Geographical, Timeframe). */
   scope: ScopeItem[];
+
+  /** The final synthesized research question string (Used for display only). */
   finalQuestion: string;
 }>();
 
 // --- Emits ---
 const emit = defineEmits<{
+  /** Emitted when a user attempts to manually edit/lock a keyword. */
   (e: 'keywordUpdate', payload: { index: number, newText: string }): void;
-  (e: 'questionFinalize', question: string): void;
+  // REMOVED: 'questionFinalize' event, as this is now handled by ActionBar.
 }>();
 
 
 // --- Computed Properties ---
 
+/** Calculates the number of locked keywords for the progress tracker. */
 const lockedKeywordsCount = computed(() => {
   return props.keywords.filter(k => k.status === 'Locked').length;
 });
 
-// Calculation remains the same, providing the percentage for the ProgressDisplay
+/** Calculates overall completion percentage for the sidebar view. */
 const completionPercentage = computed(() => {
   const totalElements = props.keywords.length + props.scope.length;
   if (totalElements === 0) return 0;
@@ -140,10 +146,10 @@ const completionPercentage = computed(() => {
   const lockedElements = props.keywords.filter(k => k.status === 'Locked').length +
                          props.scope.filter(s => s.status === 'Locked').length;
 
-  // Final question adds the last 20%
   const basePercentage = (lockedElements / totalElements) * 80;
 
-  if (props.finalQuestion && lockedElements >= 2) {
+  // Final question presence adds the last 20%
+  if (props.finalQuestion && lockedElements >= 1) {
     return Math.min(100, Math.round(basePercentage + 20));
   }
   return Math.round(basePercentage);
@@ -154,24 +160,13 @@ const completionPercentage = computed(() => {
 
 /**
  * Simulates the edit action by prompting the user and emitting the update event.
+ * NOTE: The prompt should be replaced by a proper UI modal/inline editor in production.
  */
 const promptAndEmitKeywordUpdate = (index: number, currentText: string) => {
-  // NOTE: This uses a blocking browser prompt for simulation.
-  // In production, this would open a non-blocking modal or inline input field.
   const newText = prompt(`Edit and lock keyword: ${currentText}`, currentText);
-  if (newText && newText !== currentText) {
-    emit('keywordUpdate', { index, newText });
+  if (newText && newText.trim() !== currentText) {
+    emit('keywordUpdate', { index, newText: newText.trim() });
   }
 };
 
-/**
- * Handles the locking of the final question statement.
- */
-const finalizeQuestion = () => {
-  if (props.finalQuestion && !isQuestionLocked.value) {
-    isQuestionLocked.value = true;
-    emit('questionFinalize', props.finalQuestion);
-    // Note: The alert is removed in a clean production version.
-  }
-};
 </script>

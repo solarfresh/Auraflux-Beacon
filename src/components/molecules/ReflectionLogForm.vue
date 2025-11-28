@@ -53,25 +53,24 @@
 
 <script setup lang="ts">
 import Button from '@/components/atoms/Button.vue';
-import Select from '@/components/atoms/Select.vue'; // Imported Select Atom
+import Select from '@/components/atoms/Select.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
 import { ref } from 'vue';
 
 const reflectionText = ref('');
-const category = ref('Uncertainty');
+const category = ref('Uncertainty'); // Default category
 
 const emit = defineEmits<{
   /**
    * Emitted when the user logs a reflection.
-   * @param thought - The reflection text.
-   * @param category - The selected category.
    */
   (e: 'logThought', thought: string, category: string): void;
 }>();
 
 const handleSubmit = () => {
   if (reflectionText.value.trim()) {
+    // Emit parameters explicitly by name for clarity, matching store action
     emit('logThought', reflectionText.value.trim(), category.value);
 
     // Reset form fields after submission
