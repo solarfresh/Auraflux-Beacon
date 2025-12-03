@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
 import MessageInput from '@/components/molecules/MessageInput.vue';
-import { ChatMessage } from '@/interfaces/chat';
+import { ChatMessage } from '@/interfaces/workflow';
 import { nextTick, ref, watch } from 'vue';
 
 const props = defineProps<{

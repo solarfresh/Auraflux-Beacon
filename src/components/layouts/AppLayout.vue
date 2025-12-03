@@ -27,16 +27,11 @@
 </template>
 
 <script setup lang="ts">
-// Pinia Stores
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
 import { useWorkflowStore } from '@/stores/workflow';
-
-// Organisms
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
 import LoginModal from '@/components/organisms/LoginModal.vue';
-
-// Molecules
 import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
 
 const workflowStore = useWorkflowStore();

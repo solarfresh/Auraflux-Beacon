@@ -14,12 +14,14 @@
 
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
+<!--
         <SidebarContent
           :keywords="keywords"
           :scope="scope"
           :final-question="searchQuery"
           @keyword-update="handleKeywordUpdate"
         />
+ -->
       </template>
 
       <!-- Slot: chat-interface -->
@@ -34,7 +36,7 @@
       <!-- Slot: action-bar (Flow Control) -->
       <template #action-bar>
         <ActionBar
-          :final-question="searchQuery"
+          :final-question="'searchQuery'"
           @reflect-start="handleReflect"
           @transition-request="handlePhaseTransitionRequest"
         />
@@ -61,7 +63,8 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useWorkflowStore } from '@/stores/workflow'; // Import Pinia Store
+import { useWorkflowStore } from '@/stores/workflow';
+import { useInitiativeStore } from '@/stores/initiation';
 
 // --- Component Imports ---
 import ActionBar from '@/components/molecules/ActionBar.vue';
@@ -74,39 +77,41 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 
 
 // --- Initialization ---
-const store = useWorkflowStore();
+const workflowStore = useWorkflowStore();
+const initiativeStore = useInitiativeStore();
 const router = useRouter();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
 
 // --- Store State Mapping (Computed Properties) ---
-const currentStep = computed(() => store.currentStep);
-const isLoading = computed(() => store.isLoading);
-const chatMessages = computed(() => store.chatMessages);
-const searchQuery = computed(() => store.searchQuery);
+const currentStep = computed(() => workflowStore.currentStep);
+const isLoading = computed(() => initiativeStore.isLoading);
+const chatMessages = computed(() => initiativeStore.chatMessages);
+// const searchQuery = computed(() => store.searchQuery);
 
 // Mock data mapping from store's placeholder results (as defined in workflow.ts)
-const keywords = computed(() => store.keywords);
-const scope = computed(() => store.scope);
+// const keywords = computed(() => store.keywords);
+// const scope = computed(() => store.scope);
 
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
-    store.fetchStateFromBackend();
+    // store.fetchStateFromBackend();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---
 
 /**
- * A. Handles user message input and sends it to the workflow store.
+ * Handles user message input and sends it to the workflow store.
  */
 function handleSendMessage(content: string) {
     if (isLoading.value || !content.trim()) return;
-    store.addMessage({
+    initiativeStore.addMessage({
         id: Date.now(),
-        type: 'user',
-        content: content
+        role: 'user',
+        content: content,
+        name: 'User'
     });
     // Trigger agent response logic here if needed: store.getAgentResponse(content);
 }
@@ -131,7 +136,7 @@ function handleReflect() {
  * D. Handles the submission of a thought from the Reflection form.
  */
 function logThought(thought: string, category: string) {
-    store.logReflection(thought, category);
+    // store.logReflection(thought, category);
     isReflecting.value = false;
 }
 
@@ -140,27 +145,27 @@ function logThought(thought: string, category: string) {
  * This combines the "Lock Data" and "Change Phase" actions.
  */
 async function handlePhaseTransitionRequest() {
-    if (isLoading.value || !searchQuery.value) return;
+    // if (isLoading.value || !searchQuery.value) return;
 
-    store.isLoading = true;
+    // store.isLoading = true;
 
-    try {
-        // 1. Data Lock (The finalization of structured data)
-        await store.lockData();
+    // try {
+    //     // 1. Data Lock (The finalization of structured data)
+    //     await store.lockData();
 
-        // 2. Phase Transition (The flow control change)
-        await store.transitionToNextPhase();
+    //     // 2. Phase Transition (The flow control change)
+    //     await store.transitionToNextPhase();
 
-        // 3. Navigation
-        // Assuming the next phase (SELECTION) is mapped to the '/selection' route
-        router.push('/selection');
+    //     // 3. Navigation
+    //     // Assuming the next phase (SELECTION) is mapped to the '/selection' route
+    //     router.push('/selection');
 
-    } catch (error) {
-        console.error('Failed to transition phase:', error);
-        // Display user-friendly error message
-    } finally {
-        store.isLoading = false;
-    }
+    // } catch (error) {
+    //     console.error('Failed to transition phase:', error);
+    //     // Display user-friendly error message
+    // } finally {
+    //     store.isLoading = false;
+    // }
 }
 </script>
 

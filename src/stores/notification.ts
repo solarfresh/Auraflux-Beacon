@@ -1,7 +1,6 @@
 import { useWebSocket } from '@/composables/useWebSocket';
 import config from '@/config';
 import type { WebSocketMessage } from '@/interfaces/notification';
-import type { Dichotomy } from '@/interfaces/search';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 
@@ -20,7 +19,6 @@ export const useNotificationStore = defineStore('notification', () => {
 
     // --- Local State ---
     const notifications = ref<{[key: string]: any;}>({});
-    const dynamicDichotomies = ref<Dichotomy[]>([]);
 
     // --- Actions ---
 
@@ -31,11 +29,6 @@ export const useNotificationStore = defineStore('notification', () => {
     function processNewNotification(message: WebSocketMessage | null) {
         if (message) {
             // Add the new payload to the history
-            notifications.value[message.event_type] = message.payload;
-
-            if (message.event_type === 'dichotomy_suggestions_complete') {
-                dynamicDichotomies.value = message.payload.suggestions;
-            }
         }
     }
 
@@ -49,7 +42,6 @@ export const useNotificationStore = defineStore('notification', () => {
         isConnected,
         error,
         notifications,
-        dynamicDichotomies,
 
         // Actions (if you had any, e.g., mark_as_read)
         // markAsRead: (id: number) => { ... }
