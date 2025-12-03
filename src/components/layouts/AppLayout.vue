@@ -27,16 +27,18 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
-import { useLoginStore } from '@/stores/login';
-import { useWorkflowStore } from '@/stores/workflow';
+import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
 import LoginModal from '@/components/organisms/LoginModal.vue';
-import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
+import { useAuthStore } from '@/stores/auth';
+import { useLoginStore } from '@/stores/login';
+import { useNotificationStore } from '@/stores/notification';
+import { useWorkflowStore } from '@/stores/workflow';
 
 const workflowStore = useWorkflowStore();
 const authStore = useAuthStore();
 const loginStore = useLoginStore();
+const store = useNotificationStore();
 
 const handleLoginClick = () => {
   loginStore.openModal();

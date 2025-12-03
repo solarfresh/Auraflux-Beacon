@@ -1,8 +1,10 @@
+import { apiService } from '@/api/apiService';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
 
 import type {
-    ChatMessage
+  ChatMessage
 } from '@/interfaces/initiation';
 
 export const useInitiativeStore = defineStore('intiation', () => {
@@ -12,7 +14,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     const chatMessages = ref<ChatMessage[]>([]);
 
 		/** Flag to indicate if a message is in recieving. */
-    const isLoading = ref(false);
+    const isTyping = ref(false);
 
 		// --- Getters (Computed) ---
 		// --- Actions (Functions) ---
@@ -20,20 +22,29 @@ export const useInitiativeStore = defineStore('intiation', () => {
     /**
      * Adds a new message to the chat history.
      */
-    function addMessage(message: Omit<ChatMessage, 'id' | 'timestamp'> & { id?: number }) {
+    async function addMessage(messageContent: string) {
+        const agentName = 'ExplorerAgent';
+        isTyping.value = true;
         chatMessages.value.push({
-            id: message.id || Date.now(), // Use provided ID or generate one
-            role: message.role,
-            content: message.content,
-						name: message.name
+            id: uuidv4(),
+            role: 'user',
+            content: messageContent,
+						name: 'User'
         } as ChatMessage); // Type assertion for strict compliance
+        chatMessages.value.push({
+          id: uuidv4(),
+          role: 'system',
+          content: 'Agent is typing...',
+          name: agentName
+        } as ChatMessage);
+        apiService.workflows.initiation.chat(messageContent, agentName);
     }
 
 		// --- Return public API ---
     return {
         // State
         chatMessages,
-				isLoading,
+				isTyping,
         // Getters
         // Actions
         addMessage,

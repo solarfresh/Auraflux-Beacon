@@ -1,5 +1,5 @@
 export interface ChatMessage {
-  id: number;
+  id: string;
   role: 'user' | 'system';
   content: string;
   name: string;

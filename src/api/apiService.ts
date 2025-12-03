@@ -1,6 +1,5 @@
 import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import { SearchResult } from '@/interfaces/search';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -93,13 +92,6 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
-  search: {
-    results: {
-      create: (query: string): Promise<AxiosResponse<SearchResult[]>> => {
-        return apiClient.post(SearchEndpoints.results.create(), {query: query});
-      },
-    }
-  },
   users: {
     check: {
       get: (): Promise<AxiosResponse<User>> => {
@@ -114,8 +106,8 @@ export const apiService = {
   },
   workflows: {
     initiation: {
-      chat: (message: string): Promise<AxiosResponse> => {
-        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: message})
+      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
+        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
       }
     }
   }

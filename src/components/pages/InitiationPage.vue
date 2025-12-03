@@ -28,7 +28,7 @@
       <template #chat-interface>
         <ChatInterface
           :messages="chatMessages"
-          :is-loading="isLoading"
+          :is-typing="isTyping"
           @send-message="handleSendMessage"
         />
       </template>
@@ -61,17 +61,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useWorkflowStore } from '@/stores/workflow';
 import { useInitiativeStore } from '@/stores/initiation';
+import { useWorkflowStore } from '@/stores/workflow';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-// --- Component Imports ---
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
-import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
@@ -86,7 +84,7 @@ const isReflecting = ref(false); // Controls the visibility of the Reflection Mo
 
 // --- Store State Mapping (Computed Properties) ---
 const currentStep = computed(() => workflowStore.currentStep);
-const isLoading = computed(() => initiativeStore.isLoading);
+const isTyping = computed(() => initiativeStore.isTyping);
 const chatMessages = computed(() => initiativeStore.chatMessages);
 // const searchQuery = computed(() => store.searchQuery);
 
@@ -106,13 +104,8 @@ onMounted(() => {
  * Handles user message input and sends it to the workflow store.
  */
 function handleSendMessage(content: string) {
-    if (isLoading.value || !content.trim()) return;
-    initiativeStore.addMessage({
-        id: Date.now(),
-        role: 'user',
-        content: content,
-        name: 'User'
-    });
+    if (isTyping.value || !content.trim()) return;
+    initiativeStore.addMessage(content);
     // Trigger agent response logic here if needed: store.getAgentResponse(content);
 }
 
