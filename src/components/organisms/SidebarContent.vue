@@ -7,12 +7,39 @@
     </Text>
 
     <div class="space-y-2">
-      <ProgressDisplay
+      <TopicStatusIndicator
         :percentage="completionPercentage"
-        label="Definition Progress"
-        description="of key elements locked."
-        color="indigo"
-      />
+        label="Topic Refinement Status"
+        :statusLabel="clarityStatusLabel"
+        description="current clarity level"
+        color="indigo"      />
+    </div>
+
+    <div class="flex items-center space-x-2 p-2 rounded-lg"
+      :class="getFeasibilityClasses(feasibilityStatus)">
+      <Icon :name="getFeasibilityIcon(feasibilityStatus)" type="solid" size="sm" class="flex-shrink-0" />
+      <Text tag="span" size="sm" weight="medium" class="flex-grow">
+        Research Feasibility: <span class="font-bold">{{ getFeasibilityLabel(feasibilityStatus) }}</span>
+      </Text>
+    </div>
+
+    <div class="space-y-3">
+      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
+        Final Question Statement
+        <Button variant="tertiary" size="sm" @click="promptAndEmitQuestionUpdate(finalQuestion)">
+          <Icon name="PencilSquare" type="outline" size="sm" color="gray-600" />
+        </Button>
+      </Text>
+
+      <div
+        class="p-4 rounded-lg border-2 transition duration-150 cursor-pointer hover:shadow-md"
+        :class="finalQuestion ? 'border-green-400 bg-green-50' : 'border-gray-300 bg-gray-100'"
+        @click="handleViewDetails('final-question')"
+      >
+        <Text tag="p" size="base" :weight="finalQuestion ? 'semibold' : 'normal'" :color="finalQuestion ? 'green-800' : 'gray-500'">
+          {{ finalQuestion || 'Question not yet finalized. Refine in the chat to see the draft here.' }}
+        </Text>
+      </div>
     </div>
 
     <div class="space-y-3">
@@ -21,43 +48,46 @@
         <Text tag="span" size="xs" weight="medium" color="indigo-600">({{ lockedKeywordsCount }}/{{ keywords.length }}) Locked</Text>
       </Text>
 
-      <ul class="space-y-3">
+      <ul class="space-y-2">
         <Text
           tag="li"
           v-for="(keyword, index) in keywords"
           :key="index"
-          class="flex items-center justify-between p-3 border rounded-lg transition"
+          class="flex items-center justify-between p-3 border rounded-lg transition duration-150 cursor-pointer hover:bg-gray-50"
           :class="{
-            // Highlight Locked state
-            'bg-indigo-50 border-indigo-200': keyword.status === 'Locked',
+            'bg-indigo-50 border-indigo-200 hover:bg-indigo-100': keyword.status === 'Locked',
             'bg-white border-gray-200': keyword.status === 'Draft'
           }"
+          @click="handleViewDetails('keyword', index)"
         >
           <div class="flex flex-col">
             <Text tag="span" size="base" weight="medium" :color="keyword.status === 'Locked' ? 'indigo-700' : 'gray-800'">
               {{ keyword.text }}
             </Text>
-            <Text tag="span" size="xs" color="gray-500">
-              Source: {{ keyword.source }}
+            <Text tag="span" size="xs" color="gray-400" v-if="keyword.status === 'Draft'">
+              Potential Subtopic
             </Text>
           </div>
 
           <Button
             v-if="keyword.status === 'Draft'"
-            @click="promptAndEmitKeywordUpdate(index, keyword.text)"
+            @click.stop="promptAndEmitKeywordUpdate(index, keyword.text)"
             variant="tertiary"
             size="sm"
           >
             <Icon name="PencilSquare" type="outline" size="sm" color="gray-600" />
           </Button>
-          <Icon v-else name="CheckCircle" type="solid" size="md" color="indigo-600" />
+          <Icon v-else name="ChevronRight" type="outline" size="md" color="indigo-600" />
         </Text>
       </ul>
     </div>
 
     <div class="space-y-3">
-      <Text tag="h3" size="lg" weight="semibold" color="gray-800">
+      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
         Research Scope
+        <Button variant="tertiary" size="sm" @click="handleViewDetails('scope-management')">
+          <Icon name="Cog" type="outline" size="sm" color="gray-600" />
+        </Button>
       </Text>
       <ul class="space-y-2 text-sm text-gray-700">
         <Text
@@ -72,21 +102,28 @@
       </ul>
     </div>
 
-    <div class="mt-auto pt-6 border-t border-gray-200 space-y-4">
-      <Text tag="h3" size="lg" weight="semibold" color="gray-800">
-        Final Question Statement
+    <div class="space-y-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+      <Text tag="h4" size="base" weight="semibold" color="blue-700">
+        Suggested Search Focus
+      </Text>
+      <Text tag="p" size="sm" color="blue-600">
+        {{ resourceSuggestion }}
+      </Text>
+    </div>
+
+    <div class="space-y-3 mt-auto pt-6 border-t border-gray-200">
+      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
+        Reflection Log Summary
+        <Button variant="tertiary" size="sm" @click="handleViewDetails('reflection-log')">
+          <Icon name="ListBullet" type="outline" size="sm" color="gray-600" />
+        </Button>
       </Text>
 
-      <div
-        class="p-4 rounded-lg border-2 border-dashed"
-        :class="finalQuestion ? 'border-green-400 bg-green-50' : 'border-gray-300 bg-gray-100'"
-      >
-        <Text tag="p" size="base" :weight="finalQuestion ? 'semibold' : 'normal'" :color="finalQuestion ? 'green-800' : 'gray-500'">
-          {{ finalQuestion || 'Question not yet finalized. Refine in the chat to see the draft here.' }}
-        </Text>
+      <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 italic">
+        <p v-if="latestReflection">{{ latestReflection }}</p>
+        <p v-else>No recent thoughts logged. Click the "Log a Thought" button below to clarify your task or feelings.</p>
       </div>
-
-      </div>
+    </div>
 
   </div>
 </template>
@@ -95,23 +132,29 @@
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import ProgressDisplay from '@/components/molecules/ProgressDisplay.vue';
+import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
 import { computed } from 'vue';
 
 // --- Interface Types ---
+type KeywordStatus = 'Locked' | 'Draft';
+type FeasibilityStatus = 'High' | 'Medium' | 'Low'; // Added Feasibility Status
+
 interface Keyword {
   text: string;
-  status: 'Locked' | 'Draft';
+  status: KeywordStatus;
   source: string;
 }
 
 interface ScopeItem {
   label: string;
   value: string;
-  status: 'Locked' | 'Draft';
+  status: KeywordStatus;
 }
 
-// --- Props ---
+// ----------------------------------------------------------------------
+// --- Props (Defined with Mock Data for standalone use) ---
+// ----------------------------------------------------------------------
+
 const props = defineProps<{
   /** List of keywords, status, and source. */
   keywords: Keyword[];
@@ -119,15 +162,35 @@ const props = defineProps<{
   /** List of scope items (e.g., Geographical, Timeframe). */
   scope: ScopeItem[];
 
-  /** The final synthesized research question string (Used for display only). */
+  /** The final synthesized research question string. */
   finalQuestion: string;
+
+  /** Status of information availability for the topic (e.g., High, Medium, Low). */
+  feasibilityStatus: FeasibilityStatus;
+
+  /** Suggestion for the next search path (e.g., Use academic databases). */
+  resourceSuggestion: string;
+
+  /** The most recent thought logged by the user. */
+  latestReflection: string | null;
+
+  /** The Agent-derived qualitative clarity status (e.g., Exploring, Focusing, Ready). */
+  clarityStatusLabel: string;
+
+  /** The overall completion percentage for the sidebar view. */
+  completionPercentage: number;
 }>();
 
 // --- Emits ---
 const emit = defineEmits<{
   /** Emitted when a user attempts to manually edit/lock a keyword. */
   (e: 'keywordUpdate', payload: { index: number, newText: string }): void;
-  // REMOVED: 'questionFinalize' event, as this is now handled by ActionBar.
+
+  /** NEW: Emitted when a user manually edits the Final Question. */
+  (e: 'questionUpdate', newText: string): void;
+
+  /** NEW: Emitted when a user clicks an element that leads to a detailed management page/modal. */
+  (e: 'viewDetails', type: 'final-question' | 'keyword' | 'scope-management' | 'reflection-log', index?: number): void;
 }>();
 
 
@@ -138,34 +201,57 @@ const lockedKeywordsCount = computed(() => {
   return props.keywords.filter(k => k.status === 'Locked').length;
 });
 
-/** Calculates overall completion percentage for the sidebar view. */
-const completionPercentage = computed(() => {
-  const totalElements = props.keywords.length + props.scope.length;
-  if (totalElements === 0) return 0;
-
-  const lockedElements = props.keywords.filter(k => k.status === 'Locked').length +
-                         props.scope.filter(s => s.status === 'Locked').length;
-
-  const basePercentage = (lockedElements / totalElements) * 80;
-
-  // Final question presence adds the last 20%
-  if (props.finalQuestion && lockedElements >= 1) {
-    return Math.min(100, Math.round(basePercentage + 20));
+// --- Feasibility Helpers ---
+const getFeasibilityClasses = (status: FeasibilityStatus) => {
+  switch (status) {
+    case 'High': return 'bg-teal-50 border-teal-200 text-teal-700';
+    case 'Medium': return 'bg-yellow-50 border-yellow-200 text-yellow-700';
+    case 'Low': return 'bg-red-50 border-red-200 text-red-700';
+    default: return 'bg-gray-50 border-gray-200 text-gray-500';
   }
-  return Math.round(basePercentage);
-});
+};
+
+const getFeasibilityIcon = (status: FeasibilityStatus) => {
+  switch (status) {
+    case 'High': return 'CheckCircle';
+    case 'Medium': return 'ExclamationTriangle';
+    case 'Low': return 'ArchiveBoxXMark';
+    default: return 'QuestionMarkCircle';
+  }
+};
+
+const getFeasibilityLabel = (status: FeasibilityStatus) => {
+  switch (status) {
+    case 'High': return 'Information Abundant';
+    case 'Medium': return 'Requires Refinement';
+    case 'Low': return 'Information Scarce';
+    default: return 'N/A';
+  }
+};
 
 
 // --- Methods ---
 
-/**
- * Simulates the edit action by prompting the user and emitting the update event.
- * NOTE: The prompt should be replaced by a proper UI modal/inline editor in production.
- */
+/** Emits event for navigating to detailed views/modals. */
+const handleViewDetails = (type: 'final-question' | 'keyword' | 'scope-management' | 'reflection-log', index?: number) => {
+    emit('viewDetails', type, index);
+};
+
+/** Simulates the edit action for keywords. */
 const promptAndEmitKeywordUpdate = (index: number, currentText: string) => {
+  // NOTE: This should be replaced by a proper UI modal/inline editor in production.
   const newText = prompt(`Edit and lock keyword: ${currentText}`, currentText);
   if (newText && newText.trim() !== currentText) {
     emit('keywordUpdate', { index, newText: newText.trim() });
+  }
+};
+
+/** Simulates the edit action for Final Question. */
+const promptAndEmitQuestionUpdate = (currentText: string) => {
+  // NOTE: This should be replaced by a proper UI modal/inline editor in production.
+  const newText = prompt(`Edit and lock Final Question:`, currentText);
+  if (newText && newText.trim() !== currentText) {
+    emit('questionUpdate', newText.trim());
   }
 };
 

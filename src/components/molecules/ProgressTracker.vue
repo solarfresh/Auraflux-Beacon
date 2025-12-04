@@ -14,16 +14,16 @@
         <div class="w-full md:w-2/3 lg:w-1/2 flex items-center space-x-3">
 
           <Text tag="span" size="sm" color="white" class="flex-shrink-0 whitespace-nowrap hidden sm:block">
-            <span v-if="currentStage === 'Initiation'">Feeling Unsure is Normal.</span>
-            <span v-else-if="currentStage === 'Formulation'">Finding Focus...</span>
-            <span v-else>Progress:</span>
+            <Text tag="span" color="white" v-if="currentStage === 'Initiation'">Feeling Unsure is Normal.</Text>
+            <Text tag="span" color="white" v-else-if="currentStage === 'Formulation'">Finding Focus...</Text>
+            <Text tag="span" color="white" v-else>Progress:</Text>
           </Text>
 
           <div class="w-full bg-indigo-500 rounded-full h-2.5">
-            <div
-              class="bg-white h-2.5 rounded-full transition-all duration-700 ease-out"
-              :style="{ width: `${completionPercentage}%` }"
-            ></div>
+            <BarSegment
+              :width="completionPercentage"
+              color="white"
+            />
           </div>
 
           <Text tag="span" size="sm" weight="semibold" color="white" class="flex-shrink-0">
@@ -36,9 +36,9 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '@/components/atoms/Icon.vue'; // Assuming Icon.vue import path
-import Text from '@/components/atoms/Text.vue'; // Assuming Text.vue import path
-
+import Icon from '@/components/atoms/Icon.vue';
+import Text from '@/components/atoms/Text.vue';
+import BarSegment from '@/components/atoms/BarSegment.vue';
 
 const props = defineProps({
   /**

@@ -14,14 +14,16 @@
 
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
-<!--
         <SidebarContent
-          :keywords="keywords"
-          :scope="scope"
-          :final-question="searchQuery"
-          @keyword-update="handleKeywordUpdate"
+          :clarity-status-label="mockClarityStatusLabel"
+          :completion-percentage="mockCompletionPercentage"
+          :feasibility-status="mockFeasibilityStatus"
+          :final-question="mockFinalQuestion"
+          :keywords="mockKeywords"
+          :latest-reflection="mockLatestReflection"
+          :resource-suggestion="mockResourceSuggestion"
+          :scope="mockScope"
         />
- -->
       </template>
 
       <!-- Slot: chat-interface -->
@@ -70,6 +72,7 @@ import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
+import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
@@ -86,11 +89,43 @@ const isReflecting = ref(false); // Controls the visibility of the Reflection Mo
 const currentStep = computed(() => workflowStore.currentStep);
 const isTyping = computed(() => initiativeStore.isTyping);
 const chatMessages = computed(() => initiativeStore.chatMessages);
-// const searchQuery = computed(() => store.searchQuery);
 
-// Mock data mapping from store's placeholder results (as defined in workflow.ts)
-// const keywords = computed(() => store.keywords);
-// const scope = computed(() => store.scope);
+// ----------------------------------------------------------------------
+// --- MOCK DATA FOR DEMONSTRATION/TESTING ---
+// ----------------------------------------------------------------------
+
+// --- Interface Types ---
+type KeywordStatus = 'Locked' | 'Draft';
+type FeasibilityStatus = 'High' | 'Medium' | 'Low'; // Added Feasibility Status
+
+interface Keyword {
+  text: string;
+  status: KeywordStatus;
+  source: string;
+}
+
+interface ScopeItem {
+  label: string;
+  value: string;
+  status: KeywordStatus;
+}
+
+const mockKeywords: Keyword[] = [
+  { text: 'Artificial Intelligence', status: 'Locked', source: 'Assignment Prompt' },
+  { text: 'Job Displacement', status: 'Draft', source: 'Chat Suggestion 1' },
+  { text: 'Retraining Programs', status: 'Draft', source: 'Chat Suggestion 2' },
+];
+const mockScope: ScopeItem[] = [
+  { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'Locked' },
+  { label: 'Timeframe', value: '2020 - Present', status: 'Draft' },
+  { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'Locked' },
+];
+const mockFinalQuestion: string = 'How have AI advancements since 2020 impacted job displacement rates and the need for government-funded retraining programs in the US and EU?';
+const mockFeasibilityStatus: FeasibilityStatus = 'Medium';
+const mockResourceSuggestion: string = 'Current data suggests a moderate focus. Use academic journals combined with OECD reports for feasibility assessment.';
+const mockLatestReflection: string | null = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
+const mockClarityStatusLabel: string = 'Focusing';
+const mockCompletionPercentage: number = 30;
 
 // --- Lifecycle ---
 onMounted(() => {
