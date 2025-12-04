@@ -8,9 +8,8 @@
 
     <div class="space-y-2">
       <TopicStatusIndicator
-        :percentage="completionPercentage"
+        :stability-score="stabilityScore"
         label="Topic Refinement Status"
-        :statusLabel="clarityStatusLabel"
         description="current clarity level"
         color="indigo"      />
     </div>
@@ -174,11 +173,8 @@ const props = defineProps<{
   /** The most recent thought logged by the user. */
   latestReflection: string | null;
 
-  /** The Agent-derived qualitative clarity status (e.g., Exploring, Focusing, Ready). */
-  clarityStatusLabel: string;
-
   /** The overall completion percentage for the sidebar view. */
-  completionPercentage: number;
+  stabilityScore: number;
 }>();
 
 // --- Emits ---

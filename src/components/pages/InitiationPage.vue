@@ -8,21 +8,20 @@
       <template #status-tracker>
         <ProgressTracker
           :current-stage="currentStep"
-          :completion-percentage="50"
+          :completion-percentage="16"
         />
       </template>
 
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
         <SidebarContent
-          :clarity-status-label="mockClarityStatusLabel"
-          :completion-percentage="mockCompletionPercentage"
           :feasibility-status="mockFeasibilityStatus"
           :final-question="mockFinalQuestion"
           :keywords="mockKeywords"
           :latest-reflection="mockLatestReflection"
           :resource-suggestion="mockResourceSuggestion"
           :scope="mockScope"
+          :stability-score="mockStabilityScore"
         />
       </template>
 
@@ -124,8 +123,7 @@ const mockFinalQuestion: string = 'How have AI advancements since 2020 impacted 
 const mockFeasibilityStatus: FeasibilityStatus = 'Medium';
 const mockResourceSuggestion: string = 'Current data suggests a moderate focus. Use academic journals combined with OECD reports for feasibility assessment.';
 const mockLatestReflection: string | null = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
-const mockClarityStatusLabel: string = 'Focusing';
-const mockCompletionPercentage: number = 30;
+const mockStabilityScore: number = 3;
 
 // --- Lifecycle ---
 onMounted(() => {
