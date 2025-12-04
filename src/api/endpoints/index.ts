@@ -31,6 +31,8 @@ export const UsersEndpoints = {
 export const WorkflowsEndpoints = {
   initiation: {
     chat: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat`
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat`,
+    getChatHistory: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat_history`,
   }
 }

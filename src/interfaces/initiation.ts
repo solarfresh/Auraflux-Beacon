@@ -3,6 +3,8 @@ export interface ChatMessage {
   role: 'user' | 'system';
   content: string;
   name: string;
+  timestamp: string;
+  sequence_number: number;
 }
 
 export interface Keyword {

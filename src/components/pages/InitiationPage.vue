@@ -95,7 +95,7 @@ const chatMessages = computed(() => initiativeStore.chatMessages);
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
-    // store.fetchStateFromBackend();
+    initiativeStore.getMessages();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---

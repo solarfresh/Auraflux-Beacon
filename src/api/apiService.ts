@@ -1,5 +1,6 @@
-import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
+import type { ChatMessage } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -108,6 +109,9 @@ export const apiService = {
     initiation: {
       chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
         return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+      },
+      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
       }
     }
   }

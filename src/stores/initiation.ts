@@ -29,15 +29,26 @@ export const useInitiativeStore = defineStore('intiation', () => {
             id: uuidv4(),
             role: 'user',
             content: messageContent,
-						name: 'User'
+						name: 'User',
+            timestamp: new Date().toISOString(),
+            sequence_number: chatMessages.value.length + 1,
         } as ChatMessage); // Type assertion for strict compliance
         chatMessages.value.push({
           id: uuidv4(),
           role: 'system',
           content: 'Agent is typing...',
-          name: agentName
+          name: agentName,
+          timestamp: new Date().toISOString(),
+          sequence_number: chatMessages.value.length + 2,
         } as ChatMessage);
         apiService.workflows.initiation.chat(messageContent, agentName);
+    }
+
+    async function getMessages() {
+      let response = await apiService.workflows.initiation.getChatHistory();
+      if (response) {
+        chatMessages.value = response.data;
+      }
     }
 
 		// --- Return public API ---
@@ -48,5 +59,6 @@ export const useInitiativeStore = defineStore('intiation', () => {
         // Getters
         // Actions
         addMessage,
+        getMessages,
     };
 })
