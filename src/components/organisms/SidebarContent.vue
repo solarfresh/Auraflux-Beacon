@@ -54,22 +54,22 @@
           :key="index"
           class="flex items-center justify-between p-3 border rounded-lg transition duration-150 cursor-pointer hover:bg-gray-50"
           :class="{
-            'bg-indigo-50 border-indigo-200 hover:bg-indigo-100': keyword.status === 'Locked',
-            'bg-white border-gray-200': keyword.status === 'Draft'
+            'bg-indigo-50 border-indigo-200 hover:bg-indigo-100': keyword.status === 'LOCKED',
+            'bg-white border-gray-200': keyword.status === 'DRAFT'
           }"
           @click="handleViewDetails('keyword', index)"
         >
           <div class="flex flex-col">
-            <Text tag="span" size="base" weight="medium" :color="keyword.status === 'Locked' ? 'indigo-700' : 'gray-800'">
+            <Text tag="span" size="base" weight="medium" :color="keyword.status === 'LOCKED' ? 'indigo-700' : 'gray-800'">
               {{ keyword.text }}
             </Text>
-            <Text tag="span" size="xs" color="gray-400" v-if="keyword.status === 'Draft'">
+            <Text tag="span" size="xs" color="gray-400" v-if="keyword.status === 'DRAFT'">
               Potential Subtopic
             </Text>
           </div>
 
           <Button
-            v-if="keyword.status === 'Draft'"
+            v-if="keyword.status === 'DRAFT'"
             @click.stop="promptAndEmitKeywordUpdate(index, keyword.text)"
             variant="tertiary"
             size="sm"
@@ -132,23 +132,8 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
+import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
 import { computed } from 'vue';
-
-// --- Interface Types ---
-type KeywordStatus = 'Locked' | 'Draft';
-type FeasibilityStatus = 'High' | 'Medium' | 'Low'; // Added Feasibility Status
-
-interface Keyword {
-  text: string;
-  status: KeywordStatus;
-  source: string;
-}
-
-interface ScopeItem {
-  label: string;
-  value: string;
-  status: KeywordStatus;
-}
 
 // ----------------------------------------------------------------------
 // --- Props (Defined with Mock Data for standalone use) ---
@@ -156,10 +141,10 @@ interface ScopeItem {
 
 const props = defineProps<{
   /** List of keywords, status, and source. */
-  keywords: Keyword[];
+  keywords: TopicKeyword[];
 
   /** List of scope items (e.g., Geographical, Timeframe). */
-  scope: ScopeItem[];
+  scope: TopicScopeElement[];
 
   /** The final synthesized research question string. */
   finalQuestion: string;
@@ -194,33 +179,33 @@ const emit = defineEmits<{
 
 /** Calculates the number of locked keywords for the progress tracker. */
 const lockedKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.status === 'Locked').length;
+  return props.keywords.filter(k => k.status === 'LOCKED').length;
 });
 
 // --- Feasibility Helpers ---
 const getFeasibilityClasses = (status: FeasibilityStatus) => {
   switch (status) {
-    case 'High': return 'bg-teal-50 border-teal-200 text-teal-700';
-    case 'Medium': return 'bg-yellow-50 border-yellow-200 text-yellow-700';
-    case 'Low': return 'bg-red-50 border-red-200 text-red-700';
+    case 'HIGH': return 'bg-teal-50 border-teal-200 text-teal-700';
+    case 'MEDIUM': return 'bg-yellow-50 border-yellow-200 text-yellow-700';
+    case 'LOW': return 'bg-red-50 border-red-200 text-red-700';
     default: return 'bg-gray-50 border-gray-200 text-gray-500';
   }
 };
 
 const getFeasibilityIcon = (status: FeasibilityStatus) => {
   switch (status) {
-    case 'High': return 'CheckCircle';
-    case 'Medium': return 'ExclamationTriangle';
-    case 'Low': return 'ArchiveBoxXMark';
+    case 'HIGH': return 'CheckCircle';
+    case 'MEDIUM': return 'ExclamationTriangle';
+    case 'LOW': return 'ArchiveBoxXMark';
     default: return 'QuestionMarkCircle';
   }
 };
 
 const getFeasibilityLabel = (status: FeasibilityStatus) => {
   switch (status) {
-    case 'High': return 'Information Abundant';
-    case 'Medium': return 'Requires Refinement';
-    case 'Low': return 'Information Scarce';
+    case 'HIGH': return 'Information Abundant';
+    case 'MEDIUM': return 'Requires Refinement';
+    case 'LOW': return 'Information Scarce';
     default: return 'N/A';
   }
 };

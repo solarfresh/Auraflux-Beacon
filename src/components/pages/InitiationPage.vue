@@ -74,6 +74,7 @@ import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
 
 
 // --- Initialization ---
@@ -93,34 +94,18 @@ const chatMessages = computed(() => initiativeStore.chatMessages);
 // --- MOCK DATA FOR DEMONSTRATION/TESTING ---
 // ----------------------------------------------------------------------
 
-// --- Interface Types ---
-type KeywordStatus = 'Locked' | 'Draft';
-type FeasibilityStatus = 'High' | 'Medium' | 'Low'; // Added Feasibility Status
-
-interface Keyword {
-  text: string;
-  status: KeywordStatus;
-  source: string;
-}
-
-interface ScopeItem {
-  label: string;
-  value: string;
-  status: KeywordStatus;
-}
-
-const mockKeywords: Keyword[] = [
-  { text: 'Artificial Intelligence', status: 'Locked', source: 'Assignment Prompt' },
-  { text: 'Job Displacement', status: 'Draft', source: 'Chat Suggestion 1' },
-  { text: 'Retraining Programs', status: 'Draft', source: 'Chat Suggestion 2' },
+const mockKeywords: TopicKeyword[] = [
+  { text: 'Artificial Intelligence', status: 'LOCKED'},
+  { text: 'Job Displacement', status: 'DRAFT'},
+  { text: 'Retraining Programs', status: 'DRAFT'},
 ];
-const mockScope: ScopeItem[] = [
-  { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'Locked' },
-  { label: 'Timeframe', value: '2020 - Present', status: 'Draft' },
-  { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'Locked' },
+const mockScope: TopicScopeElement[] = [
+  { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'LOCKED' },
+  { label: 'Timeframe', value: '2020 - Present', status: 'DRAFT' },
+  { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'LOCKED' },
 ];
 const mockFinalQuestion: string = 'How have AI advancements since 2020 impacted job displacement rates and the need for government-funded retraining programs in the US and EU?';
-const mockFeasibilityStatus: FeasibilityStatus = 'Medium';
+const mockFeasibilityStatus: FeasibilityStatus = 'MEDIUM';
 const mockResourceSuggestion: string = 'Current data suggests a moderate focus. Use academic journals combined with OECD reports for feasibility assessment.';
 const mockLatestReflection: string | null = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
 const mockStabilityScore: number = 3;
