@@ -15,13 +15,13 @@
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
         <SidebarContent
-          :feasibility-status="mockFeasibilityStatus"
-          :final-question="mockFinalQuestion"
-          :keywords="mockKeywords"
-          :latest-reflection="mockLatestReflection"
-          :resource-suggestion="mockResourceSuggestion"
-          :scope="mockScope"
-          :stability-score="mockStabilityScore"
+          :feasibility-status="feasibilityStatus"
+          :final-question="finalQuestion"
+          :keywords="topicKeywords"
+          :latest-reflection="latestReflection"
+          :resource-suggestion="resourceSuggestion"
+          :scope="topicScope"
+          :stability-score="stabilityScore"
         />
       </template>
 
@@ -65,7 +65,6 @@
 import { useInitiativeStore } from '@/stores/initiation';
 import { useWorkflowStore } from '@/stores/workflow';
 import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
@@ -74,46 +73,31 @@ import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
-
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
 const initiativeStore = useInitiativeStore();
-const router = useRouter();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
 
 // --- Store State Mapping (Computed Properties) ---
-const currentStep = computed(() => workflowStore.currentStep);
-const isTyping = computed(() => initiativeStore.isTyping);
 const chatMessages = computed(() => initiativeStore.chatMessages);
-
-// ----------------------------------------------------------------------
-// --- MOCK DATA FOR DEMONSTRATION/TESTING ---
-// ----------------------------------------------------------------------
-
-const mockKeywords: TopicKeyword[] = [
-  { text: 'Artificial Intelligence', status: 'LOCKED'},
-  { text: 'Job Displacement', status: 'DRAFT'},
-  { text: 'Retraining Programs', status: 'DRAFT'},
-];
-const mockScope: TopicScopeElement[] = [
-  { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'LOCKED' },
-  { label: 'Timeframe', value: '2020 - Present', status: 'DRAFT' },
-  { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'LOCKED' },
-];
-const mockFinalQuestion: string = 'How have AI advancements since 2020 impacted job displacement rates and the need for government-funded retraining programs in the US and EU?';
-const mockFeasibilityStatus: FeasibilityStatus = 'MEDIUM';
-const mockResourceSuggestion: string = 'Current data suggests a moderate focus. Use academic journals combined with OECD reports for feasibility assessment.';
-const mockLatestReflection: string | null = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
-const mockStabilityScore: number = 3;
+const currentStep = computed(() => workflowStore.currentStep);
+const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
+const finalQuestion = computed(() => initiativeStore.finalQuestion);
+const isTyping = computed(() => initiativeStore.isTyping);
+const latestReflection = computed(() => initiativeStore.latestReflection);
+const resourceSuggestion = computed(() => initiativeStore.resourceSuggestion)
+const stabilityScore = computed(() => initiativeStore.stabilityScore);
+const topicKeywords = computed(() => initiativeStore.topicKeywords);
+const topicScope = computed(() => initiativeStore.topicScope);
 
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
     initiativeStore.getMessages();
+    initiativeStore.getRefinedTopic();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---

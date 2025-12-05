@@ -100,7 +100,7 @@
         </Text>
       </ul>
     </div>
-
+<!--
     <div class="space-y-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
       <Text tag="h4" size="base" weight="semibold" color="blue-700">
         Suggested Search Focus
@@ -109,7 +109,7 @@
         {{ resourceSuggestion }}
       </Text>
     </div>
-
+ -->
     <div class="space-y-3 mt-auto pt-6 border-t border-gray-200">
       <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
         Reflection Log Summary

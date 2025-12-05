@@ -1,7 +1,8 @@
 import { apiService } from '@/api/apiService';
+import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
+import { ref } from 'vue';
 
 import type {
   ChatMessage
@@ -13,8 +14,22 @@ export const useInitiativeStore = defineStore('intiation', () => {
     /** The list of all chat messages in the initiation stage. */
     const chatMessages = ref<ChatMessage[]>([]);
 
+    const feasibilityStatus = ref<FeasibilityStatus>('LOW');
+
+    const finalQuestion = ref<string>('');
+
 		/** Flag to indicate if a message is in recieving. */
     const isTyping = ref(false);
+
+    const latestReflection = ref<string>('');
+
+    const resourceSuggestion = ref<string>('');
+
+    const stabilityScore = ref<number>(0);
+
+    const topicKeywords = ref<TopicKeyword[]>([]);
+
+    const topicScope = ref<TopicScopeElement[]>([]);
 
 		// --- Getters (Computed) ---
 		// --- Actions (Functions) ---
@@ -51,14 +66,42 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
     }
 
+    async function getRefinedTopic() {
+      topicKeywords.value = [
+        { text: 'Artificial Intelligence', status: 'LOCKED'},
+        { text: 'Job Displacement', status: 'DRAFT'},
+        { text: 'Retraining Programs', status: 'DRAFT'},
+      ];
+
+      topicScope.value = [
+        { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'LOCKED' },
+        { label: 'Timeframe', value: '2020 - Present', status: 'DRAFT' },
+        { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'LOCKED' },
+      ];
+
+      finalQuestion.value = 'How have AI advancements since 2020 impacted job displacement rates and the need for government-funded retraining programs in the US and EU?';
+      feasibilityStatus.value = 'MEDIUM';
+      latestReflection.value = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
+      resourceSuggestion.value = '';
+      stabilityScore.value = 3;
+    }
+
 		// --- Return public API ---
     return {
         // State
         chatMessages,
+        feasibilityStatus,
+        finalQuestion,
 				isTyping,
+        latestReflection,
+        resourceSuggestion,
+        stabilityScore,
+        topicKeywords,
+        topicScope,
         // Getters
         // Actions
         addMessage,
         getMessages,
+        getRefinedTopic,
     };
 })
