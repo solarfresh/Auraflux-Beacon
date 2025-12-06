@@ -33,6 +33,9 @@ const variantClass = computed(() => {
       return 'border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500';
     case 'secondary':
       return 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500';
+    case 'tertiary':
+      // Transparent background, text color matching secondary, minimal hover effect
+      return 'border-transparent bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-indigo-500';
     case 'destructive':
       return 'border-transparent bg-red-600 text-white hover:bg-red-700 focus:ring-red-500';
     case 'outline':

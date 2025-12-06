@@ -1,13 +1,13 @@
-import SearchPage from '@/components/pages/SearchPage.vue';
+import InitiationPage from '@/components/pages/InitiationPage.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'SearchPage',
-    component: SearchPage
-  }
+    name: 'InitiationPage',
+    component: InitiationPage
+  },
 ]
 
 const router = createRouter({

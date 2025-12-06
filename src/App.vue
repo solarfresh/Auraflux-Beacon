@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import AppLayout from '@/components/layouts/AppLayout.vue'; // New component import
+import AppLayout from '@/components/layouts/AppLayout.vue';
 import { useAuthStore } from '@/stores/auth';
 import { onMounted } from 'vue';
 

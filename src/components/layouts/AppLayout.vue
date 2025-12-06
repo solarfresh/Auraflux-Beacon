@@ -14,28 +14,33 @@
     </main>
 
     <LoginModal
-      :isOpen="isLoginModalOpen"
-      @close="isLoginModalOpen = false"
+      :isOpen="loginStore.isOpen"
+      @close="loginStore.closeModal"
     />
 
-    <div v-if="authStore.loading" class="fixed inset-0 bg-white bg-opacity-90 z-50 flex items-center justify-center">
-      <p class="text-xl text-indigo-600">Loading application...</p>
-    </div>
+    <FullScreenLoader
+      v-if="authStore.loading"
+      message="Loading application..."
+      detail="Please wait while we initialize the research canvas."
+    />
   </div>
 </template>
 
 <script setup lang="ts">
+import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
-import LoginModal from '@/components/molecules/LoginModal.vue';
-import { useWorkflowStore } from '@/stores/workflow';
+import LoginModal from '@/components/organisms/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
-import { ref } from 'vue';
+import { useLoginStore } from '@/stores/login';
+import { useNotificationStore } from '@/stores/notification';
+import { useWorkflowStore } from '@/stores/workflow';
 
 const workflowStore = useWorkflowStore();
 const authStore = useAuthStore();
-const isLoginModalOpen = ref(false);
+const loginStore = useLoginStore();
+const store = useNotificationStore();
 
 const handleLoginClick = () => {
-  isLoginModalOpen.value = true;
+  loginStore.openModal();
 };
 </script>

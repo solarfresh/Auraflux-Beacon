@@ -1,7 +1,6 @@
-import { SearchEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { Dichotomy, LockDataResponse, WorkflowState } from '@/interfaces/search';
-import { SearchAssistant, SearchResult } from '@/interfaces/search';
+import type { ChatMessage, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -94,18 +93,6 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
-  search: {
-    assistant: {
-      create: (query: string): Promise<AxiosResponse<SearchAssistant>> => {
-        return apiClient.post(SearchEndpoints.assistant.create(), {query: query});
-      },
-    },
-    results: {
-      create: (query: string): Promise<AxiosResponse<SearchResult[]>> => {
-        return apiClient.post(SearchEndpoints.results.create(), {query: query});
-      },
-    }
-  },
   users: {
     check: {
       get: (): Promise<AxiosResponse<User>> => {
@@ -119,20 +106,16 @@ export const apiService = {
     },
   },
   workflows: {
-    dichotomies: {
-      get: (): Promise<AxiosResponse<Dichotomy[]>> => {
-        return apiClient.get(WorkflowsEndpoints.dichotomies.get());
+    initiation: {
+      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
+        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+      },
+      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+      },
+      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
       }
-    },
-    fetchState: {
-      get: (): Promise<AxiosResponse<WorkflowState>> => {
-        return apiClient.get(WorkflowsEndpoints.fetchState.get());
-      }
-    },
-    lockData: {
-      create: (query: string): Promise<AxiosResponse<LockDataResponse>> => {
-        return apiClient.post(WorkflowsEndpoints.lockData.create(), {"query": query});
-      }
-    },
+    }
   }
 }

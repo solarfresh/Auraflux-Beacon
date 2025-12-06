@@ -1,9 +1,12 @@
 import { useWebSocket } from '@/composables/useWebSocket';
 import config from '@/config';
+import type {
+    ChatMessage
+} from '@/interfaces/initiation';
 import type { WebSocketMessage } from '@/interfaces/notification';
-import type { Dichotomy } from '@/interfaces/search';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { useInitiativeStore } from './initiation';
 
 // Define your WebSocket URL
 const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
@@ -11,6 +14,7 @@ const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
 export const useNotificationStore = defineStore('notification', () => {
 
     // --- State from Composable ---
+    const initiativeStore = useInitiativeStore();
     // Extract the reactive properties from the composable
     const {
         isConnected,
@@ -20,7 +24,26 @@ export const useNotificationStore = defineStore('notification', () => {
 
     // --- Local State ---
     const notifications = ref<{[key: string]: any;}>({});
-    const dynamicDichotomies = ref<Dichotomy[]>([]);
+
+    async function _handleInitiationEAStream(payload: any) {
+        let responseText = payload['full_response_text']
+        let status = payload['status']
+
+        let lastMessage = initiativeStore.chatMessages.at(-1) as ChatMessage;
+        lastMessage.content = responseText
+        if (status === 'COMPLETE') {
+            initiativeStore.isTyping = false
+        }
+    }
+
+    async function _handleInitiationRefinedTopic(payload: any) {
+        initiativeStore.feasibilityStatus = payload['feasibility_status'];
+        initiativeStore.finalQuestion = payload['final_research_question'];
+        initiativeStore.resourceSuggestion = payload['resource_suggestion'];
+        initiativeStore.stabilityScore = payload['stability_score'];
+        initiativeStore.topicKeywords = payload['keywords'];
+        initiativeStore.topicScope = payload['scope'];
+    }
 
     // --- Actions ---
 
@@ -28,14 +51,21 @@ export const useNotificationStore = defineStore('notification', () => {
      * Watches for new messages and processes them into the history.
      * This is the main action triggered by the connection.
      */
-    function processNewNotification(message: WebSocketMessage | null) {
-        if (message) {
-            // Add the new payload to the history
-            notifications.value[message.event_type] = message.payload;
+    async function processNewNotification(message: WebSocketMessage | null) {
+        if (!message) {
+            console.warn('Received invalid message:', message);
+            return;
+        }
 
-            if (message.event_type === 'dichotomy_suggestions_complete') {
-                dynamicDichotomies.value = message.payload.suggestions;
-            }
+        switch (message.event_type) {
+            case 'initiation_ea_stream':
+                _handleInitiationEAStream(message.payload)
+                break;
+            case 'initiation_refined_topic':
+                _handleInitiationRefinedTopic(message.payload)
+                break;
+            default:
+                break;
         }
     }
 
@@ -49,7 +79,6 @@ export const useNotificationStore = defineStore('notification', () => {
         isConnected,
         error,
         notifications,
-        dynamicDichotomies,
 
         // Actions (if you had any, e.g., mark_as_read)
         // markAsRead: (id: number) => { ... }

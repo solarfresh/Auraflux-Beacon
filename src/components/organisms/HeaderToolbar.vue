@@ -3,35 +3,16 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
 
       <div class="flex items-center space-x-4">
-        <Icon name="swatch" type="solid" size="xl" color="indigo-600" />
+        <Icon name="Target" type="solid" size="xl" color="indigo-600" />
         <Text tag="h1" size="2xl" weight="bold" color="gray-900">
-          Strategic Canvas MVP
+          Strategic Research ISP
         </Text>
       </div>
 
       <div class="hidden md:block">
-        <Text tag="span" size="base" weight="medium" color="gray-600">
-          Current Step:
-        </Text>
-        <Text tag="span" size="lg" weight="semibold" color="blue-600" class="ml-1">
-          {{ currentStepMap[currentStep] || 'Initializing...' }}
-        </Text>
-      </div>
+        </div>
 
       <div class="flex items-center space-x-3">
-
-        <Button
-          variant="outline"
-          size="sm"
-          @click="$emit('exportShortcut')"
-          :disabled="currentStep === 'SEARCH'"
-        >
-          <Icon name="download" type="solid" size="sm" color="blue-500" class="mr-1" />
-          <Text tag="span" size="sm" weight="medium" color="blue-500">
-            Export Report
-          </Text>
-        </Button>
-
         <AuthButton
           :isLoggedIn="isLoggedIn"
           @login="$emit('login')"
@@ -47,28 +28,28 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import AuthButton from '@/components/molecules/AuthButton.vue';
-import type { WorkflowStep } from '@/interfaces/search';
+
+// --- Type Definition for ISP Steps ---
+// Used only for internal logic (e.g., controlling export button state)
+type ISPStep = 'INITIATION' | 'SELECTION' | 'EXPLORATION' | 'FORMULATION' | 'COLLECTION' | 'PRESENTATION';
 
 // --- Props ---
 const props = defineProps({
+  /**
+   * The current ISP stage of the workflow. Used to determine when export is available.
+   */
   currentStep: {
-    type: String as () => WorkflowStep,
+    type: String as () => ISPStep,
     required: true,
   },
+  /**
+   * Authentication status of the user.
+   */
   isLoggedIn: {
     type: Boolean,
     required: true,
   },
 });
 
-const emit = defineEmits(['exportShortcut', 'login', 'logout']);
-
-// --- Utility Map for Display ---
-const currentStepMap: Record<WorkflowStep, string> = {
-  SEARCH: '1. Data Lock',
-  SCOPE: '2. Define Scope',
-  COLLECTION: '3. Opinion Collection',
-  ANALYSIS: '4. Tension Analysis',
-  OUTPUT: '5. Final Output',
-};
+const emit = defineEmits(['login', 'logout']);
 </script>

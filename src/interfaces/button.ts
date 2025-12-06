@@ -1,4 +1,4 @@
-type ButtonVariant = 'primary' | 'secondary' | 'destructive' | 'outline' | 'danger-outline';
+type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'outline' | 'danger-outline';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps {

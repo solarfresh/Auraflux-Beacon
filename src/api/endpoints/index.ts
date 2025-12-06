@@ -29,16 +29,12 @@ export const UsersEndpoints = {
 }
 
 export const WorkflowsEndpoints = {
-  dichotomies: {
-    get: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/dichotomies/`,
-  },
-  fetchState: {
-    get: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/fetch-state/`,
-  },
-  lockData: {
-    create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/lock-data/`,
-  },
+  initiation: {
+    chat: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat`,
+    getChatHistory: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat_history`,
+    getRefinedTopic: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/refined_topic`,
+  }
 }
