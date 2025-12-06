@@ -1,3 +1,5 @@
+import { FeasibilityStatus, TopicKeyword, TopicScopeElement } from "./workflow";
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'system';
@@ -23,4 +25,14 @@ export interface ScopeItem {
   label: string;
   value: string;
   status: 'Locked' | 'Draft';
+}
+
+export interface RefinedTopic {
+  stability_score: number,
+  feasibility_status: FeasibilityStatus,
+  final_research_question: string,
+  keywords: TopicKeyword[],
+  scope: TopicScopeElement[],
+  latest_reflection: string,
+  resource_suggestion: string,
 }

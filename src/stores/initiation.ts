@@ -61,29 +61,22 @@ export const useInitiativeStore = defineStore('intiation', () => {
 
     async function getMessages() {
       let response = await apiService.workflows.initiation.getChatHistory();
-      if (response) {
+      if (response.data) {
         chatMessages.value = response.data;
       }
     }
 
     async function getRefinedTopic() {
-      topicKeywords.value = [
-        { text: 'Artificial Intelligence', status: 'LOCKED'},
-        { text: 'Job Displacement', status: 'DRAFT'},
-        { text: 'Retraining Programs', status: 'DRAFT'},
-      ];
-
-      topicScope.value = [
-        { label: 'Geographical Focus', value: 'Developed Nations (USA, EU)', status: 'LOCKED' },
-        { label: 'Timeframe', value: '2020 - Present', status: 'DRAFT' },
-        { label: 'Target Demographic', value: 'Blue-Collar Workers', status: 'LOCKED' },
-      ];
-
-      finalQuestion.value = 'How have AI advancements since 2020 impacted job displacement rates and the need for government-funded retraining programs in the US and EU?';
-      feasibilityStatus.value = 'MEDIUM';
-      latestReflection.value = 'Feeling overwhelmed by the scope, need to narrow down the definition of "Blue-Collar".';
-      resourceSuggestion.value = '';
-      stabilityScore.value = 3;
+      let response = await apiService.workflows.initiation.getRefinedTopic();
+      if (response.data) {
+        feasibilityStatus.value = response.data.feasibility_status;
+        finalQuestion.value = response.data.final_research_question;
+        latestReflection.value = response.data.latest_reflection;
+        resourceSuggestion.value = response.data.resource_suggestion;
+        stabilityScore.value = response.data.stability_score;
+        topicKeywords.value = response.data.keywords;
+        topicScope.value = response.data.scope;
+      }
     }
 
 		// --- Return public API ---

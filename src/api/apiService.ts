@@ -1,6 +1,6 @@
 import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage } from '@/interfaces/initiation';
+import type { ChatMessage, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -112,6 +112,9 @@ export const apiService = {
       },
       getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
         return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+      },
+      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
       }
     }
   }
