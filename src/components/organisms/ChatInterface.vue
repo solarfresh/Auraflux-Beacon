@@ -17,9 +17,15 @@
             'bg-gray-100 text-gray-800 rounded-tl-none': message.role === 'system'
           }"
         >
-          <Text tag="p" size="base" color="current">
-            {{ message.content }}
-          </Text>
+          <template v-if="message.role === 'system'">
+            <MarkdownRenderer :content="message.content" class="text-gray-800" />
+          </template>
+
+          <template v-else>
+            <Text tag="p" size="base" color="current">
+              {{ message.content }}
+            </Text>
+          </template>
         </div>
       </div>
     </div>
@@ -35,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import MarkdownRenderer from '@/components/atoms/MarkdownRenderer.vue';
 import Text from '@/components/atoms/Text.vue';
 import MessageInput from '@/components/molecules/MessageInput.vue';
 import { ChatMessage } from '@/interfaces/initiation';
