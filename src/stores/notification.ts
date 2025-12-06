@@ -36,6 +36,15 @@ export const useNotificationStore = defineStore('notification', () => {
         }
     }
 
+    async function _handleInitiationRefinedTopic(payload: any) {
+        initiativeStore.feasibilityStatus = payload['feasibility_status'];
+        initiativeStore.finalQuestion = payload['final_research_question'];
+        initiativeStore.resourceSuggestion = payload['resource_suggestion'];
+        initiativeStore.stabilityScore = payload['stability_score'];
+        initiativeStore.topicKeywords = payload['keywords'];
+        initiativeStore.topicScope = payload['scope'];
+    }
+
     // --- Actions ---
 
     /**
@@ -51,6 +60,9 @@ export const useNotificationStore = defineStore('notification', () => {
         switch (message.event_type) {
             case 'initiation_ea_stream':
                 _handleInitiationEAStream(message.payload)
+                break;
+            case 'initiation_refined_topic':
+                _handleInitiationRefinedTopic(message.payload)
                 break;
             default:
                 break;

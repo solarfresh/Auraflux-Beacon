@@ -36,8 +36,8 @@ const props = defineProps({
   stabilityScore: {
     type: Number,
     required: true,
-    default: 1,
-    validator: (value: number) => value >= 1 && value <= 10,
+    default: 0,
+    validator: (value: number) => value >= 0 && value <= 10,
   },
   /**
    * The main label (e.g., "Topic Refinement Status").
