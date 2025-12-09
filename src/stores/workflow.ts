@@ -1,13 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
-
-// --- Import Interfaces from 'interface/workflow.ts' ---
-// Assuming these types are imported from a central interface file
 import type {
     ISPStep,
 } from '@/interfaces/workflow';
-// NOTE: For practical use, replace '@/interfaces/workflow' with the actual path
-// and ensure the interfaces file is available.
+import { ISP_STEP_TEXT_MAP } from '@/interfaces/workflow';
 
 // --- Store Definition ---
 
@@ -16,7 +12,7 @@ export const useWorkflowStore = defineStore('workflow', () => {
     // --- State (Refs) ---
 
     /** The current stage of the Information Search Process (ISP). */
-    const currentStep = ref<ISPStep>('INITIATION');
+    const currentStep = ref<ISPStep>('TOPIC_DEFINITION_LOCKIN');
 
     /** Flag to indicate if any long-running operation is in progress (for UI loading spinners). */
     // const isLoading = ref(false);
@@ -36,8 +32,27 @@ export const useWorkflowStore = defineStore('workflow', () => {
 
     // --- Getters (Computed) ---
 
-    /** Checks if the final research question has been set. */
-    // const isQuestionFinalized = computed(() => !!searchQuery.value); // Simple check for existence
+    /**
+     * Retrieves the user-friendly name for the current ISP step from the map.
+     * E.g., 'TOPIC_DEFINITION_LOCKIN' becomes 'Topic Definition & Lock-in'.
+     */
+    const currentStepName = computed(() => {
+        // Accesses the 'name' property of the mapped object
+        return ISP_STEP_TEXT_MAP[currentStep.value]?.name || 'Unknown Phase';
+    });
+
+    /**
+     * Retrieves the descriptive text for the current ISP step from the map.
+     * E.g., 'Defining the research question and locking scope'.
+     */
+    const currentStepDescription = computed(() => {
+        // Accesses the 'description' property of the mapped object
+        return ISP_STEP_TEXT_MAP[currentStep.value]?.description || 'No description available.';
+    });
+
+    const currentStepCompletionPercentage = computed(() => {
+        return ISP_STEP_TEXT_MAP[currentStep.value]?.percentage || 0;
+    });
 
     /** Checks if the current step allows the Export Report feature. */
     // const isExportAvailable = computed(() => {
@@ -174,6 +189,9 @@ export const useWorkflowStore = defineStore('workflow', () => {
         // reflectionLogs,
 
         // Getters
+        currentStepName,
+        currentStepDescription,
+        currentStepCompletionPercentage,
         // isQuestionFinalized,
         // isExportAvailable,
 
