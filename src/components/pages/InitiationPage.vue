@@ -22,6 +22,7 @@
           :resource-suggestion="resourceSuggestion"
           :scope="topicScope"
           :stability-score="stabilityScore"
+          @view-details="handleViewDetails"
         />
       </template>
 
@@ -38,7 +39,6 @@
       <template #action-bar>
         <ActionBar
           :final-question="'searchQuery'"
-          @reflect-start="handleReflect"
           @transition-request="handlePhaseTransitionRequest"
         />
       </template>
@@ -47,15 +47,36 @@
 
     <!-- FullScreen Modal for Reflection Log -->
     <FullScreenModalTemplate
-      :is-open="isReflecting"
-      @close="isReflecting = false"
+      :is-open="isManagementModalOpen"
+      @close="isManagementModalOpen = false"
     >
       <template #header>
-        Log a Thought (Reflector Agent)
+        Manage {{ managementModalType }}
       </template>
       <template #default>
+        <FinalQuestionEditor
+            v-if="managementModalType === 'final-question'"
+            :initial-question="initiativeStore.finalQuestion"
+            :feasibility-status="initiativeStore.feasibilityStatus"
+            :stability-score="initiativeStore.stabilityScore"
+            @close-modal="isManagementModalOpen = false"
+        />
+        <KeywordRefinementForm
+            v-if="managementModalType === 'keyword'"
+            :initial-keyword="editingInitialKeyword!"
+            :keyword-index="editingKeywordIndex!"
+            @close-modal="isManagementModalOpen = false"
+        />
+        <ScopeRefinementForm
+            v-else-if="managementModalType === 'scope-management'"
+            :initial-scope="initiativeStore.topicScope"
+            :feasibility-status="initiativeStore.feasibilityStatus"
+            @close-modal="isManagementModalOpen = false"
+        />
+
+        <div v-else class="text-center p-8">Select an item to manage.</div>
         <!-- ReflectionLogForm now emits the thought data -->
-        <ReflectionLogForm @log-thought="logThought" />
+        <!-- <ReflectionLogForm @log-thought="logThought" /> -->
       </template>
     </FullScreenModalTemplate>
   </div>
@@ -68,11 +89,17 @@ import { computed, onMounted, ref } from 'vue';
 
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
+// import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
+import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
+import KeywordRefinementForm from '@/components/organisms/KeywordRefinementForm.vue';
+import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue';
 import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+
+import type { ManagementType } from '@/interfaces/initiation.ts';
+import { TopicKeyword } from '@/interfaces/workflow';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
@@ -80,6 +107,10 @@ const initiativeStore = useInitiativeStore();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
+const isManagementModalOpen = ref(false); // Controls a generic modal for editing Question/Scope/Keywords
+const managementModalType = ref<ManagementType>(null);
+const editingKeywordIndex = ref<number | undefined>(undefined);
+const editingInitialKeyword = ref<TopicKeyword | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
@@ -113,27 +144,56 @@ function handleSendMessage(content: string) {
 }
 
 /**
- * B. Handles manual keyword updates from the Sidebar.
+ * Handles the 'viewDetails' event emitted by the SidebarContent.
+ *
+ * @param type The type of detail view requested.
+ * @param index Optional index for specific items (e.g., keywords).
  */
-function handleKeywordUpdate(payload: { index: number, newText: string }) {
-    // This action would update the structured data in the store
-    // Example: store.updateKeyword(payload);
-    console.log(`[INITIATION PAGE] Store Action: Updating keyword at index ${payload.index} to: ${payload.newText}`);
-}
+function handleViewDetails(type: ManagementType, index?: number, value?: any) {
+    editingKeywordIndex.value = undefined;
+    editingInitialKeyword.value = null;
 
-/**
- * C. Opens the reflection modal.
- */
-function handleReflect() {
-    isReflecting.value = true;
-}
+    switch (type) {
+        case 'reflection-log':
+            // The reflection log should probably open its own dedicated full-screen log view
+            // For now, let's assume it leads to the same full-screen modal as handleReflect() if it's just viewing the history.
+            // If viewing history, a separate component would be needed.
+            console.log('[INITIATION PAGE] Action: Opening full Reflection History view.');
+            // isReflectionHistoryOpen.value = true; // Example
 
-/**
- * D. Handles the submission of a thought from the Reflection form.
- */
-function logThought(thought: string, category: string) {
-    // store.logReflection(thought, category);
-    isReflecting.value = false;
+            // If we decide to use a dedicated modal for all, then:
+            // managementModalType.value = type;
+            // isManagementModalOpen.value = true;
+            break;
+
+        case 'final-question':
+        case 'scope-management':
+            // Open a generic management modal for Question/Scope
+            managementModalType.value = type;
+            isManagementModalOpen.value = true;
+            break;
+
+        case 'keyword':
+            // Open a management modal specifically for keyword editing
+            if (index === undefined) {
+              console.error("[INITIATION PAGE] Keyword index is required to view keyword details.");
+              break;
+            }
+
+            if (value === null) {
+              console.error("[INITIATION PAGE] Keyword value is required to view keyword details.");
+              break;
+            }
+
+            editingKeywordIndex.value = index;
+            editingInitialKeyword.value = value;
+            managementModalType.value = 'keyword';
+            isManagementModalOpen.value = true;
+            break;
+
+        default:
+            console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
+    }
 }
 
 /**

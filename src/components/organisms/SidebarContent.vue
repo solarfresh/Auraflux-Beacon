@@ -57,7 +57,7 @@
             'bg-indigo-50 border-indigo-200 hover:bg-indigo-100': keyword.status === 'LOCKED',
             'bg-white border-gray-200': keyword.status === 'DRAFT'
           }"
-          @click="handleViewDetails('keyword', index)"
+          @click="handleViewDetails('keyword', index, keyword)"
         >
           <div class="flex flex-col">
             <Text tag="span" size="base" weight="medium" :color="keyword.status === 'LOCKED' ? 'indigo-700' : 'gray-800'">
@@ -133,6 +133,7 @@ import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
 import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
+import type { ManagementType } from '@/interfaces/initiation';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -167,11 +168,11 @@ const emit = defineEmits<{
   /** Emitted when a user attempts to manually edit/lock a keyword. */
   (e: 'keywordUpdate', payload: { index: number, newText: string }): void;
 
-  /** NEW: Emitted when a user manually edits the Final Question. */
+  /** Emitted when a user manually edits the Final Question. */
   (e: 'questionUpdate', newText: string): void;
 
-  /** NEW: Emitted when a user clicks an element that leads to a detailed management page/modal. */
-  (e: 'viewDetails', type: 'final-question' | 'keyword' | 'scope-management' | 'reflection-log', index?: number): void;
+  /** Emitted when a user clicks an element that leads to a detailed management page/modal. */
+  (e: 'viewDetails', type: ManagementType, index?: number, value?: any): void;
 }>();
 
 
@@ -214,8 +215,8 @@ const getFeasibilityLabel = (status: FeasibilityStatus) => {
 // --- Methods ---
 
 /** Emits event for navigating to detailed views/modals. */
-const handleViewDetails = (type: 'final-question' | 'keyword' | 'scope-management' | 'reflection-log', index?: number) => {
-    emit('viewDetails', type, index);
+const handleViewDetails = (type: ManagementType, index?: number, value?: any) => {
+    emit('viewDetails', type, index, value);
 };
 
 /** Simulates the edit action for keywords. */

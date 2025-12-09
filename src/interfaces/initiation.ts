@@ -1,4 +1,5 @@
 import { FeasibilityStatus, TopicKeyword, TopicScopeElement } from "./workflow";
+export type ManagementType = 'final-question' | 'keyword' | 'scope-management' | 'reflection-log' | null;
 
 export interface ChatMessage {
   id: string;
