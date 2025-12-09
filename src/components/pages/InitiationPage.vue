@@ -8,7 +8,7 @@
       <template #status-tracker>
         <ProgressTracker
           :current-stage="currentStep"
-          :completion-percentage="16"
+          :completion-percentage="currentStepCompletionPercentage"
         />
       </template>
 
@@ -83,7 +83,8 @@ const isReflecting = ref(false); // Controls the visibility of the Reflection Mo
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
-const currentStep = computed(() => workflowStore.currentStep);
+const currentStep = computed(() => workflowStore.currentStepName);
+const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
 const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
 const finalQuestion = computed(() => initiativeStore.finalQuestion);
 const isTyping = computed(() => initiativeStore.isTyping);

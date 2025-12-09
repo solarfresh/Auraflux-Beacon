@@ -78,11 +78,11 @@ const clampedPercentage = computed(() => {
  */
 const clarityStatusLabel = computed(() => {
   if (props.stabilityScore >= 8) {
-    return 'Ready for Selection';
+    return 'Finalizing';
   } else if (props.stabilityScore >= 4) {
-    return 'Focusing';
+    return 'Refining';
   }
-  return 'Exploring';
+  return 'Defining';
 });
 
 /**
