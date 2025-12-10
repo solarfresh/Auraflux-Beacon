@@ -94,12 +94,12 @@ import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
 import KeywordRefinementForm from '@/components/organisms/KeywordRefinementForm.vue';
 import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue';
-import SidebarContent from '@/components/organisms/SidebarContent.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import SidebarContent from '@/components/templates/SidebarContent.vue';
 
-import type { ManagementType } from '@/interfaces/initiation.ts';
 import { TopicKeyword } from '@/interfaces/initiation';
+import type { ManagementType } from '@/interfaces/initiation.ts';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
