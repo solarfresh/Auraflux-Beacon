@@ -99,7 +99,7 @@ import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceT
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 import type { ManagementType } from '@/interfaces/initiation.ts';
-import { TopicKeyword } from '@/interfaces/workflow';
+import { TopicKeyword } from '@/interfaces/initiation';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();

@@ -44,40 +44,41 @@
     <div class="space-y-3">
       <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
         <Text tag="span" size="lg" weight="semibold" color="gray-800">Core Keywords & Elements</Text>
-        <Text tag="span" size="xs" weight="medium" color="indigo-600">({{ lockedKeywordsCount }}/{{ keywords.length }}) Locked</Text>
+        <Text tag="span" size="xs" weight="medium" :color="unreviewedKeywordsCount > 0 ? 'yellow-600' : 'indigo-600'">
+          ({{ lockedKeywordsCount }}/{{ keywords.length }}) Locked <span v-if="unreviewedKeywordsCount > 0">({{ unreviewedKeywordsCount }} Unreviewed)</span>
+        </Text>
       </Text>
 
       <ul class="space-y-2">
-        <Text
-          tag="li"
+        <li
           v-for="(keyword, index) in keywords"
           :key="index"
-          class="flex items-center justify-between p-3 border rounded-lg transition duration-150 cursor-pointer hover:bg-gray-50"
-          :class="{
-            'bg-indigo-50 border-indigo-200 hover:bg-indigo-100': keyword.status === 'LOCKED',
-            'bg-white border-gray-200': keyword.status === 'DRAFT'
-          }"
+          :class="[
+            'flex items-center justify-between p-3 border rounded-lg transition duration-150 cursor-pointer',
+            getTopicKeywordPresentation(keyword).classes
+          ]"
           @click="handleViewDetails('keyword', index, keyword)"
         >
-          <div class="flex flex-col">
-            <Text tag="span" size="base" weight="medium" :color="keyword.status === 'LOCKED' ? 'indigo-700' : 'gray-800'">
-              {{ keyword.text }}
-            </Text>
-            <Text tag="span" size="xs" color="gray-400" v-if="keyword.status === 'DRAFT'">
-              Potential Subtopic
-            </Text>
+          <div class="flex items-start space-x-3">
+            <Icon :name="getTopicKeywordPresentation(keyword).icon" type="outline" size="sm" :color="getTopicKeywordPresentation(keyword).iconColor" class="mt-1 flex-shrink-0" />
+
+            <div class="flex flex-col">
+              <Text tag="span" size="base" weight="medium" :color="getTopicKeywordPresentation(keyword).iconColor">
+                {{ keyword.text }}
+              </Text>
+              <Text tag="span" size="xs" :color="getTopicKeywordPresentation(keyword).iconColor" class="opacity-80">
+                {{ getTopicKeywordPresentation(keyword).secondaryText }}
+              </Text>
+            </div>
           </div>
 
-          <Button
-            v-if="keyword.status === 'DRAFT'"
-            @click.stop="promptAndEmitKeywordUpdate(index, keyword.text)"
-            variant="tertiary"
-            size="sm"
-          >
-            <Icon name="PencilSquare" type="outline" size="sm" color="gray-600" />
-          </Button>
-          <Icon v-else name="ChevronRight" type="outline" size="md" color="indigo-600" />
-        </Text>
+          <Icon
+            :name="getTopicKeywordPresentation(keyword).actionIcon!"
+            type="outline"
+            size="md"
+            :color="getTopicKeywordPresentation(keyword).iconColor"
+          />
+        </li>
       </ul>
     </div>
 
@@ -132,8 +133,7 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
-import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
-import type { ManagementType } from '@/interfaces/initiation';
+import type { FeasibilityStatus, ManagementType, TopicKeyword, TopicKeywordStyle, TopicScopeElement } from '@/interfaces/initiation';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -183,6 +183,11 @@ const lockedKeywordsCount = computed(() => {
   return props.keywords.filter(k => k.status === 'LOCKED').length;
 });
 
+/** Calculates the number of keywords that need user attention (AI_EXTRACTED or USER_DRAFT). */
+const unreviewedKeywordsCount = computed(() => {
+  return props.keywords.filter(k => k.status === 'AI_EXTRACTED' || k.status === 'USER_DRAFT').length;
+});
+
 // --- Feasibility Helpers ---
 const getFeasibilityClasses = (status: FeasibilityStatus) => {
   switch (status) {
@@ -211,6 +216,43 @@ const getFeasibilityLabel = (status: FeasibilityStatus) => {
   }
 };
 
+const getTopicKeywordPresentation = (keyword: TopicKeyword): TopicKeywordStyle => {
+    switch (keyword.status) {
+        case 'LOCKED':
+            return {
+                classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',
+                icon: 'LockClosed',
+                iconColor: 'indigo-600',
+                secondaryText: 'Locked',
+                actionIcon: 'ChevronRight', // Click to view details
+            };
+        case 'AI_EXTRACTED':
+            return {
+                classes: 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
+                icon: 'Sparkles',
+                iconColor: 'yellow-600',
+                secondaryText: 'Review AI Capture',
+                actionIcon: 'ChevronRight', // Click to manage commitment
+            };
+        case 'ON_HOLD':
+            return {
+                classes: 'bg-gray-100 border-gray-300 hover:bg-gray-200',
+                icon: 'ArchiveBox',
+                iconColor: 'gray-500',
+                secondaryText: 'On Hold (Excluded)',
+                actionIcon: 'ArrowPath', // Click to reactivate/view
+            };
+        case 'USER_DRAFT':
+        default:
+            return {
+                classes: 'bg-white border-gray-200 hover:bg-gray-50',
+                icon: 'PencilSquare',
+                iconColor: 'gray-600',
+                secondaryText: 'User Draft',
+                actionIcon: 'PencilSquare', // Click to edit text or commit
+            };
+    }
+};
 
 // --- Methods ---
 

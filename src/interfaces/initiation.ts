@@ -1,5 +1,26 @@
-import { FeasibilityStatus, TopicKeyword, TopicScopeElement } from "./workflow";
+export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
 export type ManagementType = 'final-question' | 'keyword' | 'scope-management' | 'reflection-log' | null;
+export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
+export type TopicScopeElementStatus = 'LOCKED' | 'DRAFT' | 'DISCARDED';
+
+export interface TopicKeyword {
+  text: string;
+  status: TopicKeywordStatus;
+}
+
+export interface TopicKeywordStyle {
+    classes: string;
+    icon: string;
+    iconColor: string;
+    secondaryText: string;
+    actionIcon?: string; // Icon for the action button on the right
+}
+
+export interface TopicScopeElement {
+  label: string;
+  value: string;
+  status: TopicScopeElementStatus;
+}
 
 export interface ChatMessage {
   id: string;
@@ -10,22 +31,10 @@ export interface ChatMessage {
   sequence_number: number;
 }
 
-export interface Keyword {
-  text: string;
-  status: 'Locked' | 'Draft';
-  source: string;
-}
-
 export interface ReflectionLog {
   thought: string;
   category: string;
   timestamp: number;
-}
-
-export interface ScopeItem {
-  label: string;
-  value: string;
-  status: 'Locked' | 'Draft';
 }
 
 export interface RefinedTopic {

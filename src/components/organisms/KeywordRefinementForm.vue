@@ -4,8 +4,31 @@
       Refine Core Keyword
     </Text>
     <Text tag="p" size="md" color="gray-600">
-      Edit the keyword below for precision, then lock it to finalize your topic scope. Draft keywords will not be used for initial resource retrieval.
+      Edit the keyword's text below. Changes will only be saved when you click **Lock Keyword** or **Put On Hold**.
     </Text>
+
+    <div v-if="isAI_EXTRACTED && initialKeyword.aiContext"
+         class="space-y-3 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
+
+      <Text tag="h3" size="base" weight="semibold" color="yellow-800" class="flex items-center space-x-2">
+        <Icon name="ChatBubbleLeftRight" type="solid" size="sm" color="yellow-600" />
+        <span>Agent Context Tip: Captured Keyword Awaiting Review</span>
+      </Text>
+
+      <Text tag="div" size="sm" color="gray-700">
+        <span class="font-medium text-yellow-800">Captured From Chat:</span>
+        <blockquote class="mt-1 pl-3 border-l-2 border-yellow-300 italic text-gray-600">
+          "{{ initialKeyword.aiContext.sourceText }}"
+        </blockquote>
+      </Text>
+
+      <Text tag="div" size="sm" color="gray-700">
+        <span class="font-medium text-yellow-800">Agent Refinement Suggestion:</span>
+        <p class="mt-1 text-gray-700">
+          {{ initialKeyword.aiContext.refinementSuggestion }}
+        </p>
+      </Text>
+    </div>
 
     <div class="space-y-2">
       <Text tag="label" size="sm" weight="medium" color="gray-700" for="keyword-input">
@@ -17,29 +40,55 @@
         :rows="1"
         :size="'md'"
         placeholder="Enter a precise keyword or phrase"
+        :class="{ 'border-red-500': !draftText.trim() }"
       />
+      <p v-if="!draftText.trim()" class="text-xs text-red-500">Keyword text cannot be empty.</p>
     </div>
 
-    <div class="flex justify-between items-center p-3 rounded-lg"
-         :class="isLocked ? 'bg-indigo-50 border border-indigo-200' : 'bg-gray-50 border border-gray-200'">
-      <Text tag="span" size="sm" weight="medium" :color="isLocked ? 'indigo-700' : 'gray-600'">
-        Current Status: <span class="font-bold">{{ isLocked ? 'LOCKED' : 'DRAFT' }}</span>
+    <div class="flex justify-between items-center p-3 rounded-lg border"
+         :class="statusClasses">
+
+      <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
+        Current Status: <span class="font-bold">{{ props.initialKeyword.status }}</span>
+        <span v-if="isTextModified" class="text-xs text-red-500 italic ml-2">(Unsaved Text Changes)</span>
       </Text>
-      <Icon :name="isLocked ? 'LockClosed' : 'LockOpen'" type="solid" size="sm" :color="isLocked ? 'indigo-600' : 'gray-400'" />
+
+      <Icon :name="statusIcon" type="solid" size="sm" :color="statusIconColor" />
     </div>
 
     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-      <Button variant="secondary" @click="emit('close-modal')">
+
+      <Button variant="secondary" @click="handleCancelAndCheck">
         Cancel
       </Button>
 
       <Button
-        @click="handleUpdateAndLock"
-        :disabled="!isUpdateEnabled"
-        :variant="isLocked ? 'tertiary' : 'primary'"
+        v-if="!isLOCKED"
+        variant="tertiary"
+        @click="handleUnifiedSubmit('ON_HOLD')"
+        :disabled="!draftText.trim()"
       >
-        <Icon :name="isLocked ? 'PencilSquare' : 'LockClosed'" type="solid" size="sm" />
-        {{ isLocked ? 'Update Text' : 'Save & Lock Keyword' }}
+        <Icon name="ArchiveBox" type="outline" size="sm" />
+        Put On Hold
+      </Button>
+
+      <Button
+        v-if="!isLOCKED"
+        @click="handleUnifiedSubmit('LOCKED')"
+        :disabled="!draftText.trim()"
+        variant="primary"
+      >
+        <Icon name="LockClosed" type="solid" size="sm" />
+        Lock Keyword
+      </Button>
+
+      <Button
+        v-else
+        @click="handleUnifiedSubmit(isTextModified ? 'LOCKED' : 'ON_HOLD')"
+        :variant="isTextModified ? 'primary' : 'tertiary'"
+      >
+        <Icon :name="isTextModified ? 'DocumentCheck' : 'ArchiveBox'" type="solid" size="sm" />
+        {{ isTextModified ? 'Save Text & Maintain Lock' : 'Unlock & Put On Hold' }}
       </Button>
     </div>
   </div>
@@ -50,63 +99,143 @@ import { ref, computed, watch } from 'vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Textarea from '@/components/atoms/Textarea.vue'; // The Atom component
-import type { TopicKeyword } from '@/interfaces/workflow'; // Assuming TopicKeyword type exists
+import Textarea from '@/components/atoms/Textarea.vue';
 
-// --- Props ---
+// --- Type Definitions ---
+type KeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
+
+interface KeywordSourceContext {
+    sourceText: string;
+    refinementSuggestion: string;
+}
+
+interface TopicKeyword {
+    text: string;
+    status: KeywordStatus;
+    aiContext?: KeywordSourceContext;
+}
+
+// --- Props & Emits ---
 const props = defineProps<{
-  /** The index of the keyword being edited in the main array. Crucial for updating the store. */
+  /** The index of the keyword being edited. Crucial for updating the store. */
   keywordIndex: number;
   /** The current data of the keyword being edited (passed for convenience). */
   initialKeyword: TopicKeyword;
 }>();
 
-// --- Emits ---
 const emit = defineEmits<{
-  /** Emitted when the user confirms the update and implicitly locks the keyword. */
-  (e: 'keywordUpdate', payload: { index: number, newText: string }): void;
-  /** Emitted to close the modal, handled by the parent component. */
+  /** Emitted when the user submits changes (text and status) through a commitment button. */
+  (e: 'keywordUpdate', payload: { index: number, newText: string, newStatus: KeywordStatus }): void;
+  /** Emitted to close the modal. */
   (e: 'close-modal'): void;
 }>();
 
 // --- State ---
-// Local state for editing the text
+// Local state for editing the text (Deferred Save)
 const draftText = ref(props.initialKeyword.text);
 
-// Watcher to reset draft text if the index or initial keyword changes externally
+// Watcher to reset draft text if the initial keyword changes externally
 watch(() => props.initialKeyword.text, (newText) => {
     draftText.value = newText;
 });
 
-// --- Computed ---
+// --- Computed Properties for Status Management and UI ---
 
-/** Checks if the current keyword is already locked. */
-const isLocked = computed(() => props.initialKeyword.status === 'LOCKED');
+const isLOCKED = computed(() => props.initialKeyword.status === 'LOCKED');
+const isON_HOLD = computed(() => props.initialKeyword.status === 'ON_HOLD');
+const isAI_EXTRACTED = computed(() => props.initialKeyword.status === 'AI_EXTRACTED');
 
-/** Checks if the save button should be enabled (text has changed and is not empty). */
-const isUpdateEnabled = computed(() => {
-    return draftText.value.trim() !== '' && draftText.value.trim() !== props.initialKeyword.text;
+/** Checks if the local text is different from the initial text. */
+const isTextModified = computed(() => {
+    return draftText.value.trim() !== props.initialKeyword.text;
 });
+
+/** Tailwind classes for the status box based on the current keyword status. */
+const statusClasses = computed(() => {
+    switch (props.initialKeyword.status) {
+        case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
+        case 'AI_EXTRACTED': return 'bg-yellow-50 border-yellow-200';
+        case 'ON_HOLD': return 'bg-gray-100 border-gray-300';
+        case 'USER_DRAFT':
+        default: return 'bg-white border-gray-200';
+    }
+});
+
+/** Text color based on status. */
+const statusTextColor = computed(() => {
+    switch (props.initialKeyword.status) {
+        case 'LOCKED': return 'indigo-700';
+        case 'AI_EXTRACTED': return 'yellow-800';
+        case 'ON_HOLD': return 'gray-500';
+        case 'USER_DRAFT':
+        default: return 'gray-800';
+    }
+});
+
+/** Icon based on status. */
+const statusIcon = computed(() => {
+    switch (props.initialKeyword.status) {
+        case 'LOCKED': return 'LockClosed';
+        case 'AI_EXTRACTED': return 'Sparkles';
+        case 'ON_HOLD': return 'ArchiveBox';
+        case 'USER_DRAFT':
+        default: return 'PencilSquare';
+    }
+});
+
+/** Icon color based on status. */
+const statusIconColor = computed(() => {
+    switch (props.initialKeyword.status) {
+        case 'LOCKED': return 'indigo-600';
+        case 'AI_EXTRACTED': return 'yellow-600';
+        case 'ON_HOLD': return 'gray-500';
+        case 'USER_DRAFT':
+        default: return 'gray-600';
+    }
+});
+
 
 // --- Methods ---
 
-/** Handles the final update and lock action. */
-function handleUpdateAndLock() {
-  const text = draftText.value.trim();
+function handleUnifiedSubmit(targetStatus: KeywordStatus) {
+    const text = draftText.value.trim();
+    if (!text) return; // Should be disabled by template logic, but safety check remains.
 
-  if (!isUpdateEnabled.value) {
-      console.warn('Keyword text must be changed to update.');
-      return;
-  }
+    let finalStatus = targetStatus;
 
-  // 1. Emit the update event with the index and new text
-  // The parent component/store is responsible for setting the status to 'LOCKED'
-  emit('keywordUpdate', {
-      index: props.keywordIndex,
-      newText: text
-  });
+    // Special logic for LOCKED state: If user is only saving text, the status remains LOCKED.
+    if (isLOCKED.value && targetStatus === 'LOCKED') {
+        // If locked and only saving modified text, keep it LOCKED
+        finalStatus = 'LOCKED';
+    } else if (isLOCKED.value && targetStatus === 'ON_HOLD') {
+        // If locked and user clicks 'Unlock & Put On Hold'
+        finalStatus = 'ON_HOLD';
+    } else if (isON_HOLD.value && targetStatus === 'LOCKED') {
+        // If on hold and user clicks 'Reactivate & Lock'
+        finalStatus = 'LOCKED';
+    }
+    // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
 
-  // 2. Close the modal
-  emit('close-modal');
+    emit('keywordUpdate', {
+        index: props.keywordIndex,
+        newText: text,
+        newStatus: finalStatus
+    });
+    emit('close-modal');
+}
+
+
+function handleCancelAndCheck() {
+    if (isTextModified.value) {
+        // NOTE: In a production environment, this should trigger a custom confirmation dialog.
+        const confirmation = window.confirm(
+            'You have unsaved text changes. Are you sure you want to cancel and discard them?'
+        );
+        if (confirmation) {
+            emit('close-modal');
+        }
+    } else {
+        emit('close-modal');
+    }
 }
 </script>

@@ -69,7 +69,7 @@ import { ref, computed, watch } from 'vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import type { TopicScopeElement, FeasibilityStatus } from '@/interfaces/workflow';
+import type { TopicScopeElement, FeasibilityStatus } from '@/interfaces/initiation';
 
 // Define a deep copy for local editing
 type EditableScope = TopicScopeElement & { isDirty: boolean };
