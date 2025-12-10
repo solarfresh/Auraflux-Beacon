@@ -95,7 +95,7 @@ const styles = computed<TopicKeywordStyle>(() => {
     default:
       return {
           classes: 'bg-white border-gray-200 hover:bg-gray-50',
-          icon: 'PencilSquare',
+          icon: 'ClipboardDocumentList',
           iconColor: 'gray-600',
           secondaryText: 'User Draft (Pending Lock)',
           actionIcon: 'PencilSquare', // Indicate edit action
