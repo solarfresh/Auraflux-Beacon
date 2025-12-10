@@ -26,7 +26,7 @@
     </div>
 
     <Icon
-      :name="styles.actionIcon"
+      :name="styles.actionIcon!"
       type="outline"
       size="md"
       :color="styles.iconColor"
@@ -35,27 +35,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-// NOTE: Assuming these types are correctly defined in the workflow interface file.
 import type { TopicKeyword, TopicKeywordStatus, TopicKeywordStyle } from '@/interfaces/initiation';
-
-
-// ----------------------------------------------------------------------
-// --- Type Definitions ---
-// ----------------------------------------------------------------------
-
-// TopicKeywordStyle Interface definition (Moved from SidebarContent's helper)
-// NOTE: This interface definition should ideally be imported from an interface file.
-interface KeywordStyle {
-    classes: string;
-    icon: string;
-    iconColor: string;
-    secondaryText: string;
-    actionIcon: string;
-}
-
+import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
 // --- Props & Emits ---
@@ -82,42 +65,42 @@ const emit = defineEmits<{
 /** * Computes the necessary styling and icon choices based on the keyword's status.
  * This logic is encapsulated here, adhering to the Molecule's SRP.
  */
-const styles = computed<KeywordStyle>(() => {
-    switch (props.keyword.status as TopicKeywordStatus) {
-        case 'LOCKED':
-            return {
-                classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',
-                icon: 'LockClosed',
-                iconColor: 'indigo-600',
-                secondaryText: 'LOCKED (Committed)',
-                actionIcon: 'ChevronRight', // Indicate entering a view
-            };
-        case 'AI_EXTRACTED':
-            return {
-                classes: 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
-                icon: 'Sparkles',
-                iconColor: 'yellow-600',
-                secondaryText: 'AI Capture (Needs Review)',
-                actionIcon: 'ExclamationCircle', // Indicate action needed
-            };
-        case 'ON_HOLD':
-            return {
-                classes: 'bg-gray-100 border-gray-300 hover:bg-gray-200',
-                icon: 'ArchiveBox',
-                iconColor: 'gray-500',
-                secondaryText: 'ON HOLD (Excluded)',
-                actionIcon: 'ArrowPath', // Indicate it can be reactivated
-            };
-        case 'USER_DRAFT':
-        default:
-            return {
-                classes: 'bg-white border-gray-200 hover:bg-gray-50',
-                icon: 'PencilSquare',
-                iconColor: 'gray-600',
-                secondaryText: 'User Draft (Pending Lock)',
-                actionIcon: 'PencilSquare', // Indicate edit action
-            };
-    }
+const styles = computed<TopicKeywordStyle>(() => {
+  switch (props.keyword.status as TopicKeywordStatus) {
+    case 'LOCKED':
+      return {
+          classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',
+          icon: 'LockClosed',
+          iconColor: 'indigo-600',
+          secondaryText: 'LOCKED (Committed)',
+          actionIcon: 'ChevronRight', // Indicate entering a view
+      };
+    case 'AI_EXTRACTED':
+      return {
+          classes: 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
+          icon: 'Sparkles',
+          iconColor: 'yellow-600',
+          secondaryText: 'AI Capture (Needs Review)',
+          actionIcon: 'ExclamationCircle', // Indicate action needed
+      };
+    case 'ON_HOLD':
+      return {
+          classes: 'bg-gray-100 border-gray-300 hover:bg-gray-200',
+          icon: 'ArchiveBox',
+          iconColor: 'gray-500',
+          secondaryText: 'ON HOLD (Excluded)',
+          actionIcon: 'ArrowPath', // Indicate it can be reactivated
+      };
+    case 'USER_DRAFT':
+    default:
+      return {
+          classes: 'bg-white border-gray-200 hover:bg-gray-50',
+          icon: 'PencilSquare',
+          iconColor: 'gray-600',
+          secondaryText: 'User Draft (Pending Lock)',
+          actionIcon: 'PencilSquare', // Indicate edit action
+      };
+  }
 });
 
 /**

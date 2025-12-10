@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col space-y-6">
 
-    <Text tag="h2" size="xl" weight="bold" color="gray-900" class="border-b pb-3 flex items-center space-x-2">
-      <Icon name="Target" type="solid" size="md" color="indigo-600" />
-      <Text tag="span" size="xl" weight="bold" color="gray-900">Initiation Phase Output</Text>
-    </Text>
+    <UnifiedReviewAlert
+        :keywords="keywords"
+        :scope="scope"
+        @scroll-to-review="handleScrollToReview"
+    />
 
     <div class="space-y-2">
       <TopicStatusIndicator
@@ -15,85 +16,51 @@
       />
     </div>
 
-    <div class="flex items-center space-x-2 p-2 rounded-lg"
-      :class="getFeasibilityClasses(feasibilityStatus)">
-      <Icon :name="getFeasibilityIcon(feasibilityStatus)" type="solid" size="sm" class="flex-shrink-0" />
-      <Text tag="span" size="sm" weight="medium" class="flex-grow">
-        Research Feasibility: <span class="font-bold">{{ getFeasibilityLabel(feasibilityStatus) }}</span>
-      </Text>
-    </div>
+    <div class="space-y-4">
 
-    <div class="space-y-3">
-      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
-        Final Question Statement
-        <Button variant="tertiary" size="sm" @click="promptAndEmitQuestionUpdate(finalQuestion)">
-          <Icon name="PencilSquare" type="outline" size="sm" color="gray-600" />
-        </Button>
-      </Text>
+      <ResearchValidation
+        :status="feasibilityStatus"
+        :description="getFeasibilityDescription(feasibilityStatus)"
+      />
 
-      <div
-        class="p-4 rounded-lg border-2 transition duration-150 cursor-pointer hover:shadow-md"
-        :class="finalQuestion ? 'border-green-400 bg-green-50' : 'border-gray-300 bg-gray-100'"
-        @click="handleViewDetails('final-question')"
-      >
-        <Text tag="p" size="base" :weight="finalQuestion ? 'semibold' : 'normal'" :color="finalQuestion ? 'green-800' : 'gray-500'">
-          {{ finalQuestion || 'Question not yet finalized. Refine in the chat to see the draft here.' }}
+      <div class="space-y-2">
+        <Text tag="h3" size="lg" weight="semibold" color="gray-800">Final Research Question</Text>
+
+        <Text tag="p" size="base" color="gray-600" class="p-3 bg-gray-50 rounded-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition"
+              @click="handleViewDetails('final-question')">
+          {{ finalQuestion || "Click to define the final question..." }}
         </Text>
       </div>
     </div>
 
-    <div class="space-y-3">
-      <KeywordManagementSection
-          :keywords="keywords"
-          @add-request="handleKeywordAction('keyword-add')"
-          @edit-request="(payload) => handleKeywordAction('keyword', payload)"
-      />
-    </div>
+    <div class="h-px bg-gray-200"></div>
+    <KeywordManagementSection
+        :keywords="keywords"
+        ref="keywordSectionRef"
+        @add-request="handleKeywordAction('keyword-add')"
+        @edit-request="(payload) => handleKeywordAction('keyword', payload)"
+    />
+
+    <ScopeManagementSection
+        :scope="scope"
+        :ref="scopeSectionRef"
+        @add-request="handleScopeAction('scope-add')"
+        @edit-request="(payload: any) => handleScopeAction('scope', payload)"
+    />
+
+    <div class="h-px bg-gray-200"></div>
 
     <div class="space-y-3">
-      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
-        Research Scope
-        <div class="flex items-center space-x-2">
-          <Button variant="tertiary" size="sm" @click="handleViewDetails('scope-add')">
-            <Icon name="Plus" type="outline" size="sm" color="gray-600" />
-          </Button>
-          <Button variant="tertiary" size="sm" @click="handleViewDetails('scope-management')">
-            <Icon name="Cog" type="outline" size="sm" color="gray-600" />
-          </Button>
+        <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
+            <Text tag="span" size="lg" weight="semibold" color="gray-800">Reflection Log</Text>
+            <Button variant="tertiary" size="sm" @click="handleViewDetails('reflection-log')">
+              <Icon name="MagnifyingGlass" type="outline" size="sm" color="gray-600" />
+            </Button>
+        </Text>
+        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm italic text-gray-500">
+            {{ latestReflection || "No recent reflection logs." }}
         </div>
-      </Text>
-
-      <ul class="space-y-2 text-sm text-gray-700">
-        <li
-          tag="li"
-          v-for="(item, index) in scope"
-          :key="index"
-          class="flex justify-between p-3 border rounded-lg transition duration-150 cursor-pointer hover:bg-gray-50"
-          @click="handleViewDetails('scope', index, item)"
-        >
-          <Text tag="span" size="sm" weight="medium" color="gray-600">{{ item.label }}:</Text>
-          <div class="flex items-center space-x-2">
-            <Text tag="span" size="sm" color="gray-700">{{ item.value || 'N/A' }}</Text>
-            <Icon name="ChevronRight" type="outline" size="sm" color="gray-400" />
-          </div>
-        </li>
-      </ul>
     </div>
-
-    <div class="space-y-3 mt-auto pt-6 border-t border-gray-200">
-      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
-        Reflection Log Summary
-        <Button variant="tertiary" size="sm" @click="handleViewDetails('reflection-log')">
-          <Icon name="ListBullet" type="outline" size="sm" color="gray-600" />
-        </Button>
-      </Text>
-
-      <div class="p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 italic">
-        <p v-if="latestReflection">{{ latestReflection }}</p>
-        <p v-else>No recent thoughts logged. Click the "Log a Thought" button below to clarify your task or feelings.</p>
-      </div>
-    </div>
-
   </div>
 </template>
 
@@ -101,22 +68,24 @@
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
+import ResearchValidation from '@/components/molecules/ResearchValidation.vue';
 import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
 import KeywordManagementSection from '@/components/organisms/KeywordManagementSection.vue';
-import type { FeasibilityStatus, ManagementType, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
-import { ref } from 'vue';
+import ScopeManagementSection from '@/components/organisms/ScopeManagementSection.vue';
+import UnifiedReviewAlert from '@/components/organisms/UnifiedReviewAlert.vue';
+import type { ManagementType, FeasibilityStatus as TFeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import { nextTick, ref } from 'vue';
 
 
 // ----------------------------------------------------------------------
-// --- State for Component Logic ---
+// --- Refs for Component Scrolling ---
 // ----------------------------------------------------------------------
-
-const isReviewGroupOpen = ref(true); // Default to open to encourage immediate review
-const isOnHoldGroupOpen = ref(false); // Default to closed to hide archived items
+const keywordSectionRef = ref<InstanceType<typeof KeywordManagementSection> | null>(null);
+const scopeSectionRef = ref<InstanceType<typeof ScopeManagementSection> | null>(null);
 
 
 // ----------------------------------------------------------------------
-// --- Props ---
+// --- Props & Data Conversion ---
 // ----------------------------------------------------------------------
 
 const props = defineProps<{
@@ -130,7 +99,7 @@ const props = defineProps<{
   finalQuestion: string;
 
   /** Status of information availability for the topic (e.g., High, Medium, Low). */
-  feasibilityStatus: FeasibilityStatus;
+  feasibilityStatus: TFeasibilityStatus;
 
   /** Suggestion for the next search path. (Unused in template, but kept for completeness). */
   resourceSuggestion: string;
@@ -144,74 +113,78 @@ const props = defineProps<{
 
 // --- Emits ---
 const emit = defineEmits<{
-  /** Emitted when a user attempts to manually edit/lock a keyword. (Legacy: replaced by viewDetails) */
-  (e: 'keywordUpdate', payload: { index: number, newText: string }): void;
-
-  /** Emitted when a user manually edits the Final Question. */
-  (e: 'questionUpdate', newText: string): void;
-
   /** Emitted when a user clicks an element that leads to a detailed management page/modal. */
-  (e: 'viewDetails', type: ManagementType, index?: number, value?: any): void;
+  (e: 'viewDetails', type: ManagementType | 'keyword-add' | 'scope-add' | 'scope', index?: number, value?: any): void;
 }>();
 
+
 // ----------------------------------------------------------------------
-// --- Feasibility Helpers ---
+// --- Helper Functions (Remaining Logic) ---
 // ----------------------------------------------------------------------
 
-const getFeasibilityClasses = (status: FeasibilityStatus) => {
+/** Provides a detailed description for the simple feasibility status. */
+const getFeasibilityDescription = (status: TFeasibilityStatus) => {
   switch (status) {
-    case 'HIGH': return 'bg-teal-50 border-teal-200 text-teal-700';
-    case 'MEDIUM': return 'bg-yellow-50 border-yellow-200 text-yellow-700';
-    case 'LOW': return 'bg-red-50 border-red-200 text-red-700';
-    default: return 'bg-gray-50 border-gray-200 text-gray-500';
-  }
-};
-
-const getFeasibilityIcon = (status: FeasibilityStatus) => {
-  switch (status) {
-    case 'HIGH': return 'CheckCircle';
-    case 'MEDIUM': return 'ExclamationTriangle';
-    case 'LOW': return 'ArchiveBoxXMark';
-    default: return 'QuestionMarkCircle';
-  }
-};
-
-const getFeasibilityLabel = (status: FeasibilityStatus) => {
-  switch (status) {
-    case 'HIGH': return 'Information Abundant';
-    case 'MEDIUM': return 'Requires Refinement';
-    case 'LOW': return 'Information Scarce';
-    default: return 'N/A';
+    case 'HIGH':
+      return "Data and resources are readily available. Research is low-risk.";
+    case 'MEDIUM':
+      return "Data availability might be challenging but manageable. Requires targeted effort.";
+    case 'LOW':
+      return "Significant resource or data gaps exist. Research topic may need significant refinement.";
+    default:
+      return "Feasibility status is pending.";
   }
 };
 
 
 // ----------------------------------------------------------------------
-// --- Other Methods ---
+// --- Event Handlers ---
 // ----------------------------------------------------------------------
 
-/** Handles edit/add requests from KeywordManagementSection and routes them via viewDetails. */
+/** * Handles keyword actions (add/edit) from the child Organism
+ * and routes them to the top-level viewDetails emitter.
+ */
 const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index: number, keyword: TopicKeyword }) => {
     if (type === 'keyword-add') {
-        // Route add request
         handleViewDetails('keyword-add');
     } else if (type === 'keyword' && payload) {
-        // Route edit request
         handleViewDetails('keyword', payload.index, payload.keyword);
     }
 };
 
+/** * Handles scope actions (add/edit) from the child Organism
+ * and routes them to the top-level viewDetails emitter.
+ */
+const handleScopeAction = (type: 'scope' | 'scope-add', payload?: { index: number, scope: TopicScopeElement }) => {
+    if (type === 'scope-add') {
+        handleViewDetails('scope-add');
+    } else if (type === 'scope' && payload) {
+        // NOTE: Scope edit requires the 'scope' type and index/value payload
+        handleViewDetails('scope', payload.index, payload.scope);
+    }
+};
+
 /** Emits event for navigating to detailed views/modals. */
-const handleViewDetails = (type: ManagementType | 'keyword-add' | 'scope-add' | 'scope', index?: number, value?: any) => {
+const handleViewDetails = (type: ManagementType, index?: number, value?: any) => {
     emit('viewDetails', type, index, value);
 };
 
-/** Simulates the edit action for Final Question. (Temporarily uses prompt) */
-const promptAndEmitQuestionUpdate = (currentText: string) => {
-  // NOTE: This should be replaced by a proper UI modal/inline editor in production.
-  const newText = window.prompt(`Edit Final Question:`, currentText);
-  if (newText !== null && newText.trim() !== currentText) {
-    emit('questionUpdate', newText.trim());
-  }
+
+/** * Handles the scroll-to-review event from UnifiedReviewAlert
+ * to scroll to the first section that has review items.
+ */
+const handleScrollToReview = (firstSection: 'keyword' | 'scope') => {
+    nextTick(() => {
+        let targetElement = null;
+        if (firstSection === 'keyword' && keywordSectionRef.value?.$el) {
+            targetElement = keywordSectionRef.value.$el;
+        } else if (firstSection === 'scope' && scopeSectionRef.value?.$el) {
+            targetElement = scopeSectionRef.value.$el;
+        }
+
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
 };
 </script>
