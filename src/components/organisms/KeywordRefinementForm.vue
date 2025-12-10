@@ -4,7 +4,16 @@
       Refine Core Keyword
     </Text>
     <Text tag="p" size="md" color="gray-600">
-      Edit the keyword's text below. Changes will only be saved when you click **Lock Keyword** or **Put On Hold**.
+      Edit the keyword's text below. Changes will only be saved when you click
+
+      <Text tag="span" size="md" weight="bold" color="gray-900">
+        Lock Keyword
+      </Text>
+       or
+      <Text tag="span" size="md" weight="bold" color="gray-900">
+        Put On Hold
+      </Text>
+      .
     </Text>
 
     <div v-if="isAI_EXTRACTED && initialKeyword.aiContext"

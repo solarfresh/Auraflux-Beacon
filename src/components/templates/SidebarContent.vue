@@ -35,10 +35,10 @@
 
     <div class="h-px bg-gray-200"></div>
     <KeywordManagementSection
-        :keywords="keywords"
-        ref="keywordSectionRef"
-        @add-request="handleKeywordAction('keyword-add')"
-        @edit-request="(payload) => handleKeywordAction('keyword', payload)"
+      :keywords="keywords"
+      ref="keywordSectionRef"
+      @add-request="handleKeywordAction('keyword-add')"
+      @edit-request="(payload) => handleKeywordAction('keyword', payload)"
     />
 
     <ScopeManagementSection
@@ -114,7 +114,7 @@ const props = defineProps<{
 // --- Emits ---
 const emit = defineEmits<{
   /** Emitted when a user clicks an element that leads to a detailed management page/modal. */
-  (e: 'viewDetails', type: ManagementType | 'keyword-add' | 'scope-add' | 'scope', index?: number, value?: any): void;
+  (e: 'viewDetails', type: ManagementType, index?: number, value?: any): void;
 }>();
 
 

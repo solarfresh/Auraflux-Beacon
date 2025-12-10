@@ -173,23 +173,13 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
             isManagementModalOpen.value = true;
             break;
 
+        case 'keyword-add':
         case 'keyword':
-            // Open a management modal specifically for keyword editing
-            if (index === undefined) {
-              console.error("[INITIATION PAGE] Keyword index is required to view keyword details.");
-              break;
-            }
-
-            if (value === null) {
-              console.error("[INITIATION PAGE] Keyword value is required to view keyword details.");
-              break;
-            }
-
-            editingKeywordIndex.value = index;
-            editingInitialKeyword.value = value;
-            managementModalType.value = 'keyword';
-            isManagementModalOpen.value = true;
-            break;
+          editingKeywordIndex.value = index || topicKeywords.value.length;
+          editingInitialKeyword.value = value || {text: '', status: 'USER_DRAFT'} as TopicKeyword;
+          managementModalType.value = 'keyword';
+          isManagementModalOpen.value = true;
+          break;
 
         default:
             console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);

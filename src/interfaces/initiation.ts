@@ -1,5 +1,5 @@
 export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
-export type ManagementType = 'final-question' | 'keyword' | 'scope-management' | 'reflection-log' | 'keyword-add' | 'scope-add' | 'scope' | null;
+export type ManagementType = 'final-question' | 'keyword' | 'keyword-add' | 'scope-management' | 'scope-add' | 'scope' | 'reflection-log' | null;
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 
