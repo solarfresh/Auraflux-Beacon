@@ -41,6 +41,6 @@ export const WorkflowsEndpoints = {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic_keywords`,
     update: (keywordId: string) =>
-      `${AURAFLUX_NEXUS_URL}/workflows/${keywordId}`,
+      `${AURAFLUX_NEXUS_URL}/keywords/${keywordId}/`,
   }
 }

@@ -195,10 +195,10 @@ async function handleUnifiedSubmit(targetStatus: TopicKeywordStatus) {
     // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
 
     let response = null;
-    if (keywordId) {
-      response = await apiService.workflows.keywords.create(text, finalStatus);
+    if (keywordId.value) {
+      response = await apiService.workflows.keywords.update(keywordId.value, text, finalStatus);
     } else {
-      response = await apiService.workflows.keywords.update(keywordId, text, finalStatus);
+      response = await apiService.workflows.keywords.create(text, finalStatus);
     }
 
     initiativeStore.topicKeywords = response.data;
