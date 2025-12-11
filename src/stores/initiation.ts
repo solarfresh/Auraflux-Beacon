@@ -1,5 +1,5 @@
 import { apiService } from '@/api/apiService';
-import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/workflow';
+import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { ref } from 'vue';

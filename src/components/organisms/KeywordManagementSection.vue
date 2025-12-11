@@ -30,7 +30,7 @@
         <ul class="space-y-2 pt-1">
           <template
             v-for="(keyword, index) in filteredKeywords('LOCKED')"
-            :key="index"
+            :key="keyword.id"
           >
             <KeywordListItem
                 v-if="isLockedFullView || index < 5"
@@ -58,7 +58,7 @@
         <ul v-if="isReviewGroupOpen" class="space-y-2 pt-1">
            <KeywordListItem
               v-for="(keyword, index) in filteredKeywords('REVIEW')"
-              :key="index"
+              :key="keyword.id"
               :keyword="keyword"
               :index="index"
               @edit-request="handleKeywordEdit"
@@ -77,7 +77,7 @@
         <ul v-if="isOnHoldGroupOpen" class="space-y-2 pt-1">
            <template
               v-for="(keyword, index) in filteredKeywords('ON_HOLD')"
-              :key="index"
+              :key="keyword.id"
            >
               <KeywordListItem
                  v-if="isOnHoldFullView || index < 3"

@@ -16,29 +16,6 @@
       .
     </Text>
 
-    <div v-if="isAI_EXTRACTED && initialKeyword.aiContext"
-         class="space-y-3 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
-
-      <Text tag="h3" size="base" weight="semibold" color="yellow-800" class="flex items-center space-x-2">
-        <Icon name="ChatBubbleLeftRight" type="solid" size="sm" color="yellow-600" />
-        <span>Agent Context Tip: Captured Keyword Awaiting Review</span>
-      </Text>
-
-      <Text tag="div" size="sm" color="gray-700">
-        <span class="font-medium text-yellow-800">Captured From Chat:</span>
-        <blockquote class="mt-1 pl-3 border-l-2 border-yellow-300 italic text-gray-600">
-          "{{ initialKeyword.aiContext.sourceText }}"
-        </blockquote>
-      </Text>
-
-      <Text tag="div" size="sm" color="gray-700">
-        <span class="font-medium text-yellow-800">Agent Refinement Suggestion:</span>
-        <p class="mt-1 text-gray-700">
-          {{ initialKeyword.aiContext.refinementSuggestion }}
-        </p>
-      </Text>
-    </div>
-
     <div class="space-y-2">
       <Text tag="label" size="sm" weight="medium" color="gray-700" for="keyword-input">
         Keyword Text
@@ -104,25 +81,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { apiService } from '@/api/apiService';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
+import type { TopicKeyword, TopicKeywordStatus } from '@/interfaces/initiation';
+import { useInitiativeStore } from '@/stores/initiation';
+import { computed, ref, watch } from 'vue';
 
-// --- Type Definitions ---
-type KeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
-
-interface KeywordSourceContext {
-    sourceText: string;
-    refinementSuggestion: string;
-}
-
-interface TopicKeyword {
-    text: string;
-    status: KeywordStatus;
-    aiContext?: KeywordSourceContext;
-}
+const initiativeStore = useInitiativeStore();
 
 // --- Props & Emits ---
 const props = defineProps<{
@@ -134,7 +102,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   /** Emitted when the user submits changes (text and status) through a commitment button. */
-  (e: 'keywordUpdate', payload: { index: number, newText: string, newStatus: KeywordStatus }): void;
+  (e: 'keywordUpdate', payload: { index: number, newText: string, newStatus: TopicKeywordStatus }): void;
   /** Emitted to close the modal. */
   (e: 'close-modal'): void;
 }>();
@@ -148,11 +116,12 @@ watch(() => props.initialKeyword.text, (newText) => {
     draftText.value = newText;
 });
 
+const keywordId = computed(() => props.initialKeyword.id);
+
 // --- Computed Properties for Status Management and UI ---
 
 const isLOCKED = computed(() => props.initialKeyword.status === 'LOCKED');
 const isON_HOLD = computed(() => props.initialKeyword.status === 'ON_HOLD');
-const isAI_EXTRACTED = computed(() => props.initialKeyword.status === 'AI_EXTRACTED');
 
 /** Checks if the local text is different from the initial text. */
 const isTextModified = computed(() => {
@@ -206,7 +175,7 @@ const statusIconColor = computed(() => {
 
 // --- Methods ---
 
-function handleUnifiedSubmit(targetStatus: KeywordStatus) {
+async function handleUnifiedSubmit(targetStatus: TopicKeywordStatus) {
     const text = draftText.value.trim();
     if (!text) return; // Should be disabled by template logic, but safety check remains.
 
@@ -225,11 +194,15 @@ function handleUnifiedSubmit(targetStatus: KeywordStatus) {
     }
     // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
 
-    emit('keywordUpdate', {
-        index: props.keywordIndex,
-        newText: text,
-        newStatus: finalStatus
-    });
+    let response = null;
+    if (keywordId) {
+      response = await apiService.workflows.keywords.create(text, finalStatus);
+    } else {
+      response = await apiService.workflows.keywords.update(keywordId, text, finalStatus);
+    }
+
+    initiativeStore.topicKeywords = response.data;
+
     emit('close-modal');
 }
 

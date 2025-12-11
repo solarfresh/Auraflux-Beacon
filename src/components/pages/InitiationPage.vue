@@ -176,7 +176,7 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
         case 'keyword-add':
         case 'keyword':
           editingKeywordIndex.value = index || topicKeywords.value.length;
-          editingInitialKeyword.value = value || {text: '', status: 'USER_DRAFT'} as TopicKeyword;
+          editingInitialKeyword.value = value || {id: '', text: '', status: 'USER_DRAFT'} as TopicKeyword;
           managementModalType.value = 'keyword';
           isManagementModalOpen.value = true;
           break;

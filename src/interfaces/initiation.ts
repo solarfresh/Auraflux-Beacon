@@ -4,6 +4,7 @@ export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 
 export interface TopicKeyword {
+  id: string;
   text: string;
   status: TopicKeywordStatus;
 }
