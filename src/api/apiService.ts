@@ -1,6 +1,6 @@
 import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage, RefinedTopic } from '@/interfaces/initiation';
+import type { ChatMessage, RefinedTopic, TopicKeyword } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -116,6 +116,14 @@ export const apiService = {
       getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
         return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
       }
+    },
+    keywords: {
+      create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
+        return apiClient.post(WorkflowsEndpoints.keywords.create(), {keyword_text: keywordText, status: keywordStatus})
+      },
+      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
+        return apiClient.put(WorkflowsEndpoints.keywords.update(keywordId), {keyword_text: keywordText, status: keywordStatus})
+      }
     }
-  }
+  },
 }

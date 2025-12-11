@@ -24,14 +24,10 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import AuthButton from '@/components/molecules/AuthButton.vue';
-
-// --- Type Definition for ISP Steps ---
-// Used only for internal logic (e.g., controlling export button state)
-type ISPStep = 'INITIATION' | 'SELECTION' | 'EXPLORATION' | 'FORMULATION' | 'COLLECTION' | 'PRESENTATION';
+import type { ISPStep } from '@/interfaces/workflow';
 
 // --- Props ---
 const props = defineProps({

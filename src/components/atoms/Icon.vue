@@ -22,8 +22,8 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: 'md', // sm, md, lg (maps to w-x h-x)
-    validator: (value: string) => ['sm', 'md', 'lg', 'xl', '2xl'].includes(value),
+    default: 'md', // xs, sm, md, lg, xl, 2xl (maps to w-x h-x)
+    validator: (value: string) => ['xs', 'sm', 'md', 'lg', 'xl', '2xl'].includes(value),
   },
   color: {
     type: String,
@@ -42,6 +42,7 @@ const iconComponent = computed(() => {
 
 const sizeClass = computed(() => {
     const sizeMap = <{[key: string]: string;}>{
+        xs: 'w-3 h-3',
         sm: 'w-4 h-4',
         md: 'w-6 h-6',
         lg: 'w-8 h-8',

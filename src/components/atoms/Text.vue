@@ -15,8 +15,8 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: 'base', // 'xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'
-    validator: (value: string) => ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(value),
+    default: 'base', // 'xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'
+    validator: (value: string) => ['xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(value),
   },
   weight: {
     type: String,
@@ -33,6 +33,7 @@ const sizeMap: { [key: string]: string } = {
   xs: 'text-xs',
   sm: 'text-sm',
   base: 'text-base',
+  md: 'text-base',
   lg: 'text-lg',
   xl: 'text-xl',
   '2xl': 'text-2xl',
