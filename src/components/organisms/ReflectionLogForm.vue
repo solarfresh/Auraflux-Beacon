@@ -1,6 +1,5 @@
 <template>
   <MasterDetailLayout>
-
     <template #master-panel>
       <MasterListPanel
         title="Log Entries"
@@ -92,6 +91,36 @@ const emit = defineEmits<{
 // --- STATE MANAGEMENT ---
 
 const mockReflectionLogs: ReflectionLogEntry[] = [
+  {
+    id: 'ARFL-005',
+    timestamp: '2025-12-12T10:00:00Z',
+    content: 'Initial planning session completed. Decided to focus on the "Circular Economy" aspect first, as data feasibility seems higher there. Need to re-evaluate the scope after the first search iteration.',
+    status: 'committed',
+  },
+  {
+    id: 'ARFL-004',
+    timestamp: '2025-12-11T16:30:00Z',
+    content: 'Revised the central research question slightly. Changed "impact on global markets" to "impact on European Union policy" to make the scope manageable. This should improve the stability score.',
+    status: 'committed',
+  },
+  {
+    id: 'ARFL-003',
+    timestamp: '2025-12-10T09:15:00Z',
+    content: 'Encountered significant difficulty finding up-to-date data on niche market adoption of technology X. Marking this keyword as high-risk. May need to replace it with a broader term if the next two searches fail.',
+    status: 'committed',
+  },
+  {
+    id: 'ARFL-002',
+    timestamp: '2025-12-10T14:45:00Z',
+    content: 'Quick note: Started drafting the analysis summary for the feasibility check, but I forgot to save the full conclusion. Will finish tomorrow morning.',
+    status: 'draft',
+  },
+  {
+    id: 'ARFL-001',
+    timestamp: '2025-12-09T11:00:00Z',
+    content: 'First session reflection: The initial question is too broad, covering three distinct sectors. The next step is to use the refinement tool to narrow the focus to a single industrial application.',
+    status: 'committed',
+  },
   {
     id: 'RFL-005',
     timestamp: '2025-12-12T10:00:00Z',

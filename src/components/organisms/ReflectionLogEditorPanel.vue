@@ -1,5 +1,5 @@
 <template>
-  <div class="w-2/3 p-6 overflow-y-auto bg-white">
+  <div class="w-2/3 p-6 bg-white h-full">
 
     <div v-if="currentDraft" class="flex flex-col h-full">
 

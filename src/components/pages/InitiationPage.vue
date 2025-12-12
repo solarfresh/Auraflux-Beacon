@@ -51,7 +51,7 @@
       @close="isManagementModalOpen = false"
     >
       <template #header>
-        Manage {{ managementModalType }}
+        Manage {{ getModalTitle(managementModalType) }}
       </template>
       <template #default>
         <FinalQuestionEditor
@@ -202,6 +202,22 @@ function getModalWidthClass(type: ManagementType | null): string {
     default:
       // Standard forms can use the default or slightly smaller width
       return 'max-w-2xl';
+  }
+}
+
+function getModalTitle(type: ManagementType | null): string {
+  switch (type) {
+    case 'reflection-log':
+      // Requires the largest width for split view
+      return 'Reflection Log';
+    case 'final-question':
+    case 'keyword':
+      return 'Topic Keyword';
+    case 'scope':
+      return 'Topic Scope Element';
+    default:
+      // Standard forms can use the default or slightly smaller width
+      return '';
   }
 }
 
