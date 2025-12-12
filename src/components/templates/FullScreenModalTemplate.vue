@@ -5,7 +5,7 @@
   -->
   <Modal :isOpen="isOpen" @close="$emit('close')">
     <div
-      class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] mx-auto"
+      :class="['relative w-full bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] mx-auto', modalWidthClass]"
       @click.stop
     >
       <!-- Modal Header -->
@@ -37,19 +37,23 @@
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
 import Modal from '@/components/molecules/Modal.vue';
-import CloseButton from '../molecules/CloseButton.vue'; // Import the new Molecule
+import { computed } from 'vue';
+import CloseButton from '../molecules/CloseButton.vue';
 
 // Define the component's props and events
-defineProps<{
+const props = defineProps<{
   /**
    * The visibility state of the modal, passed down to Modal.vue.
    */
   isOpen: boolean;
+  maxWidthClass?: string;
 }>();
 
 defineEmits<{
   (e: 'close'): void;
 }>();
+
+const modalWidthClass = computed(() => props.maxWidthClass || 'max-w-2xl');
 </script>
 
 <style scoped>

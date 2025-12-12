@@ -9,7 +9,7 @@
       aria-labelledby="modal-title"
     >
       <div
-        class="bg-white rounded-xl shadow-2xl max-w-lg w-full m-4 transform"
+        class="m-4 transform mx-auto"
       >
         <slot></slot>
       </div>

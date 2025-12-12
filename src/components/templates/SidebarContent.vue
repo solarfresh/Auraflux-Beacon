@@ -51,15 +51,15 @@
     <div class="h-px bg-gray-200"></div>
 
     <div class="space-y-3">
-        <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
-            <Text tag="span" size="lg" weight="semibold" color="gray-800">Reflection Log</Text>
-            <Button variant="tertiary" size="sm" @click="handleViewDetails('reflection-log')">
-              <Icon name="MagnifyingGlass" type="outline" size="sm" color="gray-600" />
-            </Button>
-        </Text>
-        <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm italic text-gray-500">
-            {{ latestReflection || "No recent reflection logs." }}
-        </div>
+      <Text tag="h3" size="lg" weight="semibold" color="gray-800" class="flex items-center justify-between">
+        <Text tag="span" size="lg" weight="semibold" color="gray-800">Reflection Log</Text>
+        <Button variant="tertiary" size="sm" @click="handleViewDetails('reflection-log')">
+          <Icon name="BookOpen" type="outline" size="sm" color="gray-600" />
+        </Button>
+      </Text>
+      <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 text-sm italic text-gray-500">
+        {{ latestReflection || "No recent reflection logs." }}
+      </div>
     </div>
   </div>
 </template>
