@@ -1,17 +1,16 @@
 <template>
-  <div class="flex h-full min-h-[700px]">
+  <MasterDetailLayout>
 
-    <div class="w-1/3 max-w-sm border-r border-gray-200 p-4 bg-gray-50 flex flex-col overflow-y-auto">
-
-      <div class="flex justify-between items-center mb-4 sticky top-0 bg-gray-50 pt-1 pb-3 z-10 border-b border-gray-100">
-        <Text tag="h2" size="xl" weight="bold" color="gray-900">Log Entries ({{ logEntries.length }})</Text>
-        <Button variant="primary" size="sm" @click="handleNewEntry" :disabled="isEditing">
-          <Icon name="Plus" type="outline" size="sm" /> New Entry
-        </Button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto">
-        <div v-for="entry in logEntries" :key="entry.id"
+    <template #master-panel>
+      <MasterListPanel
+        title="Log Entries"
+        :item-count="logEntries.length"
+        :disable-new-entry="isEditing"
+        @new-entry="handleNewEntry"
+      >
+        <template #list-items>
+          <div v-if="logEntries.length > 0">
+            <div v-for="entry in logEntries" :key="entry.id"
               :class="{
                 'bg-indigo-50 border-indigo-300': selectedEntryId === entry.id,
                 'hover:bg-gray-100': selectedEntryId !== entry.id
@@ -19,80 +18,53 @@
               class="p-3 mb-2 border border-gray-200 rounded-lg cursor-pointer transition duration-150"
               @click="handleSelectEntry(entry)">
 
-          <Text tag="p" size="sm" weight="medium" :color="selectedEntryId === entry.id ? 'indigo-800' : 'gray-800'">
-            {{ new Date(entry.timestamp).toLocaleDateString() }} {{ new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
-          </Text>
+              <Text tag="p" size="sm" weight="medium" :color="selectedEntryId === entry.id ? 'indigo-800' : 'gray-800'">
+                {{ new Date(entry.timestamp).toLocaleDateString() }}
+                {{ new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+                <span
+                  v-if="entry.status === 'draft'"
+                  class="ml-2 text-xs font-semibold text-orange-500"
+                >
+                  (Draft)
+                </span>
+              </Text>
 
-          <Text tag="p" size="sm" color="gray-600" class="truncate italic mt-1">
-            {{ entry.content || "Empty Entry" }}
-          </Text>
-        </div>
-        <p v-if="!logEntries.length" class="text-center text-gray-500 py-10">
-          No reflection entries found. Start a new one!
-        </p>
-      </div>
-    </div>
-
-    <div class="w-2/3 p-6 overflow-y-auto bg-white">
-
-      <div v-if="currentDraft" class="flex flex-col h-full">
-        <Text tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-6">
-          {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
-        </Text>
-
-        <div class="flex justify-between items-center text-sm text-gray-500 mb-4 pb-2 border-b border-gray-100">
-          <Text tag="span" weight="medium">
-            Entry Status: <span class="font-semibold text-green-600">Committed</span>
-          </Text>
-          <Text tag="span" weight="medium">
-            Last Updated: {{ new Date(currentDraft.timestamp).toLocaleString() }}
-          </Text>
-        </div>
-
-        <Textarea
-          v-model="currentDraft.content"
-          :rows="15"
-          :placeholder="editorPlaceholder"
-          :disabled="!isEditing && !isNewEntry"
-          class="mb-6 flex-1 min-h-[300px]"
-        />
-
-        <div class="flex justify-between items-center border-t border-gray-200 pt-4 mt-auto">
-
-          <Button v-if="!isNewEntry && !isEditing" variant="secondary" @click="isEditing = true">
-              <Icon name="PencilSquare" type="outline" size="sm" /> Enable Editing
-          </Button>
-
-          <Button v-else-if="!isNewEntry && isEditing" variant="secondary" @click="handleCancelEdit">
-              Cancel Edit
-          </Button>
-
-          <div class="flex space-x-3 ml-auto">
-              <Button variant="tertiary" @click="handleSave('draft')" :disabled="!isDirty">
-                  Save Draft
-              </Button>
-              <Button variant="primary" @click="handleSave('commit')" :disabled="!isDirty">
-                  Commit & Close
-              </Button>
+              <Text tag="p" size="sm" color="gray-600" class="truncate italic mt-1">
+                {{ entry.content || "Empty Entry" }}
+              </Text>
+            </div>
           </div>
-        </div>
-      </div>
+        </template>
 
-      <div v-else class="text-center p-20 text-gray-500">
-        <Icon name="DocumentText" type="outline" size="lg" class="mx-auto mb-4" />
-        <Text tag="p" size="lg">Select a historical entry or click "New Entry" to start your reflection.</Text>
-      </div>
+        <template #empty-state>
+          <p v-if="logEntries.length === 0" class="text-center text-gray-500 py-10">
+            No reflection entries found. Click 'New Entry' to begin.
+          </p>
+        </template>
+      </MasterListPanel>
+    </template>
 
-    </div>
-  </div>
+    <template #detail-panel>
+      <ReflectionLogEditorPanel
+        :current-draft="currentDraft"
+        :original-entry="originalEntry"
+        :is-editing="isEditing"
+        :is-new-entry="isNewEntry"
+        @save="handleSave"
+        @cancel-edit="handleCancelEdit"
+        @enable-edit="isEditing = true"
+      />
+    </template>
+
+  </MasterDetailLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import Button from '@/components/atoms/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Textarea from '@/components/atoms/Textarea.vue'; // Assuming Textarea component exists
+import MasterDetailLayout from '@/components/layouts/MasterDetailLayout.vue';
+import MasterListPanel from '@/components/molecules/MasterListPanel.vue';
+import ReflectionLogEditorPanel from '@/components/organisms/ReflectionLogEditorPanel.vue';
 
 // --- INTERFACE DEFINITION ---
 /** Defines the structure for a single Reflection Log entry. */
@@ -105,21 +77,59 @@ interface ReflectionLogEntry {
 
 // --- PROPS & EMITS ---
 const props = defineProps<{
-  // Placeholder: Pass existing log entries from the store
+  /** Initial list of log entries loaded from the store/API. */
   initialEntries: ReflectionLogEntry[];
 }>();
 
 const emit = defineEmits<{
+  /** Event to request the modal closure. */
   (e: 'close-modal'): void;
-  // Placeholder: Event to save or commit the new/updated entry to the store/API
+  /** Event to persist the entry (new or updated) to the backend/store. */
   (e: 'save-log', entry: ReflectionLogEntry): void;
 }>();
 
 
 // --- STATE MANAGEMENT ---
 
+const mockReflectionLogs: ReflectionLogEntry[] = [
+  {
+    id: 'RFL-005',
+    timestamp: '2025-12-12T10:00:00Z',
+    content: 'Initial planning session completed. Decided to focus on the "Circular Economy" aspect first, as data feasibility seems higher there. Need to re-evaluate the scope after the first search iteration.',
+    status: 'committed',
+  },
+  {
+    id: 'RFL-004',
+    timestamp: '2025-12-11T16:30:00Z',
+    content: 'Revised the central research question slightly. Changed "impact on global markets" to "impact on European Union policy" to make the scope manageable. This should improve the stability score.',
+    status: 'committed',
+  },
+  {
+    id: 'RFL-003',
+    timestamp: '2025-12-10T09:15:00Z',
+    content: 'Encountered significant difficulty finding up-to-date data on niche market adoption of technology X. Marking this keyword as high-risk. May need to replace it with a broader term if the next two searches fail.',
+    status: 'committed',
+  },
+  {
+    id: 'RFL-002',
+    timestamp: '2025-12-10T14:45:00Z',
+    content: 'Quick note: Started drafting the analysis summary for the feasibility check, but I forgot to save the full conclusion. Will finish tomorrow morning.',
+    status: 'draft',
+  },
+  {
+    id: 'RFL-001',
+    timestamp: '2025-12-09T11:00:00Z',
+    content: 'First session reflection: The initial question is too broad, covering three distinct sectors. The next step is to use the refinement tool to narrow the focus to a single industrial application.',
+    status: 'committed',
+  },
+];
+
+// Placeholder Mock Data (removed as per best practice, using initialEntries)
+// const mockReflectionLogs: ReflectionLogEntry[] = [...];
+
 // Log entries are stored in a reactive variable, initialized from props
-const logEntries = ref<ReflectionLogEntry[]>(props.initialEntries || []);
+// const logEntries = ref<ReflectionLogEntry[]>(props.initialEntries || []);
+const logEntries = ref<ReflectionLogEntry[]>(mockReflectionLogs);
 
 // ID of the currently selected entry in the list
 const selectedEntryId = ref<string | null>(null);
@@ -130,7 +140,7 @@ const originalEntry = ref<ReflectionLogEntry | null>(null);
 // The draft object being actively edited/created in the right panel
 const currentDraft = ref<ReflectionLogEntry | null>(null);
 
-// Flag indicating if we are in 'edit' mode for an existing entry
+// Flag indicating if we are in 'edit' mode for an existing entry (used to control input state)
 const isEditing = ref(false);
 
 
@@ -146,10 +156,6 @@ const isDirty = computed(() => {
   return currentDraft.value.content.trim() !== originalEntry.value.content.trim();
 });
 
-/** Provides a contextual placeholder for the Textarea. */
-const editorPlaceholder = computed(() => {
-  return "Document your decisions, challenges encountered, and insights gained during the research process...";
-});
 
 // --- WATCHERS ---
 
@@ -159,14 +165,14 @@ watch(() => props.initialEntries, (newEntries) => {
 }, { deep: true });
 
 
-// --- METHODS ---
+// --- METHODS (Business Logic) ---
 
 /**
  * Handles selecting an existing entry from the list.
  * @param entry The entry object clicked in the history list.
  */
 function handleSelectEntry(entry: ReflectionLogEntry) {
-  // If user is editing a different entry, confirm before switching
+  // Confirmation check before switching entries if changes are pending
   if (isEditing.value && isDirty.value && selectedEntryId.value !== entry.id) {
     if (!window.confirm("You have unsaved changes. Discard and switch entry?")) {
       return;
@@ -182,6 +188,7 @@ function handleSelectEntry(entry: ReflectionLogEntry) {
 
 /** Handles switching the view to create a new, blank entry. */
 function handleNewEntry() {
+  // Confirmation check before starting new entry if changes are pending
   if (isEditing.value && isDirty.value) {
     if (!window.confirm("You have unsaved changes. Discard and start a new entry?")) {
       return;
@@ -200,7 +207,9 @@ function handleNewEntry() {
   };
 }
 
-/** Handles saving the current draft (either as 'draft' or 'committed'). */
+/** * Handles saving the current draft (either as 'draft' or 'committed').
+ * This method is called from the Detail Panel via the 'save' event.
+ */
 function handleSave(targetStatus: 'draft' | 'commit') {
   if (!currentDraft.value || !currentDraft.value.content.trim()) {
     alert("Reflection content cannot be empty.");
@@ -218,9 +227,16 @@ function handleSave(targetStatus: 'draft' | 'commit') {
   // 2. Emit the event to the parent/store/API
   emit('save-log', finalEntry);
 
-  // 3. Update local state if it was a new entry (optional: API should handle ID)
+  // 3. Update local state (optimistic update/new entry handling)
   if (isNewEntry.value) {
-    logEntries.value.unshift(finalEntry); // Add to local list (optimistic update)
+    // Note: In a real app, you might wait for API response before adding to logEntries
+    logEntries.value.unshift(finalEntry);
+  } else {
+    // Replace the updated entry in the list
+    const index = logEntries.value.findIndex(e => e.id === finalEntry.id);
+    if (index !== -1) {
+      logEntries.value[index] = finalEntry;
+    }
   }
 
   // 4. Close the modal if committed, or stay and reset if just a draft save
@@ -229,13 +245,15 @@ function handleSave(targetStatus: 'draft' | 'commit') {
   } else {
     // Re-select the saved entry and disable editing
     selectedEntryId.value = finalEntry.id;
-    originalEntry.value = finalEntry;
+    originalEntry.value = JSON.parse(JSON.stringify(finalEntry)); // Update original for future dirty checks
     currentDraft.value = finalEntry;
     isEditing.value = false;
   }
 }
 
-/** Handles canceling the edit on an existing entry. */
+/** * Handles canceling the edit on an existing entry.
+ * This method is called from the Detail Panel via the 'cancel-edit' event.
+ */
 function handleCancelEdit() {
   if (isDirty.value) {
     if (window.confirm("Discard changes to the current entry?")) {
@@ -248,26 +266,15 @@ function handleCancelEdit() {
   }
 }
 
-/** Handles general cancellation (closing the modal). */
-function handleCancel() {
-  if (isEditing.value && isDirty.value) {
-    if (!window.confirm("You have unsaved changes. Are you sure you want to exit and discard them?")) {
-      return;
-    }
-  }
-  emit('close-modal');
-}
-
+// NOTE: The handleCancel logic for closing the entire modal should ideally be
+// placed on the FullScreenModalTemplate or a dedicated close button if needed.
+// However, the check is kept here for completeness, assuming a final close step
+// might need validation.
 
 // --- LIFECYCLE / INITIALIZATION ---
-// On component mount, handle potential initial selection (e.g., if parent passed an ID)
-// For simplicity, we initialize with no selection, waiting for user interaction.
+// (Optional: Implement logic to automatically select the latest entry on mount)
 </script>
 
 <style scoped>
-/* Scoped styles can be added here if needed, but Tailwind is generally preferred. */
-/* Ensures the main content area grows and allows internal scrolling */
-.flex-1 {
-  flex-grow: 1;
-}
+/* Scoped styles kept minimal, relying on utility classes in the sub-components. */
 </style>
