@@ -53,7 +53,7 @@ const unreviewedKeywordCount = computed(() => {
 /** Calculates the number of scope elements that need user attention (DRAFT/SUGGESTED). */
 const unreviewedScopeCount = computed(() => {
   // NOTE: Assuming DRAFT status covers all unreviewed scope items.
-  return props.scope.filter(s => s.status === 'DRAFT').length;
+  return props.scope.filter(s => s.status === 'AI_EXTRACTED' || s.status === 'USER_DRAFT').length;
 });
 
 /** Total count of all items requiring user review across all sections. */

@@ -36,16 +36,16 @@
     <div class="h-px bg-gray-200"></div>
     <KeywordManagementSection
       :keywords="keywords"
-      ref="keywordSectionRef"
+      :ref="'keywordSectionRef'"
       @add-request="handleKeywordAction('keyword-add')"
       @edit-request="(payload) => handleKeywordAction('keyword', payload)"
     />
 
     <ScopeManagementSection
-        :scope="scope"
-        :ref="scopeSectionRef"
-        @add-request="handleScopeAction('scope-add')"
-        @edit-request="(payload: any) => handleScopeAction('scope', payload)"
+      :scope="scope"
+      :ref="'scopeSectionRef'"
+      @add-request="handleScopeAction('scope-add')"
+      @edit-request="(payload: any) => handleScopeAction('scope', payload)"
     />
 
     <div class="h-px bg-gray-200"></div>
@@ -146,7 +146,7 @@ const getFeasibilityDescription = (status: TFeasibilityStatus) => {
  */
 const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index: number, keyword: TopicKeyword }) => {
     if (type === 'keyword-add') {
-        handleViewDetails('keyword-add');
+        handleViewDetails('keyword');
     } else if (type === 'keyword' && payload) {
         handleViewDetails('keyword', payload.index, payload.keyword);
     }
@@ -157,7 +157,7 @@ const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index:
  */
 const handleScopeAction = (type: 'scope' | 'scope-add', payload?: { index: number, scope: TopicScopeElement }) => {
     if (type === 'scope-add') {
-        handleViewDetails('scope-add');
+        handleViewDetails('scope');
     } else if (type === 'scope' && payload) {
         // NOTE: Scope edit requires the 'scope' type and index/value payload
         handleViewDetails('scope', payload.index, payload.scope);

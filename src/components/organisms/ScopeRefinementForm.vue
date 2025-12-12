@@ -4,8 +4,11 @@
       Refine Research Scope: {{ initialScopeElement.label }}
     </Text>
     <Text tag="p" size="md" color="gray-600">
-      Define the specific **{{ initialScopeElement.label }}** boundary for your research. Changes will only be saved when you click
-
+      Define the specific
+      <Text tag="span" size="md" weight="bold" color="gray-900">
+        {{ initialScopeElement.label }}
+      </Text>
+      boundary for your research. Changes will only be saved when you click
       <Text tag="span" size="md" weight="bold" color="gray-900">
         Lock Scope
       </Text>
@@ -43,15 +46,22 @@
     </div>
 
     <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-2">
-        <div class="flex items-center space-x-2">
-            <Icon name="ExclamationTriangle" type="solid" size="sm" color="yellow-600" />
-            <Text tag="h3" size="base" weight="semibold" color="yellow-700">
-                Scope Validation
-            </Text>
-        </div>
-        <Text tag="p" size="sm" color="yellow-600">
-            **Current Feasibility Status: {{ feasibilityStatus }}.** Precisely defining **{{ initialScopeElement.label }}** may improve resource abundance.
+      <div class="flex items-center space-x-2">
+        <Icon name="ExclamationTriangle" type="solid" size="sm" color="yellow-600" />
+        <Text tag="h3" size="base" weight="semibold" color="yellow-700">
+          Scope Validation
         </Text>
+      </div>
+      <Text tag="p" size="sm" color="yellow-600">
+        <Text tag="span" size="md" weight="bold" color="gray-900">
+          Current Feasibility Status: {{ feasibilityStatus }}.
+        </Text>
+        Precisely defining
+        <Text tag="span" size="md" weight="bold" color="gray-900">
+          {{ initialScopeElement.label }}
+        </Text>
+        may improve resource abundance.
+      </Text>
     </div>
 
     <div class="flex justify-end space-x-3 pt-4 border-t border-gray-200">
@@ -212,12 +222,6 @@ async function handleUnifiedSubmit(targetStatus: TopicScopeElementStatus) {
 
     // API Call (Simulated/Corrected based on expected Scope endpoint)
     let response = null;
-    const dataToSend = {
-        label: props.initialScopeElement.label, // Label must be sent back
-        value: value,
-        status: finalStatus,
-    };
-
     if (scopeElementId.value) {
       response = await apiService.workflows.scopes.update(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
     }

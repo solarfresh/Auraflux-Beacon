@@ -62,16 +62,17 @@
             @close-modal="isManagementModalOpen = false"
         />
         <KeywordRefinementForm
-            v-if="managementModalType === 'keyword'"
-            :initial-keyword="editingInitialKeyword!"
-            :keyword-index="editingKeywordIndex!"
-            @close-modal="isManagementModalOpen = false"
+          v-if="managementModalType === 'keyword'"
+          :initial-keyword="editingInitialKeyword!"
+          :keyword-index="editingKeywordIndex!"
+          @close-modal="isManagementModalOpen = false"
         />
         <ScopeRefinementForm
-            v-else-if="managementModalType === 'scope-management'"
-            :initial-scope="initiativeStore.topicScope"
-            :feasibility-status="initiativeStore.feasibilityStatus"
-            @close-modal="isManagementModalOpen = false"
+          v-if="managementModalType === 'scope'"
+          :initial-scope-element="editingInitialScope!"
+          :scope-index="editingScopeIndex!"
+          :feasibility-status="feasibilityStatus"
+          @close-modal="isManagementModalOpen = false"
         />
 
         <div v-else class="text-center p-8">Select an item to manage.</div>
@@ -99,7 +100,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import SidebarContent from '@/components/templates/SidebarContent.vue';
 
 import { TopicKeyword } from '@/interfaces/initiation';
-import type { ManagementType } from '@/interfaces/initiation.ts';
+import type { ManagementType, TopicScopeElement } from '@/interfaces/initiation.ts';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
@@ -111,6 +112,8 @@ const isManagementModalOpen = ref(false); // Controls a generic modal for editin
 const managementModalType = ref<ManagementType>(null);
 const editingKeywordIndex = ref<number | undefined>(undefined);
 const editingInitialKeyword = ref<TopicKeyword | null>(null);
+const editingScopeIndex = ref<number | undefined>(undefined);
+const editingInitialScope = ref<TopicScopeElement | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
@@ -151,7 +154,10 @@ function handleSendMessage(content: string) {
  */
 function handleViewDetails(type: ManagementType, index?: number, value?: any) {
     editingKeywordIndex.value = undefined;
+    editingScopeIndex.value = undefined;
     editingInitialKeyword.value = null;
+    editingInitialScope.value = null;
+    managementModalType.value = type;
 
     switch (type) {
         case 'reflection-log':
@@ -167,17 +173,16 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
             break;
 
         case 'final-question':
-        case 'scope-management':
-            // Open a generic management modal for Question/Scope
-            managementModalType.value = type;
-            isManagementModalOpen.value = true;
-            break;
+        case 'scope':
+          // Open a generic management modal for Question/Scope
+          editingScopeIndex.value = index || topicScope.value.length;
+          editingInitialScope.value = value || {id: '', label: '', value: '', status: 'USER_DRAFT'} as TopicScopeElement;
+          isManagementModalOpen.value = true;
+          break;
 
-        case 'keyword-add':
         case 'keyword':
           editingKeywordIndex.value = index || topicKeywords.value.length;
           editingInitialKeyword.value = value || {id: '', text: '', status: 'USER_DRAFT'} as TopicKeyword;
-          managementModalType.value = 'keyword';
           isManagementModalOpen.value = true;
           break;
 

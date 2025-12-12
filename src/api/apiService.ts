@@ -127,10 +127,10 @@ export const apiService = {
     },
     scopes: {
       create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
-        return apiClient.post(WorkflowsEndpoints.scopes.create(), {lable: scopeLabel, value: scopeValue, status: scopeStatus})
+        return apiClient.post(WorkflowsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       },
       update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
-        return apiClient.put(WorkflowsEndpoints.scopes.update(scopeId), {lable: scopeLabel, value: scopeValue, status: scopeStatus})
+        return apiClient.put(WorkflowsEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       }
     }
   },
