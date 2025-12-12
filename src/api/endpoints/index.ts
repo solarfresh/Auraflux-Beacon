@@ -33,14 +33,20 @@ export const WorkflowsEndpoints = {
     chat: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat`,
     getChatHistory: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat_history`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history`,
     getRefinedTopic: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/refined_topic`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic`,
   },
   keywords: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic_keywords`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords`,
     update: (keywordId: string) =>
       `${AURAFLUX_NEXUS_URL}/keywords/${keywordId}/`,
+  },
+  scopes: {
+    create: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes`,
+    update: (scopeId: string) =>
+      `${AURAFLUX_NEXUS_URL}/scopes/${scopeId}/`,
   }
 }

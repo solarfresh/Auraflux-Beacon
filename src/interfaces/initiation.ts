@@ -1,5 +1,5 @@
 export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
-export type ManagementType = 'final-question' | 'keyword' | 'keyword-add' | 'scope-management' | 'scope-add' | 'scope' | 'reflection-log' | null;
+export type ManagementType = 'final-question' | 'keyword' | 'scope' | 'reflection-log' | null;
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 
@@ -18,6 +18,7 @@ export interface TopicKeywordStyle {
 }
 
 export interface TopicScopeElement {
+  id: string;
   label: string;
   value: string;
   status: TopicScopeElementStatus;
