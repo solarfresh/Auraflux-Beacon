@@ -30,7 +30,7 @@
         <ul class="space-y-2 pt-1">
           <ScopeListItem
               v-for="(item, index) in filteredScope('LOCKED')"
-              :key="index"
+              :key="item.id"
               :scope-element="item"
               :index="index"
               @edit-request="handleScopeEdit"
@@ -48,7 +48,7 @@
         <ul v-if="isReviewGroupOpen" class="space-y-2 pt-1">
            <ScopeListItem
               v-for="(item, index) in filteredScope('REVIEW')"
-              :key="index"
+              :key="item.id"
               :scope-element="item"
               :index="index"
               @edit-request="handleScopeEdit"
@@ -67,7 +67,7 @@
         <ul v-if="isOnHoldGroupOpen" class="space-y-2 pt-1">
            <template
              v-for="(item, index) in filteredScope('ON_HOLD')"
-             :key="index"
+             :key="item.id"
            >
              <ScopeListItem
                v-if="isViewingAll || index < 3"

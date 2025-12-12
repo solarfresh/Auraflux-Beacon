@@ -18,6 +18,7 @@ export interface TopicKeywordStyle {
 }
 
 export interface TopicScopeElement {
+  id: string;
   label: string;
   value: string;
   status: TopicScopeElementStatus;
