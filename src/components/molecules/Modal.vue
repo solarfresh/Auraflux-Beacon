@@ -2,14 +2,14 @@
   <Transition name="modal-fade">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50"
+      class="fixed inset-0 z-50 bg-gray-900/50"
       @click.self="$emit('close')"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
     >
       <div
-        class="m-4 transform mx-auto"
+        :class="['mx-auto my-4 transform', modalWidthClass]"
       >
         <slot></slot>
       </div>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, watch } from 'vue';
 
 // --- Props & Emits ---
 const props = defineProps({
@@ -29,11 +29,17 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  maxWidthClass: {
+    type: String,
+    required: false
+  }
 });
 
 const emit = defineEmits<{
   (e: 'close'): void
 }>();
+
+const modalWidthClass = computed(() => props.maxWidthClass || 'max-w-2xl');
 
 // --- Accessibility/UX Logic ---
 

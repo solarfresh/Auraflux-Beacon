@@ -1,6 +1,6 @@
 <template>
   <Modal :isOpen="isOpen" @close="$emit('close')">
-    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full m-4" >
+    <div class="bg-white rounded-xl shadow-2xl w-full m-4" >
       <div class="p-6">
 
         <Text tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-4">

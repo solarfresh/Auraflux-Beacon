@@ -1,7 +1,7 @@
 <template>
-  <div class="w-2/3 p-6 bg-white h-full">
+  <div class="w-2/3 h-full p-6 bg-white">
 
-    <div v-if="currentDraft" class="flex flex-col h-full">
+    <div v-if="currentDraft" class="flex flex-col h-full overflow-y-auto">
 
       <Text tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-6">
         {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
@@ -22,6 +22,19 @@
         </Text>
       </div>
 
+      <div class="mb-6">
+        <Text tag="label" for="entry-title" size="sm" weight="medium" color="gray-700" class="block mb-1">
+          Entry Title
+        </Text>
+        <Input
+          id="entry-title"
+          v-model="currentDraft.title"
+          :disabled="!isEditable"
+          required
+          placeholder="Summarize the focus of this reflection (e.g., 'Initial Scope Review', 'Data Feasibility Check')"
+          class="w-full"
+        />
+      </div>
       <Textarea
         v-model="currentDraft.content"
         :rows="15"
@@ -81,12 +94,14 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
+import Input from '@/components/atoms/Input.vue';
 
 // --- INTERFACE DEFINITION ---
 /** Defines the structure for a single Reflection Log entry. */
 interface ReflectionLogEntry {
   id: string;
   timestamp: string; // ISO string date
+  title: string;
   content: string;
   status: 'draft' | 'committed';
 }

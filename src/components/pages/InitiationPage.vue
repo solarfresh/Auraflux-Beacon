@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen">
+  <div class="h-screen w-screen">
     <!-- Main Workspace Template: Utilizes the DualPane layout -->
     <DualPaneWorkspaceTemplate>
 
@@ -53,7 +53,7 @@
       <template #header>
         Manage {{ getModalTitle(managementModalType) }}
       </template>
-      <template #default>
+      <template #content>
         <FinalQuestionEditor
             v-if="managementModalType === 'final-question'"
             :initial-question="initiativeStore.finalQuestion"

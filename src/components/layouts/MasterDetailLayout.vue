@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen overflow-hidden">
+  <div class="flex h-full w-full overflow-hidden">
 
     <slot name="master-panel"></slot>
 
