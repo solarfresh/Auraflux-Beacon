@@ -18,7 +18,7 @@
           </span>
         </Text>
         <Text tag="span" weight="medium">
-          Last Updated: {{ new Date(currentDraft.timestamp).toLocaleString() }}
+          Last Updated: {{ new Date(currentDraft.updateAt).toLocaleString() }}
         </Text>
       </div>
 
@@ -89,22 +89,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
+import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import Input from '@/components/atoms/Input.vue';
-
-// --- INTERFACE DEFINITION ---
-/** Defines the structure for a single Reflection Log entry. */
-interface ReflectionLogEntry {
-  id: string;
-  timestamp: string; // ISO string date
-  title: string;
-  content: string;
-  status: 'draft' | 'committed';
-}
+import type { ReflectionLogEntry } from '@/interfaces/initiation';
+import { computed } from 'vue';
 
 // --- PROPS ---
 const props = defineProps<{

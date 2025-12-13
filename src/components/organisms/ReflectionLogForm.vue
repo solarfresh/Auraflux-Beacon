@@ -18,8 +18,8 @@
               @click="handleSelectEntry(entry)">
 
               <Text tag="p" size="sm" weight="medium" :color="selectedEntryId === entry.id ? 'indigo-800' : 'gray-800'">
-                {{ new Date(entry.timestamp).toLocaleDateString() }}
-                {{ new Date(entry.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
+                {{ new Date(entry.updateAt).toLocaleDateString() }}
+                {{ new Date(entry.updateAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}
                 <span
                   v-if="entry.status === 'draft'"
                   class="ml-2 text-xs font-semibold text-orange-500"
@@ -58,21 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
 import Text from '@/components/atoms/Text.vue';
 import MasterDetailLayout from '@/components/layouts/MasterDetailLayout.vue';
 import MasterListPanel from '@/components/molecules/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/ReflectionLogEditorPanel.vue';
-
-// --- INTERFACE DEFINITION ---
-/** Defines the structure for a single Reflection Log entry. */
-interface ReflectionLogEntry {
-  id: string;
-  timestamp: string; // ISO string date
-  title: string;
-  content: string;
-  status: 'draft' | 'committed';
-}
+import type { ReflectionLogEntry } from '@/interfaces/initiation';
+import { computed, ref, watch } from 'vue';
 
 // --- PROPS & EMITS ---
 const props = defineProps<{
@@ -93,70 +84,80 @@ const emit = defineEmits<{
 const mockReflectionLogs: ReflectionLogEntry[] = [
   {
     id: 'ARFL-005',
-    timestamp: '2025-12-12T10:00:00Z',
+    updateAt: '2025-12-12T10:00:00Z',
+    createAt: '2025-12-12T10:00:00Z',
     title: 'ARFL-005-AAAAA',
     content: 'Initial planning session completed. Decided to focus on the "Circular Economy" aspect first, as data feasibility seems higher there. Need to re-evaluate the scope after the first search iteration.',
     status: 'committed',
   },
   {
     id: 'ARFL-004',
-    timestamp: '2025-12-11T16:30:00Z',
+    updateAt: '2025-12-11T16:30:00Z',
+    createAt: '2025-12-11T16:30:00Z',
     title: 'ARFL-004',
     content: 'Revised the central research question slightly. Changed "impact on global markets" to "impact on European Union policy" to make the scope manageable. This should improve the stability score.',
     status: 'committed',
   },
   {
     id: 'ARFL-003',
-    timestamp: '2025-12-10T09:15:00Z',
+    updateAt: '2025-12-10T09:15:00Z',
+    createAt: '2025-12-10T09:15:00Z',
     title: 'ARFL-003',
     content: 'Encountered significant difficulty finding up-to-date data on niche market adoption of technology X. Marking this keyword as high-risk. May need to replace it with a broader term if the next two searches fail.',
     status: 'committed',
   },
   {
     id: 'ARFL-002',
-    timestamp: '2025-12-10T14:45:00Z',
+    updateAt: '2025-12-10T14:45:00Z',
+    createAt: '2025-12-10T14:45:00Z',
     title: 'ARFL-002',
     content: 'Quick note: Started drafting the analysis summary for the feasibility check, but I forgot to save the full conclusion. Will finish tomorrow morning.',
     status: 'draft',
   },
   {
     id: 'ARFL-001',
-    timestamp: '2025-12-09T11:00:00Z',
+    updateAt: '2025-12-09T11:00:00Z',
+    createAt: '2025-12-09T11:00:00Z',
     title: 'ARFL-001',
     content: 'First session reflection: The initial question is too broad, covering three distinct sectors. The next step is to use the refinement tool to narrow the focus to a single industrial application.',
     status: 'committed',
   },
   {
     id: 'RFL-005',
-    timestamp: '2025-12-12T10:00:00Z',
+    updateAt: '2025-12-12T10:00:00Z',
+    createAt: '2025-12-12T10:00:00Z',
     title: 'RFL-005',
     content: 'Initial planning session completed. Decided to focus on the "Circular Economy" aspect first, as data feasibility seems higher there. Need to re-evaluate the scope after the first search iteration.',
     status: 'committed',
   },
   {
     id: 'RFL-004',
-    timestamp: '2025-12-11T16:30:00Z',
+    updateAt: '2025-12-11T16:30:00Z',
+    createAt: '2025-12-11T16:30:00Z',
     title: 'RFL-004',
     content: 'Revised the central research question slightly. Changed "impact on global markets" to "impact on European Union policy" to make the scope manageable. This should improve the stability score.',
     status: 'committed',
   },
   {
     id: 'RFL-003',
-    timestamp: '2025-12-10T09:15:00Z',
+    updateAt: '2025-12-10T09:15:00Z',
+    createAt: '2025-12-10T09:15:00Z',
     title: 'RFL-003',
     content: 'Encountered significant difficulty finding up-to-date data on niche market adoption of technology X. Marking this keyword as high-risk. May need to replace it with a broader term if the next two searches fail.',
     status: 'committed',
   },
   {
     id: 'RFL-002',
-    timestamp: '2025-12-10T14:45:00Z',
+    updateAt: '2025-12-10T14:45:00Z',
+    createAt: '2025-12-10T14:45:00Z',
     title: 'RFL-002',
     content: 'Quick note: Started drafting the analysis summary for the feasibility check, but I forgot to save the full conclusion. Will finish tomorrow morning.',
     status: 'draft',
   },
   {
     id: 'RFL-001',
-    timestamp: '2025-12-09T11:00:00Z',
+    updateAt: '2025-12-09T11:00:00Z',
+    createAt: '2025-12-09T11:00:00Z',
     title: 'RFL-001',
     content: 'First session reflection: The initial question is too broad, covering three distinct sectors. The next step is to use the refinement tool to narrow the focus to a single industrial application.',
     status: 'committed',
@@ -240,7 +241,8 @@ function handleNewEntry() {
   originalEntry.value = null;
   currentDraft.value = {
     id: `new-${Date.now()}`, // Temporary ID
-    timestamp: new Date().toISOString(),
+    updateAt: new Date().toISOString(),
+    createAt: new Date().toISOString(),
     title: '',
     content: '',
     status: 'draft',
@@ -256,10 +258,10 @@ function handleSave(targetStatus: 'draft' | 'commit') {
     return;
   }
 
-  // 1. Update the status and timestamp
+  // 1. Update the status and updateAt
   const finalEntry: ReflectionLogEntry = {
     ...currentDraft.value,
-    timestamp: new Date().toISOString(), // Update timestamp on save
+    updateAt: new Date().toISOString(), // Update updateAt on save
     status: targetStatus === 'commit' ? 'committed' : 'draft',
     content: currentDraft.value.content.trim(),
   };

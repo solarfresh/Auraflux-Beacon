@@ -1,7 +1,17 @@
 export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
 export type ManagementType = 'final-question' | 'keyword' | 'scope' | 'reflection-log' | null;
+export type ReflectionLogStatus = 'draft' | 'committed';
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
+
+export interface ReflectionLogEntry {
+  id: string;
+  title: string;
+  content: string;
+  createAt: string;
+  updateAt: string;
+  status: ReflectionLogStatus;
+}
 
 export interface TopicKeyword {
   id: string;
