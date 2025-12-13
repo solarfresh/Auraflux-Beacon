@@ -77,7 +77,7 @@
 
         <ReflectionLogForm
           v-else-if="managementModalType === 'reflection-log'"
-          :initial-entries="[]"
+          :initial-entries="reflectionLogEntries"
           @close-modal="isManagementModalOpen = false"
         />
 
@@ -129,6 +129,7 @@ const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
 const finalQuestion = computed(() => initiativeStore.finalQuestion);
 const isTyping = computed(() => initiativeStore.isTyping);
 const latestReflection = computed(() => initiativeStore.latestReflection);
+const reflectionLogEntries = computed(() => initiativeStore.reflectionLogs);
 const resourceSuggestion = computed(() => initiativeStore.resourceSuggestion)
 const stabilityScore = computed(() => initiativeStore.stabilityScore);
 const topicKeywords = computed(() => initiativeStore.topicKeywords);
@@ -139,6 +140,7 @@ onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
     initiativeStore.getMessages();
     initiativeStore.getRefinedTopic();
+    initiativeStore.getReflection();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---

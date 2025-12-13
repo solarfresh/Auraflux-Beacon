@@ -4,6 +4,15 @@ export type ReflectionLogStatus = 'draft' | 'committed';
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 
+export interface ReflectionResponse {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  status: ReflectionLogStatus;
+}
+
 export interface ReflectionLogEntry {
   id: string;
   title: string;
@@ -41,12 +50,6 @@ export interface ChatMessage {
   name: string;
   timestamp: string;
   sequence_number: number;
-}
-
-export interface ReflectionLog {
-  thought: string;
-  category: string;
-  timestamp: number;
 }
 
 export interface RefinedTopic {

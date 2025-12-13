@@ -1,8 +1,8 @@
 import { apiService } from '@/api/apiService';
-import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { FeasibilityStatus, ReflectionLogEntry, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import type {
   ChatMessage
@@ -21,7 +21,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
 		/** Flag to indicate if a message is in recieving. */
     const isTyping = ref(false);
 
-    const latestReflection = ref<string>('');
+    const reflectionLogs = ref<ReflectionLogEntry[]>([]);
 
     const resourceSuggestion = ref<string>('');
 
@@ -32,7 +32,10 @@ export const useInitiativeStore = defineStore('intiation', () => {
     const topicScope = ref<TopicScopeElement[]>([]);
 
 		// --- Getters (Computed) ---
-		// --- Actions (Functions) ---
+
+    const latestReflection = computed(() => reflectionLogs.value.at(0)?.content || '');
+
+    // --- Actions (Functions) ---
 
     /**
      * Adds a new message to the chat history.
@@ -78,6 +81,22 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
     }
 
+    async function getReflection() {
+      let response = await apiService.workflows.reflection.get();
+      if (response.data) {
+        reflectionLogs.value = response.data.map((log) => {
+          return {
+            id: log.id,
+            title: log.title,
+            content: log.content,
+            createdAt: log.created_at,
+            updatedAt: log.updated_at,
+            status: log.status,
+          }
+        });
+      }
+    }
+
 		// --- Return public API ---
     return {
         // State
@@ -86,6 +105,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
         finalQuestion,
 				isTyping,
         latestReflection,
+        reflectionLogs,
         resourceSuggestion,
         stabilityScore,
         topicKeywords,
@@ -95,5 +115,6 @@ export const useInitiativeStore = defineStore('intiation', () => {
         addMessage,
         getMessages,
         getRefinedTopic,
+        getReflection,
     };
 })

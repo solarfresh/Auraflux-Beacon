@@ -1,6 +1,6 @@
 import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage, RefinedTopic, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ChatMessage, RefinedTopic, ReflectionResponse, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -123,6 +123,17 @@ export const apiService = {
       },
       update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
         return apiClient.put(WorkflowsEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
+      }
+    },
+    reflection: {
+      create: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionResponse[]>> => {
+        return apiClient.post(WorkflowsEndpoints.reflection.create(), {title: logTitle, content: logContent, status: logStatus})
+      },
+      get: (): Promise<AxiosResponse<ReflectionResponse[]>> => {
+        return apiClient.get(WorkflowsEndpoints.reflection.get())
+      },
+      update: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionResponse[]>> => {
+        return apiClient.put(WorkflowsEndpoints.reflection.update(logId), {title: logTitle, content: logContent, status: logStatus})
       }
     },
     scopes: {
