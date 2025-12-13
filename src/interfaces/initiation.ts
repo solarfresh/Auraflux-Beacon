@@ -8,8 +8,8 @@ export interface ReflectionLogEntry {
   id: string;
   title: string;
   content: string;
-  createAt: string;
-  updateAt: string;
+  createdAt: string;
+  updatedAt: string;
   status: ReflectionLogStatus;
 }
 
@@ -55,6 +55,5 @@ export interface RefinedTopic {
   final_research_question: string,
   keywords: TopicKeyword[],
   scope: TopicScopeElement[],
-  latest_reflection: string,
   resource_suggestion: string,
 }

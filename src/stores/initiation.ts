@@ -71,7 +71,6 @@ export const useInitiativeStore = defineStore('intiation', () => {
       if (response.data) {
         feasibilityStatus.value = response.data.feasibility_status;
         finalQuestion.value = response.data.final_research_question;
-        latestReflection.value = response.data.latest_reflection;
         resourceSuggestion.value = response.data.resource_suggestion;
         stabilityScore.value = response.data.stability_score;
         topicKeywords.value = response.data.keywords;

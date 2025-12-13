@@ -18,7 +18,7 @@
           </span>
         </Text>
         <Text tag="span" weight="medium">
-          Last Updated: {{ new Date(currentDraft.updateAt).toLocaleString() }}
+          Last Updated: {{ new Date(currentDraft.updatedAt).toLocaleString() }}
         </Text>
       </div>
 
