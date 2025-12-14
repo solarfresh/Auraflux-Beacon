@@ -229,10 +229,7 @@ async function handleUnifiedSubmit(targetStatus: TopicScopeElementStatus) {
       response = await apiService.workflows.scopes.create(props.initialScopeElement.label, value, finalStatus);
     }
 
-    if (response) {
-        // 2. Update the store with the response (assuming endpoint returns the full updated list)
-        initiativeStore.topicScope = response.data;
-    }
+    initiativeStore.createOrUpdateTopicScopes(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
 
     // 3. Close the modal
     emit('close-modal');

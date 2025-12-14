@@ -67,6 +67,9 @@ import Text from '@/components/atoms/Text.vue';
 import Modal from '@/components/molecules/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 // --- Dependency Injection (Store) ---
 const authStore = useAuthStore();
@@ -101,7 +104,7 @@ const handleLogin = async () => {
     if (success) {
       username.value = '';
       password.value = '';
-      emit('close');
+      router.go(0);
     } else {
       error.value = 'Login failed. Please check your credentials.';
     }

@@ -63,7 +63,10 @@ import MasterDetailLayout from '@/components/layouts/MasterDetailLayout.vue';
 import MasterListPanel from '@/components/molecules/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/ReflectionLogEditorPanel.vue';
 import type { ReflectionLogEntry } from '@/interfaces/initiation';
+import { useInitiativeStore } from '@/stores/initiation';
 import { computed, ref, watch } from 'vue';
+
+const initiativeStore = useInitiativeStore();
 
 // --- PROPS & EMITS ---
 const props = defineProps<{
@@ -171,37 +174,19 @@ function handleSave(targetStatus: 'draft' | 'commit') {
     return;
   }
 
-  // 1. Update the status and updatedAt
-  const finalEntry: ReflectionLogEntry = {
-    ...currentDraft.value,
-    updatedAt: new Date().toISOString(), // Update updatedAt on save
-    status: targetStatus === 'commit' ? 'committed' : 'draft',
-    content: currentDraft.value.content.trim(),
-  };
+  initiativeStore.createOrUpdateReflection(
+    currentDraft.value.id,
+    currentDraft.value.title,
+    currentDraft.value.content,
+    targetStatus === 'commit' ? 'committed' : 'draft',
+  );
 
-  // 2. Emit the event to the parent/store/API
-  emit('save-log', finalEntry);
-
-  // 3. Update local state (optimistic update/new entry handling)
-  if (isNewEntry.value) {
-    // Note: In a real app, you might wait for API response before adding to logEntries
-    logEntries.value.unshift(finalEntry);
-  } else {
-    // Replace the updated entry in the list
-    const index = logEntries.value.findIndex(e => e.id === finalEntry.id);
-    if (index !== -1) {
-      logEntries.value[index] = finalEntry;
-    }
-  }
-
-  // 4. Close the modal if committed, or stay and reset if just a draft save
+  // Close the modal if committed, or stay and reset if just a draft save
   if (targetStatus === 'commit') {
     emit('close-modal');
   } else {
     // Re-select the saved entry and disable editing
-    selectedEntryId.value = finalEntry.id;
-    originalEntry.value = JSON.parse(JSON.stringify(finalEntry)); // Update original for future dirty checks
-    currentDraft.value = finalEntry;
+    currentDraft.value.updatedAt = new Date().toISOString();
     isEditing.value = false;
   }
 }

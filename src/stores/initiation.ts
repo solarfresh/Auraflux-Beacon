@@ -62,6 +62,54 @@ export const useInitiativeStore = defineStore('intiation', () => {
         apiService.workflows.initiation.chat(messageContent, agentName);
     }
 
+    async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
+      let response = null;
+      if (logId.includes('new')) {
+        response = await apiService.workflows.reflection.create(title, content, status);
+      } else {
+        response = await apiService.workflows.reflection.update(logId, title, content, status);
+      }
+
+      if (response.data) {
+        reflectionLogs.value = response.data.map((log) => {
+          return {
+            id: log.id,
+            title: log.title,
+            content: log.content,
+            createdAt: log.created_at,
+            updatedAt: log.updated_at,
+            status: log.status,
+          }
+        });
+      }
+    }
+
+    async function createOrUpdateTopicKeywords(keywordId: string, text: string, status: string) {
+      let response = null;
+      if (keywordId) {
+        response = await apiService.workflows.keywords.update(keywordId, text, status);
+      } else {
+        response = await apiService.workflows.keywords.create(text, status);
+      }
+
+      if (response.data) {
+        topicKeywords.value = response.data;
+      }
+    }
+
+    async function createOrUpdateTopicScopes(scopeElementId: string, label: string, value: string, status: string) {
+      let response = null;
+      if (scopeElementId) {
+        response = await apiService.workflows.scopes.update(scopeElementId, label, value, status);
+      } else {
+        response = await apiService.workflows.scopes.create(label, value, status);
+      }
+
+      if (response.data) {
+        topicScope.value = response.data;
+      }
+    }
+
     async function getMessages() {
       let response = await apiService.workflows.initiation.getChatHistory();
       if (response.data) {
@@ -113,6 +161,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
         // Getters
         // Actions
         addMessage,
+        createOrUpdateReflection,
+        createOrUpdateTopicKeywords,
+        createOrUpdateTopicScopes,
         getMessages,
         getRefinedTopic,
         getReflection,
