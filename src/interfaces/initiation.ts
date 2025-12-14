@@ -1,7 +1,26 @@
 export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
 export type ManagementType = 'final-question' | 'keyword' | 'scope' | 'reflection-log' | null;
+export type ReflectionLogStatus = 'draft' | 'committed';
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
+
+export interface ReflectionResponse {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  status: ReflectionLogStatus;
+}
+
+export interface ReflectionLogEntry {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  status: ReflectionLogStatus;
+}
 
 export interface TopicKeyword {
   id: string;
@@ -33,18 +52,11 @@ export interface ChatMessage {
   sequence_number: number;
 }
 
-export interface ReflectionLog {
-  thought: string;
-  category: string;
-  timestamp: number;
-}
-
 export interface RefinedTopic {
   stability_score: number,
   feasibility_status: FeasibilityStatus,
   final_research_question: string,
   keywords: TopicKeyword[],
   scope: TopicScopeElement[],
-  latest_reflection: string,
   resource_suggestion: string,
 }

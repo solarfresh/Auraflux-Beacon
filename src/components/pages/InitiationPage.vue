@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen">
+  <div class="h-screen w-screen">
     <!-- Main Workspace Template: Utilizes the DualPane layout -->
     <DualPaneWorkspaceTemplate>
 
@@ -45,15 +45,15 @@
 
     </DualPaneWorkspaceTemplate>
 
-    <!-- FullScreen Modal for Reflection Log -->
     <FullScreenModalTemplate
       :is-open="isManagementModalOpen"
+      :max-width-class="getModalWidthClass(managementModalType)"
       @close="isManagementModalOpen = false"
     >
       <template #header>
-        Manage {{ managementModalType }}
+        Manage {{ getModalTitle(managementModalType) }}
       </template>
-      <template #default>
+      <template #content>
         <FinalQuestionEditor
             v-if="managementModalType === 'final-question'"
             :initial-question="initiativeStore.finalQuestion"
@@ -62,16 +62,22 @@
             @close-modal="isManagementModalOpen = false"
         />
         <KeywordRefinementForm
-          v-if="managementModalType === 'keyword'"
+          v-else-if="managementModalType === 'keyword'"
           :initial-keyword="editingInitialKeyword!"
           :keyword-index="editingKeywordIndex!"
           @close-modal="isManagementModalOpen = false"
         />
         <ScopeRefinementForm
-          v-if="managementModalType === 'scope'"
+          v-else-if="managementModalType === 'scope'"
           :initial-scope-element="editingInitialScope!"
           :scope-index="editingScopeIndex!"
           :feasibility-status="feasibilityStatus"
+          @close-modal="isManagementModalOpen = false"
+        />
+
+        <ReflectionLogForm
+          v-else-if="managementModalType === 'reflection-log'"
+          :initial-entries="reflectionLogEntries"
           @close-modal="isManagementModalOpen = false"
         />
 
@@ -90,7 +96,6 @@ import { computed, onMounted, ref } from 'vue';
 
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-// import ReflectionLogForm from '@/components/molecules/ReflectionLogForm.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
 import KeywordRefinementForm from '@/components/organisms/KeywordRefinementForm.vue';
@@ -98,6 +103,7 @@ import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue'
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import SidebarContent from '@/components/templates/SidebarContent.vue';
+import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
 import { TopicKeyword } from '@/interfaces/initiation';
 import type { ManagementType, TopicScopeElement } from '@/interfaces/initiation.ts';
@@ -123,6 +129,7 @@ const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
 const finalQuestion = computed(() => initiativeStore.finalQuestion);
 const isTyping = computed(() => initiativeStore.isTyping);
 const latestReflection = computed(() => initiativeStore.latestReflection);
+const reflectionLogEntries = computed(() => initiativeStore.reflectionLogs);
 const resourceSuggestion = computed(() => initiativeStore.resourceSuggestion)
 const stabilityScore = computed(() => initiativeStore.stabilityScore);
 const topicKeywords = computed(() => initiativeStore.topicKeywords);
@@ -133,6 +140,7 @@ onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
     initiativeStore.getMessages();
     initiativeStore.getRefinedTopic();
+    initiativeStore.getReflection();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---
@@ -161,16 +169,8 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
 
     switch (type) {
         case 'reflection-log':
-            // The reflection log should probably open its own dedicated full-screen log view
-            // For now, let's assume it leads to the same full-screen modal as handleReflect() if it's just viewing the history.
-            // If viewing history, a separate component would be needed.
-            console.log('[INITIATION PAGE] Action: Opening full Reflection History view.');
-            // isReflectionHistoryOpen.value = true; // Example
-
-            // If we decide to use a dedicated modal for all, then:
-            // managementModalType.value = type;
-            // isManagementModalOpen.value = true;
-            break;
+          isManagementModalOpen.value = true;
+          break;
 
         case 'final-question':
         case 'scope':
@@ -189,6 +189,38 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
         default:
             console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
     }
+}
+
+function getModalWidthClass(type: ManagementType | null): string {
+  switch (type) {
+    case 'reflection-log':
+      // Requires the largest width for split view
+      return 'max-w-6xl';
+    case 'final-question':
+      // Question editor might need moderate width
+      return 'max-w-3xl';
+    case 'keyword':
+    case 'scope':
+    default:
+      // Standard forms can use the default or slightly smaller width
+      return 'max-w-2xl';
+  }
+}
+
+function getModalTitle(type: ManagementType | null): string {
+  switch (type) {
+    case 'reflection-log':
+      // Requires the largest width for split view
+      return 'Reflection Log';
+    case 'final-question':
+    case 'keyword':
+      return 'Topic Keyword';
+    case 'scope':
+      return 'Topic Scope Element';
+    default:
+      // Standard forms can use the default or slightly smaller width
+      return '';
+  }
 }
 
 /**

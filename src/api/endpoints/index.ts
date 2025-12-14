@@ -31,21 +31,29 @@ export const UsersEndpoints = {
 export const WorkflowsEndpoints = {
   initiation: {
     chat: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/`,
     getChatHistory: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history/`,
     getRefinedTopic: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic/`,
   },
   keywords: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords/`,
     update: (keywordId: string) =>
       `${AURAFLUX_NEXUS_URL}/keywords/${keywordId}/`,
   },
+  reflection: {
+    create: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+    get: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+    update: (scopeId: string) =>
+      `${AURAFLUX_NEXUS_URL}/reflection/${scopeId}/`,
+  },
   scopes: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes`,
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes/`,
     update: (scopeId: string) =>
       `${AURAFLUX_NEXUS_URL}/scopes/${scopeId}/`,
   }

@@ -3,9 +3,9 @@
     The Modal component handles the backdrop, z-index, accessibility,
     and the Esc key/scroll lock logic.
   -->
-  <Modal :isOpen="isOpen" @close="$emit('close')">
+  <Modal :is-open="isOpen" :max-width-class="maxWidthClass" @close="$emit('close')">
     <div
-      class="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh] mx-auto"
+      class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
       @click.stop
     >
       <!-- Modal Header -->
@@ -25,10 +25,7 @@
 
       <!-- Modal Body Content -->
       <main class="p-6 overflow-y-auto flex-1">
-        <slot name="content">
-          <!-- Default slot for main content (e.g., ReflectionModal) -->
-          <slot />
-        </slot>
+        <slot name="content" />
       </main>
     </div>
   </Modal>
@@ -37,14 +34,15 @@
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
 import Modal from '@/components/molecules/Modal.vue';
-import CloseButton from '../molecules/CloseButton.vue'; // Import the new Molecule
+import CloseButton from '../molecules/CloseButton.vue';
 
 // Define the component's props and events
-defineProps<{
+const props = defineProps<{
   /**
    * The visibility state of the modal, passed down to Modal.vue.
    */
   isOpen: boolean;
+  maxWidthClass?: string;
 }>();
 
 defineEmits<{

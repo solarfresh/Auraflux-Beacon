@@ -192,16 +192,9 @@ async function handleUnifiedSubmit(targetStatus: TopicKeywordStatus) {
         // If on hold and user clicks 'Reactivate & Lock'
         finalStatus = 'LOCKED';
     }
+
     // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
-
-    let response = null;
-    if (keywordId.value) {
-      response = await apiService.workflows.keywords.update(keywordId.value, text, finalStatus);
-    } else {
-      response = await apiService.workflows.keywords.create(text, finalStatus);
-    }
-
-    initiativeStore.topicKeywords = response.data;
+    initiativeStore.createOrUpdateTopicKeywords(keywordId.value, text, finalStatus);
 
     emit('close-modal');
 }
