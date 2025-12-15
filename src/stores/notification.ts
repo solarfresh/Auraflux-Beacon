@@ -18,6 +18,7 @@ export const useNotificationStore = defineStore('notification', () => {
     // Extract the reactive properties from the composable
     const {
         isConnected,
+        status,
         receivedMessage,
         error
     } = useWebSocket(AURAFLUX_WS_URL);
