@@ -16,6 +16,24 @@
       />
     </div>
 
+    <div class="h-px bg-gray-200"></div>
+
+    <KeywordManagementSection
+      :keywords="keywords"
+      :ref="'keywordSectionRef'"
+      @add-request="handleKeywordAction('keyword-add')"
+      @edit-request="(payload) => handleKeywordAction('keyword', payload)"
+    />
+
+    <ScopeManagementSection
+      :scope="scope"
+      :ref="'scopeSectionRef'"
+      @add-request="handleScopeAction('scope-add')"
+      @edit-request="(payload: any) => handleScopeAction('scope', payload)"
+    />
+
+    <div class="h-px bg-gray-200"></div>
+
     <div class="space-y-4">
 
       <ResearchValidation
@@ -32,21 +50,6 @@
         </Text>
       </div>
     </div>
-
-    <div class="h-px bg-gray-200"></div>
-    <KeywordManagementSection
-      :keywords="keywords"
-      :ref="'keywordSectionRef'"
-      @add-request="handleKeywordAction('keyword-add')"
-      @edit-request="(payload) => handleKeywordAction('keyword', payload)"
-    />
-
-    <ScopeManagementSection
-      :scope="scope"
-      :ref="'scopeSectionRef'"
-      @add-request="handleScopeAction('scope-add')"
-      @edit-request="(payload: any) => handleScopeAction('scope', payload)"
-    />
 
     <div class="h-px bg-gray-200"></div>
 

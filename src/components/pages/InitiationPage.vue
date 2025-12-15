@@ -173,6 +173,9 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
           break;
 
         case 'final-question':
+          // isManagementModalOpen.value = true;
+          break;
+
         case 'scope':
           // Open a generic management modal for Question/Scope
           editingScopeIndex.value = index || topicScope.value.length;
@@ -213,6 +216,7 @@ function getModalTitle(type: ManagementType | null): string {
       // Requires the largest width for split view
       return 'Reflection Log';
     case 'final-question':
+      return 'Final Question';
     case 'keyword':
       return 'Topic Keyword';
     case 'scope':
