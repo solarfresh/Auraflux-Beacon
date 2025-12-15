@@ -38,7 +38,7 @@
       <!-- Slot: action-bar (Flow Control) -->
       <template #action-bar>
         <ActionBar
-          :final-question="'searchQuery'"
+          :is-proceed-ready="true"
           @transition-request="handlePhaseTransitionRequest"
         />
       </template>
