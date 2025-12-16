@@ -17,7 +17,7 @@
 
       <div class="flex flex-col">
         <Text tag="span" size="base" weight="medium" :color="styles.iconColor">
-          {{ keyword.text }}
+          {{ keyword.label }}
         </Text>
         <Text tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
           {{ styles.secondaryText }}
@@ -37,7 +37,8 @@
 <script setup lang="ts">
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import type { TopicKeyword, TopicKeywordStatus, TopicKeywordStyle } from '@/interfaces/initiation';
+import type { ProcessedKeyword, TopicKeywordStyle } from '@/interfaces/initiation';
+import type { WorkflowState } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -46,7 +47,7 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   /** The single keyword data object. */
-  keyword: TopicKeyword;
+  keyword: ProcessedKeyword;
 
   /** The index of the keyword in the main list (used for emitting the event). */
   index: number;
@@ -54,7 +55,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   /** Emitted when the list item is clicked, requesting the parent (SidebarContent) to open the modal. */
-  (e: 'edit-request', payload: { index: number, keyword: TopicKeyword }): void;
+  (e: 'edit-request', payload: { index: number, keyword: ProcessedKeyword }): void;
 }>();
 
 
@@ -66,7 +67,7 @@ const emit = defineEmits<{
  * This logic is encapsulated here, adhering to the Molecule's SRP.
  */
 const styles = computed<TopicKeywordStyle>(() => {
-  switch (props.keyword.status as TopicKeywordStatus) {
+  switch (props.keyword.workflowState as WorkflowState) {
     case 'LOCKED':
       return {
           classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',

@@ -104,7 +104,7 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import KeywordListItem from '@/components/molecules/KeywordListItem.vue';
-import type { TopicKeyword } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { computed, ref } from 'vue';
 
 
@@ -114,7 +114,7 @@ import { computed, ref } from 'vue';
 
 const props = defineProps<{
   /** List of keywords, status, and source from the parent component (SidebarContent). */
-  keywords: TopicKeyword[];
+  keywords: ProcessedKeyword[];
 }>();
 
 const emit = defineEmits<{
@@ -122,7 +122,7 @@ const emit = defineEmits<{
   (e: 'add-request'): void;
 
   /** Emitted when a user clicks an existing keyword item to open the refinement modal. */
-  (e: 'edit-request', payload: { index: number, keyword: TopicKeyword }): void;
+  (e: 'edit-request', payload: { index: number, keyword: ProcessedKeyword }): void;
 }>();
 
 
@@ -144,17 +144,17 @@ const isOnHoldFullView = ref(false);    // Controls the 'View All' state for On 
 
 /** Calculates the number of locked keywords for the progress tracker. */
 const lockedKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.status === 'LOCKED').length;
+  return props.keywords.filter(k => k.workflowState === 'LOCKED').length;
 });
 
 /** Calculates the number of keywords that need user attention (AI_EXTRACTED or USER_DRAFT). */
 const unreviewedKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.status === 'AI_EXTRACTED' || k.status === 'USER_DRAFT').length;
+  return props.keywords.filter(k => k.workflowState === 'AI_EXTRACTED' || k.workflowState === 'USER_DRAFT').length;
 });
 
 /** Calculates the number of keywords that are archived. */
 const onHoldKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.status === 'ON_HOLD').length;
+  return props.keywords.filter(k => k.workflowState === 'ON_HOLD').length;
 });
 
 
@@ -166,11 +166,11 @@ const onHoldKeywordsCount = computed(() => {
 const filteredKeywords = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
     switch (group) {
         case 'LOCKED':
-            return props.keywords.filter(k => k.status === 'LOCKED');
+            return props.keywords.filter(k => k.workflowState === 'LOCKED');
         case 'REVIEW':
-            return props.keywords.filter(k => k.status === 'AI_EXTRACTED' || k.status === 'USER_DRAFT');
+            return props.keywords.filter(k => k.workflowState === 'AI_EXTRACTED' || k.workflowState === 'USER_DRAFT');
         case 'ON_HOLD':
-            return props.keywords.filter(k => k.status === 'ON_HOLD');
+            return props.keywords.filter(k => k.workflowState === 'ON_HOLD');
         default:
             return [];
     }
@@ -191,7 +191,7 @@ const toggleGroup = (group: 'REVIEW' | 'HOLD') => {
  * Handles the edit-request event from the child KeywordListItem and re-emits it
  * to the parent component (SidebarContent).
  */
-const handleKeywordEdit = (payload: { index: number, keyword: TopicKeyword }) => {
+const handleKeywordEdit = (payload: { index: number, keyword: ProcessedKeyword }) => {
     emit('edit-request', payload);
 };
 </script>

@@ -8,7 +8,7 @@ export type ISPStep =
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
 export type WorkflowState =
   | 'USER_DRAFT'    // Under active editing by the user
-  | 'AI_SUGGESTED'  // Proposed by the AI Agent, awaiting user review
+  | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review
   | 'LOCKED'        // Finalized and protected from accidental changes
   | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
   | 'ARCHIVED';     // Removed from view but preserved in history

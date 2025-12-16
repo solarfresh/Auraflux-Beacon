@@ -76,7 +76,8 @@ import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vu
 import KeywordManagementSection from '@/components/organisms/KeywordManagementSection.vue';
 import ScopeManagementSection from '@/components/organisms/ScopeManagementSection.vue';
 import UnifiedReviewAlert from '@/components/organisms/UnifiedReviewAlert.vue';
-import type { ManagementType, FeasibilityStatus as TFeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
+import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { nextTick, ref } from 'vue';
 
 
@@ -93,10 +94,10 @@ const scopeSectionRef = ref<InstanceType<typeof ScopeManagementSection> | null>(
 
 const props = defineProps<{
   /** List of keywords, status, and source. */
-  keywords: TopicKeyword[];
+  keywords: ProcessedKeyword[];
 
   /** List of scope items (e.g., Geographical, Timeframe). */
-  scope: TopicScopeElement[];
+  scope: ProcessedScope[];
 
   /** The final synthesized research question string. */
   finalQuestion: string;
@@ -147,7 +148,7 @@ const getFeasibilityDescription = (status: TFeasibilityStatus) => {
 /** * Handles keyword actions (add/edit) from the child Organism
  * and routes them to the top-level viewDetails emitter.
  */
-const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index: number, keyword: TopicKeyword }) => {
+const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index: number, keyword: ProcessedKeyword }) => {
     if (type === 'keyword-add') {
         handleViewDetails('keyword');
     } else if (type === 'keyword' && payload) {
@@ -158,7 +159,7 @@ const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index:
 /** * Handles scope actions (add/edit) from the child Organism
  * and routes them to the top-level viewDetails emitter.
  */
-const handleScopeAction = (type: 'scope' | 'scope-add', payload?: { index: number, scope: TopicScopeElement }) => {
+const handleScopeAction = (type: 'scope' | 'scope-add', payload?: { index: number, scope: ProcessedScope }) => {
     if (type === 'scope-add') {
         handleViewDetails('scope');
     } else if (type === 'scope' && payload) {

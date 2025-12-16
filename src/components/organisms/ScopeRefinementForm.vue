@@ -29,16 +29,16 @@
         :rows="1"
         :size="'md'"
         :placeholder="`Enter a specific value for ${initialScopeElement.label}`"
-        :class="{ 'border-red-500': !draftValue.trim() }"
+        :class="{ 'border-red-500': !draftValue?.trim() }"
       />
-      <p v-if="!draftValue.trim()" class="text-xs text-red-500">Scope value cannot be empty.</p>
+      <p v-if="!draftValue?.trim()" class="text-xs text-red-500">Scope value cannot be empty.</p>
     </div>
 
     <div class="flex justify-between items-center p-3 rounded-lg border"
          :class="statusClasses">
 
       <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
-        Current Status: <span class="font-bold">{{ props.initialScopeElement.status }}</span>
+        Current Status: <span class="font-bold">{{ props.initialScopeElement.workflowState }}</span>
         <span v-if="isValueModified" class="text-xs text-red-500 italic ml-2">(Unsaved Value Changes)</span>
       </Text>
 
@@ -74,7 +74,7 @@
         v-if="!isLOCKED"
         variant="tertiary"
         @click="handleUnifiedSubmit('ON_HOLD')"
-        :disabled="!draftValue.trim()"
+        :disabled="!draftValue?.trim()"
       >
         <Icon name="ArchiveBox" type="outline" size="sm" />
         Put On Hold
@@ -83,7 +83,7 @@
       <Button
         v-if="!isLOCKED"
         @click="handleUnifiedSubmit('LOCKED')"
-        :disabled="!draftValue.trim()"
+        :disabled="!draftValue?.trim()"
         variant="primary"
       >
         <Icon name="LockClosed" type="solid" size="sm" />
@@ -108,9 +108,11 @@ import { ref, computed, watch } from 'vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Textarea from '@/components/atoms/Textarea.vue'; // Need to import Textarea
+import Textarea from '@/components/atoms/Textarea.vue';
 import { useInitiativeStore } from '@/stores/initiation';
-import type { TopicScopeElement, TopicScopeElementStatus, FeasibilityStatus } from '@/interfaces/initiation'; // Need TopicScopeElementStatus
+import type { ProcessedScope } from '@/interfaces/initiation';
+import type { WorkflowState } from '@/interfaces/workflow';
+import type { FeasibilityStatus } from '@/interfaces/core';
 
 const initiativeStore = useInitiativeStore();
 
@@ -119,7 +121,7 @@ const props = defineProps<{
     /** The index of the element being edited. Crucial for updating the store. */
     scopeIndex: number;
     /** The single scope element data object. */
-    initialScopeElement: TopicScopeElement;
+    initialScopeElement: ProcessedScope;
     /** Current feasibility status for feedback. */
     feasibilityStatus: FeasibilityStatus;
 }>();
@@ -127,7 +129,7 @@ const props = defineProps<{
 // --- Emits ---
 const emit = defineEmits<{
     /** Emitted when the user submits changes (value and status) through a commitment button. */
-    (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: TopicScopeElementStatus }): void;
+    (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: WorkflowState }): void;
     /** Emitted to close the modal. */
     (e: 'close-modal'): void;
 }>();
@@ -135,10 +137,10 @@ const emit = defineEmits<{
 
 // --- State ---
 // Local state for editing the value (Deferred Save)
-const draftValue = ref(props.initialScopeElement.value);
+const draftValue = ref(props.initialScopeElement.rationale);
 
 // Watcher to reset draft value if the initialScopeElement prop changes externally
-watch(() => props.initialScopeElement.value, (newValue) => {
+watch(() => props.initialScopeElement.rationale, (newValue) => {
     draftValue.value = newValue;
 });
 
@@ -146,19 +148,19 @@ const scopeElementId = computed(() => props.initialScopeElement.id); // Assuming
 
 // --- Computed Properties for Status Management and UI ---
 
-const isLOCKED = computed(() => props.initialScopeElement.status === 'LOCKED');
-const isAI_EXTRACTED = computed(() => props.initialScopeElement.status === 'AI_EXTRACTED'); // For potential AI context
+const isLOCKED = computed(() => props.initialScopeElement.workflowState === 'LOCKED');
+const isAI_EXTRACTED = computed(() => props.initialScopeElement.workflowState === 'AI_EXTRACTED'); // For potential AI context
 
 /** Checks if the local value is different from the initial value. */
 const isValueModified = computed(() => {
-    return draftValue.value.trim() !== props.initialScopeElement.value;
+    return draftValue.value?.trim() !== props.initialScopeElement.rationale;
 });
 
 // --- UI Styling (Copied from KeywordRefinementForm logic) ---
 
 /** Tailwind classes for the status box based on the current scope status. */
 const statusClasses = computed(() => {
-    switch (props.initialScopeElement.status) {
+    switch (props.initialScopeElement.workflowState) {
         case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -170,7 +172,7 @@ const statusClasses = computed(() => {
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialScopeElement.status) {
+    switch (props.initialScopeElement.workflowState) {
         case 'LOCKED': return 'indigo-700';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -182,7 +184,7 @@ const statusTextColor = computed(() => {
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialScopeElement.status) {
+    switch (props.initialScopeElement.workflowState) {
         case 'LOCKED': return 'LockClosed';
         case 'AI_EXTRACTED': return 'Sparkles';
         case 'ON_HOLD': return 'ArchiveBox';
@@ -193,7 +195,7 @@ const statusIcon = computed(() => {
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialScopeElement.status) {
+    switch (props.initialScopeElement.workflowState) {
         case 'LOCKED': return 'indigo-600';
         case 'AI_EXTRACTED': return 'yellow-600';
         case 'ON_HOLD': return 'gray-500';
@@ -206,8 +208,8 @@ const statusIconColor = computed(() => {
 // --- Methods ---
 
 /** Handles the unified submission of the scope element status and value. */
-async function handleUnifiedSubmit(targetStatus: TopicScopeElementStatus) {
-    const value = draftValue.value.trim();
+async function handleUnifiedSubmit(targetStatus: WorkflowState) {
+    const value = draftValue.value?.trim();
     if (!value) return;
 
     let finalStatus = targetStatus;

@@ -35,7 +35,7 @@
          :class="statusClasses">
 
       <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
-        Current Status: <span class="font-bold">{{ props.initialKeyword.status }}</span>
+        Current Status: <span class="font-bold">{{ props.initialKeyword.workflowState }}</span>
         <span v-if="isTextModified" class="text-xs text-red-500 italic ml-2">(Unsaved Text Changes)</span>
       </Text>
 
@@ -86,7 +86,8 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import type { TopicKeyword, TopicKeywordStatus } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
+import type { WorkflowState } from '@/interfaces/workflow';
 import { useInitiativeStore } from '@/stores/initiation';
 import { computed, ref, watch } from 'vue';
 
@@ -97,22 +98,22 @@ const props = defineProps<{
   /** The index of the keyword being edited. Crucial for updating the store. */
   keywordIndex: number;
   /** The current data of the keyword being edited (passed for convenience). */
-  initialKeyword: TopicKeyword;
+  initialKeyword: ProcessedKeyword;
 }>();
 
 const emit = defineEmits<{
   /** Emitted when the user submits changes (text and status) through a commitment button. */
-  (e: 'keywordUpdate', payload: { index: number, newText: string, newStatus: TopicKeywordStatus }): void;
+  (e: 'keywordUpdate', payload: { index: number, newText: string, newStatus: WorkflowState }): void;
   /** Emitted to close the modal. */
   (e: 'close-modal'): void;
 }>();
 
 // --- State ---
 // Local state for editing the text (Deferred Save)
-const draftText = ref(props.initialKeyword.text);
+const draftText = ref(props.initialKeyword.label);
 
 // Watcher to reset draft text if the initial keyword changes externally
-watch(() => props.initialKeyword.text, (newText) => {
+watch(() => props.initialKeyword.label, (newText) => {
     draftText.value = newText;
 });
 
@@ -120,17 +121,17 @@ const keywordId = computed(() => props.initialKeyword.id);
 
 // --- Computed Properties for Status Management and UI ---
 
-const isLOCKED = computed(() => props.initialKeyword.status === 'LOCKED');
-const isON_HOLD = computed(() => props.initialKeyword.status === 'ON_HOLD');
+const isLOCKED = computed(() => props.initialKeyword.workflowState === 'LOCKED');
+const isON_HOLD = computed(() => props.initialKeyword.workflowState === 'ON_HOLD');
 
 /** Checks if the local text is different from the initial text. */
 const isTextModified = computed(() => {
-    return draftText.value.trim() !== props.initialKeyword.text;
+    return draftText.value.trim() !== props.initialKeyword.label;
 });
 
 /** Tailwind classes for the status box based on the current keyword status. */
 const statusClasses = computed(() => {
-    switch (props.initialKeyword.status) {
+    switch (props.initialKeyword.workflowState) {
         case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
         case 'AI_EXTRACTED': return 'bg-yellow-50 border-yellow-200';
         case 'ON_HOLD': return 'bg-gray-100 border-gray-300';
@@ -141,7 +142,7 @@ const statusClasses = computed(() => {
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialKeyword.status) {
+    switch (props.initialKeyword.workflowState) {
         case 'LOCKED': return 'indigo-700';
         case 'AI_EXTRACTED': return 'yellow-800';
         case 'ON_HOLD': return 'gray-500';
@@ -152,7 +153,7 @@ const statusTextColor = computed(() => {
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialKeyword.status) {
+    switch (props.initialKeyword.workflowState) {
         case 'LOCKED': return 'LockClosed';
         case 'AI_EXTRACTED': return 'Sparkles';
         case 'ON_HOLD': return 'ArchiveBox';
@@ -163,7 +164,7 @@ const statusIcon = computed(() => {
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialKeyword.status) {
+    switch (props.initialKeyword.workflowState) {
         case 'LOCKED': return 'indigo-600';
         case 'AI_EXTRACTED': return 'yellow-600';
         case 'ON_HOLD': return 'gray-500';
@@ -175,7 +176,7 @@ const statusIconColor = computed(() => {
 
 // --- Methods ---
 
-async function handleUnifiedSubmit(targetStatus: TopicKeywordStatus) {
+async function handleUnifiedSubmit(targetStatus: WorkflowState) {
     const text = draftText.value.trim();
     if (!text) return; // Should be disabled by template logic, but safety check remains.
 
