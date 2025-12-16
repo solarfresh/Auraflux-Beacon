@@ -1,6 +1,7 @@
 import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage, RefinedTopic, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { APIRefinedTopic, APITopicKeyword, APITopicScopeElement } from '@/interfaces/initiation';
+import type { APIChatMessage } from '@/interfaces/core';
 import type { User } from '@/interfaces/user';
 import type { ReflectionResponse } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
@@ -111,18 +112,18 @@ export const apiService = {
       chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
         return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
       },
-      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
+      getChatHistory: (): Promise<AxiosResponse<APIChatMessage[]>> => {
         return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
       },
-      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
+      getRefinedTopic: (): Promise<AxiosResponse<APIRefinedTopic>> => {
         return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
       }
     },
     keywords: {
-      create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
+      create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<APITopicKeyword[]>> => {
         return apiClient.post(WorkflowsEndpoints.keywords.create(), {text: keywordText, status: keywordStatus})
       },
-      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
+      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<APITopicKeyword[]>> => {
         return apiClient.put(WorkflowsEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
       }
     },
@@ -138,10 +139,10 @@ export const apiService = {
       }
     },
     scopes: {
-      create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
+      create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<APITopicScopeElement[]>> => {
         return apiClient.post(WorkflowsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       },
-      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
+      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<APITopicScopeElement[]>> => {
         return apiClient.put(WorkflowsEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       }
     }

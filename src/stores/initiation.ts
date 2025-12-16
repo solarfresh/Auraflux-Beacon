@@ -1,19 +1,20 @@
 import { apiService } from '@/api/apiService';
-import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import { FeasibilityStatus } from '@/interfaces/core';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
 
 import type {
-  ChatMessage
-} from '@/interfaces/initiation';
+  BaseChatMessage
+} from '@/interfaces/core';
 
 export const useInitiativeStore = defineStore('intiation', () => {
     // --- State (Refs) ---
 
     /** The list of all chat messages in the initiation stage. */
-    const chatMessages = ref<ChatMessage[]>([]);
+    const chatMessages = ref<BaseChatMessage[]>([]);
 
     const feasibilityStatus = ref<FeasibilityStatus>('LOW');
 
@@ -28,9 +29,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
 
     const stabilityScore = ref<number>(0);
 
-    const topicKeywords = ref<TopicKeyword[]>([]);
+    const topicKeywords = ref<ProcessedKeyword[]>([]);
 
-    const topicScope = ref<TopicScopeElement[]>([]);
+    const topicScope = ref<ProcessedScope[]>([]);
 
 		// --- Getters (Computed) ---
 
@@ -50,16 +51,16 @@ export const useInitiativeStore = defineStore('intiation', () => {
             content: messageContent,
 						name: 'User',
             timestamp: new Date().toISOString(),
-            sequence_number: chatMessages.value.length + 1,
-        } as ChatMessage); // Type assertion for strict compliance
+            sequenceNumber: chatMessages.value.length + 1,
+        } as BaseChatMessage); // Type assertion for strict compliance
         chatMessages.value.push({
           id: uuidv4(),
           role: 'system',
           content: 'Agent is typing...',
           name: agentName,
           timestamp: new Date().toISOString(),
-          sequence_number: chatMessages.value.length + 2,
-        } as ChatMessage);
+          sequenceNumber: chatMessages.value.length + 2,
+        } as BaseChatMessage);
         apiService.workflows.initiation.chat(messageContent, agentName);
     }
 
@@ -80,6 +81,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
             createdAt: log.created_at,
             updatedAt: log.updated_at,
             entryType: log.entry_type,
+            step: 'TOPIC_DEFINITION_LOCKIN',
+            associatedResourceIds: [],
+            associatedConceptIds: [],
             status: log.status,
           }
         });
@@ -95,7 +99,15 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
 
       if (response.data) {
-        topicKeywords.value = response.data;
+        topicKeywords.value = response.data.map((keyword) => {
+          return {
+            id: keyword.id,
+            label: keyword.text,
+            workflowState: keyword.status,
+            createdAt: keyword.created_at,
+            updatedAt: keyword.updated_at
+          }
+        });
       }
     }
 
@@ -108,14 +120,29 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
 
       if (response.data) {
-        topicScope.value = response.data;
+        topicScope.value = response.data.map((scope) => {
+          return {
+            id: scope.id,
+            label: scope.label,
+            rationale: scope.value,
+            boundaryType: 'INCLUSION',
+            workflowState: scope.status,
+            createdAt: scope.created_at,
+            updatedAt: scope.updated_at,
+          }
+        });
       }
     }
 
     async function getMessages() {
       let response = await apiService.workflows.initiation.getChatHistory();
       if (response.data) {
-        chatMessages.value = response.data;
+        chatMessages.value = response.data.map(message => {
+          return {
+            ...message,
+            sequenceNumber: message.sequence_number
+          }
+        });
       }
     }
 
@@ -126,8 +153,26 @@ export const useInitiativeStore = defineStore('intiation', () => {
         finalQuestion.value = response.data.final_research_question;
         resourceSuggestion.value = response.data.resource_suggestion;
         stabilityScore.value = response.data.stability_score;
-        topicKeywords.value = response.data.keywords;
-        topicScope.value = response.data.scope;
+        topicKeywords.value = response.data.keywords.map(keyword => {
+          return {
+            id: keyword.id,
+            label: keyword.text,
+            workflowState: keyword.status,
+            createdAt: keyword.created_at,
+            updatedAt: keyword.updated_at
+          }
+        });
+        topicScope.value = response.data.scope.map(scope => {
+          return {
+            id: scope.id,
+            label: scope.label,
+            rationale: scope.value,
+            boundaryType: 'INCLUSION',
+            workflowState: scope.status,
+            createdAt: scope.created_at,
+            updatedAt: scope.updated_at,
+          }
+        });
       }
     }
 
@@ -142,6 +187,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
             createdAt: log.created_at,
             updatedAt: log.updated_at,
             entryType: log.entry_type,
+            step: 'TOPIC_DEFINITION_LOCKIN',
+            associatedResourceIds: [],
+            associatedConceptIds: [],
             status: log.status,
           }
         });

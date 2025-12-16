@@ -55,6 +55,15 @@ export interface BaseChatMessage {
   sequenceNumber: number;
 }
 
+export interface APIChatMessage {
+  id: ID;
+  role: ParticipantRole;
+  content: string;
+  name: string;
+  sequence_number: number;
+  timestamp: DateTimeString;
+}
+
 /**
  * Design System Tokens
  * Used for consistent styling across different node types and UI components.

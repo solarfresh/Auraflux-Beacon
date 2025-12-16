@@ -1,4 +1,4 @@
-import { FeasibilityStatus } from './core';
+import { FeasibilityStatus, BaseChatMessage, DateTimeString } from './core';
 import { TopicKeyword, TopicScopeElement, ResearchFocus } from './knowledge';
 import { WorkflowState } from './workflow';
 
@@ -41,6 +41,32 @@ export interface ProcessedKeyword extends TopicKeyword {
   workflowState: WorkflowState;
 }
 
+export interface APITopicKeyword {
+  id: string;
+  text: string;
+  status: WorkflowState;
+  created_at: DateTimeString;
+  updated_at: DateTimeString;
+}
+
 export interface ProcessedScope extends TopicScopeElement {
   workflowState: WorkflowState;
+}
+
+export interface APITopicScopeElement {
+  id: string;
+  label: string;
+  value: string;
+  status: WorkflowState;
+  created_at: DateTimeString;
+  updated_at: DateTimeString;
+}
+
+export interface APIRefinedTopic {
+  stability_score: number,
+  feasibility_status: FeasibilityStatus,
+  final_research_question: string,
+  keywords: APITopicKeyword[],
+  scope: APITopicScopeElement[],
+  resource_suggestion: string,
 }

@@ -16,8 +16,8 @@ export interface BaseKnowledgeElement {
  * Represents a semantic unit of the research topic.
  */
 export interface TopicKeyword extends BaseKnowledgeElement {
-  importanceWeight: number; // 0.0 to 1.0
-  isCore: boolean;          // Whether it's a central concept
+  importanceWeight?: number; // 0.0 to 1.0
+  isCore?: boolean;          // Whether it's a central concept
   semanticCategory?: string; // e.g., 'Methodology', 'Theory', 'Technology'
 }
 
