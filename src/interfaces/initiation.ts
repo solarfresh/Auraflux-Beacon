@@ -4,24 +4,6 @@ export type ReflectionLogStatus = 'draft' | 'committed';
 export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
 
-export interface ReflectionResponse {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-  status: ReflectionLogStatus;
-}
-
-export interface ReflectionLogEntry {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  status: ReflectionLogStatus;
-}
-
 export interface TopicKeyword {
   id: string;
   text: string;

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 /**
- * MasterDetailLayout.vue
+ * MasterDetailTemplate.vue
  * * This component provides a clean, responsive layout structure for two primary
  * vertical panels: a narrow Master list on the left and a wider Detail view/editor
  * on the right.

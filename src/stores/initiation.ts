@@ -1,5 +1,6 @@
 import { apiService } from '@/api/apiService';
-import type { FeasibilityStatus, ReflectionLogEntry, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { FeasibilityStatus, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
@@ -78,6 +79,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
             content: log.content,
             createdAt: log.created_at,
             updatedAt: log.updated_at,
+            entryType: log.entry_type,
             status: log.status,
           }
         });
@@ -139,6 +141,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
             content: log.content,
             createdAt: log.created_at,
             updatedAt: log.updated_at,
+            entryType: log.entry_type,
             status: log.status,
           }
         });
@@ -152,13 +155,13 @@ export const useInitiativeStore = defineStore('intiation', () => {
         feasibilityStatus,
         finalQuestion,
 				isTyping,
-        latestReflection,
         reflectionLogs,
         resourceSuggestion,
         stabilityScore,
         topicKeywords,
         topicScope,
         // Getters
+        latestReflection,
         // Actions
         addMessage,
         createOrUpdateReflection,

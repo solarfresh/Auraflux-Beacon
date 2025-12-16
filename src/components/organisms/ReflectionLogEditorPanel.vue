@@ -94,7 +94,7 @@ import Icon from '@/components/atoms/Icon.vue';
 import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import type { ReflectionLogEntry } from '@/interfaces/initiation';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // --- PROPS ---

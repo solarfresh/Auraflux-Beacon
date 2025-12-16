@@ -4,7 +4,13 @@ export type ISPStep =
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
-export type TopicKeywordStatus = 'LOCKED' | 'DRAFT' | 'DISCARDED';
+export type ReflectionEntryType =
+  | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
+  | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea
+  | 'EXPLORATION_CHALLENGE'  // User notes a practical difficulty (e.g., lack of good sources)
+  | 'AI_GUIDANCE_FEEDBACK'   // AI-generated encouragement or structured guidance based on user activity
+  | 'UNCATEGORIZED_DRAFT';
+export type ReflectionLogStatus = 'draft' | 'committed';
 
 export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
     TOPIC_DEFINITION_LOCKIN: {
@@ -34,3 +40,22 @@ export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: str
     },
 };
 
+export interface ReflectionResponse {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  status: ReflectionLogStatus;
+  entry_type: ReflectionEntryType;
+}
+
+export interface ReflectionLogEntry {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  status: ReflectionLogStatus;
+  entryType: ReflectionEntryType;
+}

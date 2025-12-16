@@ -1,7 +1,8 @@
 import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage, RefinedTopic, ReflectionResponse, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ChatMessage, RefinedTopic, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
+import type { ReflectionResponse } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
 
 const apiClient = axios.create({
