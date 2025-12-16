@@ -1,9 +1,17 @@
+import { ID, DateTimeString, ParticipantRole, Percentage } from './core';
+
 export type ISPStep =
   | 'TOPIC_DEFINITION_LOCKIN' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
   | 'EXPLORATION'           // Focus: Dealing with information overload (Confusion/Frustration) by sifting and evaluating sources.
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
+export type WorkflowState =
+  | 'USER_DRAFT'    // Under active editing by the user
+  | 'AI_SUGGESTED'  // Proposed by the AI Agent, awaiting user review
+  | 'LOCKED'        // Finalized and protected from accidental changes
+  | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
+  | 'ARCHIVED';     // Removed from view but preserved in history
 export type ReflectionEntryType =
   | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
   | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea
@@ -44,18 +52,46 @@ export interface ReflectionResponse {
   id: string;
   title: string;
   content: string;
-  created_at: string;
-  updated_at: string;
+  created_at: DateTimeString;
+  updated_at: DateTimeString;
   status: ReflectionLogStatus;
   entry_type: ReflectionEntryType;
 }
 
 export interface ReflectionLogEntry {
-  id: string;
+  id: ID;
   title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  status: ReflectionLogStatus;
+  content: string;  // Often promoted/synced from ResourceItem.userNotes
   entryType: ReflectionEntryType;
+  step: ISPStep;  // Tracks which phase the user was in
+  /** * Semantic Associations
+   * Cross-layer links to Knowledge entities.
+   */
+  associatedResourceIds: ID[];  // Links to knowledge.ResourceItem
+  associatedConceptIds: ID[]; // Links to knowledge.TopicKeyword
+  status: ReflectionLogStatus;
+  createdAt: DateTimeString;
+  updatedAt: DateTimeString;
+}
+
+/**
+ * Phase Progress Configuration
+ * Used for UI indicators (e.g., Progress Bar).
+ */
+export interface PhaseConfig {
+  step: ISPStep;
+  label: string;
+  description: string;
+  expectedCompletion: Percentage;
+}
+
+/**
+ * Workflow State Decorator
+ * A wrapper to add "Process Status" to any Knowledge or Canvas entity
+ * without polluting the original Knowledge Interface.
+ */
+export interface WorkflowMetadata {
+  state: WorkflowState;
+  lastModifiedBy: ParticipantRole;
+  version: number;
 }
