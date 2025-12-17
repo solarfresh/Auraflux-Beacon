@@ -42,7 +42,7 @@
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
-import type { WorkflowState } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -68,7 +68,7 @@ const emit = defineEmits<{
 
 /** Computes the dynamic classes, colors, and icons based on the scope status. */
 const statusClasses = computed(() => {
-  const status: WorkflowState = props.scopeElement.workflowState;
+  const status: EntityStatus = props.scopeElement.EntityStatus;
 
   const reviewStatuses = new Set(['USER_DRAFT', 'AI_EXTRACTED']);
 

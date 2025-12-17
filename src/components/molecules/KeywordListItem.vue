@@ -38,7 +38,7 @@
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import type { ProcessedKeyword, TopicKeywordStyle } from '@/interfaces/initiation';
-import type { WorkflowState } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -67,7 +67,7 @@ const emit = defineEmits<{
  * This logic is encapsulated here, adhering to the Molecule's SRP.
  */
 const styles = computed<TopicKeywordStyle>(() => {
-  switch (props.keyword.workflowState as WorkflowState) {
+  switch (props.keyword.EntityStatus as EntityStatus) {
     case 'LOCKED':
       return {
           classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',

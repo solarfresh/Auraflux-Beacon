@@ -144,17 +144,17 @@ const isOnHoldFullView = ref(false);    // Controls the 'View All' state for On 
 
 /** Calculates the number of locked keywords for the progress tracker. */
 const lockedKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.workflowState === 'LOCKED').length;
+  return props.keywords.filter(k => k.EntityStatus === 'LOCKED').length;
 });
 
 /** Calculates the number of keywords that need user attention (AI_EXTRACTED or USER_DRAFT). */
 const unreviewedKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.workflowState === 'AI_EXTRACTED' || k.workflowState === 'USER_DRAFT').length;
+  return props.keywords.filter(k => k.EntityStatus === 'AI_EXTRACTED' || k.EntityStatus === 'USER_DRAFT').length;
 });
 
 /** Calculates the number of keywords that are archived. */
 const onHoldKeywordsCount = computed(() => {
-  return props.keywords.filter(k => k.workflowState === 'ON_HOLD').length;
+  return props.keywords.filter(k => k.EntityStatus === 'ON_HOLD').length;
 });
 
 
@@ -166,11 +166,11 @@ const onHoldKeywordsCount = computed(() => {
 const filteredKeywords = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
     switch (group) {
         case 'LOCKED':
-            return props.keywords.filter(k => k.workflowState === 'LOCKED');
+            return props.keywords.filter(k => k.EntityStatus === 'LOCKED');
         case 'REVIEW':
-            return props.keywords.filter(k => k.workflowState === 'AI_EXTRACTED' || k.workflowState === 'USER_DRAFT');
+            return props.keywords.filter(k => k.EntityStatus === 'AI_EXTRACTED' || k.EntityStatus === 'USER_DRAFT');
         case 'ON_HOLD':
-            return props.keywords.filter(k => k.workflowState === 'ON_HOLD');
+            return props.keywords.filter(k => k.EntityStatus === 'ON_HOLD');
         default:
             return [];
     }

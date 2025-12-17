@@ -38,7 +38,7 @@
          :class="statusClasses">
 
       <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
-        Current Status: <span class="font-bold">{{ props.initialScopeElement.workflowState }}</span>
+        Current Status: <span class="font-bold">{{ props.initialScopeElement.EntityStatus }}</span>
         <span v-if="isValueModified" class="text-xs text-red-500 italic ml-2">(Unsaved Value Changes)</span>
       </Text>
 
@@ -111,7 +111,7 @@ import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
 import { useInitiativeStore } from '@/stores/initiation';
 import type { ProcessedScope } from '@/interfaces/initiation';
-import type { WorkflowState } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/workflow';
 import type { FeasibilityStatus } from '@/interfaces/core';
 
 const initiativeStore = useInitiativeStore();
@@ -129,7 +129,7 @@ const props = defineProps<{
 // --- Emits ---
 const emit = defineEmits<{
     /** Emitted when the user submits changes (value and status) through a commitment button. */
-    (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: WorkflowState }): void;
+    (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: EntityStatus }): void;
     /** Emitted to close the modal. */
     (e: 'close-modal'): void;
 }>();
@@ -148,8 +148,8 @@ const scopeElementId = computed(() => props.initialScopeElement.id); // Assuming
 
 // --- Computed Properties for Status Management and UI ---
 
-const isLOCKED = computed(() => props.initialScopeElement.workflowState === 'LOCKED');
-const isAI_EXTRACTED = computed(() => props.initialScopeElement.workflowState === 'AI_EXTRACTED'); // For potential AI context
+const isLOCKED = computed(() => props.initialScopeElement.EntityStatus === 'LOCKED');
+const isAI_EXTRACTED = computed(() => props.initialScopeElement.EntityStatus === 'AI_EXTRACTED'); // For potential AI context
 
 /** Checks if the local value is different from the initial value. */
 const isValueModified = computed(() => {
@@ -160,7 +160,7 @@ const isValueModified = computed(() => {
 
 /** Tailwind classes for the status box based on the current scope status. */
 const statusClasses = computed(() => {
-    switch (props.initialScopeElement.workflowState) {
+    switch (props.initialScopeElement.EntityStatus) {
         case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -172,7 +172,7 @@ const statusClasses = computed(() => {
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialScopeElement.workflowState) {
+    switch (props.initialScopeElement.EntityStatus) {
         case 'LOCKED': return 'indigo-700';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -184,7 +184,7 @@ const statusTextColor = computed(() => {
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialScopeElement.workflowState) {
+    switch (props.initialScopeElement.EntityStatus) {
         case 'LOCKED': return 'LockClosed';
         case 'AI_EXTRACTED': return 'Sparkles';
         case 'ON_HOLD': return 'ArchiveBox';
@@ -195,7 +195,7 @@ const statusIcon = computed(() => {
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialScopeElement.workflowState) {
+    switch (props.initialScopeElement.EntityStatus) {
         case 'LOCKED': return 'indigo-600';
         case 'AI_EXTRACTED': return 'yellow-600';
         case 'ON_HOLD': return 'gray-500';
@@ -208,7 +208,7 @@ const statusIconColor = computed(() => {
 // --- Methods ---
 
 /** Handles the unified submission of the scope element status and value. */
-async function handleUnifiedSubmit(targetStatus: WorkflowState) {
+async function handleUnifiedSubmit(targetStatus: EntityStatus) {
     const value = draftValue.value?.trim();
     if (!value) return;
 

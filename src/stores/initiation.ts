@@ -61,32 +61,19 @@ export const useInitiativeStore = defineStore('intiation', () => {
           timestamp: new Date().toISOString(),
           sequenceNumber: chatMessages.value.length + 2,
         } as BaseChatMessage);
-        apiService.workflows.initiation.chat(messageContent, agentName);
+        apiService.workflows.base.chat(messageContent, agentName);
     }
 
     async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
       let response = null;
       if (logId.includes('new')) {
-        response = await apiService.workflows.reflection.create(title, content, status);
+        response = await apiService.workflows.base.createReflectionLog(title, content, status);
       } else {
-        response = await apiService.workflows.reflection.update(logId, title, content, status);
+        response = await apiService.workflows.base.updateReflectionLogById(logId, title, content, status);
       }
 
       if (response.data) {
-        reflectionLogs.value = response.data.map((log) => {
-          return {
-            id: log.id,
-            title: log.title,
-            content: log.content,
-            createdAt: log.created_at,
-            updatedAt: log.updated_at,
-            entryType: log.entry_type,
-            step: 'TOPIC_DEFINITION_LOCKIN',
-            associatedResourceIds: [],
-            associatedConceptIds: [],
-            status: log.status,
-          }
-        });
+        reflectionLogs.value = response.data;
       }
     }
 
@@ -103,7 +90,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
           return {
             id: keyword.id,
             label: keyword.text,
-            workflowState: keyword.status,
+            EntityStatus: keyword.status,
             createdAt: keyword.created_at,
             updatedAt: keyword.updated_at
           }
@@ -126,7 +113,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
             label: scope.label,
             rationale: scope.value,
             boundaryType: 'INCLUSION',
-            workflowState: scope.status,
+            EntityStatus: scope.status,
             createdAt: scope.created_at,
             updatedAt: scope.updated_at,
           }
@@ -135,7 +122,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getMessages() {
-      let response = await apiService.workflows.initiation.getChatHistory();
+      let response = await apiService.workflows.base.getChatHistory();
       if (response.data) {
         chatMessages.value = response.data.map(message => {
           return {
@@ -147,7 +134,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getRefinedTopic() {
-      let response = await apiService.workflows.initiation.getRefinedTopic();
+      let response = await apiService.workflows.base.getRefinedTopic();
       if (response.data) {
         feasibilityStatus.value = response.data.feasibility_status;
         finalQuestion.value = response.data.final_research_question;
@@ -157,7 +144,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
           return {
             id: keyword.id,
             label: keyword.text,
-            workflowState: keyword.status,
+            EntityStatus: keyword.status,
             createdAt: keyword.created_at,
             updatedAt: keyword.updated_at
           }
@@ -168,7 +155,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
             label: scope.label,
             rationale: scope.value,
             boundaryType: 'INCLUSION',
-            workflowState: scope.status,
+            EntityStatus: scope.status,
             createdAt: scope.created_at,
             updatedAt: scope.updated_at,
           }
@@ -177,22 +164,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getReflection() {
-      let response = await apiService.workflows.reflection.get();
+      let response = await apiService.workflows.base.getReflectionLog();
       if (response.data) {
-        reflectionLogs.value = response.data.map((log) => {
-          return {
-            id: log.id,
-            title: log.title,
-            content: log.content,
-            createdAt: log.created_at,
-            updatedAt: log.updated_at,
-            entryType: log.entry_type,
-            step: 'TOPIC_DEFINITION_LOCKIN',
-            associatedResourceIds: [],
-            associatedConceptIds: [],
-            status: log.status,
-          }
-        });
+        reflectionLogs.value = response.data;
       }
     }
 

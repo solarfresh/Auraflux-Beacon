@@ -1,6 +1,6 @@
 import { FeasibilityStatus, BaseChatMessage, DateTimeString } from './core';
 import { TopicKeyword, TopicScopeElement, ResearchFocus } from './knowledge';
-import { WorkflowState } from './workflow';
+import { EntityStatus } from './workflow';
 
 export type ManagementType = 'final-question' | 'keyword' | 'scope' | 'reflection-log' | null;
 
@@ -38,26 +38,26 @@ export interface CurrentFocusData {
  * Combines the pure Knowledge structure with Workflow state for the UI.
  */
 export interface ProcessedKeyword extends TopicKeyword {
-  workflowState: WorkflowState;
+  EntityStatus: EntityStatus;
 }
 
 export interface APITopicKeyword {
   id: string;
   text: string;
-  status: WorkflowState;
+  status: EntityStatus;
   created_at: DateTimeString;
   updated_at: DateTimeString;
 }
 
 export interface ProcessedScope extends TopicScopeElement {
-  workflowState: WorkflowState;
+  EntityStatus: EntityStatus;
 }
 
 export interface APITopicScopeElement {
   id: string;
   label: string;
   value: string;
-  status: WorkflowState;
+  status: EntityStatus;
   created_at: DateTimeString;
   updated_at: DateTimeString;
 }

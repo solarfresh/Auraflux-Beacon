@@ -6,7 +6,7 @@ export type ISPStep =
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
-export type WorkflowState =
+export type EntityStatus =
   | 'USER_DRAFT'    // Under active editing by the user
   | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review
   | 'LOCKED'        // Finalized and protected from accidental changes
@@ -48,16 +48,6 @@ export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: str
     },
 };
 
-export interface ReflectionResponse {
-  id: string;
-  title: string;
-  content: string;
-  created_at: DateTimeString;
-  updated_at: DateTimeString;
-  status: ReflectionLogStatus;
-  entry_type: ReflectionEntryType;
-}
-
 export interface ReflectionLogEntry {
   id: ID;
   title: string;
@@ -91,7 +81,7 @@ export interface PhaseConfig {
  * without polluting the original Knowledge Interface.
  */
 export interface WorkflowMetadata {
-  state: WorkflowState;
+  state: EntityStatus;
   lastModifiedBy: ParticipantRole;
   version: number;
 }

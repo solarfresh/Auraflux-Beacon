@@ -96,7 +96,7 @@ import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import ScopeListItem from '@/components/molecules/ScopeListItem.vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
-import type { WorkflowState } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/workflow';
 
 
 // ----------------------------------------------------------------------
@@ -132,19 +132,19 @@ const isViewingAll = ref(false);        // Controls the 'View All' state for
 
 /** Calculates the number of locked scope elements. */
 const lockedScopeCount = computed(() => {
-  return props.scope.filter(k => k.workflowState === 'LOCKED').length;
+  return props.scope.filter(k => k.EntityStatus === 'LOCKED').length;
 });
 
 /** Calculates the number of scope elements that need user attention (USER_DRAFT or AI_EXTRACTED). */
 const unreviewedScopeCount = computed(() => {
   // === UPDATED LOGIC ===
-  return props.scope.filter(k => k.workflowState === 'USER_DRAFT' || k.workflowState === 'AI_EXTRACTED').length;
+  return props.scope.filter(k => k.EntityStatus === 'USER_DRAFT' || k.EntityStatus === 'AI_EXTRACTED').length;
 });
 
 /** Calculates the number of scope elements that are on hold (Discarded/Archived). */
 const onHoldScopeCount = computed(() => {
   // === UPDATED LOGIC ===
-  return props.scope.filter(k => k.workflowState === 'ON_HOLD').length;
+  return props.scope.filter(k => k.EntityStatus === 'ON_HOLD').length;
 });
 
 
@@ -158,13 +158,13 @@ const onHoldScopeCount = computed(() => {
 const filteredScope = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
     switch (group) {
         case 'LOCKED':
-            return props.scope.filter(k => k.workflowState === 'LOCKED');
+            return props.scope.filter(k => k.EntityStatus === 'LOCKED');
         case 'REVIEW':
             // === UPDATED LOGIC ===
-            return props.scope.filter(k => k.workflowState === 'USER_DRAFT' || k.workflowState === 'AI_EXTRACTED');
+            return props.scope.filter(k => k.EntityStatus === 'USER_DRAFT' || k.EntityStatus === 'AI_EXTRACTED');
         case 'ON_HOLD':
             // === UPDATED LOGIC ===
-            return props.scope.filter(k => k.workflowState === 'ON_HOLD');
+            return props.scope.filter(k => k.EntityStatus === 'ON_HOLD');
         default:
             return [];
     }
