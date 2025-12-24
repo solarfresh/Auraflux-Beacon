@@ -1,12 +1,14 @@
 import { apiService } from '@/api/apiService';
-import type { FeasibilityStatus, ReflectionLogEntry, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import { FeasibilityStatus } from '@/interfaces/core';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
 
 import type {
   ChatMessage
-} from '@/interfaces/initiation';
+} from '@/interfaces/core';
 
 export const useInitiativeStore = defineStore('intiation', () => {
     // --- State (Refs) ---
@@ -27,9 +29,9 @@ export const useInitiativeStore = defineStore('intiation', () => {
 
     const stabilityScore = ref<number>(0);
 
-    const topicKeywords = ref<TopicKeyword[]>([]);
+    const topicKeywords = ref<ProcessedKeyword[]>([]);
 
-    const topicScope = ref<TopicScopeElement[]>([]);
+    const topicScope = ref<ProcessedScope[]>([]);
 
 		// --- Getters (Computed) ---
 
@@ -49,7 +51,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
             content: messageContent,
 						name: 'User',
             timestamp: new Date().toISOString(),
-            sequence_number: chatMessages.value.length + 1,
+            sequenceNumber: chatMessages.value.length + 1,
         } as ChatMessage); // Type assertion for strict compliance
         chatMessages.value.push({
           id: uuidv4(),
@@ -57,37 +59,28 @@ export const useInitiativeStore = defineStore('intiation', () => {
           content: 'Agent is typing...',
           name: agentName,
           timestamp: new Date().toISOString(),
-          sequence_number: chatMessages.value.length + 2,
+          sequenceNumber: chatMessages.value.length + 2,
         } as ChatMessage);
-        apiService.workflows.initiation.chat(messageContent, agentName);
+        apiService.workflows.base.chat(messageContent, agentName);
     }
 
     async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
       let response = null;
       if (logId.includes('new')) {
-        response = await apiService.workflows.reflection.create(title, content, status);
+        response = await apiService.workflows.base.createReflectionLog(title, content, status);
       } else {
-        response = await apiService.workflows.reflection.update(logId, title, content, status);
+        response = await apiService.workflows.base.updateReflectionLogById(logId, title, content, status);
       }
 
       if (response.data) {
-        reflectionLogs.value = response.data.map((log) => {
-          return {
-            id: log.id,
-            title: log.title,
-            content: log.content,
-            createdAt: log.created_at,
-            updatedAt: log.updated_at,
-            status: log.status,
-          }
-        });
+        reflectionLogs.value = response.data;
       }
     }
 
     async function createOrUpdateTopicKeywords(keywordId: string, text: string, status: string) {
       let response = null;
       if (keywordId) {
-        response = await apiService.workflows.keywords.update(keywordId, text, status);
+        response = await apiService.knowledge.keywords.update(keywordId, text, status);
       } else {
         response = await apiService.workflows.keywords.create(text, status);
       }
@@ -100,7 +93,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     async function createOrUpdateTopicScopes(scopeElementId: string, label: string, value: string, status: string) {
       let response = null;
       if (scopeElementId) {
-        response = await apiService.workflows.scopes.update(scopeElementId, label, value, status);
+        response = await apiService.knowledge.scopes.update(scopeElementId, label, value, status);
       } else {
         response = await apiService.workflows.scopes.create(label, value, status);
       }
@@ -111,37 +104,28 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getMessages() {
-      let response = await apiService.workflows.initiation.getChatHistory();
+      let response = await apiService.workflows.base.getChatHistory();
       if (response.data) {
         chatMessages.value = response.data;
       }
     }
 
     async function getRefinedTopic() {
-      let response = await apiService.workflows.initiation.getRefinedTopic();
+      let response = await apiService.workflows.base.getRefinedTopic();
       if (response.data) {
-        feasibilityStatus.value = response.data.feasibility_status;
-        finalQuestion.value = response.data.final_research_question;
-        resourceSuggestion.value = response.data.resource_suggestion;
-        stabilityScore.value = response.data.stability_score;
-        topicKeywords.value = response.data.keywords;
+        feasibilityStatus.value = response.data.feasibilityStatus;
+        finalQuestion.value = response.data.finalQuestion;
+        resourceSuggestion.value = response.data.resourceSuggestion || '';
+        stabilityScore.value = response.data.stabilityScore;
+        topicKeywords.value = response.data.keywords || [];
         topicScope.value = response.data.scope;
       }
     }
 
     async function getReflection() {
-      let response = await apiService.workflows.reflection.get();
+      let response = await apiService.workflows.base.getReflectionLog();
       if (response.data) {
-        reflectionLogs.value = response.data.map((log) => {
-          return {
-            id: log.id,
-            title: log.title,
-            content: log.content,
-            createdAt: log.created_at,
-            updatedAt: log.updated_at,
-            status: log.status,
-          }
-        });
+        reflectionLogs.value = response.data;
       }
     }
 
@@ -152,13 +136,13 @@ export const useInitiativeStore = defineStore('intiation', () => {
         feasibilityStatus,
         finalQuestion,
 				isTyping,
-        latestReflection,
         reflectionLogs,
         resourceSuggestion,
         stabilityScore,
         topicKeywords,
         topicScope,
         // Getters
+        latestReflection,
         // Actions
         addMessage,
         createOrUpdateReflection,

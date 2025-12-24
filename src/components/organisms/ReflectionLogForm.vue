@@ -1,5 +1,5 @@
 <template>
-  <MasterDetailLayout>
+  <MasterDetailTemplate>
     <template #master-panel>
       <MasterListPanel
         title="Log Entries"
@@ -54,15 +54,15 @@
         @enable-edit="isEditing = true"
       />
     </template>
-  </MasterDetailLayout>
+  </MasterDetailTemplate>
 </template>
 
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
-import MasterDetailLayout from '@/components/layouts/MasterDetailLayout.vue';
+import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/molecules/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/ReflectionLogEditorPanel.vue';
-import type { ReflectionLogEntry } from '@/interfaces/initiation';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { useInitiativeStore } from '@/stores/initiation';
 import { computed, ref, watch } from 'vue';
 
@@ -161,6 +161,7 @@ function handleNewEntry() {
     createdAt: new Date().toISOString(),
     title: '',
     content: '',
+    entryType: 'UNCATEGORIZED_DRAFT',
     status: 'draft',
   };
 }

@@ -2,6 +2,17 @@ import config from '@/config';
 
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;
 
+export const KnowledgeEndpoints = {
+  keywords: {
+    update: (keywordId: string) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/keywords/${keywordId}/`,
+  },
+  scopes: {
+    update: (scopeId: string) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/scopes/${scopeId}/`,
+  }
+}
+
 export const SearchEndpoints = {
   results: {
     create: () =>
@@ -29,32 +40,26 @@ export const UsersEndpoints = {
 }
 
 export const WorkflowsEndpoints = {
-  initiation: {
+  base: {
     chat: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/`,
     getChatHistory: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history/`,
     getRefinedTopic: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic/`,
+    createReflectionLog: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+    getReflectionLog: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+    updateReflectionLogById: (logId: string) =>
+      `${AURAFLUX_NEXUS_URL}/workflows/reflection/${logId}/`,
   },
   keywords: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords/`,
-    update: (keywordId: string) =>
-      `${AURAFLUX_NEXUS_URL}/keywords/${keywordId}/`,
-  },
-  reflection: {
-    create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
-    get: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
-    update: (scopeId: string) =>
-      `${AURAFLUX_NEXUS_URL}/reflection/${scopeId}/`,
   },
   scopes: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes/`,
-    update: (scopeId: string) =>
-      `${AURAFLUX_NEXUS_URL}/scopes/${scopeId}/`,
   }
 }

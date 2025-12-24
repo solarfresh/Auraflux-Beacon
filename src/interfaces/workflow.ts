@@ -1,10 +1,24 @@
+import { ID, DateTimeString, ParticipantRole, Percentage } from './core';
+
 export type ISPStep =
   | 'TOPIC_DEFINITION_LOCKIN' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
   | 'EXPLORATION'           // Focus: Dealing with information overload (Confusion/Frustration) by sifting and evaluating sources.
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
-export type TopicKeywordStatus = 'LOCKED' | 'DRAFT' | 'DISCARDED';
+export type EntityStatus =
+  | 'USER_DRAFT'    // Under active editing by the user
+  | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review
+  | 'LOCKED'        // Finalized and protected from accidental changes
+  | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
+  | 'ARCHIVED';     // Removed from view but preserved in history
+export type ReflectionEntryType =
+  | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
+  | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea
+  | 'EXPLORATION_CHALLENGE'  // User notes a practical difficulty (e.g., lack of good sources)
+  | 'AI_GUIDANCE_FEEDBACK'   // AI-generated encouragement or structured guidance based on user activity
+  | 'UNCATEGORIZED_DRAFT';
+export type ReflectionLogStatus = 'draft' | 'committed';
 
 export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
     TOPIC_DEFINITION_LOCKIN: {
@@ -34,3 +48,40 @@ export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: str
     },
 };
 
+export interface ReflectionLogEntry {
+  id: ID;
+  title: string;
+  content: string;  // Often promoted/synced from ResourceItem.userNotes
+  entryType: ReflectionEntryType;
+  step: ISPStep;  // Tracks which phase the user was in
+  /** * Semantic Associations
+   * Cross-layer links to Knowledge entities.
+   */
+  associatedResourceIds: ID[];  // Links to knowledge.ResourceItem
+  associatedConceptIds: ID[]; // Links to knowledge.TopicKeyword
+  status: ReflectionLogStatus;
+  createdAt: DateTimeString;
+  updatedAt: DateTimeString;
+}
+
+/**
+ * Phase Progress Configuration
+ * Used for UI indicators (e.g., Progress Bar).
+ */
+export interface PhaseConfig {
+  step: ISPStep;
+  label: string;
+  description: string;
+  expectedCompletion: Percentage;
+}
+
+/**
+ * Workflow State Decorator
+ * A wrapper to add "Process Status" to any Knowledge or Canvas entity
+ * without polluting the original Knowledge Interface.
+ */
+export interface WorkflowMetadata {
+  state: EntityStatus;
+  lastModifiedBy: ParticipantRole;
+  version: number;
+}

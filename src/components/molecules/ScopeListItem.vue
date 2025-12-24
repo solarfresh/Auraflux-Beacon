@@ -22,7 +22,7 @@
         </Text>
 
         <Text tag="span" size="sm" weight="normal" :color="statusClasses.valueColor" class="truncate min-w-0 flex-grow">
-          {{ scopeElement.value || 'N/A' }}
+          {{ scopeElement.rationale || 'N/A' }}
         </Text>
       </div>
 
@@ -41,7 +41,8 @@
 <script setup lang="ts">
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import type { TopicScopeElement, TopicScopeElementStatus } from '@/interfaces/initiation';
+import type { ProcessedScope } from '@/interfaces/initiation';
+import type { EntityStatus } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------
@@ -50,14 +51,14 @@ import { computed } from 'vue';
 
 const props = defineProps<{
   /** The single scope element data object. */
-  scopeElement: TopicScopeElement;
+  scopeElement: ProcessedScope;
   /** The index of the element in the list, used for event payload. */
   index: number;
 }>();
 
 const emit = defineEmits<{
   /** Emitted when the item is clicked, requesting the parent to open the refinement modal. */
-  (e: 'edit-request', payload: { index: number, scope: TopicScopeElement }): void;
+  (e: 'edit-request', payload: { index: number, scope: ProcessedScope }): void;
 }>();
 
 
@@ -67,7 +68,7 @@ const emit = defineEmits<{
 
 /** Computes the dynamic classes, colors, and icons based on the scope status. */
 const statusClasses = computed(() => {
-  const status: TopicScopeElementStatus = props.scopeElement.status;
+  const status: EntityStatus = props.scopeElement.entityStatus;
 
   const reviewStatuses = new Set(['USER_DRAFT', 'AI_EXTRACTED']);
 

@@ -1,11 +1,11 @@
 <template>
-  <AppLayout>
+  <AppTemplate>
     <RouterView />
-  </AppLayout>
+  </AppTemplate>
 </template>
 
 <script setup lang="ts">
-import AppLayout from '@/components/layouts/AppLayout.vue';
+import AppTemplate from '@/components/templates/AppTemplate.vue';
 import { useAuthStore } from '@/stores/auth';
 import { onMounted } from 'vue';
 

@@ -1,32 +1,8 @@
-export type FeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
+import { FeasibilityStatus } from './core';
+import { TopicKeyword, TopicScopeElement, ResearchFocus } from './knowledge';
+import { EntityStatus } from './workflow';
+
 export type ManagementType = 'final-question' | 'keyword' | 'scope' | 'reflection-log' | null;
-export type ReflectionLogStatus = 'draft' | 'committed';
-export type TopicKeywordStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
-export type TopicScopeElementStatus = 'USER_DRAFT' | 'AI_EXTRACTED' | 'LOCKED' | 'ON_HOLD';
-
-export interface ReflectionResponse {
-  id: string;
-  title: string;
-  content: string;
-  created_at: string;
-  updated_at: string;
-  status: ReflectionLogStatus;
-}
-
-export interface ReflectionLogEntry {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  status: ReflectionLogStatus;
-}
-
-export interface TopicKeyword {
-  id: string;
-  text: string;
-  status: TopicKeywordStatus;
-}
 
 export interface TopicKeywordStyle {
     classes: string;
@@ -36,27 +12,37 @@ export interface TopicKeywordStyle {
     actionIcon?: string; // Icon for the action button on the right
 }
 
-export interface TopicScopeElement {
-  id: string;
-  label: string;
-  value: string;
-  status: TopicScopeElementStatus;
+/**
+ * Interface for the refinement process.
+ * Tracks the stability and readiness of the research topic.
+ */
+export interface RefinedTopic extends ResearchFocus {
+  resourceSuggestion?: string;
+  keywords: ProcessedKeyword[];
+  scope: ProcessedScope[];
 }
 
-export interface ChatMessage {
-  id: string;
-  role: 'user' | 'system';
-  content: string;
-  name: string;
-  timestamp: string;
-  sequence_number: number;
+/**
+ * Current Focus State.
+ * Used by the Initiation Store to manage the active drafting area.
+ */
+export interface CurrentFocusData {
+  finalQuestion: string;
+  topicKeywords: ProcessedKeyword[];
+  topicScope: ProcessedScope[];
+  latestReflection: string;
+  feasibilityStatus: FeasibilityStatus;
+  stabilityScore: number;
 }
 
-export interface RefinedTopic {
-  stability_score: number,
-  feasibility_status: FeasibilityStatus,
-  final_research_question: string,
-  keywords: TopicKeyword[],
-  scope: TopicScopeElement[],
-  resource_suggestion: string,
+/**
+ * Processed Knowledge Elements.
+ * Combines the pure Knowledge structure with Workflow state for the UI.
+ */
+export interface ProcessedKeyword extends TopicKeyword {
+  entityStatus: EntityStatus;
+}
+
+export interface ProcessedScope extends TopicScopeElement {
+  entityStatus: EntityStatus;
 }

@@ -1,7 +1,9 @@
-import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ChatMessage, RefinedTopic, ReflectionResponse, TopicKeyword, TopicScopeElement } from '@/interfaces/initiation';
+import type { ChatMessage } from '@/interfaces/core';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
 
 const apiClient = axios.create({
@@ -93,6 +95,18 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
+  knowledge:{
+    keywords: {
+      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
+        return apiClient.put(KnowledgeEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
+      }
+    },
+    scopes: {
+      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
+        return apiClient.put(KnowledgeEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
+      }
+    }
+  },
   users: {
     check: {
       get: (): Promise<AxiosResponse<User>> => {
@@ -106,43 +120,35 @@ export const apiService = {
     },
   },
   workflows: {
-    initiation: {
+    base: {
       chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+        return apiClient.post(WorkflowsEndpoints.base.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
       },
       getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+        return apiClient.get(WorkflowsEndpoints.base.getChatHistory())
       },
       getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
+        return apiClient.get(WorkflowsEndpoints.base.getRefinedTopic())
+      },
+      createReflectionLog: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
+        return apiClient.post(WorkflowsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
+      },
+      getReflectionLog: (): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
+        return apiClient.get(WorkflowsEndpoints.base.getReflectionLog())
+      },
+      updateReflectionLogById: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
+        return apiClient.put(WorkflowsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
       }
     },
     keywords: {
-      create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
+      create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
         return apiClient.post(WorkflowsEndpoints.keywords.create(), {text: keywordText, status: keywordStatus})
       },
-      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<TopicKeyword[]>> => {
-        return apiClient.put(WorkflowsEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
-      }
-    },
-    reflection: {
-      create: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionResponse[]>> => {
-        return apiClient.post(WorkflowsEndpoints.reflection.create(), {title: logTitle, content: logContent, status: logStatus})
-      },
-      get: (): Promise<AxiosResponse<ReflectionResponse[]>> => {
-        return apiClient.get(WorkflowsEndpoints.reflection.get())
-      },
-      update: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionResponse[]>> => {
-        return apiClient.put(WorkflowsEndpoints.reflection.update(logId), {title: logTitle, content: logContent, status: logStatus})
-      }
     },
     scopes: {
-      create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
+      create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
         return apiClient.post(WorkflowsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       },
-      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<TopicScopeElement[]>> => {
-        return apiClient.put(WorkflowsEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
-      }
     }
   },
 }
