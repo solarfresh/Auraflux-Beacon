@@ -67,7 +67,7 @@ const emit = defineEmits<{
  * This logic is encapsulated here, adhering to the Molecule's SRP.
  */
 const styles = computed<TopicKeywordStyle>(() => {
-  switch (props.keyword.EntityStatus as EntityStatus) {
+  switch (props.keyword.entityStatus as EntityStatus) {
     case 'LOCKED':
       return {
           classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',

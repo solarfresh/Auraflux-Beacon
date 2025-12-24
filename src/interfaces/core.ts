@@ -47,21 +47,12 @@ export type ParticipantRole = 'user' | 'system' | 'ai-agent';
  * A generic interface that specific chat implementations will extend.
  */
 
-export interface BaseChatMessage {
+export interface ChatMessage {
   id: ID;
   role: ParticipantRole;
   content: string;
   timestamp: DateTimeString;
   sequenceNumber: number;
-}
-
-export interface APIChatMessage {
-  id: ID;
-  role: ParticipantRole;
-  content: string;
-  name: string;
-  sequence_number: number;
-  timestamp: DateTimeString;
 }
 
 /**

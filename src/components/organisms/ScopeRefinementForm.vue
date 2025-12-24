@@ -38,7 +38,7 @@
          :class="statusClasses">
 
       <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
-        Current Status: <span class="font-bold">{{ props.initialScopeElement.EntityStatus }}</span>
+        Current Status: <span class="font-bold">{{ props.initialScopeElement.entityStatus }}</span>
         <span v-if="isValueModified" class="text-xs text-red-500 italic ml-2">(Unsaved Value Changes)</span>
       </Text>
 
@@ -148,8 +148,8 @@ const scopeElementId = computed(() => props.initialScopeElement.id); // Assuming
 
 // --- Computed Properties for Status Management and UI ---
 
-const isLOCKED = computed(() => props.initialScopeElement.EntityStatus === 'LOCKED');
-const isAI_EXTRACTED = computed(() => props.initialScopeElement.EntityStatus === 'AI_EXTRACTED'); // For potential AI context
+const isLOCKED = computed(() => props.initialScopeElement.entityStatus === 'LOCKED');
+const isAI_EXTRACTED = computed(() => props.initialScopeElement.entityStatus === 'AI_EXTRACTED'); // For potential AI context
 
 /** Checks if the local value is different from the initial value. */
 const isValueModified = computed(() => {
@@ -160,7 +160,7 @@ const isValueModified = computed(() => {
 
 /** Tailwind classes for the status box based on the current scope status. */
 const statusClasses = computed(() => {
-    switch (props.initialScopeElement.EntityStatus) {
+    switch (props.initialScopeElement.entityStatus) {
         case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -172,7 +172,7 @@ const statusClasses = computed(() => {
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialScopeElement.EntityStatus) {
+    switch (props.initialScopeElement.entityStatus) {
         case 'LOCKED': return 'indigo-700';
         case 'AI_EXTRACTED':
         case 'USER_DRAFT':
@@ -184,7 +184,7 @@ const statusTextColor = computed(() => {
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialScopeElement.EntityStatus) {
+    switch (props.initialScopeElement.entityStatus) {
         case 'LOCKED': return 'LockClosed';
         case 'AI_EXTRACTED': return 'Sparkles';
         case 'ON_HOLD': return 'ArchiveBox';
@@ -195,7 +195,7 @@ const statusIcon = computed(() => {
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialScopeElement.EntityStatus) {
+    switch (props.initialScopeElement.entityStatus) {
         case 'LOCKED': return 'indigo-600';
         case 'AI_EXTRACTED': return 'yellow-600';
         case 'ON_HOLD': return 'gray-500';

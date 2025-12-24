@@ -1,4 +1,4 @@
-import { FeasibilityStatus, BaseChatMessage, DateTimeString } from './core';
+import { FeasibilityStatus } from './core';
 import { TopicKeyword, TopicScopeElement, ResearchFocus } from './knowledge';
 import { EntityStatus } from './workflow';
 
@@ -18,6 +18,8 @@ export interface TopicKeywordStyle {
  */
 export interface RefinedTopic extends ResearchFocus {
   resourceSuggestion?: string;
+  keywords: ProcessedKeyword[];
+  scope: ProcessedScope[];
 }
 
 /**
@@ -38,35 +40,9 @@ export interface CurrentFocusData {
  * Combines the pure Knowledge structure with Workflow state for the UI.
  */
 export interface ProcessedKeyword extends TopicKeyword {
-  EntityStatus: EntityStatus;
-}
-
-export interface APITopicKeyword {
-  id: string;
-  text: string;
-  status: EntityStatus;
-  created_at: DateTimeString;
-  updated_at: DateTimeString;
+  entityStatus: EntityStatus;
 }
 
 export interface ProcessedScope extends TopicScopeElement {
-  EntityStatus: EntityStatus;
-}
-
-export interface APITopicScopeElement {
-  id: string;
-  label: string;
-  value: string;
-  status: EntityStatus;
-  created_at: DateTimeString;
-  updated_at: DateTimeString;
-}
-
-export interface APIRefinedTopic {
-  stability_score: number,
-  feasibility_status: FeasibilityStatus,
-  final_research_question: string,
-  keywords: APITopicKeyword[],
-  scope: APITopicScopeElement[],
-  resource_suggestion: string,
+  entityStatus: EntityStatus;
 }

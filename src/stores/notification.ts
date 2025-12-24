@@ -2,7 +2,7 @@ import { useWebSocket } from '@/composables/useWebSocket';
 import config from '@/config';
 import type {
     ChatMessage
-} from '@/interfaces/initiation';
+} from '@/interfaces/core';
 import type { WebSocketMessage } from '@/interfaces/notification';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
@@ -38,10 +38,10 @@ export const useNotificationStore = defineStore('notification', () => {
     }
 
     async function _handleInitiationRefinedTopic(payload: any) {
-        initiativeStore.feasibilityStatus = payload['feasibility_status'];
-        initiativeStore.finalQuestion = payload['final_research_question'];
-        initiativeStore.resourceSuggestion = payload['resource_suggestion'];
-        initiativeStore.stabilityScore = payload['stability_score'];
+        initiativeStore.feasibilityStatus = payload['feasibilityStatus'];
+        initiativeStore.finalQuestion = payload['finalQuestion'];
+        initiativeStore.resourceSuggestion = payload['resourceSuggestion'];
+        initiativeStore.stabilityScore = payload['stabilityScore'];
         initiativeStore.topicKeywords = payload['keywords'];
         initiativeStore.topicScope = payload['scope'];
     }

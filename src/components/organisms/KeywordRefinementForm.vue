@@ -35,7 +35,7 @@
          :class="statusClasses">
 
       <Text tag="span" size="sm" weight="medium" :color="statusTextColor">
-        Current Status: <span class="font-bold">{{ props.initialKeyword.EntityStatus }}</span>
+        Current Status: <span class="font-bold">{{ props.initialKeyword.entityStatus }}</span>
         <span v-if="isTextModified" class="text-xs text-red-500 italic ml-2">(Unsaved Text Changes)</span>
       </Text>
 
@@ -121,8 +121,8 @@ const keywordId = computed(() => props.initialKeyword.id);
 
 // --- Computed Properties for Status Management and UI ---
 
-const isLOCKED = computed(() => props.initialKeyword.EntityStatus === 'LOCKED');
-const isON_HOLD = computed(() => props.initialKeyword.EntityStatus === 'ON_HOLD');
+const isLOCKED = computed(() => props.initialKeyword.entityStatus === 'LOCKED');
+const isON_HOLD = computed(() => props.initialKeyword.entityStatus === 'ON_HOLD');
 
 /** Checks if the local text is different from the initial text. */
 const isTextModified = computed(() => {
@@ -131,7 +131,7 @@ const isTextModified = computed(() => {
 
 /** Tailwind classes for the status box based on the current keyword status. */
 const statusClasses = computed(() => {
-    switch (props.initialKeyword.EntityStatus) {
+    switch (props.initialKeyword.entityStatus) {
         case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
         case 'AI_EXTRACTED': return 'bg-yellow-50 border-yellow-200';
         case 'ON_HOLD': return 'bg-gray-100 border-gray-300';
@@ -142,7 +142,7 @@ const statusClasses = computed(() => {
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialKeyword.EntityStatus) {
+    switch (props.initialKeyword.entityStatus) {
         case 'LOCKED': return 'indigo-700';
         case 'AI_EXTRACTED': return 'yellow-800';
         case 'ON_HOLD': return 'gray-500';
@@ -153,7 +153,7 @@ const statusTextColor = computed(() => {
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialKeyword.EntityStatus) {
+    switch (props.initialKeyword.entityStatus) {
         case 'LOCKED': return 'LockClosed';
         case 'AI_EXTRACTED': return 'Sparkles';
         case 'ON_HOLD': return 'ArchiveBox';
@@ -164,7 +164,7 @@ const statusIcon = computed(() => {
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialKeyword.EntityStatus) {
+    switch (props.initialKeyword.entityStatus) {
         case 'LOCKED': return 'indigo-600';
         case 'AI_EXTRACTED': return 'yellow-600';
         case 'ON_HOLD': return 'gray-500';

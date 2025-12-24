@@ -132,19 +132,19 @@ const isViewingAll = ref(false);        // Controls the 'View All' state for
 
 /** Calculates the number of locked scope elements. */
 const lockedScopeCount = computed(() => {
-  return props.scope.filter(k => k.EntityStatus === 'LOCKED').length;
+  return props.scope.filter(k => k.entityStatus === 'LOCKED').length;
 });
 
 /** Calculates the number of scope elements that need user attention (USER_DRAFT or AI_EXTRACTED). */
 const unreviewedScopeCount = computed(() => {
   // === UPDATED LOGIC ===
-  return props.scope.filter(k => k.EntityStatus === 'USER_DRAFT' || k.EntityStatus === 'AI_EXTRACTED').length;
+  return props.scope.filter(k => k.entityStatus === 'USER_DRAFT' || k.entityStatus === 'AI_EXTRACTED').length;
 });
 
 /** Calculates the number of scope elements that are on hold (Discarded/Archived). */
 const onHoldScopeCount = computed(() => {
   // === UPDATED LOGIC ===
-  return props.scope.filter(k => k.EntityStatus === 'ON_HOLD').length;
+  return props.scope.filter(k => k.entityStatus === 'ON_HOLD').length;
 });
 
 
@@ -158,13 +158,13 @@ const onHoldScopeCount = computed(() => {
 const filteredScope = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
     switch (group) {
         case 'LOCKED':
-            return props.scope.filter(k => k.EntityStatus === 'LOCKED');
+            return props.scope.filter(k => k.entityStatus === 'LOCKED');
         case 'REVIEW':
             // === UPDATED LOGIC ===
-            return props.scope.filter(k => k.EntityStatus === 'USER_DRAFT' || k.EntityStatus === 'AI_EXTRACTED');
+            return props.scope.filter(k => k.entityStatus === 'USER_DRAFT' || k.entityStatus === 'AI_EXTRACTED');
         case 'ON_HOLD':
             // === UPDATED LOGIC ===
-            return props.scope.filter(k => k.EntityStatus === 'ON_HOLD');
+            return props.scope.filter(k => k.entityStatus === 'ON_HOLD');
         default:
             return [];
     }

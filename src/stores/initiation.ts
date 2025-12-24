@@ -7,14 +7,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
 
 import type {
-  BaseChatMessage
+  ChatMessage
 } from '@/interfaces/core';
 
 export const useInitiativeStore = defineStore('intiation', () => {
     // --- State (Refs) ---
 
     /** The list of all chat messages in the initiation stage. */
-    const chatMessages = ref<BaseChatMessage[]>([]);
+    const chatMessages = ref<ChatMessage[]>([]);
 
     const feasibilityStatus = ref<FeasibilityStatus>('LOW');
 
@@ -52,7 +52,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
 						name: 'User',
             timestamp: new Date().toISOString(),
             sequenceNumber: chatMessages.value.length + 1,
-        } as BaseChatMessage); // Type assertion for strict compliance
+        } as ChatMessage); // Type assertion for strict compliance
         chatMessages.value.push({
           id: uuidv4(),
           role: 'system',
@@ -60,7 +60,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
           name: agentName,
           timestamp: new Date().toISOString(),
           sequenceNumber: chatMessages.value.length + 2,
-        } as BaseChatMessage);
+        } as ChatMessage);
         apiService.workflows.base.chat(messageContent, agentName);
     }
 
@@ -86,15 +86,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
 
       if (response.data) {
-        topicKeywords.value = response.data.map((keyword) => {
-          return {
-            id: keyword.id,
-            label: keyword.text,
-            EntityStatus: keyword.status,
-            createdAt: keyword.created_at,
-            updatedAt: keyword.updated_at
-          }
-        });
+        topicKeywords.value = response.data;
       }
     }
 
@@ -107,59 +99,26 @@ export const useInitiativeStore = defineStore('intiation', () => {
       }
 
       if (response.data) {
-        topicScope.value = response.data.map((scope) => {
-          return {
-            id: scope.id,
-            label: scope.label,
-            rationale: scope.value,
-            boundaryType: 'INCLUSION',
-            EntityStatus: scope.status,
-            createdAt: scope.created_at,
-            updatedAt: scope.updated_at,
-          }
-        });
+        topicScope.value = response.data;
       }
     }
 
     async function getMessages() {
       let response = await apiService.workflows.base.getChatHistory();
       if (response.data) {
-        chatMessages.value = response.data.map(message => {
-          return {
-            ...message,
-            sequenceNumber: message.sequence_number
-          }
-        });
+        chatMessages.value = response.data;
       }
     }
 
     async function getRefinedTopic() {
       let response = await apiService.workflows.base.getRefinedTopic();
       if (response.data) {
-        feasibilityStatus.value = response.data.feasibility_status;
-        finalQuestion.value = response.data.final_research_question;
-        resourceSuggestion.value = response.data.resource_suggestion;
-        stabilityScore.value = response.data.stability_score;
-        topicKeywords.value = response.data.keywords.map(keyword => {
-          return {
-            id: keyword.id,
-            label: keyword.text,
-            EntityStatus: keyword.status,
-            createdAt: keyword.created_at,
-            updatedAt: keyword.updated_at
-          }
-        });
-        topicScope.value = response.data.scope.map(scope => {
-          return {
-            id: scope.id,
-            label: scope.label,
-            rationale: scope.value,
-            boundaryType: 'INCLUSION',
-            EntityStatus: scope.status,
-            createdAt: scope.created_at,
-            updatedAt: scope.updated_at,
-          }
-        });
+        feasibilityStatus.value = response.data.feasibilityStatus;
+        finalQuestion.value = response.data.finalQuestion;
+        resourceSuggestion.value = response.data.resourceSuggestion || '';
+        stabilityScore.value = response.data.stabilityScore;
+        topicKeywords.value = response.data.keywords || [];
+        topicScope.value = response.data.scope;
       }
     }
 

@@ -67,7 +67,7 @@ export interface ResourceItem extends BaseKnowledgeElement {
  */
 export interface ResearchFocus {
   finalQuestion: string;
-  feasibility: FeasibilityStatus;
+  feasibilityStatus: FeasibilityStatus;
   keywords: TopicKeyword[];
   scope: TopicScopeElement[];
   stabilityScore: number;   // Calculated metric of focus clarity

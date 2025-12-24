@@ -68,7 +68,7 @@ const emit = defineEmits<{
 
 /** Computes the dynamic classes, colors, and icons based on the scope status. */
 const statusClasses = computed(() => {
-  const status: EntityStatus = props.scopeElement.EntityStatus;
+  const status: EntityStatus = props.scopeElement.entityStatus;
 
   const reviewStatuses = new Set(['USER_DRAFT', 'AI_EXTRACTED']);
 
