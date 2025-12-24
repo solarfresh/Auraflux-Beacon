@@ -1,4 +1,4 @@
-import { UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ChatMessage } from '@/interfaces/core';
 import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
@@ -95,6 +95,18 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
+  knowledge:{
+    keywords: {
+      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
+        return apiClient.put(KnowledgeEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
+      }
+    },
+    scopes: {
+      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
+        return apiClient.put(KnowledgeEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
+      }
+    }
+  },
   users: {
     check: {
       get: (): Promise<AxiosResponse<User>> => {
@@ -132,17 +144,11 @@ export const apiService = {
       create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
         return apiClient.post(WorkflowsEndpoints.keywords.create(), {text: keywordText, status: keywordStatus})
       },
-      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
-        return apiClient.put(WorkflowsEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
-      }
     },
     scopes: {
       create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
         return apiClient.post(WorkflowsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       },
-      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
-        return apiClient.put(WorkflowsEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
-      }
     }
   },
 }

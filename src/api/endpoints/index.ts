@@ -2,6 +2,17 @@ import config from '@/config';
 
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;
 
+export const KnowledgeEndpoints = {
+  keywords: {
+    update: (keywordId: string) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/keywords/${keywordId}/`,
+  },
+  scopes: {
+    update: (scopeId: string) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/scopes/${scopeId}/`,
+  }
+}
+
 export const SearchEndpoints = {
   results: {
     create: () =>
@@ -46,13 +57,9 @@ export const WorkflowsEndpoints = {
   keywords: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords/`,
-    update: (keywordId: string) =>
-      `${AURAFLUX_NEXUS_URL}/keywords/${keywordId}/`,
   },
   scopes: {
     create: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes/`,
-    update: (scopeId: string) =>
-      `${AURAFLUX_NEXUS_URL}/scopes/${scopeId}/`,
   }
 }

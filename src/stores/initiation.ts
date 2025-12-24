@@ -80,7 +80,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     async function createOrUpdateTopicKeywords(keywordId: string, text: string, status: string) {
       let response = null;
       if (keywordId) {
-        response = await apiService.workflows.keywords.update(keywordId, text, status);
+        response = await apiService.knowledge.keywords.update(keywordId, text, status);
       } else {
         response = await apiService.workflows.keywords.create(text, status);
       }
@@ -93,7 +93,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     async function createOrUpdateTopicScopes(scopeElementId: string, label: string, value: string, status: string) {
       let response = null;
       if (scopeElementId) {
-        response = await apiService.workflows.scopes.update(scopeElementId, label, value, status);
+        response = await apiService.knowledge.scopes.update(scopeElementId, label, value, status);
       } else {
         response = await apiService.workflows.scopes.create(label, value, status);
       }
