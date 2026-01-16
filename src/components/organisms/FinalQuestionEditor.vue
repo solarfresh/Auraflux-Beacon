@@ -45,13 +45,13 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import type { FeasibilityStatus } from '@/interfaces/initiation';
+import type { FeasibilityStatus } from '@/interfaces/core';
 import { computed, ref, watch } from 'vue';
 
 // --- Props ---
 const props = defineProps<{
   /** The current question statement (passed from store). */
-  initialQuestion: string;
+  initialValue: string;
   /** The current stability score for real-time feedback. */
   stabilityScore: number;
   /** The current feasibility status for warning/confirmation. */
@@ -68,7 +68,7 @@ const emit = defineEmits<{
 
 // --- State ---
 // Initialize draft with the question passed from props
-const draftQuestion = ref(props.initialQuestion);
+const draftQuestion = ref(props.initialValue);
 const hasError = ref(false);
 const errorMessage = ref('');
 
@@ -77,11 +77,11 @@ const errorMessage = ref('');
 /** Checks if the save button should be enabled. */
 const isSaveEnabled = computed(() => {
     // Requires question to be non-empty and different from initial, or high score
-    return draftQuestion.value.trim() !== '' && draftQuestion.value.trim() !== props.initialQuestion;
+    return draftQuestion.value.trim() !== '' && draftQuestion.value.trim() !== props.initialValue;
 });
 
 // --- Watcher (for external changes to initial question) ---
-watch(() => props.initialQuestion, (newVal) => {
+watch(() => props.initialValue, (newVal) => {
   draftQuestion.value = newVal;
 });
 

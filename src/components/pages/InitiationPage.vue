@@ -55,19 +55,19 @@
       </template>
       <template #content>
         <FinalQuestionEditor
-            v-if="managementModalType === 'final-question'"
-            :initial-question="initiativeStore.finalQuestion"
-            :feasibility-status="initiativeStore.feasibilityStatus"
-            :stability-score="initiativeStore.stabilityScore"
-            @close-modal="isManagementModalOpen = false"
+          v-if="managementModalType === 'final-question'"
+          :initialValue="initiativeStore.finalQuestion"
+          :feasibility-status="initiativeStore.feasibilityStatus"
+          :stability-score="initiativeStore.stabilityScore"
+          @close-modal="isManagementModalOpen = false"
         />
-        <KeywordRefinementForm
+        <SingleKeywordDetailEditor
           v-else-if="managementModalType === 'keyword'"
           :initial-keyword="editingInitialKeyword!"
           :keyword-index="editingKeywordIndex!"
           @close-modal="isManagementModalOpen = false"
         />
-        <ScopeRefinementForm
+        <SingleScopeDetailEditor
           v-else-if="managementModalType === 'scope'"
           :initial-scope-element="editingInitialScope!"
           :scope-index="editingScopeIndex!"
@@ -98,15 +98,15 @@ import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
-import KeywordRefinementForm from '@/components/organisms/KeywordRefinementForm.vue';
-import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue';
+import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';
+import SingleScopeDetailEditor from '@/components/organisms/SingleScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import SidebarContent from '@/components/templates/SidebarContent.vue';
 import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
-import { TopicKeyword } from '@/interfaces/initiation';
-import type { ManagementType, TopicScopeElement } from '@/interfaces/initiation.ts';
+import type { ManagementType } from '@/interfaces/initiation.ts';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/workflow';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
@@ -117,9 +117,9 @@ const isReflecting = ref(false); // Controls the visibility of the Reflection Mo
 const isManagementModalOpen = ref(false); // Controls a generic modal for editing Question/Scope/Keywords
 const managementModalType = ref<ManagementType>(null);
 const editingKeywordIndex = ref<number | undefined>(undefined);
-const editingInitialKeyword = ref<TopicKeyword | null>(null);
+const editingInitialKeyword = ref<ProcessedKeyword | null>(null);
 const editingScopeIndex = ref<number | undefined>(undefined);
-const editingInitialScope = ref<TopicScopeElement | null>(null);
+const editingInitialScope = ref<ProcessedScope | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
@@ -161,37 +161,51 @@ function handleSendMessage(content: string) {
  * @param index Optional index for specific items (e.g., keywords).
  */
 function handleViewDetails(type: ManagementType, index?: number, value?: any) {
-    editingKeywordIndex.value = undefined;
-    editingScopeIndex.value = undefined;
-    editingInitialKeyword.value = null;
-    editingInitialScope.value = null;
-    managementModalType.value = type;
+  editingKeywordIndex.value = undefined;
+  editingScopeIndex.value = undefined;
+  editingInitialKeyword.value = null;
+  editingInitialScope.value = null;
+  managementModalType.value = type;
 
-    switch (type) {
-        case 'reflection-log':
-          isManagementModalOpen.value = true;
-          break;
+  switch (type) {
+    case 'reflection-log':
+      isManagementModalOpen.value = true;
+      break;
 
-        case 'final-question':
-          // isManagementModalOpen.value = true;
-          break;
+    case 'final-question':
+      // isManagementModalOpen.value = true;
+      break;
 
-        case 'scope':
-          // Open a generic management modal for Question/Scope
-          editingScopeIndex.value = index || topicScope.value.length;
-          editingInitialScope.value = value || {id: '', label: '', value: '', status: 'USER_DRAFT'} as TopicScopeElement;
-          isManagementModalOpen.value = true;
-          break;
+    case 'scope':
+      // Open a generic management modal for Question/Scope
+      editingScopeIndex.value = index || topicScope.value.length;
+      editingInitialScope.value = value || {
+        id: '',
+        label: '',
+        value: '',
+        entityStatus: 'USER_DRAFT',
+        boundaryType: 'INCLUSION',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      } as ProcessedScope;
+      isManagementModalOpen.value = true;
+      break;
 
-        case 'keyword':
-          editingKeywordIndex.value = index || topicKeywords.value.length;
-          editingInitialKeyword.value = value || {id: '', text: '', status: 'USER_DRAFT'} as TopicKeyword;
-          isManagementModalOpen.value = true;
-          break;
+    case 'keyword':
+      editingKeywordIndex.value = index || topicKeywords.value.length;
+      editingInitialKeyword.value = value || {
+        id: '',
+        label: '',
+        entityStatus: 'USER_DRAFT',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      } as ProcessedKeyword;
+      isManagementModalOpen.value = true;
+      break;
 
-        default:
-            console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
-    }
+    default:
+      console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
+  }
 }
 
 function getModalWidthClass(type: ManagementType | null): string {
