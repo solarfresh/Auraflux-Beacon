@@ -26,6 +26,10 @@ export interface TopicKeyword extends BaseKnowledgeElement {
  * Defines the boundaries of the research inquiry.
  */
 export interface TopicScopeElement extends BaseKnowledgeElement {
+  /**
+   * Defines whether the element is within the research scope (INCLUSION)
+   * or explicitly outside of it (EXCLUSION).
+   */
   boundaryType: 'INCLUSION' | 'EXCLUSION';
   rationale?: string;       // The logic behind including or excluding this
 }

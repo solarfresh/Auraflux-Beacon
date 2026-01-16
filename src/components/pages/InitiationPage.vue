@@ -105,8 +105,8 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import SidebarContent from '@/components/templates/SidebarContent.vue';
 import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
-import { TopicKeyword } from '@/interfaces/initiation';
-import type { ManagementType, TopicScopeElement } from '@/interfaces/initiation.ts';
+import { ProcessedKeyword } from '@/interfaces/initiation';
+import type { ManagementType, ProcessedScope } from '@/interfaces/initiation.ts';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
@@ -117,9 +117,9 @@ const isReflecting = ref(false); // Controls the visibility of the Reflection Mo
 const isManagementModalOpen = ref(false); // Controls a generic modal for editing Question/Scope/Keywords
 const managementModalType = ref<ManagementType>(null);
 const editingKeywordIndex = ref<number | undefined>(undefined);
-const editingInitialKeyword = ref<TopicKeyword | null>(null);
+const editingInitialKeyword = ref<ProcessedKeyword | null>(null);
 const editingScopeIndex = ref<number | undefined>(undefined);
-const editingInitialScope = ref<TopicScopeElement | null>(null);
+const editingInitialScope = ref<ProcessedScope | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
@@ -179,13 +179,27 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
         case 'scope':
           // Open a generic management modal for Question/Scope
           editingScopeIndex.value = index || topicScope.value.length;
-          editingInitialScope.value = value || {id: '', label: '', value: '', status: 'USER_DRAFT'} as TopicScopeElement;
+          editingInitialScope.value = value || {
+            id: '',
+            label: '',
+            value: '',
+            entityStatus: 'USER_DRAFT',
+            boundaryType: 'INCLUSION',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          } as ProcessedScope;
           isManagementModalOpen.value = true;
           break;
 
         case 'keyword':
           editingKeywordIndex.value = index || topicKeywords.value.length;
-          editingInitialKeyword.value = value || {id: '', text: '', status: 'USER_DRAFT'} as TopicKeyword;
+          editingInitialKeyword.value = value || {
+            id: '',
+            label: '',
+            entityStatus: 'USER_DRAFT',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          } as ProcessedKeyword;
           isManagementModalOpen.value = true;
           break;
 
