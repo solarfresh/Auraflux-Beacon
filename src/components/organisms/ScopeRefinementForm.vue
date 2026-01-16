@@ -225,7 +225,7 @@ async function handleUnifiedSubmit(targetStatus: EntityStatus) {
     // API Call (Simulated/Corrected based on expected Scope endpoint)
     let response = null;
     if (scopeElementId.value) {
-      response = await apiService.workflows.scopes.update(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
+      response = await apiService.knowledge.scopes.update(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
     }
     else {
       response = await apiService.workflows.scopes.create(props.initialScopeElement.label, value, finalStatus);
