@@ -37,8 +37,8 @@
 <script setup lang="ts">
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import type { ProcessedKeyword, TopicKeywordStyle } from '@/interfaces/initiation';
-import type { EntityStatus } from '@/interfaces/workflow';
+import type { TopicKeywordStyle } from '@/interfaces/initiation';
+import type { EntityStatus, ProcessedKeyword } from '@/interfaces/workflow';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------

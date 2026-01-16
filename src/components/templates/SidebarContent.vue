@@ -77,7 +77,8 @@ import KeywordManagementSection from '@/components/organisms/KeywordManagementSe
 import ScopeManagementSection from '@/components/organisms/ScopeManagementSection.vue';
 import UnifiedReviewAlert from '@/components/organisms/UnifiedReviewAlert.vue';
 import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
-import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import type { ManagementType } from '@/interfaces/initiation';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/workflow';
 import { nextTick, ref } from 'vue';
 
 

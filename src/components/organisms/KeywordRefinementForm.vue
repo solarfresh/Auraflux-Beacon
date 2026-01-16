@@ -81,13 +81,11 @@
 </template>
 
 <script setup lang="ts">
-import { apiService } from '@/api/apiService';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
-import type { EntityStatus } from '@/interfaces/workflow';
+import type { EntityStatus, ProcessedKeyword } from '@/interfaces/workflow';
 import { useInitiativeStore } from '@/stores/initiation';
 import { computed, ref, watch } from 'vue';
 
