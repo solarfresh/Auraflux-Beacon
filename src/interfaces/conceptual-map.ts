@@ -25,45 +25,45 @@ interface BaseNode extends Point2D {
 
 /** 1. Focus Node: Directly mapped from ResearchFocus.finalQuestion */
 export interface FocusNode extends BaseNode {
-  type: 'Focus';
+  type: 'FOCUS';
 }
 
 /** 2. Resource Node: Linked to a ResourceItem from Knowledge Layer */
 export interface ResourceNode extends BaseNode {
-  type: 'Resource';
+  type: 'RESOURCE';
   resourceId: ID; // Link to ResourceItem
   data?: ResourceItem; // Optional cached data for quick rendering
 }
 
 /** 3. Concept Node: Directly uses TopicKeyword structure */
 export interface ConceptNode extends BaseNode {
-  type: 'Concept';
+  type: 'CONCEPT';
   keywordId: ID; // Link to TopicKeyword
   data?: TopicKeyword; // This is the key to Panel-Canvas synchronization
 }
 
 /** 4. Insight Node: Synthesis from Reflection Logs */
 export interface InsightNode extends BaseNode {
-  type: 'Insight';
+  type: 'INSIGHT';
   reflectionId: ID;
 }
 
 /** 5. Query Node: Representing research gaps */
 export interface QueryNode extends BaseNode {
-  type: 'Query';
+  type: 'QUERY';
   priority: 'High' | 'Low';
 }
 
 /** 6. Navigation Node: Portal to other CanvasViews (U.S. 3) */
 export interface NavigationNode extends BaseNode {
-  type: 'Navigation';
+  type: 'NAVIGATION';
   targetCanvasId: ID;
   targetCanvasName: string;
 }
 
 /** 7. Group Node: Container for categorization (U.S. 7) */
 export interface GroupNode extends BaseNode, RectSize {
-  type: 'Group';
+  type: 'GROUP';
   childNodeIds: ID[];
   color?: string;
 }

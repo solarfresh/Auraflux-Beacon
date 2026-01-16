@@ -17,7 +17,7 @@
            @click="handleViewDetails('keyword')">
         <p class="text-xs font-medium text-blue-700">Keywords:</p>
         <p class="text-sm text-gray-800 line-clamp-2">
-          {{ currentFocus.topicKeywords?.join(', ') || 'Click to define Keywords' }}
+          {{ currentFocus.keywords?.join(', ') || 'Click to define Keywords' }}
         </p>
         <span class="text-xs text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">Edit</span>
       </div>
@@ -69,25 +69,25 @@
         <div class="index-section">
           <h4 class="text-xs font-medium text-purple-700 mb-1 flex justify-between items-center">
             Insight Nodes
-            <span class="text-gray-500 font-normal">{{ nodeSummary.Insight }}</span>
+            <span class="text-gray-500 font-normal">{{ nodeSummary.insight }}</span>
           </h4>
-          <p v-if="nodeSummary.Insight === 0" class="text-xs text-gray-400">No insights yet.</p>
+          <p v-if="nodeSummary.insight === 0" class="text-xs text-gray-400">No insights yet.</p>
           </div>
 
         <div class="index-section">
           <h4 class="text-xs font-medium text-red-700 mb-1 flex justify-between items-center">
             Query Nodes
-            <span class="text-gray-500 font-normal">{{ nodeSummary.Query }}</span>
+            <span class="text-gray-500 font-normal">{{ nodeSummary.query }}</span>
           </h4>
-          <p v-if="nodeSummary.Query === 0" class="text-xs text-gray-400">No questions defined.</p>
+          <p v-if="nodeSummary.query === 0" class="text-xs text-gray-400">No questions defined.</p>
           </div>
 
         <div class="index-section">
           <h4 class="text-xs font-medium text-green-700 mb-1 flex justify-between items-center">
             Group Nodes
-            <span class="text-gray-500 font-normal">{{ nodeSummary.Group }}</span>
+            <span class="text-gray-500 font-normal">{{ nodeSummary.group }}</span>
           </h4>
-          <p v-if="nodeSummary.Group === 0" class="text-xs text-gray-400">No groups defined.</p>
+          <p v-if="nodeSummary.group === 0" class="text-xs text-gray-400">No groups defined.</p>
           </div>
       </div>
     </div>
@@ -98,15 +98,15 @@
 import type {
   CanvasView,
   NodeSummary,
-  CurrentFocusData,
-  ManagementType // Assuming ManagementType is defined
+  ManagementType
 } from '@/interfaces/exploration';
+import type { RefinedTopic } from '@/interfaces/workflow';
 
 // --- PROPS ---
 
 const props = defineProps<{
   /** Data structure holding the current research focus (Question, Keywords, Scope, Status). (U.S. 1) */
-  currentFocus: CurrentFocusData;
+  currentFocus: RefinedTopic;
   /** Array of all available canvas views/maps. (U.S. 2) */
   canvasViews: CanvasView[];
   /** ID of the canvas view currently displayed in the center pane. (U.S. 2) */
@@ -168,6 +168,7 @@ function getStatusClass(status: string): string {
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

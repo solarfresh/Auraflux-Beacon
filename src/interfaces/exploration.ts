@@ -3,6 +3,15 @@ import { ConceptualNode, ConceptualEdge } from './conceptual-map';
 import { ResourceItem, ResearchFocus } from './knowledge';
 import { ReflectionLogEntry } from './workflow';
 
+export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
+
+export interface CanvasView {
+  id: string;
+  name: string;
+  createdAt: DateTimeString;
+  updatedAt: DateTimeString;
+}
+
 /**
  * Exploration Workspace
  * The root data structure representing the current state of an active
@@ -21,6 +30,27 @@ export interface ExplorationData {
 
   /** Historical record of the user's progress and challenges. */
   explorationStatusLog: ReflectionLogEntry[];
+}
+
+export interface ExplorationState {
+    // --- 1. Resource Management ---
+    resources: ResourceItem[];
+
+    // --- 2. Conceptual Map Management (Supports Multi-Canvas) ---
+    canvasViews: CanvasView[]; // List of all defined canvas views
+    activeCanvasViewId: string; // The currently visible canvas view
+    conceptualNodes: ConceptualNode[]; // Nodes for the active view
+    conceptualEdges: ConceptualEdge[]; // Edges for the active view
+
+    // --- 3. AI Interaction & State ---
+    chatMessages: AIChatMessage[];
+    isTyping: boolean;
+    aiSearchSuggestions: string[];
+    hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
+
+    // --- 4. Reflection & Progress ---
+    reflectionLogs: any[]; // Placeholder for reflection entries
+    isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
 }
 
 /**
@@ -71,4 +101,11 @@ export interface ExplorationUIState {
   isAIChatOpen: boolean;
   isResourcePanelOpen: boolean;
   searchTerm: string;
+}
+
+export interface NodeSummary {
+  insight: number;
+  query: number;
+  resource: number;
+  group: number;
 }

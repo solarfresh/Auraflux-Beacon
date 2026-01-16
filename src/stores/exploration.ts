@@ -1,54 +1,24 @@
-import { defineStore } from 'pinia';
+import { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 import {
-    ResourceItem,
-    ConceptualNode,
-    ConceptualEdge,
+    ExplorationState,
     ManualResourceData,
-    CanvasView,
-    AIChatMessage,
     NodeSummary
-} from '@/interfaces/exploration'; // Assuming interfaces are defined here
+} from '@/interfaces/exploration';
+import { ResourceItem } from '@/interfaces/knowledge';
+import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
-
-// Utility for fetching data (e.g., from a simulated API)
-const api = {
-    fetchData: (endpoint: string) => { /* simulated API call */ },
-    search: (term: string) => { /* simulated search API call */ },
-    // ... other methods
-};
-
-interface ExplorationState {
-    // --- 1. Resource Management ---
-    resources: ResourceItem[];
-
-    // --- 2. Conceptual Map Management (Supports Multi-Canvas) ---
-    canvasViews: CanvasView[]; // List of all defined canvas views (U.S. 2)
-    activeCanvasViewId: string; // The currently visible canvas view
-    conceptualNodes: ConceptualNode[]; // Nodes for the active view
-    conceptualEdges: ConceptualEdge[]; // Edges for the active view
-
-    // --- 3. AI Interaction & State ---
-    chatMessages: AIChatMessage[];
-    isTyping: boolean;
-    aiSearchSuggestions: string[];
-    hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
-
-    // --- 4. Reflection & Progress ---
-    reflectionLogs: any[]; // Placeholder for reflection entries
-    isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
-}
 
 export const useExplorationStore = defineStore('exploration', {
     state: (): ExplorationState => ({
         resources: [],
-        canvasViews: [{ id: 'default-view', name: 'Primary Exploration', createdAt: new Date() }],
-        activeCanvasViewId: 'default-view',
+        canvasViews: [],
+        activeCanvasViewId: '',
         conceptualNodes: [],
         conceptualEdges: [],
 
         chatMessages: [],
         isTyping: false,
-        aiSearchSuggestions: ['Ethical implications of AGI', 'Historical context of AI research'],
+        aiSearchSuggestions: [],
         hasUnreadAIChat: false,
 
         reflectionLogs: [],
@@ -61,7 +31,7 @@ export const useExplorationStore = defineStore('exploration', {
          * used by the CanvasStructureSidebar for the index (U.S. 12).
          */
         currentNodeSummary: (state): NodeSummary => {
-            const summary: NodeSummary = { Insight: 0, Query: 0, Resource: 0, Group: 0 };
+            const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
             state.conceptualNodes.forEach(node => {
                 if (node.type in summary) {
                     summary[node.type as keyof NodeSummary]++;
@@ -96,7 +66,7 @@ export const useExplorationStore = defineStore('exploration', {
             this.isTyping = true;
             try {
                 // Simulate aggregated search (internal + external)
-                const results = await api.search(term);
+                // const results = await api.search(term);
 
                 // Example: Only add to repository if they are not already present
                 // this.resources.push(...results);
@@ -111,15 +81,17 @@ export const useExplorationStore = defineStore('exploration', {
             // Logic to process ManualResourceData and convert it into a full ResourceItem
             const newResource: ResourceItem = {
                 id: uuidv4(),
-                title: data.title || (data.url ? `Manual Link: ${data.url}` : 'Manual Note'),
+                label: data.title || (data.url ? `Manual Link: ${data.url}` : 'Manual Note'),
                 url: data.url as string,
+                format: 'SNIPPET',
                 summary: '',
-                source_type: 'WEB',
-                collected_at: '',
+                sourceType: 'MANUAL',
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
                 keywords: [],
-                user_notes: '',
-                raw_content: data.content || '',
-                relevance_score: 1.0, // Manual resources are considered highly relevant
+                userNotes: '',
+                rawContent: data.content || '',
+                relevanceScore: 1.0, // Manual resources are considered highly relevant
             };
             this.resources.push(newResource);
         },
@@ -131,9 +103,8 @@ export const useExplorationStore = defineStore('exploration', {
             const newNode: ConceptualNode = {
                 id: uuidv4(),
                 type: 'CONCEPT',
-                label: item.title,
-                resource_id: item.id, // Link back to the full resource data
-                user_notes: '',
+                label: item.label,
+                keywordId: item.id, // Link back to the full resource data
                 x: position.x,
                 y: position.y,
                 // ... other Resource Node properties
@@ -197,10 +168,9 @@ export const useExplorationStore = defineStore('exploration', {
                 id: uuidv4(),
                 role: 'system',
                 content: content,
-                name: 'User',
                 isUser: isUser,
                 timestamp: new Date().toISOString(),
-                sequence_number: 0
+                sequenceNumber: 0
             });
             // Mark unread only if it's an AI response
             if (!isUser) {
@@ -231,7 +201,7 @@ export const useExplorationStore = defineStore('exploration', {
         getSimulatedAIResponse(userMessage: string): string {
             if (this.conceptualNodes.length < 5) {
                 return "It looks like your canvas is getting started! To avoid confusion, I recommend trying the **Radial Mode**: place your central Focus Node in the middle and radiate outwards with new resources.";
-            } else if (this.resources.length > 10 && this.currentNodeSummary.Group < 5) {
+            } else if (this.resources.length > 10 && this.currentNodeSummary.group < 5) {
                 return "You've gathered a lot of resources. I suggest switching to the **Categorical Grouping Mode** (use the Group Node tool) to organize the different perspectives on this topic.";
             } else {
                 return `That's an interesting point about "${userMessage}". Based on your current structure, have you considered the **Causal Link** between Concept A and Resource B?`;

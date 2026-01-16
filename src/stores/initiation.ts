@@ -1,7 +1,6 @@
 import { apiService } from '@/api/apiService';
-import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { FeasibilityStatus } from '@/interfaces/core';
-import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ProcessedKeyword, ProcessedScope, ReflectionLogEntry } from '@/interfaces/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';

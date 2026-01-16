@@ -139,7 +139,7 @@ import CanvasStructureSidebar from '@/components/templates/CanvasStructureSideba
 // --- Interfaces ---
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManualResourceData } from '@/interfaces/exploration.ts';
-import type { ManagementType } from '@/interfaces/initiation.ts';
+import type { ManagementType } from '@/interfaces/exploration.ts';
 import type { ResourceItem } from '@/interfaces/knowledge.ts';
 
 // --- Initialization ---
@@ -149,20 +149,20 @@ const explorationStore = useExplorationStore();
 
 // --- Local UI State ---
 const isManagementModalOpen = ref(false);
-const managementModalType = ref<ManagementType | 'manual-resource' | null>(null);
+const managementModalType = ref<ManagementType>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const currentStep = computed(() => workflowStore.currentStepName);
 const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
 
 // Data from Initiation/Selection (The Focus structure)
-const currentFocusData = computed(() => ({ // Aggregating Focus data for the new sidebar
+const currentFocusData = computed(() => ({
   latestReflection: initiativeStore.latestReflection,
   feasibilityStatus: initiativeStore.feasibilityStatus,
   finalQuestion: initiativeStore.finalQuestion,
-  topicKeywords: initiativeStore.topicKeywords,
+  keywords: initiativeStore.topicKeywords,
   resourceSuggestion: initiativeStore.resourceSuggestion,
-  topicScope: initiativeStore.topicScope,
+  scope: initiativeStore.topicScope,
   stabilityScore: initiativeStore.stabilityScore,
 }));
 
@@ -274,7 +274,7 @@ function handleResourceUpdate(resource: ResourceItem) {
  * Handles the 'viewDetails' event emitted by the sidebar (U.S. 1, 9, 12).
  * Triggers modals for Focus refinement or Reflection Log.
  */
-function handleViewDetails(type: ManagementType | 'reflection-log', index?: number, value?: any) {
+function handleViewDetails(type: ManagementType, index?: number, value?: any) {
   managementModalType.value = type;
   isManagementModalOpen.value = true;
 }
@@ -314,7 +314,7 @@ async function handlePhaseTransitionRequest() {
 
 // --- Utility functions for Modals ---
 
-function getFocusData(type: ManagementType | 'manual-resource' | null): any {
+function getFocusData(type: ManagementType): any {
     switch (type) {
         case 'final-question':
             return initiativeStore.finalQuestion;
@@ -327,12 +327,12 @@ function getFocusData(type: ManagementType | 'manual-resource' | null): any {
     }
 }
 
-function isFocusRefinementType(type: ManagementType | 'manual-resource' | null): boolean {
+function isFocusRefinementType(type: ManagementType): boolean {
     return type === 'final-question' || type === 'keyword' || type === 'scope';
 }
 
 
-function getModalWidthClass(type: ManagementType | 'manual-resource' | null): string {
+function getModalWidthClass(type: ManagementType): string {
   switch (type) {
     case 'reflection-log':
       return 'max-w-6xl';
@@ -343,7 +343,7 @@ function getModalWidthClass(type: ManagementType | 'manual-resource' | null): st
   }
 }
 
-function getModalTitle(type: ManagementType | 'manual-resource' | null): string {
+function getModalTitle(type: ManagementType): string {
   switch (type) {
     case 'reflection-log':
       return 'Exploration Reflection Log';

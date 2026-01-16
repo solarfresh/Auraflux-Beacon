@@ -156,7 +156,7 @@ function handleNewEntry() {
   isEditing.value = true;
   originalEntry.value = null;
   currentDraft.value = {
-    id: `new-${Date.now()}`, // Temporary ID
+    id: `new-${Date.now()}`,
     updatedAt: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     title: '',

@@ -1,4 +1,5 @@
 import { ID, DateTimeString, ParticipantRole, Percentage } from './core';
+import { ResearchFocus, TopicKeyword, TopicScopeElement } from './knowledge';
 
 export type ISPStep =
   | 'TOPIC_DEFINITION_LOCKIN' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
@@ -47,6 +48,28 @@ export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: str
         percentage: 90,
     },
 };
+
+/**
+ * Processed Knowledge Elements.
+ * Combines the pure Knowledge structure with Workflow state for the UI.
+ */
+export interface ProcessedKeyword extends TopicKeyword {
+  entityStatus: EntityStatus;
+}
+
+export interface ProcessedScope extends TopicScopeElement {
+  entityStatus: EntityStatus;
+}
+
+/**
+ * Interface for the refinement process.
+ * Tracks the stability and readiness of the research topic.
+ */
+export interface RefinedTopic extends ResearchFocus {
+  resourceSuggestion?: string;
+  keywords: ProcessedKeyword[];
+  scope: ProcessedScope[];
+}
 
 export interface ReflectionLogEntry {
   id: ID;
