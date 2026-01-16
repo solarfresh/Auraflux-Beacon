@@ -20,7 +20,7 @@
 
       <FocusItem
         label="Keywords"
-        :value="focus.keywords?.join(', ')"
+        :value="keywordItems"
         placeholder="Click to define Keywords"
         @click="$emit('edit', 'keyword')"
       />
@@ -67,6 +67,14 @@ defineEmits<{
 // --- COMPUTED ---
 const feasibilityStatus = computed(() => {
   return props.focus.feasibilityStatus;
+});
+
+const keywordItems = computed(() => {
+  const keywords = props.focus.keywords.map((processedKeyword) => {
+    return processedKeyword.label;
+  });
+
+  return keywords.join(', ');
 });
 
 /** * Summarizes the scope counts for the FocusItem display.
