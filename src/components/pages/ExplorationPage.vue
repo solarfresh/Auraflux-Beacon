@@ -122,14 +122,14 @@ import { computed, onMounted, ref } from 'vue';
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import TabbedPanel from '@/components/molecules/TabbedPanel.vue';
-import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // --- Workspace Organisms ---
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
-import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
 import ReflectionLogForm from '@/components/organisms/ReflectionLogForm.vue';
+import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
 
 // --- Custom Sidebar & Modal Components (NEW) ---
 import CanvasStructureSidebar from '@/components/templates/CanvasStructureSidebar.vue'; // NEW: For multi-canvas management (U.S. 2, 12)
@@ -137,8 +137,10 @@ import CanvasStructureSidebar from '@/components/templates/CanvasStructureSideba
 // import ResourceAddItemModal from '@/components/organisms/ResourceAddItemModal.vue'; // NEW: For manual resource entry (U.S. 5)
 
 // --- Interfaces ---
+import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
+import type { ManualResourceData } from '@/interfaces/exploration.ts';
 import type { ManagementType } from '@/interfaces/initiation.ts';
-import type { ConceptualNode, ConceptualEdge, ResourceItem, ManualResourceData } from '@/interfaces/exploration.ts';
+import type { ResourceItem } from '@/interfaces/knowledge.ts';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();

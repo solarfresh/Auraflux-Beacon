@@ -1,4 +1,4 @@
-import { ID, DateTimeString, BaseChatMessage } from './core';
+import { ID, DateTimeString, ChatMessage } from './core';
 import { ConceptualNode, ConceptualEdge } from './conceptual-map';
 import { ResourceItem, ResearchFocus } from './knowledge';
 import { ReflectionLogEntry } from './workflow';
@@ -28,7 +28,7 @@ export interface ExplorationData {
  * Extends the base message to include research-specific UI elements
  * like suggested resources or structural changes (U.S. 11).
  */
-export interface AIChatMessage extends BaseChatMessage {
+export interface AIChatMessage extends ChatMessage {
   /** True if the message was sent by the user, false if from the AI. */
   isUser: boolean;
 
