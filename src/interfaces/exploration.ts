@@ -1,4 +1,4 @@
-import { ID, DateTimeString, ChatMessage } from './core';
+import { ID, DateTimeString, ChatMessage, FeasibilityStatus } from './core';
 import { ConceptualNode, ConceptualEdge } from './conceptual-map';
 import { ResourceItem, ResearchFocus } from './knowledge';
 import { ReflectionLogEntry } from './workflow';
@@ -33,22 +33,22 @@ export interface ExplorationData {
 }
 
 export interface ExplorationState {
-    // --- 1. Resource Management ---
+    // --- Resource Management ---
     resources: ResourceItem[];
 
-    // --- 2. Conceptual Map Management (Supports Multi-Canvas) ---
+    // --- Conceptual Map Management (Supports Multi-Canvas) ---
     canvasViews: CanvasView[]; // List of all defined canvas views
     activeCanvasViewId: string; // The currently visible canvas view
     conceptualNodes: ConceptualNode[]; // Nodes for the active view
     conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
-    // --- 3. AI Interaction & State ---
+    // --- AI Interaction & State ---
     chatMessages: AIChatMessage[];
     isTyping: boolean;
     aiSearchSuggestions: string[];
     hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
 
-    // --- 4. Reflection & Progress ---
+    // --- Reflection & Progress ---
     reflectionLogs: any[]; // Placeholder for reflection entries
     isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
 }
