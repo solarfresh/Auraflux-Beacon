@@ -117,20 +117,20 @@ const initiativeStore = useInitiativeStore();
 
 // --- Props ---
 const props = defineProps<{
-    /** The index of the element being edited. Crucial for updating the store. */
-    scopeIndex: number;
-    /** The single scope element data object. */
-    initialScopeElement: ProcessedScope;
-    /** Current feasibility status for feedback. */
-    feasibilityStatus: FeasibilityStatus;
+  /** The index of the element being edited. Crucial for updating the store. */
+  scopeIndex: number;
+  /** The single scope element data object. */
+  initialScopeElement: ProcessedScope;
+  /** Current feasibility status for feedback. */
+  feasibilityStatus: FeasibilityStatus;
 }>();
 
 // --- Emits ---
 const emit = defineEmits<{
-    /** Emitted when the user submits changes (value and status) through a commitment button. */
-    (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: EntityStatus }): void;
-    /** Emitted to close the modal. */
-    (e: 'close-modal'): void;
+  /** Emitted when the user submits changes (value and status) through a commitment button. */
+  (e: 'scopeUpdate', payload: { index: number, newValue: string, newStatus: EntityStatus }): void;
+  /** Emitted to close the modal. */
+  (e: 'close-modal'): void;
 }>();
 
 
@@ -140,7 +140,7 @@ const draftValue = ref(props.initialScopeElement.rationale);
 
 // Watcher to reset draft value if the initialScopeElement prop changes externally
 watch(() => props.initialScopeElement.rationale, (newValue) => {
-    draftValue.value = newValue;
+  draftValue.value = newValue;
 });
 
 const scopeElementId = computed(() => props.initialScopeElement.id); // Assuming ID exists
@@ -152,55 +152,55 @@ const isAI_EXTRACTED = computed(() => props.initialScopeElement.entityStatus ===
 
 /** Checks if the local value is different from the initial value. */
 const isValueModified = computed(() => {
-    return draftValue.value?.trim() !== props.initialScopeElement.rationale;
+  return draftValue.value?.trim() !== props.initialScopeElement.rationale;
 });
 
 // --- UI Styling (Copied from SingleKeywordDetailEditor logic) ---
 
 /** Tailwind classes for the status box based on the current scope status. */
 const statusClasses = computed(() => {
-    switch (props.initialScopeElement.entityStatus) {
-        case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
-        case 'AI_EXTRACTED':
-        case 'USER_DRAFT':
-            return 'bg-yellow-50 border-yellow-200';
-        case 'ON_HOLD': return 'bg-gray-100 border-gray-300';
-        default: return 'bg-white border-gray-200';
-    }
+  switch (props.initialScopeElement.entityStatus) {
+    case 'LOCKED': return 'bg-indigo-50 border-indigo-200';
+    case 'AI_EXTRACTED':
+    case 'USER_DRAFT':
+      return 'bg-yellow-50 border-yellow-200';
+    case 'ON_HOLD': return 'bg-gray-100 border-gray-300';
+    default: return 'bg-white border-gray-200';
+  }
 });
 
 /** Text color based on status. */
 const statusTextColor = computed(() => {
-    switch (props.initialScopeElement.entityStatus) {
-        case 'LOCKED': return 'indigo-700';
-        case 'AI_EXTRACTED':
-        case 'USER_DRAFT':
-            return 'yellow-800';
-        case 'ON_HOLD': return 'gray-500';
-        default: return 'gray-800';
-    }
+  switch (props.initialScopeElement.entityStatus) {
+    case 'LOCKED': return 'indigo-700';
+    case 'AI_EXTRACTED':
+    case 'USER_DRAFT':
+      return 'yellow-800';
+    case 'ON_HOLD': return 'gray-500';
+    default: return 'gray-800';
+  }
 });
 
 /** Icon based on status. */
 const statusIcon = computed(() => {
-    switch (props.initialScopeElement.entityStatus) {
-        case 'LOCKED': return 'LockClosed';
-        case 'AI_EXTRACTED': return 'Sparkles';
-        case 'ON_HOLD': return 'ArchiveBox';
-        case 'USER_DRAFT':
-        default: return 'PencilSquare';
-    }
+  switch (props.initialScopeElement.entityStatus) {
+    case 'LOCKED': return 'LockClosed';
+    case 'AI_EXTRACTED': return 'Sparkles';
+    case 'ON_HOLD': return 'ArchiveBox';
+    case 'USER_DRAFT':
+    default: return 'PencilSquare';
+  }
 });
 
 /** Icon color based on status. */
 const statusIconColor = computed(() => {
-    switch (props.initialScopeElement.entityStatus) {
-        case 'LOCKED': return 'indigo-600';
-        case 'AI_EXTRACTED': return 'yellow-600';
-        case 'ON_HOLD': return 'gray-500';
-        case 'USER_DRAFT':
-        default: return 'gray-600';
-    }
+  switch (props.initialScopeElement.entityStatus) {
+    case 'LOCKED': return 'indigo-600';
+    case 'AI_EXTRACTED': return 'yellow-600';
+    case 'ON_HOLD': return 'gray-500';
+    case 'USER_DRAFT':
+    default: return 'gray-600';
+  }
 });
 
 
@@ -208,45 +208,45 @@ const statusIconColor = computed(() => {
 
 /** Handles the unified submission of the scope element status and value. */
 async function handleUnifiedSubmit(targetStatus: EntityStatus) {
-    const value = draftValue.value?.trim();
-    if (!value) return;
+  const value = draftValue.value?.trim();
+  if (!value) return;
 
-    let finalStatus = targetStatus;
+  let finalStatus = targetStatus;
 
-    // Logic similar to SingleKeywordDetailEditor's unified submit
-    if (isLOCKED.value && targetStatus === 'LOCKED') {
-        finalStatus = 'LOCKED'; // Maintain lock after saving value
-    } else if (isLOCKED.value && targetStatus === 'ON_HOLD') {
-        finalStatus = 'ON_HOLD'; // Unlock and put on hold
-    }
-    // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
+  // Logic similar to SingleKeywordDetailEditor's unified submit
+  if (isLOCKED.value && targetStatus === 'LOCKED') {
+    finalStatus = 'LOCKED'; // Maintain lock after saving value
+  } else if (isLOCKED.value && targetStatus === 'ON_HOLD') {
+    finalStatus = 'ON_HOLD'; // Unlock and put on hold
+  }
+  // For DRAFT/AI_EXTRACTED, targetStatus is already LOCKED or ON_HOLD, which is correct.
 
-    // API Call (Simulated/Corrected based on expected Scope endpoint)
-    let response = null;
-    if (scopeElementId.value) {
-      response = await apiService.knowledge.scopes.update(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
-    }
-    else {
-      response = await apiService.workflows.scopes.create(props.initialScopeElement.label, value, finalStatus);
-    }
+  // API Call (Simulated/Corrected based on expected Scope endpoint)
+  let response = null;
+  if (scopeElementId.value) {
+    response = await apiService.knowledge.scopes.update(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
+  }
+  else {
+    response = await apiService.workflows.scopes.create(props.initialScopeElement.label, value, finalStatus);
+  }
 
-    initiativeStore.createOrUpdateTopicScopes(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
+  initiativeStore.createOrUpdateTopicScopes(scopeElementId.value, props.initialScopeElement.label, value, finalStatus);
 
-    // 3. Close the modal
-    emit('close-modal');
+  // 3. Close the modal
+  emit('close-modal');
 }
 
 
 function handleCancelAndCheck() {
-    if (isValueModified.value) {
-        const confirmation = window.confirm(
-            'You have unsaved value changes. Are you sure you want to cancel and discard them?'
-        );
-        if (confirmation) {
-            emit('close-modal');
-        }
-    } else {
-        emit('close-modal');
+  if (isValueModified.value) {
+    const confirmation = window.confirm(
+      'You have unsaved value changes. Are you sure you want to cancel and discard them?'
+    );
+    if (confirmation) {
+      emit('close-modal');
     }
+  } else {
+    emit('close-modal');
+  }
 }
 </script>

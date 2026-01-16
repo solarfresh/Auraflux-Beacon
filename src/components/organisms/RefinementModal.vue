@@ -33,10 +33,10 @@ import type { ManagementType } from '@/interfaces/exploration';
 import Text from '@/components/atoms/Text.vue';
 import Icon from '@/components/atoms/Icon.vue';
 
-// Forms (Molecules/Organisms)
-// import QuestionRefinementForm from './forms/QuestionRefinementForm.vue';
+// Organisms
+import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
 import KeywordListRefinementForm from '@/components/organisms/KeywordListRefinementForm.vue';
-// import ScopeRefinementForm from './forms/ScopeRefinementForm.vue';
+import ScopeListRefinementForm from '@/components/organisms/ScopeListRefinementForm.vue';
 
 const props = defineProps<{
   type: ManagementType;
@@ -56,7 +56,7 @@ const config = computed(() => {
       icon: 'QuestionMarkCircle',
       iconColor: 'indigo-600',
       description: 'Review and sharpen your core question based on the insights discovered during exploration.',
-      // component: QuestionRefinementForm
+      component: FinalQuestionEditor
     },
     'keyword': {
       title: 'Keywords',
@@ -70,7 +70,7 @@ const config = computed(() => {
       icon: 'ArrowsPointingOut',
       iconColor: 'emerald-600',
       description: 'Update inclusion and exclusion criteria to keep your workspace focused.',
-      // component: ScopeRefinementForm
+      component: ScopeListRefinementForm
     }
   };
   return mapping[props.type as keyof typeof mapping] || mapping['final-question'];

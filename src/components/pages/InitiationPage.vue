@@ -55,11 +55,11 @@
       </template>
       <template #content>
         <FinalQuestionEditor
-            v-if="managementModalType === 'final-question'"
-            :initial-question="initiativeStore.finalQuestion"
-            :feasibility-status="initiativeStore.feasibilityStatus"
-            :stability-score="initiativeStore.stabilityScore"
-            @close-modal="isManagementModalOpen = false"
+          v-if="managementModalType === 'final-question'"
+          :initialValue="initiativeStore.finalQuestion"
+          :feasibility-status="initiativeStore.feasibilityStatus"
+          :stability-score="initiativeStore.stabilityScore"
+          @close-modal="isManagementModalOpen = false"
         />
         <SingleKeywordDetailEditor
           v-else-if="managementModalType === 'keyword'"
@@ -67,7 +67,7 @@
           :keyword-index="editingKeywordIndex!"
           @close-modal="isManagementModalOpen = false"
         />
-        <ScopeRefinementForm
+        <SingleScopeDetailEditor
           v-else-if="managementModalType === 'scope'"
           :initial-scope-element="editingInitialScope!"
           :scope-index="editingScopeIndex!"
@@ -99,7 +99,7 @@ import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
 import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';
-import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue';
+import SingleScopeDetailEditor from '@/components/organisms/SingleScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import SidebarContent from '@/components/templates/SidebarContent.vue';

@@ -23,12 +23,11 @@
 </template>
 
 <script setup lang="ts">
+import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
+
 import { computed } from 'vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-
-// --- TYPES ---
-export type TFeasibilityStatus = 'HIGH' | 'MEDIUM' | 'LOW';
 
 // ----------------------------------------------------------------------
 // --- Props ---

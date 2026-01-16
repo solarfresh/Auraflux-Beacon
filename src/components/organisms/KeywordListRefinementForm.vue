@@ -54,13 +54,13 @@
             {{ keyword.label }}
           </Text>
 
-          <button
-            class="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-all opacity-0 group-hover:opacity-100"
-            @click="removeKeyword(index)"
-            title="Remove from list"
-          >
-            <Icon name="XMark" size="xs" />
-          </button>
+          <IconButton
+              variant="danger"
+              size="xs"
+              icon-name="XMark"
+              class="opacity-0 group-hover:opacity-100"
+              @click="removeKeyword(index)"
+            />
         </div>
       </div>
     </div>
@@ -77,14 +77,15 @@
 </template>
 
 <script setup lang="ts">
+import type { EntityStatus, ProcessedKeyword } from '@/interfaces/workflow';
 import { ref } from 'vue';
-import type { ProcessedKeyword, EntityStatus } from '@/interfaces/workflow';
 
 // Atoms
-import Text from '@/components/atoms/Text.vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
+import IconButton from '@/components/atoms/IconButton.vue';
 import Input from '@/components/atoms/Input.vue';
+import Text from '@/components/atoms/Text.vue';
 
 /**
  * English Documentation:
