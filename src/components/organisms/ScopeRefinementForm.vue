@@ -155,7 +155,7 @@ const isValueModified = computed(() => {
     return draftValue.value?.trim() !== props.initialScopeElement.rationale;
 });
 
-// --- UI Styling (Copied from KeywordRefinementForm logic) ---
+// --- UI Styling (Copied from SingleKeywordDetailEditor logic) ---
 
 /** Tailwind classes for the status box based on the current scope status. */
 const statusClasses = computed(() => {
@@ -213,7 +213,7 @@ async function handleUnifiedSubmit(targetStatus: EntityStatus) {
 
     let finalStatus = targetStatus;
 
-    // Logic similar to KeywordRefinementForm's unified submit
+    // Logic similar to SingleKeywordDetailEditor's unified submit
     if (isLOCKED.value && targetStatus === 'LOCKED') {
         finalStatus = 'LOCKED'; // Maintain lock after saving value
     } else if (isLOCKED.value && targetStatus === 'ON_HOLD') {

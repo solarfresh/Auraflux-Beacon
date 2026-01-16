@@ -48,7 +48,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   /** Emitted when the user clicks to edit Focus details or view Reflection Log. (U.S. 1) */
-  (e: 'view-details', type: ManagementType | 'reflection-log'): void;
+  (e: 'view-details', type: ManagementType): void;
   /** Emitted when the user clicks to switch the active canvas view. (U.S. 2) */
   (e: 'switch-canvas', viewId: string): void;
   /** Emitted when the user interacts with canvas management buttons (New, Rename, Delete). (U.S. 2) */

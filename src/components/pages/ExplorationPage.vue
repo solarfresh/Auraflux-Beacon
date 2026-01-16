@@ -86,20 +86,15 @@
         Manage {{ getModalTitle(managementModalType) }}
       </template>
       <template #content>
-        <ReflectionLogForm
-          v-if="managementModalType === 'reflection-log'"
-          :initial-entries="reflectionLogEntries"
-          @close-modal="isManagementModalOpen = false"
-        />
-<!--
         <RefinementModal
-          v-else-if="isFocusRefinementType(managementModalType)"
+          v-if="isFocusRefinementType(managementModalType)"
           :type="managementModalType"
           :initial-data="getFocusData(managementModalType)"
           @update-focus="handleUpdateFocus"
           @close-modal="isManagementModalOpen = false"
         />
 
+<!--
         <ResourceAddItemModal
           v-else-if="managementModalType === 'manual-resource'"
           @add-resource="handleAddManualResource"
@@ -128,7 +123,7 @@ import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspac
 // --- Workspace Organisms ---
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
-import ReflectionLogForm from '@/components/organisms/ReflectionLogForm.vue';
+import RefinementModal from '@/components/organisms/RefinementModal.vue';
 import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
 
 // --- Custom Sidebar & Modal Components (NEW) ---
@@ -315,20 +310,20 @@ async function handlePhaseTransitionRequest() {
 // --- Utility functions for Modals ---
 
 function getFocusData(type: ManagementType): any {
-    switch (type) {
-        case 'final-question':
-            return initiativeStore.finalQuestion;
-        case 'keyword':
-            return initiativeStore.topicKeywords;
-        case 'scope':
-            return initiativeStore.topicScope;
-        default:
-            return null;
-    }
+  switch (type) {
+    case 'final-question':
+      return initiativeStore.finalQuestion;
+    case 'keyword':
+      return initiativeStore.topicKeywords;
+    case 'scope':
+      return initiativeStore.topicScope;
+    default:
+      return null;
+  }
 }
 
 function isFocusRefinementType(type: ManagementType): boolean {
-    return type === 'final-question' || type === 'keyword' || type === 'scope';
+  return type === 'final-question' || type === 'keyword' || type === 'scope';
 }
 
 

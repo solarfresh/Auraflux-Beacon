@@ -150,28 +150,28 @@ const getFeasibilityDescription = (status: TFeasibilityStatus) => {
  * and routes them to the top-level viewDetails emitter.
  */
 const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: { index: number, keyword: ProcessedKeyword }) => {
-    if (type === 'keyword-add') {
-        handleViewDetails('keyword');
-    } else if (type === 'keyword' && payload) {
-        handleViewDetails('keyword', payload.index, payload.keyword);
-    }
+  if (type === 'keyword-add') {
+    handleViewDetails('keyword');
+  } else if (type === 'keyword' && payload) {
+    handleViewDetails('keyword', payload.index, payload.keyword);
+  }
 };
 
 /** * Handles scope actions (add/edit) from the child Organism
  * and routes them to the top-level viewDetails emitter.
  */
 const handleScopeAction = (type: 'scope' | 'scope-add', payload?: { index: number, scope: ProcessedScope }) => {
-    if (type === 'scope-add') {
-        handleViewDetails('scope');
-    } else if (type === 'scope' && payload) {
-        // NOTE: Scope edit requires the 'scope' type and index/value payload
-        handleViewDetails('scope', payload.index, payload.scope);
-    }
+  if (type === 'scope-add') {
+    handleViewDetails('scope');
+  } else if (type === 'scope' && payload) {
+    // NOTE: Scope edit requires the 'scope' type and index/value payload
+    handleViewDetails('scope', payload.index, payload.scope);
+  }
 };
 
 /** Emits event for navigating to detailed views/modals. */
 const handleViewDetails = (type: ManagementType, index?: number, value?: any) => {
-    emit('viewDetails', type, index, value);
+  emit('viewDetails', type, index, value);
 };
 
 
@@ -179,17 +179,17 @@ const handleViewDetails = (type: ManagementType, index?: number, value?: any) =>
  * to scroll to the first section that has review items.
  */
 const handleScrollToReview = (firstSection: 'keyword' | 'scope') => {
-    nextTick(() => {
-        let targetElement = null;
-        if (firstSection === 'keyword' && keywordSectionRef.value?.$el) {
-            targetElement = keywordSectionRef.value.$el;
-        } else if (firstSection === 'scope' && scopeSectionRef.value?.$el) {
-            targetElement = scopeSectionRef.value.$el;
-        }
+  nextTick(() => {
+    let targetElement = null;
+    if (firstSection === 'keyword' && keywordSectionRef.value?.$el) {
+        targetElement = keywordSectionRef.value.$el;
+    } else if (firstSection === 'scope' && scopeSectionRef.value?.$el) {
+        targetElement = scopeSectionRef.value.$el;
+    }
 
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    });
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
 };
 </script>

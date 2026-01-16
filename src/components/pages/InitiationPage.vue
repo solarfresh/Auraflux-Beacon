@@ -61,7 +61,7 @@
             :stability-score="initiativeStore.stabilityScore"
             @close-modal="isManagementModalOpen = false"
         />
-        <KeywordRefinementForm
+        <SingleKeywordDetailEditor
           v-else-if="managementModalType === 'keyword'"
           :initial-keyword="editingInitialKeyword!"
           :keyword-index="editingKeywordIndex!"
@@ -98,7 +98,7 @@ import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
-import KeywordRefinementForm from '@/components/organisms/KeywordRefinementForm.vue';
+import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';
 import ScopeRefinementForm from '@/components/organisms/ScopeRefinementForm.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
@@ -161,51 +161,51 @@ function handleSendMessage(content: string) {
  * @param index Optional index for specific items (e.g., keywords).
  */
 function handleViewDetails(type: ManagementType, index?: number, value?: any) {
-    editingKeywordIndex.value = undefined;
-    editingScopeIndex.value = undefined;
-    editingInitialKeyword.value = null;
-    editingInitialScope.value = null;
-    managementModalType.value = type;
+  editingKeywordIndex.value = undefined;
+  editingScopeIndex.value = undefined;
+  editingInitialKeyword.value = null;
+  editingInitialScope.value = null;
+  managementModalType.value = type;
 
-    switch (type) {
-        case 'reflection-log':
-          isManagementModalOpen.value = true;
-          break;
+  switch (type) {
+    case 'reflection-log':
+      isManagementModalOpen.value = true;
+      break;
 
-        case 'final-question':
-          // isManagementModalOpen.value = true;
-          break;
+    case 'final-question':
+      // isManagementModalOpen.value = true;
+      break;
 
-        case 'scope':
-          // Open a generic management modal for Question/Scope
-          editingScopeIndex.value = index || topicScope.value.length;
-          editingInitialScope.value = value || {
-            id: '',
-            label: '',
-            value: '',
-            entityStatus: 'USER_DRAFT',
-            boundaryType: 'INCLUSION',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          } as ProcessedScope;
-          isManagementModalOpen.value = true;
-          break;
+    case 'scope':
+      // Open a generic management modal for Question/Scope
+      editingScopeIndex.value = index || topicScope.value.length;
+      editingInitialScope.value = value || {
+        id: '',
+        label: '',
+        value: '',
+        entityStatus: 'USER_DRAFT',
+        boundaryType: 'INCLUSION',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      } as ProcessedScope;
+      isManagementModalOpen.value = true;
+      break;
 
-        case 'keyword':
-          editingKeywordIndex.value = index || topicKeywords.value.length;
-          editingInitialKeyword.value = value || {
-            id: '',
-            label: '',
-            entityStatus: 'USER_DRAFT',
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          } as ProcessedKeyword;
-          isManagementModalOpen.value = true;
-          break;
+    case 'keyword':
+      editingKeywordIndex.value = index || topicKeywords.value.length;
+      editingInitialKeyword.value = value || {
+        id: '',
+        label: '',
+        entityStatus: 'USER_DRAFT',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      } as ProcessedKeyword;
+      isManagementModalOpen.value = true;
+      break;
 
-        default:
-            console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
-    }
+    default:
+      console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
+  }
 }
 
 function getModalWidthClass(type: ManagementType | null): string {
