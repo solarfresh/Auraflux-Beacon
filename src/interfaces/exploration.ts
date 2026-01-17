@@ -5,6 +5,11 @@ import { ReflectionLogEntry } from './workflow';
 
 export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
 
+interface AdversaryData {
+  critique: string;
+  conflicts: string[];
+}
+
 export interface CanvasView {
   id: string;
   name: string;
@@ -43,6 +48,9 @@ export interface ExplorationState {
     conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
     // --- AI Interaction & State ---
+    isAdversaryVisible: boolean;
+    healthScore: number;
+    adversaryData: AdversaryData;
     chatMessages: AIChatMessage[];
     isTyping: boolean;
     aiSearchSuggestions: string[];

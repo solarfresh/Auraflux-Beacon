@@ -16,6 +16,12 @@ export const useExplorationStore = defineStore('exploration', {
 			conceptualNodes: [],
 			conceptualEdges: [],
 
+			isAdversaryVisible: true,
+			healthScore: 100,
+			adversaryData: {
+				critique: '',
+				conflicts: []
+			},
 			chatMessages: [],
 			isTyping: false,
 			aiSearchSuggestions: [],
@@ -48,6 +54,38 @@ export const useExplorationStore = defineStore('exploration', {
 	},
 
 	actions: {
+		/**
+		 * dismissAdversaryOverlay
+		 * Resets the friction layer and restores UI focus to the synthesis hub.
+		 * Triggered by the "Acknowledge" Button in the KnowledgeInterrogationPanel.
+		 */
+		dismissAdversaryOverlay() {
+			// 1. Terminate the 'Intentional Friction' visual state
+			this.isAdversaryVisible = false;
+
+			// 2. Optional: Log the acknowledgement for research traceability
+			// this.logReflection({
+			// 	type: 'adversary_ack',
+			// 	timestamp: new Date().toISOString(),
+			// 	context: this.adversaryData.critique
+			// });
+
+			// 3. Reset HealthScore threshold to prevent immediate re-triggering
+			// We set it to a "Caution" state (e.g., 40) rather than full health
+			if (this.healthScore < 30) {
+				this.healthScore = 40;
+			}
+		},
+
+		/**
+		 * Triggered when the system detects high uncertainty or AI Hallucination
+		 */
+		triggerAdversaryWarning(critique: string) {
+			this.adversaryData.critique = critique;
+			this.isAdversaryVisible = true;
+			// Triggers the CSS transition in the Panel organism
+		},
+
 		// --- Initialization & Loading ---
 		async loadExplorationData() {
 			// Simulate loading data for the current active view and resources
