@@ -2,6 +2,7 @@ import { computed } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import type { ID } from '@/interfaces/core';
 import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
+import { getStabilityContext } from '@/logic/workflow';
 
 /**
  * useRegistry
@@ -84,14 +85,10 @@ export function useRegistry() {
     if (!node) return;
 
     // Constrain stability between 0 and 100
-    node.stabilityScore = Math.max(0, Math.min(100, node.stabilityScore + delta));
+    node.stabilityScore = Math.max(0, Math.min(10, node.stabilityScore + delta));
 
     // 5. Solidity Light Logic: Automated transition based on stability
-    if (node.stabilityScore >= 80) {
-      node.solidity = 'SOLID';
-    } else if (node.stabilityScore < 40) {
-      node.solidity = 'PULSING';
-    }
+    node.solidity = getStabilityContext(node.stabilityScore).solidity;
   };
 
   /**

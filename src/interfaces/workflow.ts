@@ -13,6 +13,7 @@ export type ReflectionEntryType =
   | 'AI_GUIDANCE_FEEDBACK'   // AI-generated encouragement or structured guidance based on user activity
   | 'UNCATEGORIZED_DRAFT';
 export type ReflectionLogStatus = 'draft' | 'committed';
+export type StabilityStatus = 'Finalizing' | 'Refining' | 'Defining';
 
 export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
     TOPIC_DEFINITION_LOCKIN: {
@@ -67,6 +68,13 @@ export interface PhaseConfig {
   label: string;
   description: string;
   expectedCompletion: Percentage;
+}
+
+export interface StabilityMetric {
+  label: StabilityStatus;
+  solidity: 'SOLID' | 'PULSING';
+  jitterLevel: 'NONE' | 'LOW' | 'HIGH';
+  description: string;
 }
 
 /**

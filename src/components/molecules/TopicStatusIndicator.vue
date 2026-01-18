@@ -26,6 +26,7 @@
 import { computed } from 'vue';
 import Text from '@/components/atoms/Text.vue';
 import BarSegment from '@/components/atoms/BarSegment.vue';
+import { getStabilityContext } from '@/logic/workflow';
 
 // --- Props ---
 const props = defineProps({
@@ -77,12 +78,7 @@ const clampedPercentage = computed(() => {
  * 8-10: Ready, 4-7: Focusing, 1-3: Exploring.
  */
 const clarityStatusLabel = computed(() => {
-  if (props.stabilityScore >= 8) {
-    return 'Finalizing';
-  } else if (props.stabilityScore >= 4) {
-    return 'Refining';
-  }
-  return 'Defining';
+  return getStabilityContext(props.stabilityScore).label;
 });
 
 /**
