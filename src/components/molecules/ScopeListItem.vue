@@ -42,7 +42,7 @@
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import type { EntityStatus } from '@/interfaces/core'
-import type { ProcessedScope } from '@/interfaces/workflow';
+import type { ProcessedScope } from '@/interfaces/initiation';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------

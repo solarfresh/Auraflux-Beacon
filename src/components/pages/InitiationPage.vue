@@ -105,8 +105,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import SidebarContent from '@/components/templates/SidebarContent.vue';
 import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
-import type { ManagementType } from '@/interfaces/initiation.ts';
-import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/workflow';
+import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();

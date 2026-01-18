@@ -1,7 +1,7 @@
 import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ChatMessage } from '@/interfaces/core';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/workflow';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
