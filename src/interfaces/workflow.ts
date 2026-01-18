@@ -1,4 +1,4 @@
-import { ID, DateTimeString, ParticipantRole, Percentage } from './core';
+import { DateTimeString, EntityStatus, ID, ParticipantRole, Percentage } from './core';
 import { ResearchFocus, TopicKeyword, TopicScopeElement } from './knowledge';
 
 export type ISPStep =
@@ -7,12 +7,6 @@ export type ISPStep =
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
-export type EntityStatus =
-  | 'USER_DRAFT'    // Under active editing by the user
-  | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review
-  | 'LOCKED'        // Finalized and protected from accidental changes
-  | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
-  | 'ARCHIVED';     // Removed from view but preserved in history
 export type ReflectionEntryType =
   | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
   | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea

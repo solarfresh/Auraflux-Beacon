@@ -85,7 +85,8 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import type { EntityStatus, ProcessedKeyword } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/core'
+import type { ProcessedKeyword } from '@/interfaces/workflow';
 import { useInitiativeStore } from '@/stores/initiation';
 import { computed, ref, watch } from 'vue';
 

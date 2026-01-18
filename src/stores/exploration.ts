@@ -13,11 +13,12 @@ export const useExplorationStore = defineStore('exploration', {
 			resources: [],
 			canvasViews: [],
 			activeCanvasViewId: '',
+			selectedNodeId: '',
 			conceptualNodes: [],
 			conceptualEdges: [],
 
 			isAdversaryVisible: true,
-			healthScore: 100,
+			stabilityScore: 10,
 			adversaryData: {
 				critique: '',
 				conflicts: []
@@ -70,10 +71,10 @@ export const useExplorationStore = defineStore('exploration', {
 			// 	context: this.adversaryData.critique
 			// });
 
-			// 3. Reset HealthScore threshold to prevent immediate re-triggering
+			// 3. Reset StabilityScore threshold to prevent immediate re-triggering
 			// We set it to a "Caution" state (e.g., 40) rather than full health
-			if (this.healthScore < 30) {
-				this.healthScore = 40;
+			if (this.stabilityScore < 0) {
+				this.stabilityScore = 4;
 			}
 		},
 
@@ -140,11 +141,14 @@ export const useExplorationStore = defineStore('exploration', {
 		addResourceToCanvas(item: ResourceItem, position: { x: number, y: number }) {
 			const newNode: ConceptualNode = {
 				id: uuidv4(),
-				type: 'CONCEPT',
+				stabilityScore: 10,
+				solidity: 'DIMMED',
+				canvases: [],
+				type: 'RESOURCE',
 				label: item.label,
-				keywordId: item.id, // Link back to the full resource data
-				x: position.x,
-				y: position.y,
+				resourceId: item.id, // Link back to the full resource data
+				data: item,
+				position: position,
 				// ... other Resource Node properties
 			};
 			this.conceptualNodes.push(newNode);

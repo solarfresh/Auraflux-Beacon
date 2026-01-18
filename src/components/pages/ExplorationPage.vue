@@ -11,13 +11,8 @@
 
       <template #left-sidebar>
         <CanvasStructureSidebar
-          :current-focus="currentFocusData"
-          :canvas-views="conceptualCanvasViews"
-          :active-view-id="activeCanvasViewId"
-          :node-summary="currentNodeSummary"
-          @view-details="handleViewDetails"
-          @switch-canvas="handleCanvasSwitch"
-          @manage-canvas="handleManageCanvas"
+          @select-node="handleNodeSelect"
+          @request-teleport="handleTeleport"
         />
       </template>
 
@@ -27,7 +22,7 @@
             ref="canvas"
             :nodes="explorationStore.conceptualNodes"
             :edges="explorationStore.conceptualEdges"
-            :health-scores="explorationStore.healthScore"
+            :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasViewId"
             @node-update="handleNodeUpdate"
             @edge-update="handleEdgeUpdate"
@@ -119,6 +114,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import { useInitiativeStore } from '@/stores/initiation';
 import { useWorkflowStore } from '@/stores/workflow';
+import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
 import Text from '@/components/atoms/Text.vue';
@@ -129,7 +125,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 // Organisms
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ActionBar from '@/components/molecules/ActionBar.vue';
-import CanvasStructureSidebar from '@/components/templates/CanvasStructureSidebar.vue';
+import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
 import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
 import FocusAligner from '@/components/organisms/FocusAligner.vue';
@@ -142,35 +138,63 @@ const explorationStore = useExplorationStore();
 const initiativeStore = useInitiativeStore();
 const workflowStore = useWorkflowStore();
 
+const {
+  registryNodes,
+  selectNode
+} = useRegistry();
+
 // UI State
 const isManagementModalOpen = ref(false);
 const managementModalType = ref<ManagementType>(null);
 
-// Computed Stage Data
-const conceptualNodes = computed(() => explorationStore.conceptualNodes as ConceptualNode[]);
-const conceptualEdges = computed(() => explorationStore.conceptualEdges as ConceptualEdge[]);
-const conceptualCanvasViews = computed(() => explorationStore.canvasViews);
-const activeCanvasViewId = computed(() => explorationStore.activeCanvasViewId);
-const currentNodeSummary = computed(() => explorationStore.currentNodeSummary);
-
 const currentStep = computed(() => workflowStore.currentStepName);
 const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
-
-const currentFocusData = computed(() => ({
-  latestReflection: initiativeStore.latestReflection,
-  feasibilityStatus: initiativeStore.feasibilityStatus,
-  finalQuestion: initiativeStore.finalQuestion,
-  keywords: initiativeStore.topicKeywords,
-  resourceSuggestion: initiativeStore.resourceSuggestion,
-  scope: initiativeStore.topicScope,
-  stabilityScore: initiativeStore.stabilityScore,
-}));
 
 // Initial Data Fetching
 onMounted(async () => {
   await initiativeStore.getRefinedTopic();
   await explorationStore.loadExplorationData();
 });
+
+/**
+ * Synchronizes the selection across the Sidebar, Canvas, and Adversary Panel.
+ */
+const handleNodeSelect = (nodeId: string | null) => {
+  // Update the centralized selected ID in the Store via useRegistry
+  selectNode(nodeId);
+
+  // If a node is selected and its stability is critical,
+  // we trigger the Adversary Panel to force reflection.
+  const node = registryNodes.value.find(n => n.id === nodeId);
+  if (node && node.stabilityScore < 4) {
+    explorationStore.isAdversaryVisible = true;
+    // Potentially trigger a specific "Critical Inquiry" mode in the Adversary Data
+    // explorationStore.adversaryData.focusNodeId = nodeId;
+  }
+};
+
+/**
+ * Manages cross-canvas navigation when a presence badge is clicked.
+ */
+const handleTeleport = async (data: { nodeId: string; canvasId: string }) => {
+  const { nodeId, canvasId } = data;
+
+  // Step 1: Switch the active canvas view if it's different
+  if (explorationStore.activeCanvasViewId !== canvasId) {
+    explorationStore.activeCanvasViewId = canvasId;
+  }
+
+  // Step 2: Set the node as selected for visual consistency
+  handleNodeSelect(nodeId);
+
+  // Step 3: Emit or trigger a Camera Focus event
+  // We use nextTick to ensure the Canvas component has re-rendered for the new canvasId
+  // await nextTick();
+
+  // Dispatch a custom event or use a template ref to call the Canvas's auto-focus method
+  // This ensures the user is "teleported" directly to the node's spatial coordinates.
+  // eventBus.emit('canvas:focus-node', { nodeId });
+};
 
 /**
  * Open Modal for Focus Alignment or Reflection Logs

@@ -43,13 +43,14 @@ export interface ExplorationState {
 
     // --- Conceptual Map Management (Supports Multi-Canvas) ---
     canvasViews: CanvasView[]; // List of all defined canvas views
-    activeCanvasViewId: string; // The currently visible canvas view
+    activeCanvasViewId: ID; // The currently visible canvas view
+    selectedNodeId: ID | null;
     conceptualNodes: ConceptualNode[]; // Nodes for the active view
     conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
     // --- AI Interaction & State ---
     isAdversaryVisible: boolean;
-    healthScore: number;
+    stabilityScore: number;
     adversaryData: AdversaryData;
     chatMessages: AIChatMessage[];
     isTyping: boolean;
