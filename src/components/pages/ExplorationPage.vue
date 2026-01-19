@@ -20,7 +20,7 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="explorationStore.conceptualNodes"
+            :nodes="[]"
             :edges="explorationStore.conceptualEdges"
             :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasViewId"
@@ -88,6 +88,7 @@
         </div>
       </template>
       <template #content>
+<!--
         <FocusAligner
           v-if="isFocusType(managementModalType)"
           :type="managementModalType"
@@ -99,6 +100,7 @@
           <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           <Text tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</Text>
         </div>
+ -->
       </template>
     </FullScreenModalTemplate>
   </div>
@@ -112,9 +114,9 @@
  */
 import { ref, computed, onMounted } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
-import { useInitiativeStore } from '@/stores/initiation';
 import { useWorkflowStore } from '@/stores/workflow';
 import { useRegistry } from '@/composables/useRegistry';
+import { useWorkflowSync } from '@/composables/useWorkflowSync';
 
 // Atoms & Layout Components
 import Text from '@/components/atoms/Text.vue';
@@ -135,8 +137,8 @@ import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
 const explorationStore = useExplorationStore();
-const initiativeStore = useInitiativeStore();
 const workflowStore = useWorkflowStore();
+const { syncInitiationToExploration } = useWorkflowSync();
 
 const {
   registryNodes,
@@ -152,7 +154,7 @@ const currentStepCompletionPercentage = computed(() => workflowStore.currentStep
 
 // Initial Data Fetching
 onMounted(async () => {
-  await initiativeStore.getRefinedTopic();
+  syncInitiationToExploration();
   await explorationStore.loadExplorationData();
 });
 
@@ -166,7 +168,7 @@ const handleNodeSelect = (nodeId: string | null) => {
   // If a node is selected and its stability is critical,
   // we trigger the Adversary Panel to force reflection.
   const node = registryNodes.value.find(n => n.id === nodeId);
-  if (node && node.stabilityScore < 4) {
+  if (node && node.groundedness < 4) {
     explorationStore.isAdversaryVisible = true;
     // Potentially trigger a specific "Critical Inquiry" mode in the Adversary Data
     // explorationStore.adversaryData.focusNodeId = nodeId;
@@ -267,19 +269,6 @@ async function handlePhaseTransitionRequest() {
 }
 
 // --- Utility functions for Modals ---
-
-function getFocusData(type: ManagementType): any {
-  switch (type) {
-    case 'final-question':
-      return initiativeStore.finalQuestion;
-    case 'keyword':
-      return initiativeStore.topicKeywords;
-    case 'scope':
-      return initiativeStore.topicScope;
-    default:
-      return null;
-  }
-}
 
 function isFocusType(type: ManagementType): boolean {
   return type === 'final-question' || type === 'keyword' || type === 'scope';

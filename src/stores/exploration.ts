@@ -11,62 +11,61 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
-			resources: [],
-			canvasViews: [],
-			activeCanvasViewId: '',
-			selectedNodeId: '',
-			conceptualNodes: [],
-			conceptualEdges: [],
+		resources: [],
+		canvasViews: [],
+		activeCanvasViewId: '',
+		selectedNodeId: '',
+		conceptualNodes: [],
+		conceptualEdges: [],
 
-			isAdversaryVisible: true,
-			stabilityScore: 10,
-			adversaryData: {
-				critique: '',
-				conflicts: []
-			},
-			chatMessages: [],
-			isTyping: false,
-			aiSearchSuggestions: [],
-			hasUnreadAIChat: false,
+		isAdversaryVisible: true,
+		stabilityScore: 10,
+		adversaryData: {
+			critique: '',
+			conflicts: []
+		},
+		chatMessages: [],
+		isTyping: false,
+		aiSearchSuggestions: [],
+		hasUnreadAIChat: false,
 
-			reflectionLogs: [],
-			isExplorationSufficient: false,
+		reflectionLogs: [],
+		isExplorationSufficient: false,
 	}),
 
 	getters: {
-			/**
-			 * Returns a summarized count of node types for the active canvas,
-			 * used by the CanvasStructureSidebar for the index (U.S. 12).
-			 */
-			currentNodeSummary: (state): NodeSummary => {
-					const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
-					state.conceptualNodes.forEach(node => {
-							if (node.type in summary) {
-									summary[node.type as keyof NodeSummary]++;
-							}
-					});
-					return summary;
-			},
+		/**
+		 * Returns a summarized count of node types for the active canvas,
+		 * used by the CanvasStructureSidebar for the index (U.S. 12).
+		 */
+		currentNodeSummary: (state): NodeSummary => {
+				const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
+				state.conceptualNodes.forEach(node => {
+						if (node.type in summary) {
+								summary[node.type as keyof NodeSummary]++;
+						}
+				});
+				return summary;
+		},
 
-			// Placeholder for calculating exploration completeness
-			isExplorationComplete: (state) => {
-					// Logic should check node count, resource count, and reflection frequency
-					return state.resources.length > 5 && state.conceptualNodes.length > 10;
-			},
+		// Placeholder for calculating exploration completeness
+		isExplorationComplete: (state) => {
+				// Logic should check node count, resource count, and reflection frequency
+				return state.resources.length > 5 && state.conceptualNodes.length > 10;
+		},
 	},
 
 	actions: {
 
-		addNodeFromKeyword(keyword: ProcessedKeyword, stabilityScore: number) {
+		addNodeFromKeyword(keyword: ProcessedKeyword, groundedness: number) {
 			const newNode: ConceptualNode = {
 				id: uuidv4(),
-				stabilityScore: stabilityScore,
+				groundedness: groundedness,
 				solidity: 'DIMMED',
 				canvases: [],
 				type: 'CONCEPT',
 				label: keyword.label,
 				keywordId: keyword.id,
-				domainStatus: keyword.entityStatus,
 				data: keyword,
 				// ... other Resource Node properties
 			};
@@ -159,7 +158,7 @@ export const useExplorationStore = defineStore('exploration', {
 		addResourceToCanvas(item: ResourceItem, position: { x: number, y: number }) {
 			const newNode: ConceptualNode = {
 				id: uuidv4(),
-				stabilityScore: 10,
+				groundedness: 10,
 				solidity: 'DIMMED',
 				canvases: [],
 				type: 'RESOURCE',

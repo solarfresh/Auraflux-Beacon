@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between mb-2">
         <Text tag="span" size="xs" weight="bold" color="indigo-600" class="uppercase">Research Focus</Text>
         <div :class="['px-2 py-0.5 rounded-full text-[10px] font-bold transition-colors',
-          globalStability < 40 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-100 text-emerald-600']">
+          globalStability < 4 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-100 text-emerald-600']">
           {{ globalStability }}% STABLE
         </div>
       </div>
@@ -31,7 +31,7 @@
           Inbox ({{ inboxNodes.length }})
         </button>
       </div>
-      <Icon name="shield-check" :color="globalStability < 40 ? 'red-500' : 'emerald-500'" size="sm" />
+      <Icon name="shield-check" :color="globalStability < 4 ? 'red-500' : 'emerald-500'" size="sm" />
     </div>
 
     <nav class="flex-grow overflow-y-auto p-2 space-y-1 scrollbar-none">
@@ -80,7 +80,7 @@ const nodeGroups: NodeType[] = ['FOCUS', 'CONCEPT', 'RESOURCE', 'INSIGHT', 'QUER
 
 const globalStability = computed(() => {
   if (registryNodes.value.length === 0) return 0;
-  const sum = registryNodes.value.reduce((acc, n) => acc + n.stabilityScore, 0);
+  const sum = registryNodes.value.reduce((acc, n) => acc + n.groundedness, 0);
   return Math.round(sum / registryNodes.value.length);
 });
 

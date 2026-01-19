@@ -93,6 +93,7 @@
 import { useInitiativeStore } from '@/stores/initiation';
 import { useWorkflowStore } from '@/stores/workflow';
 import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 import ActionBar from '@/components/molecules/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
@@ -110,6 +111,7 @@ import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfa
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
 const initiativeStore = useInitiativeStore();
+const router = useRouter();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
@@ -258,7 +260,7 @@ async function handlePhaseTransitionRequest() {
 
     //     // 3. Navigation
     //     // Assuming the next phase (SELECTION) is mapped to the '/selection' route
-    //     router.push('/selection');
+  router.push('/exploration');
 
     // } catch (error) {
     //     console.error('Failed to transition phase:', error);

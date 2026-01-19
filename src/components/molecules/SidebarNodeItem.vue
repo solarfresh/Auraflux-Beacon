@@ -4,7 +4,7 @@
       'group relative flex items-start gap-3 p-2 rounded-lg transition-all cursor-pointer border-2',
       isActive ? 'bg-indigo-50 border-indigo-200 shadow-sm' : 'bg-transparent border-transparent hover:bg-gray-50',
       // Anti-hallucination jitter triggered by low health score
-      node.stabilityScore < 40 ? 'animate-jitter' : ''
+      node.groundedness < 4 ? 'animate-jitter' : ''
     ]"
     @click="emit('select', node.id)"
     @mouseenter="emit('hover', node.id)"

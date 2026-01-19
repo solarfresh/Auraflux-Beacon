@@ -80,15 +80,15 @@ export function useRegistry() {
    * STABILITY CONTROLLER (Anti-Hallucination)
    * Linked to the Jitter animation in the SidebarNodeItem.
    */
-  const updateStability = (nodeId: ID, delta: number) => {
+  const updateGroundedness = (nodeId: ID, delta: number) => {
     const node = store.conceptualNodes.find(n => n.id === nodeId);
     if (!node) return;
 
     // Constrain stability between 0 and 100
-    node.stabilityScore = Math.max(0, Math.min(10, node.stabilityScore + delta));
+    node.groundedness = Math.max(0, Math.min(10, node.groundedness + delta));
 
     // 5. Solidity Light Logic: Automated transition based on stability
-    node.solidity = getNodeGroundednessContext(node.stabilityScore).solidity;
+    node.solidity = getNodeGroundednessContext(node.groundedness).solidity;
   };
 
   /**
@@ -107,7 +107,7 @@ export function useRegistry() {
     activeCanvasId: computed(() => store.activeCanvasViewId),
     mountToCanvas,
     unmountFromCanvas,
-    updateStability,
+    updateGroundedness,
     selectNode
   };
 }

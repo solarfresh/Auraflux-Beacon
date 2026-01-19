@@ -1,5 +1,6 @@
 import { EntityStatus, ID, Point2D, RectSize } from './core';
-import { TopicKeyword, ResourceItem } from './knowledge';
+import { TopicKeyword, ResourceItem, TopicScopeElement } from './knowledge';
+import { ReflectionLogEntry } from './workflow';
 
 /**
  * NodeType Definition
@@ -30,7 +31,7 @@ interface BaseNode {
   /** * Anti-Hallucination: Health Score (0-10)
    * Drives the Jitter animation. Values < 4 trigger visual alarm.
    */
-  stabilityScore: number;
+  groundedness: number;
 
   /** * Materiality: Grounding state
    * SOLID: Evidence-backed
@@ -84,8 +85,6 @@ export interface ResourceNode extends BaseNode {
 export interface ConceptNode extends BaseNode {
   type: 'CONCEPT';
   keywordId: ID;
-  // Inherited EntityStatus for Adversary Panel context
-  domainStatus: EntityStatus;
   // The original semantic seed
   data: TopicKeyword;
 }
@@ -98,6 +97,7 @@ export interface ConceptNode extends BaseNode {
 export interface InsightNode extends BaseNode {
   type: 'INSIGHT';
   reflectionId: ID;
+  data: ReflectionLogEntry
 }
 
 /**
@@ -125,8 +125,10 @@ export interface NavigationNode extends BaseNode {
  */
 export interface GroupNode extends BaseNode {
   type: 'GROUP';
+  topicScopeId: ID;
   childNodeIds: ID[];
-  size: RectSize; // Specific to Group's spatial footprint
+  size: RectSize;
+  data: TopicScopeElement;
   color?: string;
 }
 
