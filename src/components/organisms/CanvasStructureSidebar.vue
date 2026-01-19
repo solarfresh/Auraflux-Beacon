@@ -1,69 +1,85 @@
 <template>
   <aside class="w-80 h-full bg-white border-r border-gray-200 flex flex-col shadow-lg z-10">
     <div class="p-4 border-b bg-gray-50/50">
-      <div class="flex items-center justify-between mb-2">
-        <Text tag="span" size="xs" weight="bold" color="indigo-600" class="uppercase">Research Focus</Text>
-        <div :class="['px-2 py-0.5 rounded-full text-[10px] font-bold transition-colors',
-          globalStability < 4 ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-emerald-100 text-emerald-600']">
-          {{ globalStability }}% STABLE
-        </div>
-      </div>
-
-      <div v-if="focusNode" class="group relative">
-        <Text tag="h2" size="md" weight="bold" color="gray-900" class="leading-snug">
-          {{ focusNode.label }}
-        </Text>
-      </div>
+      <TopicStatusIndicator
+        :stability-score="stabilityScore"
+        label="Topic Refinement Status"
+        description="current clarity level"
+        color="indigo"
+      />
     </div>
 
     <div class="px-4 py-2 bg-white border-b flex items-center justify-between">
-      <div class="flex gap-2">
-        <button
+      <div class="flex gap-1 bg-gray-100 p-1 rounded-md">
+        <Button
+          size="sm"
+          :variant="viewMode === 'all' ? 'primary' : 'tertiary'"
           @click="viewMode = 'all'"
-          :class="['text-xs font-medium px-2 py-1 rounded', viewMode === 'all' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-100']"
+          class="!py-0.5 !px-3 !text-[10px]"
         >
           All Nodes
-        </button>
-        <button
+        </Button>
+        <Button
+          size="sm"
+          :variant="viewMode === 'inbox' ? 'primary' : 'tertiary'"
           @click="viewMode = 'inbox'"
-          :class="['text-xs font-medium px-2 py-1 rounded', viewMode === 'inbox' ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-100']"
+          class="!py-0.5 !px-3 !text-[10px]"
         >
           Inbox ({{ inboxNodes.length }})
-        </button>
+        </Button>
       </div>
-      <Icon name="shield-check" :color="globalStability < 4 ? 'red-500' : 'emerald-500'" size="sm" />
+      <Icon name="shield-check" :color="stabilityScore < 4 ? 'red-400' : 'emerald-400'" size="sm" />
     </div>
 
     <nav class="flex-grow overflow-y-auto p-2 space-y-1 scrollbar-none">
-      <div v-for="type in nodeGroups" :key="type" class="mb-4">
-        <div class="px-2 mb-1 flex items-center justify-between">
-          <Text tag="span" size="xs" weight="semibold" color="gray-400" class="uppercase tracking-widest">
-            {{ type }}
-          </Text>
-          <div class="h-[1px] flex-grow ml-3 bg-gray-100"></div>
-        </div>
+      <SidebarRegistrySection
+        title="Anchors & Portals"
+        section-type="TOP"
+        :node-types="['FOCUS', 'NAVIGATION']"
+        :nodes="filterNodesByTypes(['FOCUS', 'NAVIGATION'])"
+        :selected-node-id="selectedNodeId"
+        :is-collapsible="false"
+        @add="handleCreateNavigator"
+        @select="selectNode"
+        @teleport="handleTeleport"
+      />
 
-        <SidebarNodeItem
-          v-for="node in filterNodesByType(type)"
-          :key="node.id"
-          :node="node"
-          :is-active="selectedNodeId === node.id"
-          @select="handleNodeSelect"
-          @teleport="handleTeleport"
-        />
-      </div>
+      <SidebarRegistrySection
+        title="Structure"
+        section-type="MIDDLE"
+        :node-types="['GROUP', 'CONCEPT']"
+        :nodes="filterNodesByTypes(['GROUP', 'CONCEPT'])"
+        :selected-node-id="selectedNodeId"
+        @add="handleCreateConcept"
+        @select="selectNode"
+        @teleport="handleTeleport"
+      />
+
+      <SidebarRegistrySection
+        class="flex-grow"
+        title="Evidence & Inquiry"
+        section-type="BOTTOM"
+        :node-types="['RESOURCE', 'INSIGHT', 'QUERY']"
+        :nodes="filterNodesByTypes(['RESOURCE', 'INSIGHT', 'QUERY'])"
+        :selected-node-id="selectedNodeId"
+        @add="handleQuickCapture"
+        @select="selectNode"
+        @teleport="handleTeleport"
+      />
     </nav>
   </aside>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRegistry } from '@/composables/useRegistry';
-import Text from '@/components/atoms/Text.vue';
+import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
-import SidebarNodeItem from '@/components/molecules/SidebarNodeItem.vue';
-import type { ID } from '@/interfaces/core'
-import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
+import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
+import SidebarRegistrySection from '@/components/organisms/SidebarRegistrySection.vue';
+import { useRegistry } from '@/composables/useRegistry';
+import type { NodeType } from '@/interfaces/conceptual-map';
+import type { ID } from '@/interfaces/core';
+import { useExplorationStore } from '@/stores/exploration';
+import { computed, ref } from 'vue';
 
 const {
   registryNodes,
@@ -73,28 +89,31 @@ const {
   selectNode
 } = useRegistry();
 
+const explorationStore = useExplorationStore();
+
 const viewMode = ref<'all' | 'inbox'>('all');
 
-// 7 Node Types Ordering for the Sidebar
-const nodeGroups: NodeType[] = ['FOCUS', 'CONCEPT', 'RESOURCE', 'INSIGHT', 'QUERY', 'GROUP', 'NAVIGATION'];
+const stabilityScore = computed(() => explorationStore.stabilityScore);
 
-const globalStability = computed(() => {
-  if (registryNodes.value.length === 0) return 0;
-  const sum = registryNodes.value.reduce((acc, n) => acc + n.groundedness, 0);
-  return Math.round(sum / registryNodes.value.length);
-});
-
-const focusNode = computed(() =>
-  registryNodes.value.find(n => n.type === 'FOCUS')
-);
-
-const filterNodesByType = (type: NodeType) => {
+const filterNodesByTypes = (types: NodeType[]) => {
   const baseList = viewMode.value === 'all' ? registryNodes.value : inboxNodes.value;
-  return baseList.filter(n => n.type === type);
+  return baseList.filter(n => types.includes(n.type as NodeType));
 };
 
-const handleNodeSelect = (id: ID) => {
-  selectNode(id);
+/**
+ * ACTION HANDLERS
+ */
+const handleCreateNavigator = () => {
+  // Logic to open a modal for new canvas creation
+  console.log('Action: Create New Navigation Portal');
+};
+
+const handleCreateConcept = () => {
+  console.log('Action: Add New Concept or Group');
+};
+
+const handleQuickCapture = () => {
+  console.log('Action: Open Quick Capture for Insights/Resources');
 };
 
 const handleTeleport = (nodeId: ID, canvasId?: ID) => {

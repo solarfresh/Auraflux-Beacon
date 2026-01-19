@@ -11,6 +11,8 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
+		stabilityScore: 10,
+
 		resources: [],
 		canvasViews: [],
 		activeCanvasViewId: '',
@@ -19,7 +21,6 @@ export const useExplorationStore = defineStore('exploration', {
 		conceptualEdges: [],
 
 		isAdversaryVisible: true,
-		stabilityScore: 10,
 		adversaryData: {
 			critique: '',
 			conflicts: []

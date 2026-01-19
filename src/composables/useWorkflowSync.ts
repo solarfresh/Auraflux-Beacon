@@ -8,6 +8,7 @@ export function useWorkflowSync() {
   const expoStore = useExplorationStore();
 
   const syncInitiationToExploration = () => {
+    expoStore.stabilityScore = initStore.stabilityScore;
     convertRefinedTopicToSidebarNodes();
   };
 
