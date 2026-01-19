@@ -67,10 +67,7 @@ import SidebarNodeItem from '@/components/molecules/SidebarNodeItem.vue';
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 
-/**
- * PROPS DEFINITION
- */
-interface Props {
+const props = withDefaults(defineProps<{
   title: string;
   sectionType: 'TOP' | 'MIDDLE' | 'BOTTOM';
   nodeTypes: NodeType[];
@@ -78,9 +75,7 @@ interface Props {
   selectedNodeId: ID | null;
   isCollapsible?: boolean;
   canAdd?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   isCollapsible: true,
   canAdd: true
 });
