@@ -1,8 +1,8 @@
-import { computed } from 'vue';
-import { useExplorationStore } from '@/stores/exploration';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
-import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
-import { getStabilityContext } from '@/logic/workflow';
+import { getNodeGroundednessContext } from '@/logic/workflow';
+import { useExplorationStore } from '@/stores/exploration';
+import { computed } from 'vue';
 
 /**
  * useRegistry
@@ -88,7 +88,7 @@ export function useRegistry() {
     node.stabilityScore = Math.max(0, Math.min(10, node.stabilityScore + delta));
 
     // 5. Solidity Light Logic: Automated transition based on stability
-    node.solidity = getStabilityContext(node.stabilityScore).solidity;
+    node.solidity = getNodeGroundednessContext(node.stabilityScore).solidity;
   };
 
   /**

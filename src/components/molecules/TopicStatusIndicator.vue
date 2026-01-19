@@ -23,10 +23,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import Text from '@/components/atoms/Text.vue';
 import BarSegment from '@/components/atoms/BarSegment.vue';
+import Text from '@/components/atoms/Text.vue';
 import { getStabilityContext } from '@/logic/workflow';
+import { computed } from 'vue';
 
 // --- Props ---
 const props = defineProps({
@@ -78,7 +78,7 @@ const clampedPercentage = computed(() => {
  * 8-10: Ready, 4-7: Focusing, 1-3: Exploring.
  */
 const clarityStatusLabel = computed(() => {
-  return getStabilityContext(props.stabilityScore).label;
+  return getStabilityContext(props.stabilityScore);
 });
 
 /**

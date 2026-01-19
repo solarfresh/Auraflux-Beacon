@@ -70,8 +70,7 @@ export interface PhaseConfig {
   expectedCompletion: Percentage;
 }
 
-export interface StabilityMetric {
-  label: StabilityStatus;
+export interface GroundednessMetric {
   solidity: 'SOLID' | 'PULSING';
   jitterLevel: 'NONE' | 'LOW' | 'HIGH';
   description: string;

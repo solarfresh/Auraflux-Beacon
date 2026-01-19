@@ -7,6 +7,7 @@ import {
 import { ResourceItem } from '@/interfaces/knowledge';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
@@ -55,6 +56,23 @@ export const useExplorationStore = defineStore('exploration', {
 	},
 
 	actions: {
+
+		addNodeFromKeyword(keyword: ProcessedKeyword, stabilityScore: number) {
+			const newNode: ConceptualNode = {
+				id: uuidv4(),
+				stabilityScore: stabilityScore,
+				solidity: 'DIMMED',
+				canvases: [],
+				type: 'CONCEPT',
+				label: keyword.label,
+				keywordId: keyword.id,
+				domainStatus: keyword.entityStatus,
+				data: keyword,
+				// ... other Resource Node properties
+			};
+			this.conceptualNodes.push(newNode);
+		},
+
 		/**
 		 * dismissAdversaryOverlay
 		 * Resets the friction layer and restores UI focus to the synthesis hub.
