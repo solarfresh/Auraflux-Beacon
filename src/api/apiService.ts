@@ -2,6 +2,7 @@ import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/en
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ChatMessage } from '@/interfaces/core';
 import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
+import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { User } from '@/interfaces/user';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
@@ -127,9 +128,6 @@ export const apiService = {
       getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
         return apiClient.get(WorkflowsEndpoints.base.getChatHistory())
       },
-      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(WorkflowsEndpoints.base.getRefinedTopic())
-      },
       createReflectionLog: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.post(WorkflowsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
       },
@@ -138,6 +136,16 @@ export const apiService = {
       },
       updateReflectionLogById: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.put(WorkflowsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
+      }
+    },
+    initiation: {
+      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
+      },
+    },
+    exploration: {
+      getSidebarRegistryInfo:(): Promise<AxiosResponse<SidebarRegistryInfo>> => {
+        return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
       }
     },
     keywords: {

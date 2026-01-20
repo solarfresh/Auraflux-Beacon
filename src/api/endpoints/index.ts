@@ -45,14 +45,20 @@ export const WorkflowsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/`,
     getChatHistory: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history/`,
-    getRefinedTopic: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/topic/`,
     createReflectionLog: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     getReflectionLog: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     updateReflectionLogById: (logId: string) =>
       `${AURAFLUX_NEXUS_URL}/workflows/reflection/${logId}/`,
+  },
+  initiation: {
+    getRefinedTopic: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/topic/`,
+  },
+  exploration: {
+    getSidebarRegistryInfo: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/sidebar/`,
   },
   keywords: {
     create: () =>

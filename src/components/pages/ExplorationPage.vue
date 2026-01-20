@@ -116,7 +116,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import { useWorkflowStore } from '@/stores/workflow';
 import { useRegistry } from '@/composables/useRegistry';
-import { useWorkflowSync } from '@/composables/useWorkflowSync';
 
 // Atoms & Layout Components
 import Text from '@/components/atoms/Text.vue';
@@ -138,7 +137,6 @@ import type { ManagementType } from '@/interfaces/exploration.ts';
 // Stores
 const explorationStore = useExplorationStore();
 const workflowStore = useWorkflowStore();
-const { syncInitiationToExploration } = useWorkflowSync();
 
 const {
   registryNodes,
@@ -154,7 +152,6 @@ const currentStepCompletionPercentage = computed(() => workflowStore.currentStep
 
 // Initial Data Fetching
 onMounted(async () => {
-  syncInitiationToExploration();
   await explorationStore.loadExplorationData();
 });
 

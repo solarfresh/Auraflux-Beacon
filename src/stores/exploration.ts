@@ -1,13 +1,15 @@
+import { apiService } from '@/api/apiService';
 import { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 import {
 	ExplorationState,
 	ManualResourceData,
 	NodeSummary
 } from '@/interfaces/exploration';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { ResourceItem } from '@/interfaces/knowledge';
+import { getNodeGroundednessContext } from '@/logic/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
@@ -110,9 +112,58 @@ export const useExplorationStore = defineStore('exploration', {
 			// Simulate loading data for the current active view and resources
 			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
 			try {
-				// Example:
-				// this.resources = await api.fetchData('/exploration/resources');
-				// this.conceptualNodes = await api.fetchData(`/exploration/canvas/${this.activeCanvasViewId}/nodes`);
+				await this.loadSidebarRegistryInfo();
+			} catch (error) {
+				console.error('Failed to load exploration data:', error);
+			}
+		},
+
+		async loadSidebarRegistryInfo() {
+			try {
+				let response = await apiService.workflows.exploration.getSidebarRegistryInfo();
+				if (response.data) {
+					this.stabilityScore = response.data.stabilityScore;
+
+					response.data.keywords.map((processedKeyword: any) => {
+						this.conceptualNodes.push({
+							id: uuidv4(),
+							type: 'CONCEPT',
+							groundedness: 10,
+							canvases: [],
+							solidity: getNodeGroundednessContext(10).solidity,
+							label: processedKeyword?.label,
+							keywordId: processedKeyword?.id,
+							data: processedKeyword
+						})
+					});
+
+					response.data.scope.map((processedScope: any) => {
+						this.conceptualNodes.push({
+							id: uuidv4(),
+							type: 'GROUP',
+							groundedness: 10,
+							canvases: [],
+							solidity: getNodeGroundednessContext(10).solidity,
+							label: processedScope.label,
+							topicScopeId: processedScope.id,
+							childNodeIds: [],
+							size: {width: 0, height: 0},
+							data: processedScope
+						})
+					});
+
+					this.conceptualNodes.push({
+						id: uuidv4(),
+						type: 'FOCUS',
+						groundedness: 10,
+						canvases: [],
+						solidity: getNodeGroundednessContext(10).solidity,
+						label: response.data.finalQuestion,
+					});
+
+				} else {
+					console.log(response.data);
+				}
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}

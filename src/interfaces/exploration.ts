@@ -64,6 +64,13 @@ export interface ExplorationState {
   isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
 }
 
+export interface SidebarRegistryInfo {
+  stabilityScore: number;
+  finalQuestion: string;
+  keywords: Object[];
+  scope: Object[];
+};
+
 /**
  * AI Guide & Search Chat Message
  * Extends the base message to include research-specific UI elements

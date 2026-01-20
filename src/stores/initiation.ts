@@ -111,7 +111,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getRefinedTopic() {
-      let response = await apiService.workflows.base.getRefinedTopic();
+      let response = await apiService.workflows.initiation.getRefinedTopic();
       if (response.data) {
         feasibilityStatus.value = response.data.feasibilityStatus;
         finalQuestion.value = response.data.finalQuestion;
