@@ -107,6 +107,7 @@ import SidebarContent from '@/components/templates/SidebarContent.vue';
 import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import { apiService } from '@/api/apiService';
 
 // --- Initialization ---
 const workflowStore = useWorkflowStore();
@@ -247,27 +248,17 @@ function getModalTitle(type: ManagementType | null): string {
  * This combines the "Lock Data" and "Change Phase" actions.
  */
 async function handlePhaseTransitionRequest() {
-    // if (isLoading.value || !searchQuery.value) return;
-
-    // store.isLoading = true;
-
-    // try {
-    //     // 1. Data Lock (The finalization of structured data)
-    //     await store.lockData();
-
-    //     // 2. Phase Transition (The flow control change)
-    //     await store.transitionToNextPhase();
-
-    //     // 3. Navigation
-    //     // Assuming the next phase (SELECTION) is mapped to the '/selection' route
-  router.push('/exploration');
-
-    // } catch (error) {
-    //     console.error('Failed to transition phase:', error);
-    //     // Display user-friendly error message
-    // } finally {
-    //     store.isLoading = false;
-    // }
+  try {
+    const response = await apiService.workflows.exploration.createSession(initiativeStore.stabilityScore, initiativeStore.finalQuestion);
+    if (response.data) {
+      router.push('/exploration');
+    } else {
+      console.log(response.data);
+    }
+  } catch (error) {
+    console.error('Failed to transition phase:', error);
+    // Display user-friendly error message
+  }
 }
 </script>
 

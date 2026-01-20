@@ -61,7 +61,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
           timestamp: new Date().toISOString(),
           sequenceNumber: chatMessages.value.length + 2,
         } as ChatMessage);
-        apiService.workflows.base.chat(messageContent, agentName);
+        apiService.workflows.initiation.chat(messageContent, agentName);
     }
 
     async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
@@ -104,7 +104,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getMessages() {
-      let response = await apiService.workflows.base.getChatHistory();
+      let response = await apiService.workflows.initiation.getChatHistory();
       if (response.data) {
         chatMessages.value = response.data;
       }

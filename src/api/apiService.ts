@@ -122,12 +122,6 @@ export const apiService = {
   },
   workflows: {
     base: {
-      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(WorkflowsEndpoints.base.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
-      },
-      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(WorkflowsEndpoints.base.getChatHistory())
-      },
       createReflectionLog: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.post(WorkflowsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
       },
@@ -139,11 +133,20 @@ export const apiService = {
       }
     },
     initiation: {
+      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
+        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+      },
+      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+      },
       getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
         return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
       },
     },
     exploration: {
+      createSession: (stabilityScore: number, finalQuestion: string): Promise<AxiosResponse<any>> => {
+        return apiClient.post(WorkflowsEndpoints.exploration.createSession(), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
+      },
       getSidebarRegistryInfo:(): Promise<AxiosResponse<SidebarRegistryInfo>> => {
         return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
       }

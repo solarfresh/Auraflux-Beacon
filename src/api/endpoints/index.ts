@@ -41,10 +41,6 @@ export const UsersEndpoints = {
 
 export const WorkflowsEndpoints = {
   base: {
-    chat: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/`,
-    getChatHistory: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/chat/history/`,
     createReflectionLog: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     getReflectionLog: () =>
@@ -53,10 +49,16 @@ export const WorkflowsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/workflows/reflection/${logId}/`,
   },
   initiation: {
+    chat: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/`,
+    getChatHistory: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/history/`,
     getRefinedTopic: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/topic/`,
   },
   exploration: {
+    createSession: () =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/session/`,
     getSidebarRegistryInfo: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/sidebar/`,
   },
