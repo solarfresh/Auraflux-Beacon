@@ -107,7 +107,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { ProcessedScope } from '@/interfaces/workflow';
+import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms
 import Text from '@/components/atoms/Text.vue';

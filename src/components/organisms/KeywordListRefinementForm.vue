@@ -77,7 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import type { EntityStatus, ProcessedKeyword } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/core'
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { ref } from 'vue';
 
 // Atoms

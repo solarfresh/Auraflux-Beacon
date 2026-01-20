@@ -1,9 +1,14 @@
-import { ID, DateTimeString, ChatMessage, FeasibilityStatus } from './core';
+import { ID, DateTimeString, ChatMessage } from './core';
 import { ConceptualNode, ConceptualEdge } from './conceptual-map';
 import { ResourceItem, ResearchFocus } from './knowledge';
 import { ReflectionLogEntry } from './workflow';
 
 export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
+
+interface AdversaryData {
+  critique: string;
+  conflicts: string[];
+}
 
 export interface CanvasView {
   id: string;
@@ -18,6 +23,8 @@ export interface CanvasView {
  * exploration session, combining all layers of the architecture.
  */
 export interface ExplorationData {
+  sidebarNodes: ConceptualNode[];
+
   /** The research foundation inherited from Initiation. */
   activeFocus: ResearchFocus;
 
@@ -33,25 +40,36 @@ export interface ExplorationData {
 }
 
 export interface ExplorationState {
-    // --- Resource Management ---
-    resources: ResourceItem[];
+  // --- Resource Management ---
+  resources: ResourceItem[];
 
-    // --- Conceptual Map Management (Supports Multi-Canvas) ---
-    canvasViews: CanvasView[]; // List of all defined canvas views
-    activeCanvasViewId: string; // The currently visible canvas view
-    conceptualNodes: ConceptualNode[]; // Nodes for the active view
-    conceptualEdges: ConceptualEdge[]; // Edges for the active view
+  // --- Conceptual Map Management (Supports Multi-Canvas) ---
+  canvasViews: CanvasView[]; // List of all defined canvas views
+  activeCanvasViewId: ID; // The currently visible canvas view
+  selectedNodeId: ID | null;
+  conceptualNodes: ConceptualNode[]; // Nodes for the active view
+  conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
-    // --- AI Interaction & State ---
-    chatMessages: AIChatMessage[];
-    isTyping: boolean;
-    aiSearchSuggestions: string[];
-    hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
+  // --- AI Interaction & State ---
+  isAdversaryVisible: boolean;
+  stabilityScore: number;
+  adversaryData: AdversaryData;
+  chatMessages: AIChatMessage[];
+  isTyping: boolean;
+  aiSearchSuggestions: string[];
+  hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
 
-    // --- Reflection & Progress ---
-    reflectionLogs: any[]; // Placeholder for reflection entries
-    isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
+  // --- Reflection & Progress ---
+  reflectionLogs: any[]; // Placeholder for reflection entries
+  isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
 }
+
+export interface SidebarRegistryInfo {
+  stabilityScore: number;
+  finalQuestion: string;
+  keywords: Object[];
+  scope: Object[];
+};
 
 /**
  * AI Guide & Search Chat Message

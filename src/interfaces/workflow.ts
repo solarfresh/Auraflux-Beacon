@@ -1,5 +1,4 @@
-import { ID, DateTimeString, ParticipantRole, Percentage } from './core';
-import { ResearchFocus, TopicKeyword, TopicScopeElement } from './knowledge';
+import { DateTimeString, EntityStatus, ID, ParticipantRole, Percentage } from './core';
 
 export type ISPStep =
   | 'TOPIC_DEFINITION_LOCKIN' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
@@ -7,12 +6,6 @@ export type ISPStep =
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
   | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
-export type EntityStatus =
-  | 'USER_DRAFT'    // Under active editing by the user
-  | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review
-  | 'LOCKED'        // Finalized and protected from accidental changes
-  | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
-  | 'ARCHIVED';     // Removed from view but preserved in history
 export type ReflectionEntryType =
   | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
   | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea
@@ -20,6 +13,7 @@ export type ReflectionEntryType =
   | 'AI_GUIDANCE_FEEDBACK'   // AI-generated encouragement or structured guidance based on user activity
   | 'UNCATEGORIZED_DRAFT';
 export type ReflectionLogStatus = 'draft' | 'committed';
+export type StabilityStatus = 'Finalizing' | 'Refining' | 'Defining';
 
 export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
     TOPIC_DEFINITION_LOCKIN: {
@@ -49,28 +43,6 @@ export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: str
     },
 };
 
-/**
- * Processed Knowledge Elements.
- * Combines the pure Knowledge structure with Workflow state for the UI.
- */
-export interface ProcessedKeyword extends TopicKeyword {
-  entityStatus: EntityStatus;
-}
-
-export interface ProcessedScope extends TopicScopeElement {
-  entityStatus: EntityStatus;
-}
-
-/**
- * Interface for the refinement process.
- * Tracks the stability and readiness of the research topic.
- */
-export interface RefinedTopic extends ResearchFocus {
-  resourceSuggestion?: string;
-  keywords: ProcessedKeyword[];
-  scope: ProcessedScope[];
-}
-
 export interface ReflectionLogEntry {
   id: ID;
   title: string;
@@ -96,6 +68,12 @@ export interface PhaseConfig {
   label: string;
   description: string;
   expectedCompletion: Percentage;
+}
+
+export interface GroundednessMetric {
+  solidity: 'SOLID' | 'PULSING';
+  jitterLevel: 'NONE' | 'LOW' | 'HIGH';
+  description: string;
 }
 
 /**

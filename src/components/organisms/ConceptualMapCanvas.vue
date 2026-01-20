@@ -90,26 +90,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
 import {
-    VueFlow,
-    useVueFlow,
-    // Core Functions and Types
-    type NodeDragEvent,
-    type EdgeUpdateEvent,
+  VueFlow,
+  useVueFlow,
+  type EdgeUpdateEvent,
+  // Core Functions and Types
+  type NodeDragEvent,
 } from '@vue-flow/core';
+import { computed, ref } from 'vue';
 // Fix for type import issues: use aliases for Node and Edge
-import type { Node as FlowNode, Edge as FlowEdge } from '@vue-flow/core';
+import type { Edge as FlowEdge, Node as FlowNode } from '@vue-flow/core';
 
 // Helper Components (Ensure they are installed: npm install @vue-flow/controls @vue-flow/minimap @vue-flow/background)
+import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
-import { Background } from '@vue-flow/background';
 
 // Application Interfaces
-import type { ConceptualNode, ConceptualEdge, ResourceItem } from '@/interfaces/exploration';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import { v4 as uuidv4 } from 'uuid'; // For generating unique IDs
+import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import type { ResourceItem } from '@/interfaces/knowledge';
+import { v4 as uuidv4 } from 'uuid';
 
 // --- PROPS & EMITS ---
 
@@ -174,10 +175,10 @@ function transformConceptualNodes(cNodes: ConceptualNode[]): FlowNode[] {
     return cNodes.map(cNode => ({
         id: cNode.id,
         type: 'default', // Using default type, customized via slot
-        position: { x: cNode.x, y: cNode.y },
+        position: cNode.position,
         label: cNode.label,
         data: {
-            resource_id: cNode.resource_id,
+            resource_id: cNode?.resource_id,
             ...cNode
         },
         // Set custom class for easier styling based on type

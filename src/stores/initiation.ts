@@ -1,6 +1,7 @@
 import { apiService } from '@/api/apiService';
 import { FeasibilityStatus } from '@/interfaces/core';
-import type { ProcessedKeyword, ProcessedScope, ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
@@ -60,7 +61,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
           timestamp: new Date().toISOString(),
           sequenceNumber: chatMessages.value.length + 2,
         } as ChatMessage);
-        apiService.workflows.base.chat(messageContent, agentName);
+        apiService.workflows.initiation.chat(messageContent, agentName);
     }
 
     async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
@@ -103,14 +104,14 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getMessages() {
-      let response = await apiService.workflows.base.getChatHistory();
+      let response = await apiService.workflows.initiation.getChatHistory();
       if (response.data) {
         chatMessages.value = response.data;
       }
     }
 
     async function getRefinedTopic() {
-      let response = await apiService.workflows.base.getRefinedTopic();
+      let response = await apiService.workflows.initiation.getRefinedTopic();
       if (response.data) {
         feasibilityStatus.value = response.data.feasibilityStatus;
         finalQuestion.value = response.data.finalQuestion;

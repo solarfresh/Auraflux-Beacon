@@ -1,61 +1,169 @@
+import { apiService } from '@/api/apiService';
 import { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 import {
 	ExplorationState,
 	ManualResourceData,
 	NodeSummary
 } from '@/interfaces/exploration';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { ResourceItem } from '@/interfaces/knowledge';
+import { getNodeGroundednessContext } from '@/logic/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
-			resources: [],
-			canvasViews: [],
-			activeCanvasViewId: '',
-			conceptualNodes: [],
-			conceptualEdges: [],
+		stabilityScore: 10,
 
-			chatMessages: [],
-			isTyping: false,
-			aiSearchSuggestions: [],
-			hasUnreadAIChat: false,
+		resources: [],
+		canvasViews: [],
+		activeCanvasViewId: '',
+		selectedNodeId: '',
+		conceptualNodes: [],
+		conceptualEdges: [],
 
-			reflectionLogs: [],
-			isExplorationSufficient: false,
+		isAdversaryVisible: true,
+		adversaryData: {
+			critique: '',
+			conflicts: []
+		},
+		chatMessages: [],
+		isTyping: false,
+		aiSearchSuggestions: [],
+		hasUnreadAIChat: false,
+
+		reflectionLogs: [],
+		isExplorationSufficient: false,
 	}),
 
 	getters: {
-			/**
-			 * Returns a summarized count of node types for the active canvas,
-			 * used by the CanvasStructureSidebar for the index (U.S. 12).
-			 */
-			currentNodeSummary: (state): NodeSummary => {
-					const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
-					state.conceptualNodes.forEach(node => {
-							if (node.type in summary) {
-									summary[node.type as keyof NodeSummary]++;
-							}
-					});
-					return summary;
-			},
+		/**
+		 * Returns a summarized count of node types for the active canvas,
+		 * used by the CanvasStructureSidebar for the index (U.S. 12).
+		 */
+		currentNodeSummary: (state): NodeSummary => {
+				const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
+				state.conceptualNodes.forEach(node => {
+						if (node.type in summary) {
+								summary[node.type as keyof NodeSummary]++;
+						}
+				});
+				return summary;
+		},
 
-			// Placeholder for calculating exploration completeness
-			isExplorationComplete: (state) => {
-					// Logic should check node count, resource count, and reflection frequency
-					return state.resources.length > 5 && state.conceptualNodes.length > 10;
-			},
+		// Placeholder for calculating exploration completeness
+		isExplorationComplete: (state) => {
+				// Logic should check node count, resource count, and reflection frequency
+				return state.resources.length > 5 && state.conceptualNodes.length > 10;
+		},
 	},
 
 	actions: {
+
+		addNodeFromKeyword(keyword: ProcessedKeyword, groundedness: number) {
+			const newNode: ConceptualNode = {
+				id: uuidv4(),
+				groundedness: groundedness,
+				solidity: 'DIMMED',
+				canvases: [],
+				type: 'CONCEPT',
+				label: keyword.label,
+				keywordId: keyword.id,
+				data: keyword,
+				// ... other Resource Node properties
+			};
+			this.conceptualNodes.push(newNode);
+		},
+
+		/**
+		 * dismissAdversaryOverlay
+		 * Resets the friction layer and restores UI focus to the synthesis hub.
+		 * Triggered by the "Acknowledge" Button in the KnowledgeInterrogationPanel.
+		 */
+		dismissAdversaryOverlay() {
+			// 1. Terminate the 'Intentional Friction' visual state
+			this.isAdversaryVisible = false;
+
+			// 2. Optional: Log the acknowledgement for research traceability
+			// this.logReflection({
+			// 	type: 'adversary_ack',
+			// 	timestamp: new Date().toISOString(),
+			// 	context: this.adversaryData.critique
+			// });
+
+			// 3. Reset StabilityScore threshold to prevent immediate re-triggering
+			// We set it to a "Caution" state (e.g., 40) rather than full health
+			if (this.stabilityScore < 0) {
+				this.stabilityScore = 4;
+			}
+		},
+
+		/**
+		 * Triggered when the system detects high uncertainty or AI Hallucination
+		 */
+		triggerAdversaryWarning(critique: string) {
+			this.adversaryData.critique = critique;
+			this.isAdversaryVisible = true;
+			// Triggers the CSS transition in the Panel organism
+		},
+
 		// --- Initialization & Loading ---
 		async loadExplorationData() {
 			// Simulate loading data for the current active view and resources
 			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
 			try {
-				// Example:
-				// this.resources = await api.fetchData('/exploration/resources');
-				// this.conceptualNodes = await api.fetchData(`/exploration/canvas/${this.activeCanvasViewId}/nodes`);
+				await this.loadSidebarRegistryInfo();
+			} catch (error) {
+				console.error('Failed to load exploration data:', error);
+			}
+		},
+
+		async loadSidebarRegistryInfo() {
+			try {
+				let response = await apiService.workflows.exploration.getSidebarRegistryInfo();
+				if (response.data) {
+					this.stabilityScore = response.data.stabilityScore;
+
+					response.data.keywords.map((processedKeyword: any) => {
+						this.conceptualNodes.push({
+							id: uuidv4(),
+							type: 'CONCEPT',
+							groundedness: 10,
+							canvases: [],
+							solidity: getNodeGroundednessContext(10).solidity,
+							label: processedKeyword?.label,
+							keywordId: processedKeyword?.id,
+							data: processedKeyword
+						})
+					});
+
+					response.data.scope.map((processedScope: any) => {
+						this.conceptualNodes.push({
+							id: uuidv4(),
+							type: 'GROUP',
+							groundedness: 10,
+							canvases: [],
+							solidity: getNodeGroundednessContext(10).solidity,
+							label: processedScope.label,
+							topicScopeId: processedScope.id,
+							childNodeIds: [],
+							size: {width: 0, height: 0},
+							data: processedScope
+						})
+					});
+
+					this.conceptualNodes.push({
+						id: uuidv4(),
+						type: 'FOCUS',
+						groundedness: 10,
+						canvases: [],
+						solidity: getNodeGroundednessContext(10).solidity,
+						label: response.data.finalQuestion,
+					});
+
+				} else {
+					console.log(response.data);
+				}
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}
@@ -102,11 +210,14 @@ export const useExplorationStore = defineStore('exploration', {
 		addResourceToCanvas(item: ResourceItem, position: { x: number, y: number }) {
 			const newNode: ConceptualNode = {
 				id: uuidv4(),
-				type: 'CONCEPT',
+				groundedness: 10,
+				solidity: 'DIMMED',
+				canvases: [],
+				type: 'RESOURCE',
 				label: item.label,
-				keywordId: item.id, // Link back to the full resource data
-				x: position.x,
-				y: position.y,
+				resourceId: item.id, // Link back to the full resource data
+				data: item,
+				position: position,
 				// ... other Resource Node properties
 			};
 			this.conceptualNodes.push(newNode);

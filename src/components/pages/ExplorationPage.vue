@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-screen">
+  <div class="h-screen w-screen bg-slate-950 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30">
     <ThreePaneWorkspaceTemplate>
 
       <template #header>
@@ -11,68 +11,67 @@
 
       <template #left-sidebar>
         <CanvasStructureSidebar
-          :current-focus="currentFocusData"
-          :canvas-views="conceptualCanvasViews"
-          :active-view-id="activeCanvasViewId"
-          :node-summary="currentNodeSummary"
-          @view-details="handleViewDetails"
-          @switch-canvas="handleCanvasSwitch"
-          @manage-canvas="handleManageCanvas"
+          @select-node="handleNodeSelect"
+          @request-teleport="handleTeleport"
         />
       </template>
 
       <template #main-content>
-        <ConceptualMapCanvas
-          :nodes="conceptualNodes"
-          :edges="conceptualEdges"
-          @node-update="handleNodeUpdate"
-          @edge-update="handleEdgeUpdate"
-          @edge-create="handleEdgeUpdate"
-          @drop-resource="handleDropResource"
-        />
+        <main class="relative h-full w-full">
+          <ConceptualMapCanvas
+            ref="canvas"
+            :nodes="[]"
+            :edges="explorationStore.conceptualEdges"
+            :health-scores="explorationStore.stabilityScore"
+            :active-view-id="explorationStore.activeCanvasViewId"
+            @node-update="handleNodeUpdate"
+            @edge-update="handleEdgeUpdate"
+            @drop-resource="handleDropResource"
+          />
+
+          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-1 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-full shadow-2xl z-10">
+            <Button
+              v-for="mode in ['Matrix', 'Causal', 'Radial']"
+              :key="mode"
+              variant="tertiary"
+              size="sm"
+              class="rounded-full !px-4 hover:bg-slate-800 group"
+            >
+              <Text tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
+                {{ mode }}
+              </Text>
+            </Button>
+          </div>
+        </main>
       </template>
 
       <template #right-panel>
-        <div class="h-full flex flex-col">
-          <TabbedPanel @active-tab-updated="handleTabSwitch">
-
-            <template #tab-1-title>Resources ({{ resources.length }})</template>
-            <template #tab-1-content>
-              <ResourceRepository
-                :resources="resources"
-                @add-manual-request="handleManualResourceRequest"
-                @search-resources="handleSearchResources"
-                @add-to-canvas="handleAddToCanvas"
-                @update-resource="handleResourceUpdate"
-              />
-            </template>
-
-            <template #tab-2-title>
-              AI Guide & Search
-              <span
-                v-if="hasNewAiContent"
-                class="inline-block w-2 h-2 ml-1 rounded-full bg-red-500"
-                aria-label="New message from AI Guide"
-              ></span>
-            </template>
-            <template #tab-2-content>
-              <ChatInterface
-                :messages="chatMessages"
-                :is-typing="isTyping"
-                :suggestions="aiSearchSuggestions"
-                @send-message="handleSendMessage"
-              />
-            </template>
-          </TabbedPanel>
-        </div>
+        <KnowledgeInterrogationPanel
+          @drop-to-canvas="handleDropResource"
+          @open-refinement="handleOpenAligner"
+          @send-message="explorationStore.getAgentResponse"
+        />
       </template>
 
       <template #footer>
         <ActionBar
-          :is-proceed-ready="isExplorationComplete"
+          :is-proceed-ready="false"
           :proceed-label="'Proceed to Formulation'"
           @transition-request="handlePhaseTransitionRequest"
-        />
+        >
+          <template #action-button>
+            <Button
+              variant="primary"
+              size="lg"
+              :disabled="!explorationStore.isExplorationSufficient"
+              class="!bg-indigo-600 shadow-xl shadow-indigo-900/20 group"
+            >
+              <Text tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
+                Commit to Formulation
+              </Text>
+            </Button>
+          </template>
+        </ActionBar>
       </template>
 
     </ThreePaneWorkspaceTemplate>
@@ -83,165 +82,148 @@
       @close="isManagementModalOpen = false"
     >
       <template #header>
-        Manage {{ getModalTitle(managementModalType) }}
+        <div class="flex items-center gap-2 px-2">
+          <Text tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</Text>
+          <Text tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</Text>
+        </div>
       </template>
       <template #content>
-        <RefinementModal
-          v-if="isFocusRefinementType(managementModalType)"
+<!--
+        <FocusAligner
+          v-if="isFocusType(managementModalType)"
           :type="managementModalType"
           :initial-data="getFocusData(managementModalType)"
           @update-focus="handleUpdateFocus"
-          @close-modal="isManagementModalOpen = false"
+          @close="isManagementModalOpen = false"
         />
-
-<!--
-        <ResourceAddItemModal
-          v-else-if="managementModalType === 'manual-resource'"
-          @add-resource="handleAddManualResource"
-          @close-modal="isManagementModalOpen = false"
-        />
+        <div v-else class="flex flex-col h-80 items-center justify-center gap-4">
+          <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+          <Text tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</Text>
+        </div>
  -->
-        <div v-else class="text-center p-8">...</div>
       </template>
     </FullScreenModalTemplate>
   </div>
 </template>
 
 <script setup lang="ts">
+/**
+ * ExplorationPage.vue
+ * - Root template for the "War Room" phase.
+ * - Handles top-level layout coordination and Store-to-Canvas event mapping.
+ */
+import { ref, computed, onMounted } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
-import { useInitiativeStore } from '@/stores/initiation';
 import { useWorkflowStore } from '@/stores/workflow';
-import { computed, onMounted, ref } from 'vue';
+import { useRegistry } from '@/composables/useRegistry';
 
-// --- Layout & Global Components ---
-import ActionBar from '@/components/molecules/ActionBar.vue';
-import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-import TabbedPanel from '@/components/molecules/TabbedPanel.vue';
-import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+// Atoms & Layout Components
+import Text from '@/components/atoms/Text.vue';
+import Button from '@/components/atoms/Button.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
+import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
-// --- Workspace Organisms ---
-import ChatInterface from '@/components/organisms/ChatInterface.vue';
+// Organisms
+import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
+import ActionBar from '@/components/molecules/ActionBar.vue';
+import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
-import RefinementModal from '@/components/organisms/RefinementModal.vue';
-import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
+import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
+import FocusAligner from '@/components/organisms/FocusAligner.vue';
 
-// --- Custom Sidebar & Modal Components (NEW) ---
-import CanvasStructureSidebar from '@/components/templates/CanvasStructureSidebar.vue'; // NEW: For multi-canvas management (U.S. 2, 12)
-// import RefinementModal from '@/components/organisms/RefinementModal.vue'; // NEW: For editing Focus data (U.S. 1)
-// import ResourceAddItemModal from '@/components/organisms/ResourceAddItemModal.vue'; // NEW: For manual resource entry (U.S. 5)
-
-// --- Interfaces ---
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
-import type { ManualResourceData } from '@/interfaces/exploration.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
-import type { ResourceItem } from '@/interfaces/knowledge.ts';
 
-// --- Initialization ---
-const workflowStore = useWorkflowStore();
-const initiativeStore = useInitiativeStore();
+// Stores
 const explorationStore = useExplorationStore();
+const workflowStore = useWorkflowStore();
 
-// --- Local UI State ---
+const {
+  registryNodes,
+  selectNode
+} = useRegistry();
+
+// UI State
 const isManagementModalOpen = ref(false);
 const managementModalType = ref<ManagementType>(null);
 
-// --- Store State Mapping (Computed Properties) ---
 const currentStep = computed(() => workflowStore.currentStepName);
 const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
 
-// Data from Initiation/Selection (The Focus structure)
-const currentFocusData = computed(() => ({
-  latestReflection: initiativeStore.latestReflection,
-  feasibilityStatus: initiativeStore.feasibilityStatus,
-  finalQuestion: initiativeStore.finalQuestion,
-  keywords: initiativeStore.topicKeywords,
-  resourceSuggestion: initiativeStore.resourceSuggestion,
-  scope: initiativeStore.topicScope,
-  stabilityScore: initiativeStore.stabilityScore,
-}));
-
-// Exploration Specific Data
-const resources = computed(() => explorationStore.resources as ResourceItem[]);
-const conceptualNodes = computed(() => explorationStore.conceptualNodes as ConceptualNode[]);
-const conceptualEdges = computed(() => explorationStore.conceptualEdges as ConceptualEdge[]);
-const conceptualCanvasViews = computed(() => explorationStore.canvasViews); // NEW: For multi-canvas
-const activeCanvasViewId = computed(() => explorationStore.activeCanvasViewId); // NEW
-const currentNodeSummary = computed(() => explorationStore.currentNodeSummary); // NEW: For sidebar index (U.S. 12)
-const chatMessages = computed(() => explorationStore.chatMessages);
-const isTyping = computed(() => explorationStore.isTyping);
-const aiSearchSuggestions = computed(() => explorationStore.aiSearchSuggestions);
-const reflectionLogEntries = computed(() => explorationStore.reflectionLogs);
-const hasNewAiContent = computed(() => explorationStore.hasUnreadAIChat); // NEW: For Notification Badge (U.S. 10)
-
-// Flow control logic
-const isExplorationComplete = computed(() => explorationStore.isExplorationSufficient);
-
-// --- Lifecycle ---
-onMounted(() => {
-  initiativeStore.getRefinedTopic();
-  explorationStore.loadExplorationData();
+// Initial Data Fetching
+onMounted(async () => {
+  await explorationStore.loadExplorationData();
 });
 
-// --- Action Handlers ---
-
 /**
- * Handles tab switching in the TabbedPanel (Right Panel).
- * Used primarily to clear the AI notification badge when the user views the chat. (U.S. 10)
+ * Synchronizes the selection across the Sidebar, Canvas, and Adversary Panel.
  */
-function handleTabSwitch(index: number) {
-  // Assuming AI Guide is Tab 2 (index 1)
-  if (index === 1 && hasNewAiContent.value) {
-    explorationStore.markAIChatAsRead();
+const handleNodeSelect = (nodeId: string | null) => {
+  // Update the centralized selected ID in the Store via useRegistry
+  selectNode(nodeId);
+
+  // If a node is selected and its stability is critical,
+  // we trigger the Adversary Panel to force reflection.
+  const node = registryNodes.value.find(n => n.id === nodeId);
+  if (node && node.groundedness < 4) {
+    explorationStore.isAdversaryVisible = true;
+    // Potentially trigger a specific "Critical Inquiry" mode in the Adversary Data
+    // explorationStore.adversaryData.focusNodeId = nodeId;
   }
-}
+};
 
 /**
- * Handles sending messages to the AI Agent. (U.S. 11)
+ * Manages cross-canvas navigation when a presence badge is clicked.
  */
-function handleSendMessage(content: string) {
-  if (isTyping.value || !content.trim()) return;
-  explorationStore.addMessage(content);
-  explorationStore.getAgentResponse(content);
-}
+const handleTeleport = async (data: { nodeId: string; canvasId: string }) => {
+  const { nodeId, canvasId } = data;
+
+  // Step 1: Switch the active canvas view if it's different
+  if (explorationStore.activeCanvasViewId !== canvasId) {
+    explorationStore.activeCanvasViewId = canvasId;
+  }
+
+  // Step 2: Set the node as selected for visual consistency
+  handleNodeSelect(nodeId);
+
+  // Step 3: Emit or trigger a Camera Focus event
+  // We use nextTick to ensure the Canvas component has re-rendered for the new canvasId
+  // await nextTick();
+
+  // Dispatch a custom event or use a template ref to call the Canvas's auto-focus method
+  // This ensures the user is "teleported" directly to the node's spatial coordinates.
+  // eventBus.emit('canvas:focus-node', { nodeId });
+};
 
 /**
- * Handles search request from Resource Repository (U.S. 4)
+ * Open Modal for Focus Alignment or Reflection Logs
  */
-function handleSearchResources(term: string) {
-  // Store action should handle calling both internal and external (Google) search APIs
-  explorationStore.searchResources(term);
-}
-
-/**
- * Opens the modal for manually adding a resource (U.S. 5)
- */
-function handleManualResourceRequest() {
-  managementModalType.value = 'manual-resource';
+function handleOpenAligner(type: ManagementType) {
+  managementModalType.value = type;
   isManagementModalOpen.value = true;
 }
 
 /**
- * Handles the actual submission of a manually entered resource.
+ * Handle resource drop from Right Panel to Canvas
  */
-function handleAddManualResource(data: ManualResourceData) {
-  explorationStore.addManualResource(data);
-  isManagementModalOpen.value = false;
-}
-
-/**
- * Handles the event from Resource Repository to add a resource/concept to the canvas.
- * This is triggered by a button click, typically used for testing.
- */
-function handleAddToCanvas(item: ResourceItem, position: { x: number, y: number }) {
+function handleDropResource(item: any, position: { x: number, y: number }) {
   explorationStore.addResourceToCanvas(item, position);
 }
 
 /**
- * Handles the drag-and-drop event from Resource Repository onto the canvas. (U.S. 6)
+ * Handles the 'viewDetails' event emitted by the sidebar (U.S. 1, 9, 12).
+ * Triggers modals for Focus refinement or Reflection Log.
  */
-function handleDropResource(item: ResourceItem, position: { x: number, y: number }) {
-  explorationStore.addResourceToCanvas(item, position);
+function handleViewDetails(type: ManagementType, index?: number, value?: any) {
+  managementModalType.value = type;
+  isManagementModalOpen.value = true;
+}
+
+/**
+ * Switch Active Multi-Canvas View
+ */
+function handleCanvasSwitch(viewId: string) {
+  explorationStore.setActiveCanvasView(viewId);
 }
 
 /**
@@ -256,29 +238,6 @@ function handleNodeUpdate(node: ConceptualNode, action: 'move' | 'link' | 'edit'
  */
 function handleEdgeUpdate(edge: ConceptualEdge, action: 'create' | 'delete' | 'update' | 'label-edit') {
   explorationStore.updateConceptualMapEdge(edge, action);
-}
-
-/**
- * Handles user interaction to update notes or relevance of a collected resource.
- */
-function handleResourceUpdate(resource: ResourceItem) {
-  // explorationStore.updateResource(resource);
-}
-
-/**
- * Handles the 'viewDetails' event emitted by the sidebar (U.S. 1, 9, 12).
- * Triggers modals for Focus refinement or Reflection Log.
- */
-function handleViewDetails(type: ManagementType, index?: number, value?: any) {
-  managementModalType.value = type;
-  isManagementModalOpen.value = true;
-}
-
-/**
- * Handles the event to switch the active conceptual canvas view (U.S. 2).
- */
-function handleCanvasSwitch(viewId: string) {
-  explorationStore.setActiveCanvasView(viewId);
 }
 
 /**
@@ -297,7 +256,6 @@ function handleManageCanvas(action: 'create' | 'rename' | 'delete', viewId?: str
     console.log(`Canvas management requested: ${action} on ${viewId}`);
 }
 
-
 /**
  * E. Handles the core workflow transition request to the next phase (Formulation).
  */
@@ -309,23 +267,9 @@ async function handlePhaseTransitionRequest() {
 
 // --- Utility functions for Modals ---
 
-function getFocusData(type: ManagementType): any {
-  switch (type) {
-    case 'final-question':
-      return initiativeStore.finalQuestion;
-    case 'keyword':
-      return initiativeStore.topicKeywords;
-    case 'scope':
-      return initiativeStore.topicScope;
-    default:
-      return null;
-  }
-}
-
-function isFocusRefinementType(type: ManagementType): boolean {
+function isFocusType(type: ManagementType): boolean {
   return type === 'final-question' || type === 'keyword' || type === 'scope';
 }
-
 
 function getModalWidthClass(type: ManagementType): string {
   switch (type) {
@@ -354,8 +298,5 @@ function getModalTitle(type: ManagementType): string {
       return '';
   }
 }
+// ... Additional lifecycle logic and data getters
 </script>
-
-<style scoped>
-/* Scoped styles specific to the Exploration Page view */
-</style>

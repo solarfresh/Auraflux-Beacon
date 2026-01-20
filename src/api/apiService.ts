@@ -1,7 +1,8 @@
 import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ChatMessage } from '@/interfaces/core';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/workflow';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
+import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { User } from '@/interfaces/user';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
@@ -121,15 +122,6 @@ export const apiService = {
   },
   workflows: {
     base: {
-      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(WorkflowsEndpoints.base.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
-      },
-      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(WorkflowsEndpoints.base.getChatHistory())
-      },
-      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(WorkflowsEndpoints.base.getRefinedTopic())
-      },
       createReflectionLog: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.post(WorkflowsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
       },
@@ -138,6 +130,25 @@ export const apiService = {
       },
       updateReflectionLogById: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.put(WorkflowsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
+      }
+    },
+    initiation: {
+      chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
+        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+      },
+      getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+      },
+      getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
+        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
+      },
+    },
+    exploration: {
+      createSession: (stabilityScore: number, finalQuestion: string): Promise<AxiosResponse<any>> => {
+        return apiClient.post(WorkflowsEndpoints.exploration.createSession(), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
+      },
+      getSidebarRegistryInfo:(): Promise<AxiosResponse<SidebarRegistryInfo>> => {
+        return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
       }
     },
     keywords: {

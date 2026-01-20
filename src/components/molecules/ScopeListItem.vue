@@ -41,7 +41,8 @@
 <script setup lang="ts">
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import type { EntityStatus, ProcessedScope } from '@/interfaces/workflow';
+import type { EntityStatus } from '@/interfaces/core'
+import type { ProcessedScope } from '@/interfaces/initiation';
 import { computed } from 'vue';
 
 // ----------------------------------------------------------------------

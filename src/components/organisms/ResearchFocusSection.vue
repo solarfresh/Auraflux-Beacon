@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
 import type { ManagementType } from '@/interfaces/exploration';
-import type { RefinedTopic } from '@/interfaces/workflow';
+import type { RefinedTopic } from '@/interfaces/initiation';
 import { computed } from 'vue';
 
 // Components
