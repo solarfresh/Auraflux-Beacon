@@ -123,6 +123,15 @@ export const useExplorationStore = defineStore('exploration', {
 				if (response.data) {
 					this.stabilityScore = response.data.stabilityScore;
 
+					// TODO: The data model of final question must be defined
+					this.conceptualNodes.set('focusQuestion', {
+						id: 'focusQuestion',
+						label: response.data.finalQuestion,
+						groundedness: 10,
+						solidity: 'SOLID',
+						type: 'FOCUS',
+					})
+
 					response.data.nodes.map((node: ConceptualNode) => {
 						this.conceptualNodes.set(node.id, node);
 					});
