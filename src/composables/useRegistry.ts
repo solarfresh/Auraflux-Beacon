@@ -16,24 +16,31 @@ export function useRegistry() {
    * GLOBAL REGISTRY ACCESS
    * Ensures the Sidebar has access to the full manifest of nodes.
    */
-  const registryNodes = computed(() => store.conceptualNodes);
+  const registryNodes = computed(() => {
+    return Array.from(store.conceptualNodes.entries()).map(([id, node]) => {
+      return node
+    })
+  });
 
   /**
    * INBOX VIEW
    * Nodes that are not yet placed on any canvas (DIMMED state).
    */
-  const inboxNodes = computed(() =>
-    store.conceptualNodes.filter((node: ConceptualNode) => node.canvases.length === 0)
-  );
+  const inboxNodes = computed(() => {
+    return Array.from(store.conceptualNodes.entries()).map(([id, node]) => {
+      return node
+    })
+  });
 
   /**
    * ACTIVE CANVAS VIEW
    * Filtered nodes based on the currently active canvas ID.
    */
   const activeCanvasNodes = computed(() => {
-    return store.conceptualNodes.filter((node: ConceptualNode) =>
-      node.canvases.includes(store.activeCanvasViewId)
-    );
+    // return store.conceptualNodes.filter((node: ConceptualNode) =>
+    //   node.canvases.includes(store.activeCanvasViewId)
+    // );
+    return []
   });
 
   /**
@@ -41,23 +48,23 @@ export function useRegistry() {
    * Transition logic from "Semantic Seed" to "Physical Instance".
    */
   const mountToCanvas = (nodeId: ID, canvasId: ID, position?: { x: number, y: number }) => {
-    const node = store.conceptualNodes.find(n => n.id === nodeId);
-    if (!node) return;
+    // const node = store.conceptualNodes.find(n => n.id === nodeId);
+    // if (!node) return;
 
-    // 1. Update presence array to support Multi-Canvas Badges
-    if (!node.canvases.includes(canvasId)) {
-      node.canvases.push(canvasId);
-    }
+    // // 1. Update presence array to support Multi-Canvas Badges
+    // if (!node.canvases.includes(canvasId)) {
+    //   node.canvases.push(canvasId);
+    // }
 
-    // 2. Physical Evolution: Transition from DIMMED to PULSING (Hypothesis)
-    if (node.solidity === 'DIMMED') {
-      node.solidity = 'PULSING';
-    }
+    // // 2. Physical Evolution: Transition from DIMMED to PULSING (Hypothesis)
+    // if (node.solidity === 'DIMMED') {
+    //   node.solidity = 'PULSING';
+    // }
 
-    // 3. Spatial Localization: Assign physical coordinates
-    if (position) {
-      node.position = position;
-    }
+    // // 3. Spatial Localization: Assign physical coordinates
+    // if (position) {
+    //   node.position = position;
+    // }
   };
 
   /**
@@ -65,15 +72,15 @@ export function useRegistry() {
    * Handles the removal from a specific space without deleting the semantic identity.
    */
   const unmountFromCanvas = (nodeId: ID, canvasId: ID) => {
-    const node = store.conceptualNodes.find(n => n.id === nodeId);
-    if (!node) return;
+    // const node = store.conceptualNodes.find(n => n.id === nodeId);
+    // if (!node) return;
 
-    node.canvases = node.canvases.filter(id => id !== canvasId);
+    // node.canvases = node.canvases.filter(id => id !== canvasId);
 
-    // 4. Persistence Guard: Return to DIMMED if no longer on any canvas
-    if (node.canvases.length === 0) {
-      node.solidity = 'DIMMED';
-    }
+    // // 4. Persistence Guard: Return to DIMMED if no longer on any canvas
+    // if (node.canvases.length === 0) {
+    //   node.solidity = 'DIMMED';
+    // }
   };
 
   /**
@@ -81,7 +88,7 @@ export function useRegistry() {
    * Linked to the Jitter animation in the SidebarNodeItem.
    */
   const updateGroundedness = (nodeId: ID, delta: number) => {
-    const node = store.conceptualNodes.find(n => n.id === nodeId);
+    const node = store.conceptualNodes.get(nodeId);
     if (!node) return;
 
     // Constrain stability between 0 and 100

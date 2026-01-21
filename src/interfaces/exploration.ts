@@ -17,28 +17,6 @@ export interface CanvasView {
   updatedAt: DateTimeString;
 }
 
-/**
- * Exploration Workspace
- * The root data structure representing the current state of an active
- * exploration session, combining all layers of the architecture.
- */
-export interface ExplorationData {
-  sidebarNodes: ConceptualNode[];
-
-  /** The research foundation inherited from Initiation. */
-  activeFocus: ResearchFocus;
-
-  /** All resources collected for this project. */
-  resources: ResourceItem[];
-
-  /** The spatial graph structure. */
-  conceptualNodes: ConceptualNode[];
-  conceptualEdges: ConceptualEdge[];
-
-  /** Historical record of the user's progress and challenges. */
-  explorationStatusLog: ReflectionLogEntry[];
-}
-
 export interface ExplorationState {
   // --- Resource Management ---
   resources: ResourceItem[];
@@ -47,7 +25,7 @@ export interface ExplorationState {
   canvasViews: CanvasView[]; // List of all defined canvas views
   activeCanvasViewId: ID; // The currently visible canvas view
   selectedNodeId: ID | null;
-  conceptualNodes: ConceptualNode[]; // Nodes for the active view
+  conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
   conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
   // --- AI Interaction & State ---
@@ -67,8 +45,7 @@ export interface ExplorationState {
 export interface SidebarRegistryInfo {
   stabilityScore: number;
   finalQuestion: string;
-  keywords: Object[];
-  scope: Object[];
+  nodes: ConceptualNode[];
 };
 
 /**
@@ -107,18 +84,6 @@ export interface ManualResourceData {
 
   /** Keywords or tags manually associated by the user. */
   manualTags?: string[];
-}
-
-/**
- * Active View State
- * Manages the current UI focus within the Exploration phase.
- */
-export interface ExplorationUIState {
-  activeCanvasViewId: ID;
-  selectedNodeId: ID | null;
-  isAIChatOpen: boolean;
-  isResourcePanelOpen: boolean;
-  searchTerm: string;
 }
 
 export interface NodeSummary {

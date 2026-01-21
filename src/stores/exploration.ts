@@ -7,7 +7,6 @@ import {
 } from '@/interfaces/exploration';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { ResourceItem } from '@/interfaces/knowledge';
-import { getNodeGroundednessContext } from '@/logic/workflow';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,7 +18,7 @@ export const useExplorationStore = defineStore('exploration', {
 		canvasViews: [],
 		activeCanvasViewId: '',
 		selectedNodeId: '',
-		conceptualNodes: [],
+		conceptualNodes: new Map(),
 		conceptualEdges: [],
 
 		isAdversaryVisible: true,
@@ -54,7 +53,7 @@ export const useExplorationStore = defineStore('exploration', {
 		// Placeholder for calculating exploration completeness
 		isExplorationComplete: (state) => {
 				// Logic should check node count, resource count, and reflection frequency
-				return state.resources.length > 5 && state.conceptualNodes.length > 10;
+				return state.resources.length > 5 && state.conceptualNodes.size > 10;
 		},
 	},
 
@@ -65,14 +64,14 @@ export const useExplorationStore = defineStore('exploration', {
 				id: uuidv4(),
 				groundedness: groundedness,
 				solidity: 'DIMMED',
-				canvases: [],
+				// canvases: [],
 				type: 'CONCEPT',
 				label: keyword.label,
-				keywordId: keyword.id,
-				data: keyword,
+				// keywordId: keyword.id,
+				// data: keyword,
 				// ... other Resource Node properties
 			};
-			this.conceptualNodes.push(newNode);
+			this.conceptualNodes.set(newNode.id, newNode);
 		},
 
 		/**
@@ -124,43 +123,18 @@ export const useExplorationStore = defineStore('exploration', {
 				if (response.data) {
 					this.stabilityScore = response.data.stabilityScore;
 
-					response.data.keywords.map((processedKeyword: any) => {
-						this.conceptualNodes.push({
-							id: uuidv4(),
-							type: 'CONCEPT',
-							groundedness: 10,
-							canvases: [],
-							solidity: getNodeGroundednessContext(10).solidity,
-							label: processedKeyword?.label,
-							keywordId: processedKeyword?.id,
-							data: processedKeyword
-						})
-					});
-
-					response.data.scope.map((processedScope: any) => {
-						this.conceptualNodes.push({
-							id: uuidv4(),
-							type: 'GROUP',
-							groundedness: 10,
-							canvases: [],
-							solidity: getNodeGroundednessContext(10).solidity,
-							label: processedScope.label,
-							topicScopeId: processedScope.id,
-							childNodeIds: [],
-							size: {width: 0, height: 0},
-							data: processedScope
-						})
-					});
-
-					this.conceptualNodes.push({
-						id: uuidv4(),
-						type: 'FOCUS',
-						groundedness: 10,
-						canvases: [],
-						solidity: getNodeGroundednessContext(10).solidity,
+					// TODO: The data model of final question must be defined
+					this.conceptualNodes.set('focusQuestion', {
+						id: 'focusQuestion',
 						label: response.data.finalQuestion,
-					});
+						groundedness: 10,
+						solidity: 'SOLID',
+						type: 'FOCUS',
+					})
 
+					response.data.nodes.map((node: ConceptualNode) => {
+						this.conceptualNodes.set(node.id, node);
+					});
 				} else {
 					console.log(response.data);
 				}
@@ -212,30 +186,27 @@ export const useExplorationStore = defineStore('exploration', {
 				id: uuidv4(),
 				groundedness: 10,
 				solidity: 'DIMMED',
-				canvases: [],
+				// canvases: [],
 				type: 'RESOURCE',
 				label: item.label,
-				resourceId: item.id, // Link back to the full resource data
-				data: item,
-				position: position,
+				// resourceId: item.id, // Link back to the full resource data
+				// data: item,
+				// position: position,
 				// ... other Resource Node properties
 			};
-			this.conceptualNodes.push(newNode);
+			this.conceptualNodes.set(newNode.id, newNode);
 		},
 
 		/** Handles updates for existing nodes, including moving, grouping, and editing */
 		updateConceptualMapNode(node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') {
-			const index = this.conceptualNodes.findIndex(n => n.id === node.id);
-			if (index !== -1) {
-				if (action === 'delete') {
-					this.conceptualNodes.splice(index, 1);
-					// Also delete related edges
-					this.conceptualEdges = this.conceptualEdges.filter(e => e.source !== node.id && e.target !== node.id);
-				} else {
-					this.conceptualNodes[index] = node;
-				}
+			if (action === 'delete') {
+				this.conceptualNodes.delete(node.id);
+				// Also delete related edges
+				this.conceptualEdges = this.conceptualEdges.filter(e => e.source !== node.id && e.target !== node.id);
 			} else if (action === 'group') {
 				// Logic to create or update a Group Node (U.S. 7)
+ 			} else {
+				this.conceptualNodes.set(node.id, node);
 			}
 		},
 
@@ -268,8 +239,8 @@ export const useExplorationStore = defineStore('exploration', {
 			// this.conceptualEdges = await api.fetchData(`/exploration/canvas/${viewId}/edges`);
 
 			// For now, simulating load:
-			this.conceptualNodes = [];
-			this.conceptualEdges = [];
+			// this.conceptualNodes = [];
+			// this.conceptualEdges = [];
 		},
 
 		// --- AI Interaction (U.S. 10, 11) ---
@@ -310,7 +281,7 @@ export const useExplorationStore = defineStore('exploration', {
 
 		// Placeholder for AI logic
 		getSimulatedAIResponse(userMessage: string): string {
-			if (this.conceptualNodes.length < 5) {
+			if (this.conceptualNodes.size < 5) {
 				return "It looks like your canvas is getting started! To avoid confusion, I recommend trying the **Radial Mode**: place your central Focus Node in the middle and radiate outwards with new resources.";
 			} else if (this.resources.length > 10 && this.currentNodeSummary.group < 5) {
 				return "You've gathered a lot of resources. I suggest switching to the **Categorical Grouping Mode** (use the Group Node tool) to organize the different perspectives on this topic.";
