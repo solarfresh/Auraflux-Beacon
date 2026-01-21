@@ -44,16 +44,7 @@ interface BaseNode {
    * Tracks which Canvas IDs this node is currently placed on.
    * If empty, the node resides only in the Sidebar Registry.
    */
-  canvases: ID[];
-
-  /** UI State: Locking the node on canvas */
-  isLocked?: boolean;
-
-  /** * Optional Spatial Property
-   * Point2D is moved here as an optional property because a node
-   * in the Sidebar Registry does not yet possess a 2D coordinate.
-   */
-  position?: Point2D;
+  // canvases: ID[];
 }
 
 /**
@@ -72,9 +63,9 @@ export interface FocusNode extends BaseNode {
  */
 export interface ResourceNode extends BaseNode {
   type: 'RESOURCE';
-  resourceId: ID;
+  // resourceId: ID;
   // Reference to the original Knowledge Item
-  data?: ResourceItem;
+  // data?: ResourceItem;
 }
 
 /**
@@ -84,9 +75,9 @@ export interface ResourceNode extends BaseNode {
  */
 export interface ConceptNode extends BaseNode {
   type: 'CONCEPT';
-  keywordId: ID;
+  // keywordId: ID;
   // The original semantic seed
-  data: TopicKeyword;
+  // data: TopicKeyword;
 }
 
 /**
@@ -96,8 +87,8 @@ export interface ConceptNode extends BaseNode {
  */
 export interface InsightNode extends BaseNode {
   type: 'INSIGHT';
-  reflectionId: ID;
-  data: ReflectionLogEntry
+  // reflectionId: ID;
+  // data: ReflectionLogEntry
 }
 
 /**
@@ -106,7 +97,7 @@ export interface InsightNode extends BaseNode {
  */
 export interface QueryNode extends BaseNode {
   type: 'QUERY';
-  priority: 'High' | 'Low';
+  // priority: 'High' | 'Low';
 }
 
 /**
@@ -115,8 +106,8 @@ export interface QueryNode extends BaseNode {
  */
 export interface NavigationNode extends BaseNode {
   type: 'NAVIGATION';
-  targetCanvasId: ID;
-  targetCanvasName: string;
+  // targetCanvasId: ID;
+  // targetCanvasName: string;
 }
 
 /**
@@ -125,11 +116,11 @@ export interface NavigationNode extends BaseNode {
  */
 export interface GroupNode extends BaseNode {
   type: 'GROUP';
-  topicScopeId: ID;
-  childNodeIds: ID[];
-  size: RectSize;
-  data: TopicScopeElement;
-  color?: string;
+  // topicScopeId: ID;
+  // childNodeIds: ID[];
+  // size: RectSize;
+  // data: TopicScopeElement;
+  // color?: string;
 }
 
 /** * Discriminated Union for ConceptualNode

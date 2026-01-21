@@ -164,12 +164,12 @@ const handleNodeSelect = (nodeId: string | null) => {
 
   // If a node is selected and its stability is critical,
   // we trigger the Adversary Panel to force reflection.
-  const node = registryNodes.value.find(n => n.id === nodeId);
-  if (node && node.groundedness < 4) {
-    explorationStore.isAdversaryVisible = true;
+  // const node = registryNodes.value.find(n => n.id === nodeId);
+  // if (node && node.groundedness < 4) {
+    // explorationStore.isAdversaryVisible = true;
     // Potentially trigger a specific "Critical Inquiry" mode in the Adversary Data
     // explorationStore.adversaryData.focusNodeId = nodeId;
-  }
+  // }
 };
 
 /**

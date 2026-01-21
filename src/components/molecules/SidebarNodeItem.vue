@@ -36,6 +36,7 @@
         </Text>
 
         <div class="flex gap-0.5">
+<!--
           <Text
             v-for="cId in node.canvases"
             :key="cId"
@@ -49,6 +50,7 @@
             {{ cId }}
           </Text>
           <div v-if="node.canvases.length === 0" class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1" title="In Inbox"></div>
+ -->
         </div>
       </div>
 
