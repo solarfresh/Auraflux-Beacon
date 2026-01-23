@@ -124,7 +124,7 @@ import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspac
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Organisms
-import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
+import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';

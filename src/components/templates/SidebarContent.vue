@@ -72,7 +72,7 @@ import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import ResearchValidation from '@/components/molecules/ResearchValidation.vue';
-import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
+import TopicStatusIndicator from '@/components/molecules/feedback/TopicStatusIndicator.vue';
 import KeywordManagementSection from '@/components/organisms/KeywordManagementSection.vue';
 import ScopeManagementSection from '@/components/organisms/ScopeManagementSection.vue';
 import UnifiedReviewAlert from '@/components/organisms/UnifiedReviewAlert.vue';

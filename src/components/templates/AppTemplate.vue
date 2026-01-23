@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
+import FullScreenLoader from '@/components/molecules/feedback/FullScreenLoader.vue';
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
 import LoginModal from '@/components/organisms/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';

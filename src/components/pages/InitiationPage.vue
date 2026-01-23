@@ -96,7 +96,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import ActionBar from '@/components/molecules/actions/ActionBar.vue';
-import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
+import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
 import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';

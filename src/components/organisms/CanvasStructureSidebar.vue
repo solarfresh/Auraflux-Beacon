@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
-import TopicStatusIndicator from '@/components/molecules/TopicStatusIndicator.vue';
+import TopicStatusIndicator from '@/components/molecules/feedback/TopicStatusIndicator.vue';
 import SidebarRegistrySection from '@/components/organisms/SidebarRegistrySection.vue';
 import { useRegistry } from '@/composables/useRegistry';
 import type { NodeType } from '@/interfaces/conceptual-map';
