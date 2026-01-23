@@ -95,7 +95,7 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import ActionBar from '@/components/molecules/ActionBar.vue';
+import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';

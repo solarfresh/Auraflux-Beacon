@@ -43,8 +43,8 @@
 <script setup lang="ts">
 import MarkdownRenderer from '@/components/atoms/MarkdownRenderer.vue';
 import Text from '@/components/atoms/Text.vue';
-import MessageInput from '@/components/molecules/MessageInput.vue';
-import { ChatMessage } from '@/interfaces/initiation';
+import MessageInput from '@/components/molecules/actions/MessageInput.vue';
+import { ChatMessage } from '@/interfaces/core';
 import { nextTick, ref, watch } from 'vue';
 
 const props = defineProps<{

@@ -125,7 +125,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 
 // Organisms
 import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-import ActionBar from '@/components/molecules/ActionBar.vue';
+import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
 import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';

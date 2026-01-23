@@ -1,25 +1,24 @@
 <template>
-  <div class="flex space-x-3 items-end">
-
+  <div class="flex space-x-3 items-end w-full">
     <Input
-      type="text"
       v-model="inputContent"
-      @keyup.enter="handleSend"
+      type="text"
       placeholder="Type your question or statement..."
       :disabled="isDisabled"
       size="lg"
       class="flex-1"
+      @keyup.enter="handleSend"
     />
 
     <Button
-      @click="handleSend"
-      :disabled="isDisabled || !inputContent.trim()"
       variant="primary"
       size="lg"
       class="flex-shrink-0"
+      :disabled="isDisabled || !inputContent.trim()"
       aria-label="Send message"
+      @click="handleSend"
     >
-      <Icon name="PaperAirplane" type="solid" size="md" color="white" />
+      <Icon name="PaperAirplane" type="solid" size="md" />
     </Button>
   </div>
 </template>
@@ -30,10 +29,13 @@ import Input from '@/components/atoms/Input.vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 
+/**
+ * MessageInput Molecule
+ * A composite component for message entry in chat interfaces.
+ * Combines Input and Button atoms with localized sending logic.
+ */
 const props = defineProps({
-  /**
-   * Disables the input field and send button when the agent is typing or busy.
-   */
+  /** Prevents interaction during processing states */
   isDisabled: {
     type: Boolean,
     default: false,
@@ -42,23 +44,21 @@ const props = defineProps({
 
 const emit = defineEmits<{
   /**
-   * Emitted when the user successfully sends a message.
-   * @param content - The text content of the message.
+   * Fires when a valid message is submitted.
+   * @param content The trimmed string content.
    */
   (e: 'sendMessage', content: string): void;
 }>();
 
 const inputContent = ref('');
 
+/** Handles validation and emission of the message */
 const handleSend = () => {
   const content = inputContent.value.trim();
 
   if (content && !props.isDisabled) {
-    // 1. Emit the message content
     emit('sendMessage', content);
-
-    // 2. Clear the local input state
-    inputContent.value = '';
+    inputContent.value = ''; // Reset input after successful emission
   }
 };
 </script>
