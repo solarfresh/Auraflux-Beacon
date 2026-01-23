@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import AuthButton from '@/components/molecules/AuthButton.vue';
+import AuthButton from '@/components/molecules/actions/AuthButton.vue';
 import type { ISPStep } from '@/interfaces/workflow';
 
 // --- Props ---
