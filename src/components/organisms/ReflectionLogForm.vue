@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
-import MasterListPanel from '@/components/molecules/MasterListPanel.vue';
+import MasterListPanel from '@/components/organisms/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/ReflectionLogEditorPanel.vue';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import { useInitiativeStore } from '@/stores/initiation';

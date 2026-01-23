@@ -1,12 +1,17 @@
 # Molecules: Feedback
 
-Feedback molecules provide users with information about the system's current state, progress, or the result of an action. They are essential for a responsive and transparent user experience.
+Feedback molecules provide users with information about the system's current state, progress, or the validity of data. They ensure the application remains transparent and responsive to user actions.
 
 ## 🧭 Design Principles
 
-* **Non-Blocking vs. Blocking**: Distinguish clearly between feedback that blocks interaction (e.g., `FullScreenLoader`) and feedback that is purely informative (e.g., `TopicStatusIndicator`).
-* **Visual Hierarchy**: Use size and color to denote the importance of the feedback (e.g., indigo for progress, green for success).
-* **Clarity**: Always pair icons with descriptive text to ensure the context is understandable without visual-only cues.
+* **Semantic Consistency**: Use standardized color sets to convey meaning:
+* **Success/Stable**: `emerald` (High grounding or feasibility)
+* **Warning/Review**: `amber` (AI-extracted or medium feasibility)
+* **Danger/Critical**: `red` (Low feasibility or connection errors)
+
+
+* **Visual Anchors**: Always pair status colors with icons to ensure accessibility for color-blind users.
+* **Non-Blocking vs. Blocking**: Distinguish between localized feedback (e.g., `TopicStatusIndicator`) and global state blocking (e.g., `FullScreenLoader`).
 
 ---
 
@@ -14,33 +19,49 @@ Feedback molecules provide users with information about the system's current sta
 
 ### 1. FullScreenLoader
 
-A high-priority overlay that prevents user interaction during global loading states.
+A high-priority overlay that prevents user interaction during global transitions.
 
 * **Composition**: `Icon` + `Text`.
-* **Standardization**: Uses `backdrop-blur-md` to maintain spatial awareness while focusing on the task.
+* **Visuals**: Uses `backdrop-blur-md` to maintain context while focusing the user.
 
-### 2. ProgressTracker
+### 2. ResearchValidation
 
-A horizontal bar for tracking workflow stages.
+A status card used to display the feasibility or stability of a research topic.
 
-* **Composition**: `Icon` + `Text` + `BarSegment`.
-* **Usage**: Best placed in page headers or fixed footers.
+* **Composition**: `Icon` + `Text` (Status) + `Text` (Rationale).
+* **Usage**: Best for summary panels or "Check-point" reviews during the refinement process.
 
 ### 3. TopicStatusIndicator
 
-A localized status bar for specific research entities.
+A localized indicator for specific research entities.
 
 * **Composition**: `Text` + `BarSegment`.
-* **Logic**: Maps numeric scores to qualitative labels.
+* **Logic**: Maps internal numeric scores to qualitative labels (e.g., "Stable", "Incomplete").
+
+### 4. ProgressTracker
+
+A structural molecule for tracking multi-stage workflows (e.g., Research Initiation).
+
+* **Composition**: `Icon` + `Text` + `BarSegment`.
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1:** Feedback components should be "Read-Only". They should not contain inputs or actionable buttons unless it's a "Retry" or "Cancel" action.
-> **Rule 2:** Always use the `animate-spin` utility for loading icons to ensure consistent motion across the app.
-> **Rule 3:** Use `gray-500` for "Detail" or "Secondary" text to keep the visual focus on the primary message.
+> **Rule 1: Accessible Color Blindness.** Never rely on color alone. Use the `CheckCircle` for high/stable, `QuestionMarkCircle` for medium/pending, and `ExclamationCircle` for low/critical.
+> **Rule 2: Read-Only Intent.** Feedback molecules should not contain primary inputs. They are for reflection and observation.
+> **Rule 3: Animation Utility.** Use `animate-spin` for loading icons and `animate-pulse` only for high-priority "live" status lights.
+
+### Comparison of Status Tones
+
+```vue
+<ResearchValidation
+  status="HIGH"
+  description="Grounding is solid with 5+ citations."
+/>
+
+```
 
 ---
 
@@ -50,7 +71,8 @@ A localized status bar for specific research entities.
 src/components/molecules/feedback/
 ├── FullScreenLoader.vue     # Global block state
 ├── ProgressTracker.vue      # Workflow progress
-├── TopicStatusIndicator.vue # Stability indicator
+├── ResearchValidation.vue   # Data quality alert
+├── TopicStatusIndicator.vue # Localized status
 └── README.md                # You are here
 
 ```

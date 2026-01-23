@@ -1,80 +1,78 @@
-# Molecules: Functional Components
+# Molecules: The Functional Assembly
 
-Molecules are groups of **Atoms** bonded together. They are the smallest fundamental units that can carry out a specific operational task (e.g., submitting a message, confirming an action, or tracking progress).
+Molecules are the second layer of our Atomic Design system. They are groups of two or more **Atoms** bonded together to form a distinct, functional unit of the UI. Unlike Organisms, Molecules are relatively simple and focused on a single responsibility.
 
-## 🧭 Design Contract
+## 🧭 Layer Principles
 
-* **Atom Dependency**: Molecules must exclusively use components from `@/components/atoms`.
-* **Standardized Sizing**: Always match sizes across sibling atoms (e.g., if an `Input` is `lg`, the sibling `Button` must be `lg`).
-* **Prop Propagation**: Molecules should pass relevant states (like `isDisabled`) down to all child atoms to ensure visual consistency.
-* **Layout**: Molecules use Flexbox or Grid to manage the spatial relationship between their atoms but should remain flexible in width.
-
----
-
-## 🛠 Component Catalog
-
-### 1. Interaction & Input
-
-| Component | Composition | Purpose |
-| --- | --- | --- |
-| **MessageInput** | `Input` + `Button` + `Icon` | Primary chat/search entry. Supports `Enter` key and auto-trimming. |
-| **ActionBar** | `Button` + `Text` | Sticky/fixed footer for critical workflow transitions (e.g., Phase Lock). |
-
-### 2. Overlays & Layout
-
-| Component | Composition | Purpose |
-| --- | --- | --- |
-| **Modal** | `Text` + `Button` + `Slot` | Managed overlay with header, footer, and backdrop-blur. Includes `Escape` key logic. |
-| **TabbedPanel** | `Button` + `Text` | (In Progress) Switches between different content views. |
-
-### 3. Information & Status
-
-| Component | Composition | Purpose |
-| --- | --- | --- |
-| **ProgressTracker** | `Icon` + `Text` + `BarSegment` | Displays Kuhlthau ISP stages and percentage with contextual status messages. |
-| **TopicStatusIndicator** | `Icon` + `Text` | (In Progress) Visual badge for topic readiness. |
+* **Atomic Synergy:** Molecules must use Atoms (Button, Icon, Text) for all internal elements. Never use raw HTML.
+* **Prop Propagation:** Molecules are responsible for passing states (like `disabled` or `loading`) down to their child Atoms.
+* **Layout Agnostic:** While a Molecule has internal spacing, it should not define its own external margins or fixed widths.
+* **Logic Boundary:** Molecules may contain UI logic (e.g., toggling an icon based on a prop), but they should not contain "Business Logic" (e.g., API calls).
 
 ---
 
-## 🤖 AI Implementation Rules (For Agents)
+## 📂 Sub-Directory Map
+
+| Category | Description | Key Components |
+| --- | --- | --- |
+| **`actions/`** | Triggers and entry points for user intent. | `MessageInput`, `AuthButton`, `ActionBar` |
+| **`navigation/`** | Components that help users move through the app. | `TabbedPanel` |
+| **`feedback/`** | Status indicators and progress communication. | `ResearchValidation`, `FullScreenLoader` |
+| **`overlays/`** | Content that floats above the main UI. | `Modal`, `CloseButton` |
+| **`list-items/`** | Repetitive rows for sidebars and data feeds. | `SidebarNodeItem`, `KeywordListItem` |
+
+---
+
+## 🛠 Interaction Standards
+
+### 1. Sizing Consistency
+
+Molecules must maintain a consistent "Scale" among sibling Atoms.
+
+* **Correct:** An `lg` Input paired with an `lg` Button.
+* **Incorrect:** An `lg` Input paired with an `xs` Button.
+
+### 2. Semantic Coloring
+
+We follow a strict semantic palette across all molecules:
+
+* **Primary/Active:** `indigo`
+* **Success/Stable:** `emerald`
+* **Warning/Pending:** `amber`
+* **Danger/Alert:** `red`
+* **Neutral/Secondary:** `gray`
+
+---
+
+## 🤖 AI Implementation Guide
 
 > [!IMPORTANT]
-> **Rule 1:** When building Molecules, ensure the `focus-ring` of inputs matches the `primary` color of buttons.
-> **Rule 2:** Do not hardcode specific hex colors. Use the Atomic props (e.g., `variant="primary"` or `color="white"`).
-> **Rule 3:** Use `aria-label` on buttons that contain only icons (like the close button in `Modal`).
+> **Rule 1:** When creating a new molecule, determine its category first. If it's a row in a list, put it in `list-items/`. If it triggers a process, put it in `actions/`.
+> **Rule 2:** Use **PascalCase** for all `iconName` props (e.g., `ArrowRight` instead of `arrow-right`).
+> **Rule 3:** Always implement `hover` and `active` states using standard Tailwind tokens (e.g., `hover:bg-gray-50`).
 
-### Common Composition Patterns
+### Example Composition
 
 ```vue
-<div class="flex space-x-2">
-  <Input size="md" :disabled="loading" />
-  <Button size="md" :disabled="loading" variant="primary">Submit</Button>
+<div class="flex items-center gap-3 p-2 rounded-md hover:bg-indigo-50">
+  <Icon name="Beaker" color="indigo-500" />
+  <Text weight="medium">Experiment 01</Text>
+  <Button variant="ghost" size="xs" iconName="Trash" />
 </div>
 
 ```
 
 ---
 
-## 📂 Directory Progress
+## 📂 Directory Structure
 
 ```text
-src/components/molecules
-├── ActionBar.vue
-├── AuthButton.vue
-├── CloseButton.vue
-├── FocusItem.vue
-├── FullScreenLoader.vue
-├── IndexStatItem.vue
-├── KeywordListItem.vue
-├── MasterListPanel.vue
-├── MessageInput.vue
-├── Modal.vue
-├── ProgressTracker.vue
-├── ReadMe.md
-├── ResearchValidation.vue
-├── ScopeListItem.vue
-├── SidebarNodeItem.vue
-├── TabbedPanel.vue
-├── TopicStatusIndicator.vue
-└── ViewListItem.vue
+src/components/molecules/
+├── actions/      # User triggers & inputs
+├── feedback/     # Status & progress
+├── list-items/   # Repetitive data rows
+├── navigation/   # Tabs & menus
+├── overlays/     # Modals & floaters
+└── README.md     # You are here
+
 ```
