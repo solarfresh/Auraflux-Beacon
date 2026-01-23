@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import type { CanvasView } from '@/interfaces/exploration';
 import Text from '@/components/atoms/Text.vue';
-import ViewListItem from '@/components/molecules/ViewListItem.vue';
+import ViewListItem from '@/components/molecules/list-items/ViewListItem.vue';
 
 defineProps<{
   views: CanvasView[];

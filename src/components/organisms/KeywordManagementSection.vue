@@ -103,7 +103,7 @@
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import KeywordListItem from '@/components/molecules/KeywordListItem.vue';
+import KeywordListItem from '@/components/molecules/list-items/KeywordListItem.vue';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { computed, ref } from 'vue';
 

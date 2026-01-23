@@ -6,9 +6,10 @@ Atoms are the smallest functional units of our UI—the "periodic table" of the 
 
 * **Zero Business Logic:** Atoms do not fetch data or hold application state.
 * **Semantic Integrity:** Visual style is decoupled from HTML tags (e.g., using `Text.vue` to render an `h1` style as a `p` tag for SEO).
-* **Consistent Tokens:** * **Focus Ring:** `indigo-600`
-* **Border Radius:** `rounded-md` (Standard) or `rounded-full` (Search/Pill)
-* **Disabled State:** `bg-gray-50 text-gray-400 border-gray-200`
+* **Consistent Tokens:**
+* **Focus Ring:** `indigo-500` with `ring-offset-2`.
+* **Border Radius:** `rounded-md` (Standard) or `rounded-full` (Search/Pill/CloseButton).
+* **Disabled State:** `opacity-50 cursor-not-allowed` with grayed-out backgrounds.
 
 
 
@@ -20,45 +21,47 @@ Atoms are the smallest functional units of our UI—the "periodic table" of the 
 
 | Component | Key Props | AI Usage Note |
 | --- | --- | --- |
-| **Button** | `variant`, `size`, `iconOnly`, `iconName` | Includes `IconButton` logic. Use `iconOnly` for square icon buttons. |
-| **Checkbox** | `v-model`, `disabled` | Controlled boolean input. No label included. |
+| **Button** | `variant`, `size`, `iconOnly`, `iconName` | **Updated:** Supports `xs` to `lg`. Use `iconOnly` for square buttons; the Atom handles internal Icon sizing. |
+| **Checkbox** | `v-model`, `disabled` | Controlled boolean input. Does not include a label (labels are handled by Molecules). |
 
 ### 2. Form Inputs (Unified Styles)
 
 | Component | Key Props | Description |
 | --- | --- | --- |
-| **Input** | `variant`, `size`, `type` | Supports `default` and `search` (rounded) variants. |
-| **Textarea** | `rows`, `size`, `disabled` | Multi-line input. Shared padding/rounding with `Input`. |
-| **Select** | `modelValue`, `size` | Native wrapper. Use `<slot>` for options. |
+| **Input** | `variant`, `size`, `type` | Supports `default` and `search` (rounded-full) variants. |
+| **Textarea** | `rows`, `size`, `disabled` | Multi-line input. Shared padding and rounding tokens with `Input`. |
+| **Select** | `modelValue`, `size` | Native wrapper with custom styling. Use `<slot>` for options. |
 
 ### 3. Visual & Content
 
 | Component | Key Props | Description |
 | --- | --- | --- |
-| **Icon** | `name`, `variant`, `size` | Dynamic Heroicons wrapper. Use kebab-case names. |
-| **Text** | `tag`, `size`, `weight` | Typography engine for all UI text strings. |
-| **MarkdownRenderer** | `content` | Renders Markdown to HTML using `markdown-it`. |
-| **BarSegment** | `width`, `color` | Clamped (0-100) building block for progress bars. |
+| **Icon** | `name`, `type`, `size` | Dynamic Heroicons wrapper. Use **PascalCase** names (e.g., `XMark`, `PencilSquare`). |
+| **Text** | `tag`, `size`, `weight`, `color` | The typography engine. Supports responsive sizes and semantic coloring. |
+| **MarkdownRenderer** | `content` | Renders safe HTML from Markdown strings using `markdown-it`. |
+| **BarSegment** | `width`, `color` | A single progress unit. Clamped (0-100) width with dynamic color themes. |
 
 ---
 
 ## 🤖 AI Instruction Context (System Prompt)
 
 > [!IMPORTANT]
-> **Rule 1:** NEVER use raw HTML tags (e.g., `<button>`, `<input>`, `<h1>`). Always use the Atom component.
-> **Rule 2:** `IconButton.vue` is **DEPRECATED**. Use `<Button iconOnly />`.
-> **Rule 3:** Maintain vertical alignment. All form atoms (`Input`, `Select`, `Textarea`) share the same `size` scale.
+> **Rule 1:** NEVER use raw HTML tags (e.g., `<button>`, `<input>`, `<h1>`). Always use the corresponding Atom.
+> **Rule 2:** Use the `xs` size for actions inside compact list items (e.g., `KeywordListItem`, `ViewListItem`) to maintain high information density.
+> **Rule 3:** **Icon Naming:** Always use PascalCase for icon names to match Heroicons' internal exports and prevent runtime errors.
 
 ### Common Implementation Snippets
 
 ```vue
-<Button variant="primary">Submit</Button>
+<Button variant="primary" size="md">Submit</Button>
 
-<Input variant="search" placeholder="Search..." iconName="magnifying-glass" />
+<Button variant="ghost" size="xs" iconOnly iconName="Trash" />
 
-<Text tag="span" size="sm" color="gray-500">Required field</Text>
+<Input variant="search" placeholder="Search topics..." iconName="MagnifyingGlass" />
 
-<Button iconOnly variant="ghost" iconName="trash" />
+<Text tag="p" size="sm" color="gray-500" weight="medium">
+  Reference: 2026-ISP-01
+</Text>
 
 ```
 
@@ -69,9 +72,9 @@ Atoms are the smallest functional units of our UI—the "periodic table" of the 
 ```text
 src/components/atoms/
 ├── BarSegment.vue
-├── Button.vue           <-- (Integrated IconButton logic)
+├── Button.vue           <-- Supports sizes [xs, sm, md, lg]
 ├── Checkbox.vue
-├── Icon.vue
+├── Icon.vue             <-- Use PascalCase for 'name' prop
 ├── Input.vue
 ├── MarkdownRenderer.vue
 ├── Select.vue

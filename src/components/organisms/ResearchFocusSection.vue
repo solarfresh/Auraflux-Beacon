@@ -50,7 +50,7 @@ import { computed } from 'vue';
 
 // Components
 import Text from '@/components/atoms/Text.vue';
-import FocusItem from '@/components/molecules/FocusItem.vue';
+import FocusItem from '@/components/molecules/list-items/FocusItem.vue';
 import ResearchValidation from '@/components/molecules/ResearchValidation.vue';
 
 // --- PROPS ---

@@ -94,7 +94,7 @@ import { computed, ref } from 'vue';
 import Button from '@/components/atoms/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import ScopeListItem from '@/components/molecules/ScopeListItem.vue';
+import ScopeListItem from '@/components/molecules/list-items/ScopeListItem.vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
 
 
