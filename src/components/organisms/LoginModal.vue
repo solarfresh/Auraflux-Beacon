@@ -64,7 +64,7 @@
 import Button from '@/components/atoms/Button.vue';
 import Input from '@/components/atoms/Input.vue';
 import Text from '@/components/atoms/Text.vue';
-import Modal from '@/components/molecules/Modal.vue';
+import Modal from '@/components/molecules/overlays/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

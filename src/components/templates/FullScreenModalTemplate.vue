@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import Text from '@/components/atoms/Text.vue';
-import Modal from '@/components/molecules/Modal.vue';
-import CloseButton from '../molecules/CloseButton.vue';
+import Modal from '@/components/molecules/overlays/Modal.vue';
+import CloseButton from '@/components/molecules/overlays/CloseButton.vue';
 
 // Define the component's props and events
 const props = defineProps<{
