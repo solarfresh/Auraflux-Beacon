@@ -84,7 +84,7 @@
 import { useExplorationStore } from '@/stores/exploration';
 import Text from '@/components/atoms/Text.vue';
 import Button from '@/components/atoms/Button.vue';
-import TabbedPanel from '@/components/molecules/TabbedPanel.vue';
+import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
 import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
 
