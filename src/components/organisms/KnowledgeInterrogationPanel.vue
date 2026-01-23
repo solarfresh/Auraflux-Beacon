@@ -86,7 +86,7 @@ import Text from '@/components/atoms/Text.vue';
 import Button from '@/components/atoms/Button.vue';
 import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
-import ResourceRepository from '@/components/organisms/ResourceRepository.vue';
+import ResourceRepository from '@/components/organisms/sections/ResourceRepository.vue';
 
 const store = useExplorationStore();
 const emit = defineEmits(['drop-to-canvas', 'open-refinement']);

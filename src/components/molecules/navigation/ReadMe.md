@@ -1,45 +1,63 @@
 # Molecules: Navigation
 
-Navigation molecules are responsible for structural view switching and guiding the user through high-level application states. These components act as containers or controllers for significant layout changes.
+Navigation molecules facilitate movement through the application’s information architecture, managing visibility, grouping, and user attention.
 
 ## 🧭 Design Principles
 
-* **Structural Intent**: Unlike list items, navigation molecules usually dictate the content of the entire surrounding layout or panel.
-* **Visual Continuity**: Use the system primary color (`indigo-600`) to highlight the active path or selection.
-* **Accessibility**: Must implement appropriate ARIA roles (e.g., `role="tablist"`, `role="tab"`) and support keyboard interaction.
+* **Directional Clarity**: Indicators (Chevrons, active states) must clearly communicate where the user is going or what is currently expanded.
+* **Contextual Guidance**: Navigation elements should prioritize items requiring attention (e.g., using status colors or item counts).
+* **Smooth Transitions**: Toggles and active state shifts should use standard durations (`transition-all duration-200`) to feel responsive.
 
 ---
 
 ## 🛠 Component Catalog
 
-### 1. TabbedPanel
+### 1. SectionGroup
 
-A container that organizes content into multiple switchable views using a horizontal navigation bar.
+A structural wrapper for grouping related list items within a Management Section.
 
-* **Composition**: `Button[variant="ghost"]` (acting as tab triggers) + `Text`.
-* **Standardization**: Uses `indigo-600` for active bottom borders and bold text for the active state.
-* **Flexibility**: Utilizes dynamic slots (e.g., `#tab-1-content`) to allow any component to be rendered within the panel.
+* **Key Features**: Supports **Collapsible** states and **Variant-based header styling** (Indigo, Amber, Gray).
+* **Slots**: Primary content area and a `footer` for "View All" actions.
+
+### 2. ViewListItem
+
+A specialized navigation item for switching between different Workspace/Canvas views.
+
+* **Logic**: Implements high-contrast `isActive` styling to signify the current environment.
+
+### 3. UnifiedReviewAlert
+
+A high-level navigation banner that surfaces items requiring user intervention across multiple sections.
+
+* **Logic**: Aggregates `unreviewedCount` from Keywords and Scope.
+* **Interaction**: Acts as a **Deep Link**; clicking it triggers a scroll or focus event to the first relevant section.
+* **Placement**: Usually positioned at the top of the `MasterListPanel` for maximum visibility.
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1:** Use `Button` atoms for all clickable navigation triggers to ensure consistent hover/focus behavior.
-> **Rule 2:** Avoid fixed heights in navigation headers; allow the `Text` atom's padding and line-height to define the footprint.
-> **Rule 3:** Always sync the `aria-selected` attribute with the internal `activeTab` state for screen reader compatibility.
+> **Rule 1: State Sync.** `SectionGroup` should ideally use `v-model:open` if the parent needs to programmatically expand it (e.g., when clicking a Review Alert).
+> **Rule 2: Visual Hierarchy.** The `UnifiedReviewAlert` uses `indigo-50` backgrounds and `backdrop-blur` to distinguish itself from standard content sections.
+> **Rule 3: Scalability.** Navigation items must handle long text via `truncate` to prevent horizontal layout overflows in the fixed-width sidebar.
 
-### Active State Logic
+### Implementation Pattern: Cross-Section Navigation
 
 ```vue
-<Button
-  variant="ghost"
-  :class="isActive ? 'border-indigo-600' : 'border-transparent'"
+<UnifiedReviewAlert
+  :keywords="keywords"
+  :scope="scope"
+  @scroll-to-review="handleScroll"
+/>
+
+<SectionGroup
+  title="To Review"
+  variant="amber"
+  collapsible
+  :open="activeSection === 'keyword'"
 >
-  <Text :weight="isActive ? 'bold' : 'medium'">
-    {{ label }}
-  </Text>
-</Button>
+  </SectionGroup>
 
 ```
 
@@ -49,7 +67,9 @@ A container that organizes content into multiple switchable views using a horizo
 
 ```text
 src/components/molecules/navigation/
-├── TabbedPanel.vue        # Fully standardized
+├── SectionGroup.vue       # Collapsible container for list items
+├── UnifiedReviewAlert.vue # New: Cross-section attention director
+├── ViewListItem.vue       # Canvas/Workspace switcher
 └── README.md              # You are here
 
 ```
