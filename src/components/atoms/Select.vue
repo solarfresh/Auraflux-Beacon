@@ -5,12 +5,13 @@
     @change="$emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
     :disabled="disabled"
     :class="[
-      // Base Tailwind classes for border, shadow, and focus states
-      'block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 transition duration-150 ease-in-out',
-      // Dynamic size classes (padding and font size)
+      // Base styles: consistent transition and layout
+      'block w-full transition duration-150 ease-in-out',
+      // Border and Focus: standardized to indigo-600 and rounded-md
+      'border-gray-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600 rounded-md',
       sizeClasses,
-      // Dynamic state classes (disabled vs. normal)
-      disabled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-900',
+      // State styling: unified disabled look
+      disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
     ]"
   >
     <slot></slot>
@@ -20,31 +21,28 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+/**
+ * Select Atom
+ * A styled wrapper for the native HTML select element.
+ * Aligned with Input.vue and Textarea.vue for form consistency.
+ */
 const props = defineProps({
-  /**
-   * Used for v-model binding: the currently selected value.
-   */
+  /** Currently selected value (v-model) */
   modelValue: {
     type: [String, Number],
     default: '',
   },
-  /**
-   * Optional ID for accessibility (linking to a <Text tag="label">).
-   */
+  /** Accessibility ID to associate with a label */
   id: {
     type: String,
     default: undefined,
   },
-  /**
-   * Disables the select element.
-   */
+  /** Toggles the disabled state */
   disabled: {
     type: Boolean,
     default: false,
   },
-  /**
-   * Defines the size of the select input.
-   */
+  /** Size variants matching the global form scale */
   size: {
     type: String,
     default: 'md', // 'sm', 'md', 'lg'
@@ -52,19 +50,33 @@ const props = defineProps({
   },
 });
 
-// Emit v-model update event
+/** Define emits for v-model support with specific types */
 defineEmits<{
   (e: 'update:modelValue', value: string | number): void;
 }>();
 
-// --- Tailwind Size Classes Map ---
-const sizeMap: { [key: string]: string } = {
+// --- Tailwind Size Mapping ---
+// Matches Input.vue padding and font sizes exactly
+const sizeMap: Record<string, string> = {
   sm: 'px-2 py-1.5 text-sm',
   md: 'px-3 py-2 text-base',
   lg: 'px-4 py-3 text-lg',
 };
 
 const sizeClasses = computed(() => {
-  return sizeMap[props.size];
+  return sizeMap[props.size] || sizeMap.md;
 });
 </script>
+
+<style scoped>
+/* Standard select styling to ensure the arrow icon looks consistent across browsers */
+select {
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+</style>

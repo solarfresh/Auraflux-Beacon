@@ -7,9 +7,14 @@
     :placeholder="placeholder"
     :disabled="disabled"
     :class="[
-      'block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 transition duration-150 ease-in-out',
+      'block w-full transition duration-150 ease-in-out',
+      // Consistent focus and border states
+      'border-gray-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600',
+      // Normalized corner radius
+      'rounded-md',
       sizeClasses,
-      disabled ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : 'bg-white text-gray-900',
+      // Unified disabled styling
+      disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
     ]"
   ></textarea>
 </template>
@@ -17,30 +22,38 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+/**
+ * Textarea Atom
+ * Used for multi-line text input.
+ * Styled to match Input.vue for visual consistency.
+ */
 const props = defineProps({
-  /**
-   * Used for v-model binding
-   */
+  /** Used for v-model binding */
   modelValue: {
     type: String,
     default: '',
   },
+  /** Unique identifier for accessibility and label association */
   id: {
     type: String,
     default: undefined,
   },
+  /** Number of visible text lines */
   rows: {
     type: [String, Number],
     default: 3,
   },
+  /** Input placeholder text */
   placeholder: {
     type: String,
     default: '',
   },
+  /** Toggles the disabled state and styling */
   disabled: {
     type: Boolean,
     default: false,
   },
+  /** Defines vertical padding and font size scale */
   size: {
     type: String,
     default: 'md', // 'sm', 'md', 'lg'
@@ -48,17 +61,25 @@ const props = defineProps({
   },
 });
 
-// Emit v-model update event
+// Define emits for v-model support
 defineEmits(['update:modelValue']);
 
-// --- Tailwind Size Classes ---
-const sizeMap: { [key: string]: string } = {
-  sm: 'p-2 text-sm',
-  md: 'p-3 text-base',
-  lg: 'p-4 text-lg',
+// --- Tailwind Size Mapping ---
+// Mirrored from Input.vue to ensure vertical alignment in forms
+const sizeMap: Record<string, string> = {
+  sm: 'py-1.5 px-2 text-sm',
+  md: 'py-2 px-3 text-base',
+  lg: 'py-3 px-4 text-lg',
 };
 
 const sizeClasses = computed(() => {
-  return sizeMap[props.size];
+  return sizeMap[props.size] || sizeMap.md;
 });
 </script>
+
+<style scoped>
+/* Resizing can be restricted here if design dictates fixed widths */
+textarea {
+  resize: vertical;
+}
+</style>

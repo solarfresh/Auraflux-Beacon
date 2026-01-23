@@ -13,10 +13,10 @@ import { computed } from 'vue';
 import { ButtonProps } from '@/interfaces/button';
 
 const props = withDefaults(defineProps<ButtonProps>(), {
-  type: 'button',
-  disabled: false,
   variant: 'primary',
   size: 'md',
+  iconOnly: false,
+  iconName: ''
 });
 
 const baseClass = computed(() => {
@@ -42,6 +42,10 @@ const variantClass = computed(() => {
       return 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500';
     case 'danger-outline':
       return 'border-gray-300 bg-white text-red-500 hover:text-red-700 hover:bg-red-50 focus:ring-red-500'
+    case 'ghost':
+      return 'text-gray-400 hover:text-gray-600 hover:bg-gray-100';
+    case 'danger-ghost':
+      return 'text-gray-400 hover:text-red-600 hover:bg-red-50';
     default:
       return '';
   }

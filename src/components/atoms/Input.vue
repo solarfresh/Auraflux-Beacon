@@ -4,59 +4,80 @@
     :value="modelValue"
     @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     :placeholder="placeholder"
-    :class="inputClasses"
+    :disabled="disabled"
+    :class="[
+      'block w-full transition duration-150 ease-in-out',
+      'border-gray-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600',
+      sizeClasses,
+      variantClasses,
+      // Unified disabled styling
+      disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
+    ]"
   />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 
+/**
+ * Input Atom
+ * The primary text entry component.
+ * Variants include 'default' for forms and 'search' for navigation/filtering.
+ */
 const props = defineProps({
+  /** Used for v-model binding (supports strings and numbers) */
   modelValue: {
     type: [String, Number],
     default: '',
   },
+  /** HTML placeholder text */
   placeholder: {
     type: String,
     default: undefined,
   },
+  /** Native input type (text, password, email, number, etc.) */
   type: {
     type: String,
     default: 'text',
   },
+  /** Visual style variant */
   variant: {
     type: String,
     default: 'default', // 'default', 'search'
     validator: (value: string) => ['default', 'search'].includes(value),
   },
-  // --- NEW SIZE PROP ---
+  /** Component size scale */
   size: {
     type: String,
     default: 'md', // 'sm', 'md', 'lg'
     validator: (value: string) => ['sm', 'md', 'lg'].includes(value),
   },
+  /** Toggles the disabled state */
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const emit = defineEmits(['update:modelValue']);
+// Emit v-model update event
+defineEmits(['update:modelValue']);
 
-// --- Tailwind Size Map ---
-const sizeMap: { [key: string]: string } = {
+// --- Tailwind Size Mapping ---
+// Shared values across Input, Select, and Textarea
+const sizeMap: Record<string, string> = {
   sm: 'py-1.5 px-2 text-sm',
   md: 'py-2 px-3 text-base',
   lg: 'py-3 px-4 text-lg',
 };
 
-// --- Tailwind Variant Map (Simplified Focus) ---
-const variantMap: { [key: string]: string } = {
-  default: 'shadow-sm border-gray-300 rounded-md focus:ring-indigo-600 focus:border-indigo-600',
-  // Search variant often includes a leading icon and a rounded shape, adjust p/py as needed
-  search: 'border-gray-300 rounded-full focus:ring-blue-500 focus:border-blue-500',
+// --- Tailwind Variant Mapping ---
+const variantMap: Record<string, string> = {
+  // Standard form style
+  default: 'rounded-md',
+  // Search style with pill-shape rounding
+  search: 'rounded-full',
 };
 
-const inputClasses = computed(() => {
-  const baseClasses = 'block w-full transition duration-150 ease-in-out';
-
-  // Combine base, size, and variant classes
-  return `${baseClasses} ${sizeMap[props.size]} ${variantMap[props.variant]}`;
-});
+const sizeClasses = computed(() => sizeMap[props.size] || sizeMap.md);
+const variantClasses = computed(() => variantMap[props.variant] || variantMap.default);
 </script>
