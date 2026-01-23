@@ -1,6 +1,4 @@
-import { EntityStatus, ID, Point2D, RectSize } from './core';
-import { TopicKeyword, ResourceItem, TopicScopeElement } from './knowledge';
-import { ReflectionLogEntry } from './workflow';
+import { ID } from './core';
 
 /**
  * NodeType Definition
