@@ -1,47 +1,52 @@
 <template>
   <section
-    class="flex flex-col border-b border-gray-100 last:border-0"
+    class="flex flex-col border-b border-gray-100 last:border-0 transition-colors duration-300"
     :class="sectionPhysicsClass"
   >
     <header
-      class="px-4 py-2 flex items-center justify-between hover:bg-gray-50/50 transition-colors group cursor-pointer"
+      class="px-4 py-2.5 flex items-center justify-between hover:bg-gray-50/80 transition-colors group cursor-pointer"
       @click="toggleSection"
     >
       <div class="flex items-center gap-2">
         <Icon
           v-if="isCollapsible"
-          name="chevron-right"
+          name="ChevronRight"
           size="xs"
           class="transition-transform duration-200 text-gray-400"
           :class="{ 'rotate-90': isExpanded }"
         />
-        <Text
-          tag="span"
-          size="xs"
-          weight="bold"
-          class="uppercase tracking-widest text-gray-500 group-hover:text-indigo-600"
-        >
-          {{ title }}
-        </Text>
-        <Text size="xs" color="gray-300">({{ nodes.length }})</Text>
+
+        <div class="flex items-baseline gap-1.5">
+          <Text
+            tag="span"
+            size="xs"
+            weight="bold"
+            class="uppercase tracking-widest text-gray-500 group-hover:text-indigo-600 transition-colors"
+          >
+            {{ title }}
+          </Text>
+          <Text size="xs" color="gray-300" weight="medium">
+            {{ nodes.length }}
+          </Text>
+        </div>
       </div>
 
       <Button
         v-if="canAdd"
-        variant="tertiary"
-        size="sm"
+        variant="ghost"
+        size="xs"
         icon-only
         class="opacity-0 group-hover:opacity-100 transition-opacity"
         @click.stop="emit('add')"
       >
-        <Icon name="plus" size="xs" />
+        <Icon name="Plus" size="xs" color="gray-500" />
       </Button>
     </header>
 
     <transition name="section-slide">
       <div v-if="isExpanded" class="px-2 pb-3 space-y-0.5">
-        <div v-if="nodes.length === 0" class="py-6 text-center">
-          <Text size="xs" color="gray-400" italic>No items in this section</Text>
+        <div v-if="nodes.length === 0" class="py-8 text-center flex flex-col items-center gap-1">
+          <Text size="xs" color="gray-400" italic>No items available</Text>
         </div>
 
         <SidebarNodeItem
@@ -67,8 +72,15 @@ import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.v
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 
+/**
+ * SidebarRegistrySection: Manages groups of conceptual nodes.
+ * Used primarily within the Discovery/Exploration sidebar to represent
+ * the "Stability Gradient" of the research data.
+ */
+
 const props = withDefaults(defineProps<{
   title: string;
+  /** Visual mapping of data stability: TOP (Stable) -> BOTTOM (Volatile) */
   sectionType: 'TOP' | 'MIDDLE' | 'BOTTOM';
   nodeTypes: NodeType[];
   nodes: ConceptualNode[];
@@ -80,24 +92,18 @@ const props = withDefaults(defineProps<{
   canAdd: true
 });
 
-/**
- * EMITS DEFINITION
- */
 const emit = defineEmits<{
   (e: 'select', id: ID): void;
+  /** Teleports the canvas view to a specific node */
   (e: 'teleport', nodeId: string, canvasId?: string): void;
   (e: 'add'): void;
 }>();
 
-/**
- * COMPONENT STATE
- * TOP section is always expanded by default to maintain focus.
- */
-const isExpanded = ref(true);
+// --- State Management ---
+// Defaulting to expanded for the high-priority "TOP" section
+const isExpanded = ref(props.sectionType === 'TOP' || !props.isCollapsible);
 
-/**
- * UI LOGIC
- */
+// --- Logic Handlers ---
 const toggleSection = () => {
   if (props.isCollapsible) {
     isExpanded.value = !isExpanded.value;
@@ -105,25 +111,25 @@ const toggleSection = () => {
 };
 
 /**
- * PHYSICS GRADIENT MAPPING
- * Visual cues for the vertical stability gradient.
+ * Section Physics Logic:
+ * Provides background tints to visually represent the stability level.
  */
 const sectionPhysicsClass = computed(() => {
-  switch (props.sectionType) {
-    case 'TOP': return 'bg-transparent'; // North Star stability
-    case 'MIDDLE': return 'bg-gray-50/30'; // Structural skeleton
-    case 'BOTTOM': return 'bg-indigo-50/10'; // Fluid/volatile evidence
-    default: return '';
-  }
+  const mapping = {
+    TOP: 'bg-transparent',          // Pure, focused stability
+    MIDDLE: 'bg-gray-50/40',       // Standard structural layout
+    BOTTOM: 'bg-indigo-50/15',     // Fluid, exploration zone
+  };
+  return mapping[props.sectionType] || '';
 });
 </script>
 
 <style scoped>
-/* Transition for smooth collapse/expand */
+/* Smooth expand/collapse transitions */
 .section-slide-enter-active,
 .section-slide-leave-active {
-  transition: all 0.25s ease-out;
-  max-height: 1000px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 1200px;
   overflow: hidden;
 }
 
@@ -131,6 +137,6 @@ const sectionPhysicsClass = computed(() => {
 .section-slide-leave-to {
   opacity: 0;
   max-height: 0;
-  transform: translateY(-8px);
+  transform: translateY(-4px);
 }
 </style>

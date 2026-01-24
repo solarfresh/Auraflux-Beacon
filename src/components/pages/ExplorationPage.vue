@@ -10,7 +10,7 @@
       </template>
 
       <template #left-sidebar>
-        <CanvasStructureSidebar
+        <DiscoverySidebar
           @select-node="handleNodeSelect"
           @request-teleport="handleTeleport"
         />
@@ -126,7 +126,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 // Organisms
 import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ActionBar from '@/components/molecules/actions/ActionBar.vue';
-import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
+import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
 import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
 import FocusAligner from '@/components/organisms/FocusAligner.vue';

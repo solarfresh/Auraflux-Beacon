@@ -98,13 +98,13 @@ import { useRouter } from 'vue-router';
 import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/ChatInterface.vue';
-import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
+import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
 import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';
 import SingleScopeDetailEditor from '@/components/organisms/SingleScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import InitiationSidebar from '@/components/organisms/sidebars/InitiationSidebar.vue';
-import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
+import ReflectionLogForm from '@/components/organisms/forms/ReflectionLogForm.vue';
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { apiService } from '@/api/apiService';
