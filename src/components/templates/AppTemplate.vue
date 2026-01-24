@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import FullScreenLoader from '@/components/molecules/feedback/FullScreenLoader.vue';
 import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
-import LoginModal from '@/components/organisms/LoginModal.vue';
+import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
 import { useNotificationStore } from '@/stores/notification';
