@@ -11,8 +11,6 @@ Atoms are the smallest functional units of our UI—the "periodic table" of the 
 * **Border Radius:** `rounded-md` (Standard) or `rounded-full` (Badge/Search/Pills).
 * **Disabled State:** `opacity-50 cursor-not-allowed` with grayed-out backgrounds.
 
-
-
 ---
 
 ## 🛠 Component Catalog
