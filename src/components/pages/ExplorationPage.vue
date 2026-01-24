@@ -129,7 +129,7 @@ import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
 import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
-import FocusAligner from '@/components/organisms/FocusAligner.vue';
+import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
