@@ -14,7 +14,7 @@
 
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
-        <SidebarContent
+        <InitiationSidebar
           :feasibility-status="feasibilityStatus"
           :final-question="finalQuestion"
           :keywords="topicKeywords"
@@ -103,7 +103,7 @@ import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetai
 import SingleScopeDetailEditor from '@/components/organisms/SingleScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import SidebarContent from '@/components/templates/SidebarContent.vue';
+import InitiationSidebar from '@/components/organisms/sidebars/InitiationSidebar.vue';
 import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';

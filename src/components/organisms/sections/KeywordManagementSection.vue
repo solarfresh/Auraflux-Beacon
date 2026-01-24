@@ -18,7 +18,17 @@
         </Text>
       </div>
 
-      </template>
+      <Button
+        v-if="unreviewedCount > 0"
+        variant="secondary"
+        size="xs"
+        @click="isReviewGroupOpen = true"
+        class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
+      >
+        <Icon name="ExclamationCircle" size="xs" color="amber-500" class="mr-1" />
+        {{ unreviewedCount }} To Review
+      </Button>
+    </template>
 
     <template #content>
 
@@ -108,10 +118,12 @@ const LIMITS = { LOCKED: 5, ON_HOLD: 3 };
 
 // --- UI State ---
 const isLockedFullView = ref(false);
+const isReviewGroupOpen = ref(true);
 const isOnHoldFullView = ref(false);
 
 // --- Computed Stats ---
 const lockedCount = computed(() => props.keywords.filter(k => k.entityStatus === 'LOCKED').length);
+const unreviewedCount = computed(() => props.keywords.filter(k => ['AI_EXTRACTED', 'USER_DRAFT'].includes(k.entityStatus)).length);
 const onHoldCount = computed(() => props.keywords.filter(k => k.entityStatus === 'ON_HOLD').length);
 
 /**
