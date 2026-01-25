@@ -1,85 +1,80 @@
-# Atoms: The Design System Foundation
+# Atoms: The Periodic Table of UI
 
-Atoms are the smallest functional units of our UI—the "periodic table" of the application. They are purely presentational, layout-agnostic, and managed entirely via props.
+Atoms are the smallest, indivisible functional units of the **Strategic Research ISP** platform. They are purely presentational, layout-agnostic (unless categorized as Layout), and driven entirely by props.
 
-## 🧭 Core Principles for AI & Humans
+## 📂 Directory Structure & Categorization
 
-* **Zero Business Logic:** Atoms do not fetch data or hold application state.
-* **Semantic Integrity:** Visual style is decoupled from HTML tags (e.g., using `Text.vue` to render an `h1` style as a `p` tag for accessibility).
-* **Consistent Tokens:**
-* **Focus Ring:** `indigo-500` with `ring-offset-2`.
-* **Border Radius:** `rounded-md` (Standard) or `rounded-full` (Badge/Search/Pills).
-* **Disabled State:** `opacity-50 cursor-not-allowed` with grayed-out backgrounds.
+To optimize for AI context windows and developer ergonomics, Atoms are categorized into four specialized domains:
 
----
+### 1. [Layout](layout/README.md) `atoms/layout/`
 
-## 🛠 Component Catalog
+**The Skeleton & Skin.**
 
-### 1. Action & Interaction
+* Components: `Box`, `Stack`, `Cluster`, `Spacer`.
+* Responsibility: Managing space, alignment, and containment. These replace all raw HTML layout tags.
 
-| Component | Key Props | AI Usage Note |
-| --- | --- | --- |
-| **Button** | `variant`, `size`, `iconOnly`, `iconName` | **Updated:** Supports `xs` to `lg`. Use `iconOnly` for square buttons; the Atom handles internal Icon sizing. |
-| **Checkbox** | `v-model`, `label`, `disabled` | Controlled boolean input. **Updated:** Now supports an optional label for streamlined form building. |
+### 2. [Actions](actions/README.md) `atoms/actions/`
 
-### 2. Form Inputs (Unified Styles)
+**The Interaction Engines.**
 
-| Component | Key Props | Description |
-| --- | --- | --- |
-| **Input** | `variant`, `size`, `type` | Supports `default` and `search` (rounded-full) variants. |
-| **Textarea** | `rows`, `size`, `disabled` | Multi-line input. Shared padding and rounding tokens with `Input`. |
-| **Select** | `modelValue`, `size` | Native wrapper with custom styling. Use `<slot>` for options. |
+* Components: `Button`.
+* Responsibility: Handling user intent and triggering events with standardized feedback (loading, hover, focus).
 
-### 3. Visual & Content
+### 3. [Data Display](data-display/README.md) `atoms/data-display/`
 
-| Component | Key Props | Description |
-| --- | --- | --- |
-| **Icon** | `name`, `type`, `size` | Dynamic Heroicons wrapper. Use **PascalCase** names (e.g., `XMark`, `PencilSquare`). |
-| **Text** | `tag`, `size`, `weight`, `color` | The typography engine. Supports responsive sizes and semantic coloring. |
-| **Badge** | `variant`, `size` | Status and category labels. Use `rounded-full` for pill-style indicators. |
-| **MarkdownRenderer** | `content` | Renders safe HTML from Markdown strings using `markdown-it`. |
-| **BarSegment** | `width`, `color` | A single progress unit. Clamped (0-100) width with dynamic color themes. |
+**The Voice & Vision.**
+
+* Components: `Text`, `Icon`, `Badge`, `BarSegment`, `MarkdownRenderer`.
+* Responsibility: Presenting information semantically and accessible. Strictly read-only.
+
+### 4. [Forms](forms/README.md) `atoms/forms/`
+
+**The Data Collectors.**
+
+* Components: `Input`, `Checkbox`, `Select`, `Textarea`.
+* Responsibility: Capturing user input while maintaining strict focus and validation states.
 
 ---
 
-## 🤖 AI Instruction Context (System Prompt)
+## 🧭 Global Atomic Principles
+
+1. **Zero Raw HTML**:
+No `<div>`, `<span>`, `<h1>`, `<button>`, or `<input>` should exist outside of these Atoms. All UI must be composed using these primitives.
+2. **No External Margins**:
+An Atom never dictates its own outer spacing. Spacing is the sole responsibility of the **Parent Layout Atom** (`Stack` or `Cluster`).
+3. **Semantic Integrity**:
+We decouple visual style from HTML tags. A `Text` component can look like an `h1` but be rendered as a `p` tag for document structure.
+4. **Prop-Driven Logic**:
+Atoms do not fetch data or hold global state (Pinia). They receive data via props and emit raw events.
+
+---
+
+## 🤖 AI System Prompt Context
 
 > [!IMPORTANT]
-> **Rule 1:** NEVER use raw HTML tags (e.g., `<button>`, `<input>`, `<h1>`, `<span>`). Always use the corresponding Atom.
-> **Rule 2:** Use the `xs` size for actions inside compact list items (e.g., `ResourceListItem`, `KeywordListItem`) to maintain high information density.
-> **Rule 3:** **Icon Naming:** Always use PascalCase for icon names to match Heroicons' internal exports and prevent runtime errors.
-
-### Common Implementation Snippets
-
-```vue
-<Button variant="primary" size="md">Submit</Button>
-
-<Button variant="ghost" size="xs" iconOnly iconName="Trash" />
-
-<Badge variant="amber" size="xs">Under Review</Badge>
-
-<Text tag="h2" size="lg" weight="bold" color="gray-900">
-  Project Summary
-</Text>
-
-```
+> **Priority 1**: When building or refactoring components, always check the `layout/` directory first to establish the container structure.
+> **Priority 2**: Use the **"Skin & Bones"** pattern: A `Box` (Skin) provides padding/background, while a `Stack` or `Cluster` (Bones) provides the internal alignment.
+> **Priority 3**: Strictly follow the directory-specific READMEs for naming conventions (e.g., PascalCase for `Icon` names).
 
 ---
 
-## 📂 Directory Structure
+## 🛠 Usage Example
 
-```text
-src/components/atoms/
-├── Badge.vue            # New: Semantic status labels
-├── BarSegment.vue
-├── Button.vue           # Supports sizes [xs, sm, md, lg]
-├── Checkbox.vue
-├── Icon.vue             # Use PascalCase for 'name' prop
-├── Input.vue
-├── MarkdownRenderer.vue
-├── Select.vue
-├── Text.vue
-├── Textarea.vue
-└── README.md            # You are here
+```vue
+<template>
+  <Box tag="aside" padding="md" background="white" border="right">
+
+    <Stack gap="lg">
+
+      <Text tag="h2" size="xl" weight="bold">Research Panel</Text>
+
+      <Button variant="primary" iconName="PlusCircle">
+        Create New Topic
+      </Button>
+
+    </Stack>
+
+  </Box>
+</template>
 
 ```
