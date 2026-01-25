@@ -45,7 +45,7 @@
       <div class="flex items-center gap-4">
         <div class="h-6 w-[1px] bg-gray-200 mx-2 hidden md:block"></div>
 
-        <AuthButton
+        <VAuthAction
           :isLoggedIn="isLoggedIn"
           @login="$emit('login')"
           @logout="$emit('logout')"
@@ -64,7 +64,7 @@
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
-import AuthButton from '@/components/molecules/actions/AuthButton.vue';
+import VAuthAction from '@/components/molecules/forms/VAuthAction.vue';
 import type { ISPStep } from '@/interfaces/workflow';
 
 // --- Props ---

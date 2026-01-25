@@ -20,7 +20,7 @@
     <VBox tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
       <VStack gap="xl">
 
-        <FormField id="keyword-input" label="Keyword Text">
+        <VFormField id="keyword-input" label="Keyword Text">
           <template #hint>
             <VBadge v-if="isTextModified" variant="amber" size="xs" class="animate-pulse">
               Unsaved Changes
@@ -43,7 +43,7 @@
               </VCluster>
             </VStack>
           </template>
-        </FormField>
+        </VFormField>
 
         <VBox
           padding="md"
@@ -140,7 +140,7 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
-import FormField from '@/components/molecules/actions/FormField.vue';
+import VFormField from '@/components/molecules/forms/VFormField.vue';
 
 const props = defineProps<{
   keywordIndex: number;

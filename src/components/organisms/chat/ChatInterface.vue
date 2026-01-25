@@ -60,7 +60,7 @@
 
     <footer class="flex-shrink-0 border-t border-gray-100 p-4 sm:p-6 bg-white/80 backdrop-blur-sm">
       <div class="max-w-4xl mx-auto">
-        <MessageInput
+        <VInputGroup
           @send-message="$emit('sendMessage', $event)"
           :is-disabled="isTyping"
           class="shadow-lg shadow-gray-200/50"
@@ -83,7 +83,7 @@ import type { ChatMessage } from '@/interfaces/core';
 import VMarkdown from '@/components/atoms/indicators/VMarkdown.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import MessageInput from '@/components/molecules/actions/MessageInput.vue';
+import VInputGroup from '@/components/molecules/forms/VInputGroup.vue';
 
 const props = defineProps<{
   messages: ChatMessage[];

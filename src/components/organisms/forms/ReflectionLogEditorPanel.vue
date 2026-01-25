@@ -24,7 +24,7 @@
 
       <VBox padding="lg" class="flex-1 overflow-y-auto stable-gutter">
         <VStack gap="xl">
-          <FormField id="entry-title" label="Entry Title" required>
+          <VFormField id="entry-title" label="Entry Title" required>
             <template #default="{ id }">
               <VInput
                 :id="id"
@@ -34,9 +34,9 @@
                 placeholder="e.g., 'Initial Scope Review'..."
               />
             </template>
-          </FormField>
+          </VFormField>
 
-          <FormField
+          <VFormField
             id="entry-content"
             label="Reflection Content"
             description="Your thoughts will be saved as a draft unless committed."
@@ -50,7 +50,7 @@
                 class="flex-1 min-h-[400px] resize-none font-serif leading-relaxed text-gray-800"
               />
             </template>
-          </FormField>
+          </VFormField>
         </VStack>
       </VBox>
 
@@ -129,7 +129,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 
 // Molecules
-import FormField from '@/components/molecules/actions/FormField.vue';
+import VFormField from '@/components/molecules/forms/VFormField.vue';
 
 const props = defineProps<{
   currentDraft: ReflectionLogEntry | null;

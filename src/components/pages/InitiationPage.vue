@@ -37,7 +37,7 @@
 
       <!-- Slot: action-bar (Flow Control) -->
       <template #action-bar>
-        <ActionBar
+        <VButtonToolbar
           :is-proceed-ready="true"
           @transition-request="handlePhaseTransitionRequest"
         />
@@ -95,7 +95,7 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import ActionBar from '@/components/molecules/actions/ActionBar.vue';
+import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';

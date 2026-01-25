@@ -54,7 +54,7 @@
       </template>
 
       <template #footer>
-        <ActionBar
+        <VButtonToolbar
           :is-proceed-ready="false"
           :proceed-label="'Proceed to Formulation'"
           @transition-request="handlePhaseTransitionRequest"
@@ -71,7 +71,7 @@
               </VTypography>
             </VButton>
           </template>
-        </ActionBar>
+        </VButtonToolbar>
       </template>
 
     </ThreePaneWorkspaceTemplate>
@@ -125,7 +125,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 
 // Organisms
 import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
-import ActionBar from '@/components/molecules/actions/ActionBar.vue';
+import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';
 import KnowledgeInterrogationPanel from '@/components/organisms/panels/KnowledgeInterrogationPanel.vue';
