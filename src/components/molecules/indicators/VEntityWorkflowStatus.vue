@@ -24,9 +24,7 @@
 import { computed } from 'vue';
 import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-
-// Define the expected entity statuses based on the system's core interfaces
-type EntityStatus = 'LOCKED' | 'AI_EXTRACTED' | 'ON_HOLD' | 'USER_DRAFT';
+import type { EntityStatus } from '@/interfaces/core';
 
 interface Props {
   /** The current workflow state of the entity */
@@ -53,17 +51,29 @@ const config = computed(() => {
       label: 'AI Extracted',
       description: 'Extracted by AI. Review and modify to stabilize.'
     },
+    // Used for active but paused items
     ON_HOLD: {
       variant: 'secondary' as const,
       icon: 'ArchiveBox',
       label: 'On Hold',
       description: 'Temporarily sidelined. This item will not be used in active research.'
     },
+    // Used for local modifications
     USER_DRAFT: {
       variant: 'secondary' as const,
       icon: 'PencilSquare',
       label: 'Draft',
       description: 'Local changes detected. Save to update system state.'
+    },
+    /**
+     * NEW: ARCHIVED status
+     * Indicates the entity is no longer part of the active project scope.
+     */
+    ARCHIVED: {
+      variant: 'secondary' as const,
+      icon: 'Trash', // Or 'ArchiveBoxXMark' depending on your icon set
+      label: 'Archived',
+      description: 'This item has been removed from the research lifecycle.'
     }
   };
 

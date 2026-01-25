@@ -34,10 +34,11 @@
                 v-model="draftText"
                 :rows="2"
                 placeholder="Enter a precise keyword..."
-                class="w-full text-lg font-medium p-4 resize-none"
-                :class="{ 'border-red-500 ring-red-100': !draftText.trim() }"
+                class="w-full text-lg font-medium p-4"
+                :class="{ 'border-red-500 ring-red-100': !isValid }"
               />
-              <VCluster v-if="!draftText.trim()" gap="xs" align="center" class="text-red-500">
+
+              <VCluster v-if="!isValid" gap="xs" align="center" class="text-red-500">
                 <VIcon name="ExclamationCircle" size="xs" />
                 <VTypography size="xs">Keyword text cannot be empty.</VTypography>
               </VCluster>
@@ -45,49 +46,31 @@
           </template>
         </VFormField>
 
-        <VBox
-          padding="md"
-          rounded="xl"
-          border="all"
-          :class="[statusUI.bgClass, 'transition-all duration-300']"
-        >
-          <VCluster justify="between" align="center" full-width>
-            <VCluster gap="md" align="center">
-              <VBox padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
-                <VIcon :name="statusUI.icon" size="sm" />
-              </VBox>
-              <VStack gap="none">
-                <VTypography size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
-                  Current Status
-                </VTypography>
-                <VTypography size="sm" weight="bold" :class="statusUI.textColor">
-                  {{ initialKeyword.entityStatus }}
-                </VTypography>
-              </VStack>
-            </VCluster>
-
-            <VBox v-if="isTextModified" padding="none" class="text-right">
-              <VTypography size="xs" color="amber-600" italic class="leading-tight">
-                Saving will update content <br/> and persist the choice below.
+        <VStack gap="sm">
+          <VEntityWorkflowStatus :status="initialKeyword.entityStatus">
+            <template v-if="isTextModified" #default>
+              <VTypography size="xs" color="amber-600" italic class="mt-1">
+                Note: Saving will update content and persist the choice below.
               </VTypography>
-            </VBox>
-          </VCluster>
-        </VBox>
+            </template>
+          </VEntityWorkflowStatus>
+        </VStack>
+
       </VStack>
     </VBox>
 
     <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
       <VCluster justify="end" gap="md">
-        <VButton variant="tertiary" @click="handleCancelAndCheck">
+        <VButton variant="tertiary" @click="handleCancel">
           Cancel
         </VButton>
 
-        <template v-if="!isLOCKED">
+        <template v-if="!isLocked">
           <VButton
             variant="secondary"
             icon-name="ArchiveBox"
-            :disabled="!draftText.trim()"
-            @click="handleUnifiedSubmit('ON_HOLD')"
+            :disabled="!isValid"
+            @click="handleSubmit('ON_HOLD')"
           >
             Put On Hold
           </VButton>
@@ -95,8 +78,8 @@
           <VButton
             variant="primary"
             icon-name="LockClosed"
-            :disabled="!draftText.trim()"
-            @click="handleUnifiedSubmit('LOCKED')"
+            :disabled="!isValid"
+            @click="handleSubmit('LOCKED')"
           >
             Lock Keyword
           </VButton>
@@ -106,7 +89,7 @@
           <VButton
             variant="secondary"
             icon-name="ArchiveBox"
-            @click="handleUnifiedSubmit('ON_HOLD')"
+            @click="handleSubmit('ON_HOLD')"
           >
             Unlock & Hold
           </VButton>
@@ -115,7 +98,7 @@
             variant="primary"
             icon-name="DocumentCheck"
             :disabled="!isTextModified"
-            @click="handleUnifiedSubmit('LOCKED')"
+            @click="handleSubmit('LOCKED')"
           >
             Save Changes
           </VButton>
@@ -126,12 +109,16 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * KeywordDetailEditor
+ * Integrated refactor using specialized status molecules.
+ */
 import { computed, ref, watch } from 'vue';
 import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { useInitiativeStore } from '@/stores/initiation';
 
-// Atoms & Molecules
+// Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
@@ -140,7 +127,11 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
+
+// Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VEntityWorkflowStatus from '@/components/molecules/indicators/VEntityWorkflowStatus.vue';
+import VFeasibilityStatus from '@/components/molecules/indicators/VFeasibilityStatus.vue';
 
 const props = defineProps<{
   keywordIndex: number;
@@ -154,64 +145,32 @@ const emit = defineEmits<{
 const initiativeStore = useInitiativeStore();
 const draftText = ref(props.initialKeyword.label);
 
-// Keep draft in sync if external data changes
-watch(() => props.initialKeyword.label, (newVal) => {
-  draftText.value = newVal;
-});
+// Sync draft with external props
+watch(() => props.initialKeyword.label, (val) => (draftText.value = val));
 
-const isLOCKED = computed(() => props.initialKeyword.entityStatus === 'LOCKED');
+// Computed Logic
+const isValid = computed(() => !!draftText.value.trim());
+const isLocked = computed(() => props.initialKeyword.entityStatus === 'LOCKED');
 const isTextModified = computed(() => draftText.value.trim() !== props.initialKeyword.label);
 
 /**
- * UI Configuration Mapping
- * Translates backend entity states into cohesive UI themes.
+ * Persist changes to store
  */
-const statusUI = computed(() => {
-  const status = props.initialKeyword.entityStatus;
-  const config = {
-    LOCKED: {
-      bgClass: 'bg-indigo-50 border-indigo-100',
-      textColor: 'text-indigo-700',
-      iconColor: 'text-indigo-600',
-      icon: 'LockClosed' as const
-    },
-    AI_EXTRACTED: {
-      bgClass: 'bg-amber-50 border-amber-100',
-      textColor: 'text-amber-700',
-      iconColor: 'text-amber-600',
-      icon: 'Sparkles' as const
-    },
-    ON_HOLD: {
-      bgClass: 'bg-gray-50 border-gray-200',
-      textColor: 'text-gray-500',
-      iconColor: 'text-gray-400',
-      icon: 'ArchiveBox' as const
-    },
-    USER_DRAFT: {
-      bgClass: 'bg-white border-gray-200',
-      textColor: 'text-gray-800',
-      iconColor: 'text-gray-600',
-      icon: 'PencilSquare' as const
-    }
-  };
-  return config[status as keyof typeof config] || config.USER_DRAFT;
-});
-
-/**
- * Persists the refined keyword and its new status.
- */
-async function handleUnifiedSubmit(targetStatus: EntityStatus) {
-  const text = draftText.value.trim();
-  if (!text) return;
-  await initiativeStore.createOrUpdateTopicKeywords(props.initialKeyword.id, text, targetStatus);
+async function handleSubmit(targetStatus: EntityStatus) {
+  if (!isValid.value) return;
+  await initiativeStore.createOrUpdateTopicKeywords(
+    props.initialKeyword.id,
+    draftText.value.trim(),
+    targetStatus
+  );
   emit('close-modal');
 }
 
 /**
- * Safety check for unsaved state before closing the editor.
+ * Safety check for dirty state
  */
-function handleCancelAndCheck() {
-  if (isTextModified.value && !window.confirm('Discard unsaved text changes?')) return;
+function handleCancel() {
+  if (isTextModified.value && !window.confirm('Discard unsaved changes?')) return;
   emit('close-modal');
 }
 </script>

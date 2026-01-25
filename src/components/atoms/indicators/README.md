@@ -40,7 +40,7 @@ A wrapper for SVG-based iconography (e.g., Heroicons).
 
 Small status descriptors based on the **Bootstrap Badge** model.
 
-* **Variants**: `primary`, `secondary`, `success`, `danger`, `warning`, `info`.
+* **Variants**: `indigo` | `amber` | `emerald` | `red` | `gray` | `purple` | `blue` | `slate`.
 * **Style**: Supports `pill` (rounded-full) and `outline` modes.
 
 ### 4. VProgressSegment

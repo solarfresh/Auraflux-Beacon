@@ -61,7 +61,7 @@
           :stability-score="initiativeStore.stabilityScore"
           @close-modal="isManagementModalOpen = false"
         />
-        <SingleKeywordDetailEditor
+        <KeywordDetailEditor
           v-else-if="managementModalType === 'keyword'"
           :initial-keyword="editingInitialKeyword!"
           :keyword-index="editingKeywordIndex!"
@@ -99,7 +99,7 @@ import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
-import SingleKeywordDetailEditor from '@/components/organisms/forms/SingleKeywordDetailEditor.vue';
+import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEditor.vue';
 import SingleScopeDetailEditor from '@/components/organisms/forms/SingleScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

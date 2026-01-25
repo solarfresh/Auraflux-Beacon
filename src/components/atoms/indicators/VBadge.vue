@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { BadgeColor } from '@/interfaces/indicators';
 
 /**
  * Props for Badge atom
@@ -20,7 +21,7 @@ import { computed } from 'vue';
  */
 
 const props = withDefaults(defineProps<{
-  variant?: 'indigo' | 'amber' | 'emerald' | 'red' | 'gray' | 'purple';
+  variant?: BadgeColor;
   size?: 'xs' | 'sm' | 'md';
 }>(), {
   variant: 'gray',
@@ -31,13 +32,15 @@ const props = withDefaults(defineProps<{
  * Maps variant prop to Tailwind CSS classes
  */
 const variantClasses = computed(() => {
-  const themes = {
-    indigo: 'bg-indigo-50 text-indigo-700 border border-indigo-100',
-    amber: 'bg-amber-50 text-amber-700 border border-amber-100',
-    emerald: 'bg-emerald-50 text-emerald-700 border border-emerald-100',
-    red: 'bg-red-50 text-red-700 border border-red-100',
-    gray: 'bg-gray-100 text-gray-600 border border-gray-200',
-    purple: 'bg-purple-50 text-purple-700 border border-purple-100'
+const themes: Record<BadgeColor, string> = {
+    indigo:  'bg-indigo-50 text-indigo-700 border-indigo-100',
+    amber:   'bg-amber-50 text-amber-700 border-amber-100',
+    emerald: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+    red:     'bg-red-50 text-red-700 border-red-100',
+    gray:    'bg-gray-100 text-gray-600 border-gray-200',
+    purple:  'bg-purple-50 text-purple-700 border-purple-100',
+    blue:    'bg-blue-50 text-blue-700 border-blue-100',
+    slate:   'bg-slate-100 text-slate-700 border-slate-200'
   };
   return themes[props.variant];
 });
