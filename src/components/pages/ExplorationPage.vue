@@ -127,8 +127,8 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
 import ActionBar from '@/components/molecules/actions/ActionBar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
-import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
-import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
+import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';
+import KnowledgeInterrogationPanel from '@/components/organisms/panels/KnowledgeInterrogationPanel.vue';
 import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';

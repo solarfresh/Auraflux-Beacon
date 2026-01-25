@@ -18,12 +18,11 @@ import { computed } from 'vue';
  * @property {string} variant - The color theme of the badge
  * @property {string} size - The physical scale of the badge
  */
-interface Props {
+
+const props = withDefaults(defineProps<{
   variant?: 'indigo' | 'amber' | 'emerald' | 'red' | 'gray' | 'purple';
   size?: 'xs' | 'sm' | 'md';
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   variant: 'gray',
   size: 'sm'
 });
