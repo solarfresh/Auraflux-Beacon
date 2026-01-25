@@ -3,7 +3,7 @@
     <ThreePaneWorkspaceTemplate>
 
       <template #header>
-        <ProgressTracker
+        <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
@@ -124,7 +124,7 @@ import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspac
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Organisms
-import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
+import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';

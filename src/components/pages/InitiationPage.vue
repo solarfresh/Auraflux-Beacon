@@ -6,7 +6,7 @@
       <!-- Slot: status-tracker (Shows ISP steps) -->
 
       <template #status-tracker>
-        <ProgressTracker
+        <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
@@ -96,7 +96,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
-import ProgressTracker from '@/components/molecules/feedback/ProgressTracker.vue';
+import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
 import SingleKeywordDetailEditor from '@/components/organisms/forms/SingleKeywordDetailEditor.vue';

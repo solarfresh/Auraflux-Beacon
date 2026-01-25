@@ -17,12 +17,12 @@
 
     <template #body>
       <div class="flex flex-col gap-4">
-        <TopicStatusIndicator
+        <VStatusScore
           :stability-score="stabilityScore"
           label="Topic Refinement"
           color="indigo"
         />
-        <ResearchValidation
+        <VStatusCard
           :status="feasibilityStatus"
           :description="getFeasibilityDescription(feasibilityStatus)"
         />
@@ -94,8 +94,8 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 // Molecules
-import ResearchValidation from '@/components/molecules/feedback/ResearchValidation.vue';
-import TopicStatusIndicator from '@/components/molecules/feedback/TopicStatusIndicator.vue';
+import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
+import VStatusScore from '@/components/molecules/indicators/VStatusScore.vue';
 import UnifiedReviewAlert from '@/components/molecules/navigation/UnifiedReviewAlert.vue';
 
 // Specialized Sections
