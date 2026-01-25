@@ -82,6 +82,20 @@ The **Sequential Tracker**. Communicates progress through a multi-stage wizard.
 * **Physical Layer**: `VCluster` > `VIcon` (Step Marker) + `VTypography`.
 * **Usage**: Research initiation steps, Onboarding flows.
 
+### 9. VReflectionStatus
+
+A **Business Molecule**. Specialized feedback for the Reflection Log system.
+
+* **Logic**: Distinguishes between `draft` (Warning) and `committed` (Success) states.
+* **Composition**: `VStatusCard`.
+
+### 10. VEmptyState
+
+A **Navigational Molecule**. Handles the "Zero Data" scenario to prevent user disorientation.
+
+* **Composition**: `VStack` > [`VBox` > `VIcon`, `VTypography` (Title), `Slot` (Description), `Slot` (Actions)].
+* **Key Props**: `icon`, `title`, `description`.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -117,6 +131,8 @@ src/components/molecules/indicators/
 ├── VStatusCard.vue           # Standardized layout (Icon + Title + Body)
 ├── VFeasibilityStatus.vue    # Business: Data quality (was ResearchValidation)
 ├── VEntityWorkflowStatus.vue # Business: Lifecycle (Locked/Draft)
+├── VReflectionStatus.vue     # Business: Log persistence mapping
+├── VEmptyState.vue           # Navigation: Zero-data guidance
 ├── VModal.vue                # High-focus dialog (Overlay)
 ├── VOverlayLoader.vue        # Blocking state feedback
 ├── VStatusScore.vue          # Text + Progress bar (was TopicStatusIndicator)

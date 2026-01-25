@@ -31,7 +31,7 @@
 import { computed, useAttrs } from 'vue';
 
 type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 type BorderToken = 'all' | 'top' | 'bottom' | 'right' | 'none';
 type BackgroundToken = 'white' | 'gray-50' | 'indigo-50' | 'amber-50' | 'transparent';
 

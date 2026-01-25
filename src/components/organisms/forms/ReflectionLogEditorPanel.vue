@@ -8,6 +8,7 @@
             <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
               {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
             </VTypography>
+
             <VBadge :variant="currentDraft.status === 'committed' ? 'emerald' : 'amber'" size="sm">
               {{ currentDraft.status === 'committed' ? 'Committed' : 'Draft' }}
             </VBadge>
@@ -24,13 +25,14 @@
 
       <VBox padding="lg" class="flex-1 overflow-y-auto stable-gutter">
         <VStack gap="xl">
+          <VReflectionStatus :status="currentDraft.status" />
+
           <VFormField id="entry-title" label="Entry Title" required>
             <template #default="{ id }">
               <VInput
                 :id="id"
                 v-model="currentDraft.title"
                 :disabled="!isEditable"
-                required
                 placeholder="e.g., 'Initial Scope Review'..."
               />
             </template>
@@ -39,7 +41,7 @@
           <VFormField
             id="entry-content"
             label="Reflection Content"
-            description="Your thoughts will be saved as a draft unless committed."
+            description="Your thoughts will be saved as a draft unless committed to the log."
           >
             <template #default="{ id }">
               <VTextarea
@@ -47,7 +49,7 @@
                 v-model="currentDraft.content"
                 :placeholder="editorPlaceholder"
                 :disabled="!isEditable"
-                class="flex-1 min-h-[400px] resize-none font-serif leading-relaxed text-gray-800"
+                class="flex-1 min-h-[400px] font-serif leading-relaxed"
               />
             </template>
           </VFormField>
@@ -60,12 +62,10 @@
             <VButton
               v-if="!isNewEntry && !isEditing"
               variant="secondary"
+              icon-name="PencilSquare"
               @click="$emit('enable-edit')"
             >
-              <VCluster gap="xs" align="center">
-                <VIcon name="PencilSquare" size="sm" />
-                <VTypography tag="span">Enable Editing</VTypography>
-              </VCluster>
+              Enable Editing
             </VButton>
 
             <VButton
@@ -87,6 +87,7 @@
             </VButton>
             <VButton
               variant="primary"
+              icon-name="CheckCircle"
               :disabled="!isEditable"
               @click="$emit('save', 'commit')"
             >
@@ -98,17 +99,11 @@
     </template>
 
     <template v-else>
-      <VStack full-height align="center" justify="center" gap="lg" background="gray-50" class="opacity-80">
-        <VBox padding="md" background="white" rounded border="all" class="shadow-sm">
-          <VIcon name="DocumentText" size="lg" color="gray-300" />
-        </VBox>
-        <VStack gap="xs" align="center">
-          <VTypography size="lg" weight="medium" color="gray-900">No Entry Selected</VTypography>
-          <VTypography size="sm" color="gray-500" class="max-w-xs text-center">
-            Select an entry from the list or start a new reflection to document your journey.
-          </VTypography>
-        </VStack>
-      </VStack>
+      <VEmptyState
+        icon="DocumentText"
+        title="No Entry Selected"
+        description="Select an entry from the list or start a new reflection to document your research journey."
+      />
     </template>
   </VBox>
 </template>
@@ -130,6 +125,8 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VReflectionStatus from '@/components/molecules/indicators/VReflectionStatus.vue';
+import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
 
 const props = defineProps<{
   currentDraft: ReflectionLogEntry | null;
@@ -145,5 +142,5 @@ const emit = defineEmits<{
 }>();
 
 const isEditable = computed(() => props.isNewEntry || props.isEditing);
-const editorPlaceholder = "Document your decisions, challenges encountered, and insights gained...";
+const editorPlaceholder = "Document your decisions, challenges encountered, and insights gained during this phase...";
 </script>
