@@ -78,7 +78,7 @@ import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import Text from '@/components/atoms/Text.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Badge from '@/components/atoms/Badge.vue';
-import MasterDetailTemplate from '@/components/organisms/layout/MasterDetailTemplate.vue';
+import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/organisms/layout/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/forms/ReflectionLogEditorPanel.vue';
 
