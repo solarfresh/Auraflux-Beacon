@@ -67,7 +67,7 @@
           :keyword-index="editingKeywordIndex!"
           @close-modal="isManagementModalOpen = false"
         />
-        <SingleScopeDetailEditor
+        <ScopeDetailEditor
           v-else-if="managementModalType === 'scope'"
           :initial-scope-element="editingInitialScope!"
           :scope-index="editingScopeIndex!"
@@ -100,7 +100,7 @@ import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
 import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEditor.vue';
-import SingleScopeDetailEditor from '@/components/organisms/forms/SingleScopeDetailEditor.vue';
+import ScopeDetailEditor from '@/components/organisms/forms/ScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import InitiationSidebar from '@/components/organisms/sidebars/InitiationSidebar.vue';
