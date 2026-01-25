@@ -29,7 +29,7 @@ The universal trigger. It replaces raw `<button>` tags and handles all visual va
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: No Specialized Wrappers.** Do not create or use `IconButton.vue`. Use `<Button iconOnly />` instead.
+> **Rule 1: No Specialized Wrappers.** Do not create or use `IconButton.vue`. Use `<VButton iconOnly />` instead.
 > **Rule 2: Icon Naming.** Use the `iconName` prop with **PascalCase** (e.g., `ChevronRight`) to leverage internal dynamic icon rendering.
 > **Rule 3: Size Coupling.** > - `size="xs"` button inside a list item → `size="4"` (16px) icon.
 > * `size="md"` button → `size="5"` (20px) icon.
@@ -39,9 +39,9 @@ The universal trigger. It replaces raw `<button>` tags and handles all visual va
 ### Correct Implementation Pattern
 
 ```vue
-<Button variant="primary" @click="save">Save Changes</Button>
+<VButton variant="primary" @click="save">Save Changes</VButton>
 
-<Button
+<VButton
   variant="ghost"
   size="sm"
   iconOnly
@@ -49,7 +49,7 @@ The universal trigger. It replaces raw `<button>` tags and handles all visual va
   @click="remove"
 />
 
-<Button variant="outline" iconName="PlusIcon">Add Research</Button>
+<VButton variant="outline" iconName="PlusIcon">Add Research</VButton>
 
 ```
 
@@ -70,7 +70,7 @@ The universal trigger. It replaces raw `<button>` tags and handles all visual va
 
 ```text
 src/components/atoms/actions/
-├── Button.vue         # The exclusive trigger atom (Supports iconOnly)
+├── VButton.vue         # The exclusive trigger atom (Supports iconOnly)
 └── README.md          # You are here
 
 ```

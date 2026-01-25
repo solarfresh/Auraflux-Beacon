@@ -20,7 +20,7 @@
             </VTypography>
           </slot>
 
-          <Button
+          <VButton
             variant="ghost"
             iconOnly
             iconName="XMark"
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, watch } from 'vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 const props = defineProps({
   isOpen: { type: Boolean, required: true },

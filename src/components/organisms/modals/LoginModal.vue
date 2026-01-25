@@ -58,7 +58,7 @@
           </div>
 
           <div class="pt-2">
-            <Button
+            <VButton
               type="submit"
               variant="primary"
               size="lg"
@@ -67,7 +67,7 @@
             >
               <VIcon v-if="isSubmitting" name="ArrowPath" size="sm" class="animate-spin mr-2" />
               {{ isSubmitting ? 'Verifying Account...' : 'Sign In' }}
-            </Button>
+            </VButton>
           </div>
         </form>
       </div>
@@ -87,7 +87,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 
 // Atoms & Molecules
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';

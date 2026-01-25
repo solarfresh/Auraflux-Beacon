@@ -33,7 +33,7 @@
         </VStack>
       </VCluster>
 
-      <Button
+      <VButton
         variant="ghost"
         icon-only
         :icon-name="styles.actionIcon"
@@ -57,7 +57,7 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 

@@ -36,7 +36,7 @@
               {{ data.type }}
             </VBadge>
 
-            <Button
+            <VButton
               variant="tertiary"
               size="xs"
               iconOnly
@@ -104,8 +104,8 @@
 
       <template #footer>
         <div class="flex justify-end gap-3 w-full">
-          <Button variant="tertiary" size="md" @click="isEditModalOpen = false">Cancel</Button>
-          <Button variant="primary" size="md" @click="saveEdit">Apply Changes</Button>
+          <VButton variant="tertiary" size="md" @click="isEditModalOpen = false">Cancel</VButton>
+          <VButton variant="primary" size="md" @click="saveEdit">Apply Changes</VButton>
         </div>
       </template>
     </FullScreenModalTemplate>
@@ -127,7 +127,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 // Atoms & Templates
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';

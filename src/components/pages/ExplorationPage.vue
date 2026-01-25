@@ -30,7 +30,7 @@
           />
 
           <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-1 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-full shadow-2xl z-10">
-            <Button
+            <VButton
               v-for="mode in ['Matrix', 'Causal', 'Radial']"
               :key="mode"
               variant="tertiary"
@@ -40,7 +40,7 @@
               <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
                 {{ mode }}
               </VTypography>
-            </Button>
+            </VButton>
           </div>
         </main>
       </template>
@@ -60,7 +60,7 @@
           @transition-request="handlePhaseTransitionRequest"
         >
           <template #action-button>
-            <Button
+            <VButton
               variant="primary"
               size="lg"
               :disabled="!explorationStore.isExplorationSufficient"
@@ -69,7 +69,7 @@
               <VTypography tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
                 Commit to Formulation
               </VTypography>
-            </Button>
+            </VButton>
           </template>
         </ActionBar>
       </template>
@@ -119,7 +119,7 @@ import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 

@@ -29,7 +29,7 @@
           </VCluster>
         </VStack>
 
-        <Button
+        <VButton
           variant="ghost"
           size="xs"
           icon-only
@@ -85,7 +85,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 const props = defineProps<{
   resource: ResourceItem;

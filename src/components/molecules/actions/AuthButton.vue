@@ -1,16 +1,16 @@
 <template>
-  <Button
+  <VButton
     :variant="isLoggedIn ? 'secondary' : 'primary'"
     size="sm"
     :iconName="isLoggedIn ? 'UserMinus' : 'ArrowRightOnRectangle'"
     @click="handleClick"
   >
     {{ isLoggedIn ? 'Logout' : 'Login' }}
-  </Button>
+  </VButton>
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 /**
  * AuthButton Molecule

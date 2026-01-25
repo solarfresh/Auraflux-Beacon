@@ -2,7 +2,7 @@
   <BaseSectionLayout title="Knowledge Repository">
     <template #header-actions>
       <div class="flex items-center gap-1">
-        <Button
+        <VButton
           variant="ghost"
           size="xs"
           iconOnly
@@ -77,8 +77,8 @@
         </div>
 
         <div class="flex justify-end gap-3 mt-4">
-          <Button variant="ghost" @click="isEditModalOpen = false">Cancel</Button>
-          <Button @click="saveNotes">Save Reflections</Button>
+          <VButton variant="ghost" @click="isEditModalOpen = false">Cancel</VButton>
+          <VButton @click="saveNotes">Save Reflections</VButton>
         </div>
       </div>
     </template>
@@ -90,7 +90,7 @@ import { ref, computed } from 'vue';
 import type { ResourceItem, ResourceSource } from '@/interfaces/knowledge';
 
 // Atoms, Molecules & Layouts
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';

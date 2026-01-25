@@ -7,22 +7,22 @@
     <template #header-extension>
       <div class="px-5 pb-4 border-b border-gray-50">
         <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
-          <Button
+          <VButton
             size="sm"
             class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
             :variant="viewMode === 'all' ? 'primary' : 'ghost'"
             @click="viewMode = 'all'"
           >
             All Nodes
-          </Button>
-          <Button
+          </VButton>
+          <VButton
             size="sm"
             class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
             :variant="viewMode === 'inbox' ? 'primary' : 'ghost'"
             @click="viewMode = 'inbox'"
           >
             Inbox ({{ inboxNodes.length }})
-          </Button>
+          </VButton>
         </div>
       </div>
     </template>
@@ -92,7 +92,7 @@ import type { ID } from '@/interfaces/core';
 // Layout & UI
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 /**

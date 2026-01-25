@@ -44,13 +44,13 @@
         </div>
 
         <div class="flex flex-col gap-4 mt-auto">
-          <Button variant="primary" size="lg" class="w-full bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200" @click="handleAdversaryAction('acknowledge')">
+          <VButton variant="primary" size="lg" class="w-full bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200" @click="handleAdversaryAction('acknowledge')">
             <VTypography tag="span" weight="bold" color="white">Acknowledge Critique</VTypography>
-          </Button>
-          <Button variant="tertiary" size="md" class="w-full border border-red-200 text-red-600 hover:bg-red-50" @click="handleAdversaryAction('add-reflection')">
+          </VButton>
+          <VButton variant="tertiary" size="md" class="w-full border border-red-200 text-red-600 hover:bg-red-50" @click="handleAdversaryAction('add-reflection')">
             <VIcon name="DocumentPlus" size="xs" class="mr-2" />
             Inject Correction Node
-          </Button>
+          </VButton>
         </div>
       </div>
     </transition>
@@ -109,7 +109,7 @@ import { useExplorationStore } from '@/stores/exploration';
 
 // Atoms & Molecules
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';

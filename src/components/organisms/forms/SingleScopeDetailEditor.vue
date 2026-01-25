@@ -104,47 +104,47 @@
 
     <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
       <VCluster justify="end" gap="md">
-        <Button variant="tertiary" @click="handleCancelAndCheck">
+        <VButton variant="tertiary" @click="handleCancelAndCheck">
           Cancel
-        </Button>
+        </VButton>
 
         <template v-if="!isLOCKED">
-          <Button
+          <VButton
             variant="secondary"
             icon-name="ArchiveBox"
             :disabled="!draftValue?.trim()"
             @click="handleUnifiedSubmit('ON_HOLD')"
           >
             Put On Hold
-          </Button>
+          </VButton>
 
-          <Button
+          <VButton
             variant="primary"
             icon-name="LockClosed"
             :disabled="!draftValue?.trim()"
             @click="handleUnifiedSubmit('LOCKED')"
           >
             Lock Scope
-          </Button>
+          </VButton>
         </template>
 
         <template v-else>
-          <Button
+          <VButton
             variant="secondary"
             icon-name="ArchiveBox"
             @click="handleUnifiedSubmit('ON_HOLD')"
           >
             Unlock & Hold
-          </Button>
+          </VButton>
 
-          <Button
+          <VButton
             variant="primary"
             icon-name="DocumentCheck"
             :disabled="!isValueModified"
             @click="handleUnifiedSubmit('LOCKED')"
           >
             Save Changes
-          </Button>
+          </VButton>
         </template>
       </VCluster>
     </VBox>
@@ -162,7 +162,7 @@ import type { ProcessedScope } from '@/interfaces/initiation';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';

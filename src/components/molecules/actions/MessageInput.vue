@@ -10,7 +10,7 @@
       @keyup.enter="handleSend"
     />
 
-    <Button
+    <VButton
       variant="primary"
       size="lg"
       class="flex-shrink-0"
@@ -19,14 +19,14 @@
       @click="handleSend"
     >
       <VIcon name="PaperAirplane" type="solid" size="md" />
-    </Button>
+    </VButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 
 /**

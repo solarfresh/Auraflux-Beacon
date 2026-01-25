@@ -57,7 +57,7 @@
       <VBox padding="md" background="gray-50" border="top">
         <VCluster justify="between" align="center" class="max-w-4xl mx-auto w-full">
           <VCluster gap="sm">
-            <Button
+            <VButton
               v-if="!isNewEntry && !isEditing"
               variant="secondary"
               @click="$emit('enable-edit')"
@@ -66,32 +66,32 @@
                 <VIcon name="PencilSquare" size="sm" />
                 <VTypography tag="span">Enable Editing</VTypography>
               </VCluster>
-            </Button>
+            </VButton>
 
-            <Button
+            <VButton
               v-else-if="!isNewEntry && isEditing"
               variant="tertiary"
               @click="$emit('cancel-edit')"
             >
               Cancel Edit
-            </Button>
+            </VButton>
           </VCluster>
 
           <VCluster gap="md">
-            <Button
+            <VButton
               variant="tertiary"
               :disabled="!isEditable"
               @click="$emit('save', 'draft')"
             >
               Save as Draft
-            </Button>
-            <Button
+            </VButton>
+            <VButton
               variant="primary"
               :disabled="!isEditable"
               @click="$emit('save', 'commit')"
             >
               Commit Entry
-            </Button>
+            </VButton>
           </VCluster>
         </VCluster>
       </VBox>
@@ -126,7 +126,7 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 // Molecules
 import FormField from '@/components/molecules/actions/FormField.vue';

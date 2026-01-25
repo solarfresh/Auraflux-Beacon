@@ -7,7 +7,7 @@
   >
     <template #header-actions>
       <slot name="header-actions">
-        <Button
+        <VButton
           v-if="showNewButton"
           variant="primary"
           size="sm"
@@ -16,7 +16,7 @@
           @click="emit('new-entry')"
         >
           {{ newButtonLabel }}
-        </Button>
+        </VButton>
       </slot>
     </template>
 
@@ -63,7 +63,7 @@
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 

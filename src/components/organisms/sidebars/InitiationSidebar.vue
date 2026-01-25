@@ -66,7 +66,7 @@
         <div class="space-y-2 px-2 pb-4">
           <div class="flex items-center justify-between">
             <VTypography tag="h3" size="sm" weight="bold" color="gray-900">Latest Reflection</VTypography>
-            <Button
+            <VButton
               variant="ghost"
               size="xs"
               iconOnly
@@ -90,7 +90,7 @@ import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfa
 
 // Layout & UI Components
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 // Molecules

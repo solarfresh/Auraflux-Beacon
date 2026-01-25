@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <Button
+      <VButton
         v-if="canAdd"
         variant="ghost"
         size="xs"
@@ -40,7 +40,7 @@
         @click.stop="emit('add')"
       >
         <VIcon name="Plus" size="xs" color="gray-500" />
-      </Button>
+      </VButton>
     </header>
 
     <transition name="section-slide">
@@ -67,7 +67,7 @@
 import { ref, computed } from 'vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.vue';
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';

@@ -1,7 +1,7 @@
 <template>
   <BaseSectionLayout title="Research Scope & Boundaries">
     <template #header-actions>
-      <Button
+      <VButton
         variant="ghost"
         size="xs"
         iconOnly
@@ -18,7 +18,7 @@
         </VTypography>
       </div>
 
-      <Button
+      <VButton
         v-if="unreviewedCount > 0"
         variant="secondary"
         size="xs"
@@ -27,7 +27,7 @@
       >
         <VIcon name="ExclamationCircle" size="xs" color="amber-500" class="mr-1" />
         {{ unreviewedCount }} To Review
-      </Button>
+      </VButton>
     </template>
 
     <template #content>
@@ -72,7 +72,7 @@
           @edit-request="handleScopeEdit"
         />
         <template #footer>
-          <Button
+          <VButton
             v-if="onHoldCount > LIMITS.ON_HOLD && !isViewingAll"
             variant="ghost"
             size="xs"
@@ -80,7 +80,7 @@
             class="self-start"
           >
             View All ({{ onHoldCount - LIMITS.ON_HOLD }} more)
-          </Button>
+          </VButton>
         </template>
       </SectionGroup>
 
@@ -91,7 +91,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';

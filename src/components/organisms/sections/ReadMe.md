@@ -49,7 +49,7 @@ The central asset hub for research materials.
 <template>
   <BaseSectionLayout title="Section Title">
     <template #header-actions>
-      <Button variant="ghost" size="xs" iconOnly iconName="Plus" />
+      <VButton variant="ghost" size="xs" iconOnly iconName="Plus" />
     </template>
 
     <template #stats>

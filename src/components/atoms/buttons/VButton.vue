@@ -21,7 +21,7 @@ import { computed } from 'vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import { ButtonProps } from '@/interfaces/button';
 
-const props = withDefaults(defineProps<ButtonProps>(), {
+const props = withDefaults(defineProps<VButtonProps>(), {
   variant: 'primary',
   size: 'md',
   iconOnly: false,

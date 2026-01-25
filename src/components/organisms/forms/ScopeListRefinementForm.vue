@@ -36,14 +36,14 @@
             </button>
           </div>
 
-          <Button
+          <VButton
             variant="primary"
             size="md"
             @click="addScope"
             :disabled="!newScopeText.trim()"
           >
             Add to Scope
-          </Button>
+          </VButton>
         </div>
       </div>
     </div>
@@ -116,12 +116,12 @@
     </div>
 
     <div class="flex justify-end items-center space-x-3 pt-6 border-t border-gray-100">
-      <Button variant="tertiary" size="md" @click="$emit('cancel')">
+      <VButton variant="tertiary" size="md" @click="$emit('cancel')">
         Cancel
-      </Button>
-      <Button variant="primary" size="md" @click="handleSave">
+      </VButton>
+      <VButton variant="primary" size="md" @click="handleSave">
         Save Scope Changes
-      </Button>
+      </VButton>
     </div>
   </div>
 </template>
@@ -132,7 +132,7 @@ import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VIconButton from '@/components/atoms/IconButton.vue';

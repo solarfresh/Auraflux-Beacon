@@ -12,9 +12,9 @@
           class="flex-1"
           @keyup.enter="addKeyword"
         />
-        <Button variant="primary" size="md" @click="addKeyword">
+        <VButton variant="primary" size="md" @click="addKeyword">
           Add
-        </Button>
+        </VButton>
       </div>
       <VTypography tag="p" size="xs" color="gray-400">
         Keywords help the system narrow down relevant resources and insights.
@@ -77,12 +77,12 @@
     </div>
 
     <div class="flex justify-end items-center space-x-3 pt-6 border-t border-gray-100">
-      <Button variant="tertiary" size="md" @click="$emit('cancel')">
+      <VButton variant="tertiary" size="md" @click="$emit('cancel')">
         Cancel
-      </Button>
-      <Button variant="primary" size="md" @click="handleSave">
+      </VButton>
+      <VButton variant="primary" size="md" @click="handleSave">
         Save Changes
-      </Button>
+      </VButton>
     </div>
   </div>
 </template>
@@ -93,7 +93,7 @@ import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 // Atoms
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VIconButton from '@/components/atoms/IconButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';

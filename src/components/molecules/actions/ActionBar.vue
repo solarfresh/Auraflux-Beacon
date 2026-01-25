@@ -1,6 +1,6 @@
 <template>
   <div class="p-4 bg-white border-t border-indigo-200 flex justify-end items-center shadow-lg">
-    <Button
+    <VButton
       variant="primary"
       size="lg"
       class="px-8 py-3 shadow-xl transition-all duration-300"
@@ -12,13 +12,13 @@
           {{ isTransitioning ? 'Finalizing Data...' : 'Lock & Proceed to Exploration Phase' }}
         </VTypography>
       </div>
-    </Button>
+    </VButton>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import { useWorkflowAuth } from '@/composables/useWorkflowAuth';
 

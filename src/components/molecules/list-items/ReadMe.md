@@ -78,7 +78,7 @@ A lean molecule for switching workspace perspectives.
         <VIcon :name="icon" />
         <VTypography truncate>{{ label }}</VTypography
       </VCluster>
-      <Button variant="ghost" class="opacity-0 group-hover:opacity-100" />
+      <VButton variant="ghost" class="opacity-0 group-hover:opacity-100" />
     </VCluster>
   </VBox>
 </template>

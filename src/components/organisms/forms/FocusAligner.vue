@@ -73,12 +73,12 @@
     </section>
 
     <footer class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
-      <Button variant="tertiary" @click="$emit('close')">
+      <VButton variant="tertiary" @click="$emit('close')">
         <VTypography tag="span" size="sm" color="gray-500">Cancel</VTypography>
-      </Button>
-      <Button variant="primary" @click="handleSave" class="px-8">
+      </VButton>
+      <VButton variant="primary" @click="handleSave" class="px-8">
         <VTypography tag="span" size="sm" weight="bold" color="white">Apply Alignment</VTypography>
-      </Button>
+      </VButton>
     </footer>
 
   </div>
@@ -93,7 +93,7 @@
 import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 

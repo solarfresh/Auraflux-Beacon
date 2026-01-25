@@ -74,10 +74,10 @@
 
     <footer class="p-4 bg-gray-50 border-t border-gray-100 flex-shrink-0">
       <div class="flex justify-end items-center gap-3">
-        <Button variant="tertiary" size="md" @click="emit('close-modal')">
+        <VButton variant="tertiary" size="md" @click="emit('close-modal')">
           Cancel
-        </Button>
-        <Button
+        </VButton>
+        <VButton
           variant="primary"
           size="md"
           :disabled="!isSaveEnabled"
@@ -85,7 +85,7 @@
         >
           <VIcon name="LockClosed" size="sm" class="mr-2" />
           Confirm & Finalize Question
-        </Button>
+        </VButton>
       </div>
     </footer>
   </div>
@@ -96,7 +96,7 @@ import { computed, ref, watch } from 'vue';
 import type { FeasibilityStatus } from '@/interfaces/core';
 
 // Atoms & Molecules
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';

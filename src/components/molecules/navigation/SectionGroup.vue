@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2">
-    <Button
+    <VButton
       v-if="collapsible"
       variant="ghost"
       class="w-full !justify-between !px-0 border-b !rounded-none pb-1 group text-left transition-opacity"
@@ -22,7 +22,7 @@
         size="xs"
         :color="variantClasses.icon"
       />
-    </Button>
+    </VButton>
 
     <div
       v-else
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 

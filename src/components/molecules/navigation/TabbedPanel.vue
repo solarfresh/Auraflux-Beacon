@@ -2,7 +2,7 @@
   <div class="h-full flex flex-col bg-white">
     <div class="flex-shrink-0 border-b border-gray-200">
       <nav class="-mb-px flex space-x-8 px-4" aria-label="Tabs" role="tablist">
-        <Button
+        <VButton
           v-for="tab in tabs"
           :key="tab.id"
           variant="ghost"
@@ -25,7 +25,7 @@
           >
             <slot :name="`tab-${tab.id}-title`">{{ tab.label }}</slot>
           </VTypography>
-        </Button>
+        </VButton>
       </nav>
     </div>
 
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 /**

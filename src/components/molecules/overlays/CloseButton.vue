@@ -1,5 +1,5 @@
 <template>
-  <Button
+  <VButton
     variant="ghost"
     size="sm"
     iconOnly
@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 /**
  * CloseButton Molecule

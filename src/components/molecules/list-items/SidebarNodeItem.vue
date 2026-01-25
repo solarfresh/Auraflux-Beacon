@@ -60,7 +60,7 @@
       </VStack>
 
       <VBox padding="none" class="self-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button
+        <VButton
           variant="ghost"
           size="sm"
           icon-only
@@ -84,7 +84,7 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 
 defineOptions({ inheritAttrs: false });

@@ -57,9 +57,9 @@ A state-aware trigger for session management.
     <template #default="{ id }">
       <VCluster gap="none">
         <VInput :id="id" size="md" class="rounded-r-none" />
-        <Button size="md" variant="primary" class="rounded-l-none">
+        <VButton size="md" variant="primary" class="rounded-l-none">
           Search
-        </Button>
+        </VButton>
       </VCluster>
     </template>
   </FormField>

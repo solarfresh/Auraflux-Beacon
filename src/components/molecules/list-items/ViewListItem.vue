@@ -45,7 +45,7 @@
           class="w-1.5 h-1.5 bg-indigo-500"
         />
 
-        <Button
+        <VButton
           v-if="!isActive"
           variant="ghost"
           size="xs"
@@ -67,7 +67,7 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Button from '@/components/atoms/actions/Button.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 defineOptions({ inheritAttrs: false });
 

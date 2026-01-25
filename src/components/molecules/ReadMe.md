@@ -57,7 +57,7 @@ We follow a strict semantic palette across all molecules:
 <div class="flex items-center gap-3 p-2 rounded-md hover:bg-indigo-50">
   <VIcon name="Beaker" color="indigo-500" />
   <VTypography weight="medium">Experiment 01</VTypography
-  <Button variant="ghost" size="xs" iconName="Trash" />
+  <VButton variant="ghost" size="xs" iconName="Trash" />
 </div>
 
 ```
