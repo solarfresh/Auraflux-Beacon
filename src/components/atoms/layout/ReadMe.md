@@ -1,12 +1,17 @@
 # Atoms: Layout
 
-Layout atoms are the structural "bones" and "skin" of the application. They are responsible for spacing, containment, and alignment. By using these components, we ensure that the design system's spacing tokens are enforced and that business logic components remain layout-agnostic.
+Layout atoms are the structural primitives of the application. They are responsible for containment, spacing, and alignment. These components replace all raw HTML layout tags (e.g., `div`, `section`, `header`) to ensure design tokens are strictly enforced.
 
 ## 🧭 Core Principles
 
-* **No Native Layout Tags**: Use `Box`, `Stack`, and `Cluster` instead of `<div>`, `<header>`, `<section>`, etc.
-* **Margin-Free Components**: Individual atoms and molecules should not have external margins. Spacing is always managed by the parent Layout atom.
-* **Semantic Structure**: Use the `tag` prop to maintain HTML5 accessibility (e.g., `<Box tag="aside">`) while keeping design system control.
+* **No Native Layout Tags**: Use `Box`, `Stack`, and `Cluster` exclusively for structural needs.
+* **Attribute Inheritance**: All layout atoms are configured with `inheritAttrs: false` (or managed via `$attrs`) to allow seamless merging of external classes without manual computed logic.
+* **Margin-Free**: Individual components should never have external margins. Spacing is always managed by the parent `Stack` or `Cluster` using the `gap` prop.
+* **Skin vs. Bones**:
+* **Skin (`Box`)**: Handles the surface properties (Padding, Border, Background).
+* **Bones (`Stack`, `Cluster`)**: Handles the distribution of children (Vertical/Horizontal gaps).
+
+
 
 ---
 
@@ -14,30 +19,30 @@ Layout atoms are the structural "bones" and "skin" of the application. They are 
 
 ### 1. Box
 
-The foundational container. Handles internal padding, backgrounds, and borders.
+The universal container. Use it as the "Skin" of your UI.
 
-* **Usage**: Use as the outer shell for any section or panel.
-* **Key Props**: `padding`, `background`, `border`, `shadow`, `tag`.
+* **Usage**: Wraps content that needs internal padding, borders, or specific backgrounds.
+* **Key Props**: `padding`, `background`, `border`, `tag` (semantic HTML).
 
 ### 2. Stack
 
-A vertical layout engine (Flex-column).
+Vertical layout engine (Flex-column).
 
-* **Usage**: Use for stacking elements like form fields, list items, or paragraphs.
-* **Key Props**: `gap`, `align` (horizontal), `justify` (vertical).
+* **Usage**: Used for vertical rhythm between items (e.g., list items, form fields).
+* **Key Props**: `gap`, `align` (horizontal alignment), `justify`.
 
 ### 3. Cluster
 
-A horizontal layout engine (Flex-row).
+Horizontal layout engine (Flex-row).
 
-* **Usage**: Use for toolbars, navigation links, or aligning icons with text.
-* **Key Props**: `gap`, `align` (vertical), `justify` (horizontal), `wrap`.
+* **Usage**: Used for aligning elements side-by-side (e.g., header actions, icon + text).
+* **Key Props**: `gap`, `align` (vertical alignment), `justify`, `wrap`.
 
 ### 4. Spacer
 
-A utility for flexible growth or fixed gaps.
+The "Push" utility.
 
-* **Usage**: Use with `flex` to push elements to opposite sides of a container.
+* **Usage**: Use with the `flex` prop to push elements to opposite sides of a container or create fixed gaps.
 * **Key Props**: `size`, `flex`, `axis`.
 
 ---
@@ -45,44 +50,40 @@ A utility for flexible growth or fixed gaps.
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: The "Skin & Bones" Pattern.** A common pattern is a `Box` (skin) wrapping a `Stack` or `Cluster` (bones).
-> **Rule 2: Avoid Pixel Pushing.** Never use arbitrary Tailwind classes like `mt-[17px]`. Only use the provided `xs`, `sm`, `md`, `lg`, `xl` tokens within Layout atoms.
-> **Rule 3: Truncation Context.** When using `Cluster` with text that might overflow, ensure the text container has `min-w-0` to allow the `truncate` utility to function correctly.
+> **Rule 1: Semantic Over Style.** Always use the `tag` prop on `Box` to render proper HTML5 elements (`header`, `footer`, `aside`) while maintaining design system styles.
+> **Rule 2: Gap Over Margin.** Never use `mt-4` or `mb-2`. Wrap the items in a `Stack` and use `gap="md"`.
+> **Rule 3: Class Merging.** Since layout atoms support attribute inheritance, you can pass custom classes directly. The component will handle the merging logic internally.
 
 ### Correct Composition Pattern
 
 ```vue
-<Box tag="header" padding="sidebar-header" border="bottom">
-  <Cluster justify="between">
-    <Cluster gap="sm">
-      <Icon name="Beaker" />
-      <Text weight="bold">Research Lab</Text>
-    </Cluster>
-    <Button variant="ghost" size="xs" iconOnly iconName="XMark" />
-  </Cluster>
-</Box>
+<Box tag="aside" padding="md" background="white" border="right">
+  <Stack gap="lg">
+    <Text size="xl" weight="bold">Navigation</Text>
 
-<Stack fullHeight>
-  <Box>Top Content</Box>
-  <Spacer flex />
-  <Box padding="md" background="gray-50">
-    <Button variant="primary" fullWidth>Finish</Button>
-  </Box>
-</Stack>
+    <Cluster gap="sm">
+      <Icon name="Home" />
+      <Text>Dashboard</Text>
+    </Cluster>
+  </Stack>
+</Box>
 
 ```
 
 ---
 
-## 🎨 Spacing Tokens (Shared)
+## 🎨 Spacing Tokens
 
-| Token | Pixels | Tailwind Class | Usage Context |
+Layout components use a standardized spacing scale to ensure vertical and horizontal rhythm.
+
+| Token | Pixels | Tailwind Utility | Context |
 | --- | --- | --- | --- |
-| `xs` | 4px | `gap-1 / p-1` | Tight clusters, small icons |
-| `sm` | 8px | `gap-2 / p-2` | List item internals |
-| `md` | 16px | `gap-4 / p-4` | Standard component spacing |
-| `lg` | 24px | `gap-6 / p-6` | Section margins |
-| `xl` | 32px | `gap-8 / p-8` | Large page gutters |
+| `none` | 0px | `p-0 / gap-0` | Flush alignment |
+| `xs` | 4px | `p-1 / gap-1` | Tight clusters (e.g., Icon + Label) |
+| `sm` | 8px | `p-2 / gap-2` | List item internals |
+| `md` | 16px | `p-4 / gap-4` | Default component spacing |
+| `lg` | 24px | `p-6 / gap-6` | Section padding / Large gaps |
+| `xl` | 32px | `p-8 / gap-8` | Page gutters |
 
 ---
 
@@ -90,10 +91,10 @@ A utility for flexible growth or fixed gaps.
 
 ```text
 src/components/atoms/layout/
-├── Box.vue         # Containment & Surface
-├── Cluster.vue     # Horizontal distribution
-├── Spacer.vue      # Flexible/Fixed spacing
-├── Stack.vue       # Vertical distribution
+├── Box.vue         # Containment, Padding & Background
+├── Cluster.vue     # Horizontal spacing & alignment
+├── Spacer.vue      # Flexible/Fixed spacing gaps
+├── Stack.vue       # Vertical spacing & alignment
 └── README.md       # You are here
 
 ```

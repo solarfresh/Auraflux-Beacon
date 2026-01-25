@@ -1,107 +1,96 @@
 <template>
-  <aside
-    class="flex flex-col overflow-hidden transition-all duration-200 shadow-sm"
-    :class="$attrs.class"
+  <BaseSidebarLayout
+    :title="title"
+    :item-count="itemCount"
+    :is-empty="isEmpty"
+    class="shadow-sm"
   >
-    <header class="flex-shrink-0 z-10 sticky top-0 bg-inherit/95 backdrop-blur-sm border-b border-gray-100">
-      <div class="pt-6 pb-4 px-5">
-        <div class="flex items-center justify-between">
-          <div class="flex items-baseline gap-2">
-            <Text tag="h2" size="xl" weight="bold" color="gray-900">
-              {{ title }}
-            </Text>
-            <Text
-              v-if="itemCount !== undefined"
-              tag="span"
-              size="sm"
-              weight="medium"
-              color="gray-400"
-            >
-              ({{ itemCount }})
-            </Text>
-          </div>
+    <template #header-actions>
+      <slot name="header-actions">
+        <Button
+          v-if="showNewButton"
+          variant="primary"
+          size="sm"
+          icon-name="Plus"
+          :disabled="disableNewButton"
+          @click="emit('new-entry')"
+        >
+          {{ newButtonLabel }}
+        </Button>
+      </slot>
+    </template>
 
-          <slot name="header-actions">
-            <Button
-              v-if="showNewButton"
-              variant="primary"
-              size="sm"
-              icon-name="Plus"
-              :disabled="disableNewButton"
-              @click="emit('new-entry')"
-            >
-              {{ newButtonLabel }}
-            </Button>
-          </slot>
-        </div>
-      </div>
-
+    <template #header-extension>
       <slot name="header-extension" />
-    </header>
+    </template>
 
-    <div
-      class="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-2"
-      :class="bodyClass"
-    >
-      <slot name="list-items" />
-
-      <div
-        v-if="isEmpty"
-        class="flex flex-col items-center justify-center py-16 px-6 text-center"
+    <template #body>
+      <Box
+        padding="xs"
+        v-bind="$attrs"
       >
-        <slot name="empty-state">
-          <Icon name="Inbox" size="lg" color="gray-300" class="mb-3" />
+        <Stack gap="sm">
+          <slot name="list-items" />
+        </Stack>
+      </Box>
+    </template>
+
+    <template #empty-state>
+      <slot name="empty-state">
+        <Stack align="center" justify="center" gap="sm" class="py-16 px-6">
+          <Icon name="Inbox" size="lg" color="gray-300" />
           <Text size="sm" color="gray-500">
             No items found in {{ title.toLowerCase() }}.
           </Text>
-        </slot>
-      </div>
-    </div>
+        </Stack>
+      </slot>
+    </template>
 
-    <footer v-if="$slots.footer" class="flex-shrink-0 mt-auto border-t border-gray-100">
+    <template #footer>
       <slot name="footer" />
-    </footer>
-  </aside>
+    </template>
+  </BaseSidebarLayout>
 </template>
 
 <script setup lang="ts">
-import Text from '@/components/atoms/data-display/Text.vue';
+/**
+ * MasterListPanel (Organism)
+ * Optimized for list-driven selection patterns.
+ * * * ARCHITECTURAL CHANGE:
+ * Removed 'bodyClass' prop. External classes are now caught by $attrs
+ * and applied directly to the internal Box to prevent array nesting.
+ */
+import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
+import Box from '@/components/atoms/layout/Box.vue';
+import Stack from '@/components/atoms/layout/Stack.vue';
 import Button from '@/components/atoms/actions/Button.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 
-/**
- * MasterListPanel: Optimized for Master-Detail navigation patterns.
- * Best used inside Modals or Admin views where a list-driven selection
- * triggers a detail view on the right.
- */
+// We disable attribute inheritance on the root so we can
+// manually bind $attrs to the specific internal Box container.
+defineOptions({
+  inheritAttrs: false
+});
 
-const props = withDefaults(defineProps<{
+interface Props {
   title: string;
   itemCount?: number;
   isEmpty?: boolean;
-  /** UI control for the default "New" button */
   showNewButton?: boolean;
   newButtonLabel?: string;
   disableNewButton?: boolean;
-  /** Custom classes for the scrollable list container */
-  bodyClass?: string;
-}>(), {
+}
+
+const props = withDefaults(defineProps<Props>(), {
   itemCount: undefined,
   isEmpty: false,
   showNewButton: true,
   newButtonLabel: 'New Entry',
   disableNewButton: false,
-  bodyClass: '',
 });
 
 const emit = defineEmits<{
   (e: 'new-entry'): void;
 }>();
 </script>
-
-<style scoped>
-/* Scoped styles kept minimal, relying on global scrollbar-gutter */
-aside {
-  scrollbar-gutter: stable;
-}
-</style>

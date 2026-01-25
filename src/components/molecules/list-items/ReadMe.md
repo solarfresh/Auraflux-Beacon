@@ -1,88 +1,102 @@
 # Molecules: List Items
 
-List Items are repetitive building blocks used to represent data entities within sidebars, feeds, or search results. They translate raw data into interactive, status-aware rows.
+List items are specialized molecules designed to represent data entities within sidebars, feeds, or master-detail panels. They act as the interactive bridge between raw data (interfaces) and the UI layout.
 
 ## 🧭 Design Principles
 
-* **Visual Density**: Items must remain compact (baseline `p-2` or `p-3`) to allow users to scan large sets of data.
-* **Semantic Signaling**: Use color tokens, **Badges**, and **Icons** to communicate data quality, source types, and entity status at a glance.
-* **Hover Affordance**: All list items must provide a subtle background shift or shadow transition on hover to indicate they are interactive.
-* **Action Encapsulation**: Secondary actions (like "Edit" or "Delete") are hidden by default and revealed via `group-hover` to reduce visual noise.
+* **Atomic Structure**: Every list item must use a `Box` atom as its root. This ensures that internal padding, borders, and backgrounds are managed through design tokens rather than magic strings.
+* **Gap-Driven Spacing**: Items never carry external margins (`m-`, `mt-`, `mb-`). Vertical or horizontal spacing between items is strictly managed by the parent container's `Stack` or `Cluster` gap props.
+* **Contextual Feedback**: Items must provide clear visual cues for `isActive` (selection), `hover` (affordance), and `groundedness` (data quality/AI alerts).
+* **Attribute Flattening**: All list item molecules use `inheritAttrs: false` and bind `$attrs` to the root `Box`. This prevents recursive class nesting (e.g., `['p-2', ['p-2']]`) and ensures a single layer of CSS classes in the DOM.
 
 ---
 
 ## 🛠 Component Catalog
 
-### 1. KeywordListItem
+### 1. ReflectionLogListItem
 
-Visualizes the status of specific research keywords.
+Visualizes research journal entries. Optimizes for chronological scanning.
 
-* **States**: Maps `LOCKED` (Indigo), `AI_EXTRACTED` (Amber), and `ON_HOLD` (Gray) statuses.
-* **Composition**: `Icon` + `Text` (Label) + `Button[xs]`.
+* **Composition**: `Box` > `Stack` > [`Cluster` (Date/Badge), `Text` (Title), `Text` (Excerpt)].
+* **Key Prop**: `isActive` (Indigo highlight).
 
-### 2. ScopeListItem
+### 2. KeywordListItem
 
-A horizontal row for defining research boundaries (Inclusions/Exclusions) and rationales.
+Represents research keywords with status-based coloring.
 
-* **Logic**: Optimizes for longer strings of text using `truncate` and `line-clamp`.
-* **Composition**: `Badge` (Status) + `Text` (Boundary description).
+* **States**: `LOCKED`, `AI_EXTRACTED`, `ON_HOLD`, `USER_DRAFT`.
+* **Composition**: `Box` > `Cluster` > [`Icon`, `Stack` (Label/Status), `Button` (Action)].
 
 ### 3. ResourceListItem
 
-Represents collected research materials like PDFs, URLs, or Academic papers.
+Represents collected materials (PDFs, URLs, etc.). Supports Drag & Drop.
 
-* **Key Features**: Supports **Drag & Drop** via `draggable="true"`.
-* **Metadata**: Displays `sourceType` (e.g., Academic, Social) and `format` (e.g., PDF, URL) using semantic **Badges**.
-* **Indicators**: Shows a dedicated `Icon` if `userNotes` are present.
+* **Key Features**: Draggable surface, metadata badges for `sourceType` and `format`, and visual indicators for `userNotes`.
+* **Composition**: `Box` > `Stack` > [`Cluster` (Header), `Text` (Summary), `Cluster` (Footer Tags)].
 
-### 4. SidebarNodeItem
+### 4. ScopeListItem
+
+Visualizes inclusion/exclusion criteria for research boundaries.
+
+* **Composition**: `Box` > `Cluster` > [`Icon`, `Cluster` (Label + Rationale), `Icon` (Chevron)].
+* **Key Logic**: Uses `min-w-0` and `truncate` on the rationale to prevent layout breaking.
+
+### 5. SidebarNodeItem
 
 A complex navigation molecule for the Conceptual Map.
 
-* **Key Features**: Implements **Anti-Hallucination Jitter** for low-groundedness data and **Solidity Lights** for evidence-backed nodes.
+* **Advanced Features**: Implements **Anti-Hallucination Jitter** animation for low-groundedness data and **Solidity Lights** for evidence-backed nodes.
 
-### 5. ViewListItem
+### 6. ViewListItem
 
-A structural navigation item for switching perspectives or workspaces.
+A lean molecule for switching workspace perspectives.
 
-* **Style**: Uses a bold `isActive` state with `indigo` highlights.
+* **Composition**: `Box` > `Cluster` > [`Icon`, `Text`, `StatusDot`].
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: Truncation First.** Titles and rationales must use the `truncate` utility class combined with `min-w-0` on parent containers to prevent layout breaking.
-> **Rule 2: Summary Clamping.** Use `line-clamp-2` for AI-generated summaries to maintain a consistent vertical footprint across lists.
-> **Rule 3: Drag & Drop.** For `ResourceListItem`, ensure the `handleDragStart` method correctly serializes the resource object into `application/json` or a custom format for the Canvas.
+> **Rule 1: No Raw Tags.** Replace all `<li>` or `<div>` containers with the `Box` atom.
+> **Rule 2: Proper Truncation.** When displaying titles or long text, use the `truncate` prop on the `Text` atom and ensure the parent `Cluster` has `min-w-0 flex-1`.
+> **Rule 3: Hover Visibility.** Action buttons (like Edit/Delete) should be wrapped in a container with `opacity-0 group-hover:opacity-100` to maintain high visual density when not focused.
 
-### Standard Resource Row Pattern
+### Standard "Industrial" Item Pattern
 
 ```vue
-<li class="group flex flex-col p-3 border rounded-lg hover:shadow-md transition">
-   <div class="flex justify-between items-start">
-      <Text weight="bold" class="truncate" />
-      <Button variant="ghost" size="xs" class="opacity-0 group-hover:opacity-100" />
-   </div>
-   <div class="flex gap-1 mt-1">
-      <Badge variant="indigo" size="xs">{{ sourceType }}</Badge>
-      <Badge variant="gray" size="xs">{{ format }}</Badge>
-   </div>
-</li>
+<template>
+  <Box
+    padding="sm"
+    rounded
+    clickable
+    v-bind="$attrs"
+    :background="isActive ? 'indigo-50' : 'white'"
+  >
+    <Cluster justify="between" align="center" full-width>
+      <Cluster gap="md" class="min-w-0 flex-1">
+        <Icon :name="icon" />
+        <Text truncate>{{ label }}</Text>
+      </Cluster>
+      <Button variant="ghost" class="opacity-0 group-hover:opacity-100" />
+    </Cluster>
+  </Box>
+</template>
 
 ```
 
 ---
 
-## 📂 Directory Progress
+## 📂 Directory Structure
 
 ```text
 src/components/molecules/list-items/
 ├── KeywordListItem.vue
-├── ResourceListItem.vue   # Added: Supports drag & drop + Source/Format badges
+├── ReflectionLogListItem.vue
+├── ResourceListItem.vue
 ├── ScopeListItem.vue
 ├── SidebarNodeItem.vue
 ├── ViewListItem.vue
-└── README.md              # You are here
+└── README.md
 
 ```

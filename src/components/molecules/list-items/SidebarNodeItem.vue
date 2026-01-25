@@ -1,32 +1,43 @@
 <template>
-  <div
+  <Box
+    padding="xs"
+    rounded
+    clickable
+    v-bind="$attrs"
+    :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
-      'group relative flex items-start gap-3 p-2 rounded-md transition-all cursor-pointer border-2',
-      isActive
-        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-        : 'bg-transparent border-transparent hover:bg-gray-50',
-      // Cognitive Alert: Anti-hallucination jitter
-      node.groundedness < 4 ? 'animate-jitter border-red-500 bg-red-50' : ''
+      'relative border-2 transition-all duration-200 group',
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50',
+      // Anti-hallucination Jitter logic
+      { 'animate-jitter border-red-500 bg-red-50': node.groundedness < 4 }
     ]"
     @click="emit('select', node.id)"
     @mouseenter="emit('hover', node.id)"
     @mouseleave="emit('hover', null)"
   >
-    <div class="relative flex-shrink-0 mt-1.5">
-      <div
-        :class="[
-          'w-3 h-3 rounded-full transition-shadow duration-500',
-          solidityClass,
-          node.solidity === 'PULSING' ? 'animate-pulse' : ''
-        ]"
-      ></div>
-      <div class="absolute -top-1.5 -right-1.5 bg-white rounded-full p-0.5 shadow-sm border border-gray-100">
-        <Icon :name="typeIcon" :color="typeColor" size="xs" />
-      </div>
-    </div>
+    <Cluster align="start" gap="md" full-width>
 
-    <div class="flex-grow min-w-0">
-      <div class="flex items-center justify-between gap-2 mb-0.5">
+      <Box padding="none" class="relative mt-1.5 flex-shrink-0">
+        <div
+          :class="[
+            'w-3 h-3 rounded-full transition-all duration-500',
+            solidityStyles.colorClass,
+            solidityStyles.shadowClass,
+            { 'animate-pulse': node.solidity === 'PULSING' }
+          ]"
+        />
+        <Box
+          padding="none"
+          background="white"
+          rounded-full
+          border="all"
+          class="absolute -top-1.5 -right-1.5 p-0.5 shadow-sm"
+        >
+          <Icon :name="typeIcon" :color="typeColor" size="xs" />
+        </Box>
+      </Box>
+
+      <Stack gap="none" class="flex-1 min-w-0">
         <Text
           tag="span"
           size="xs"
@@ -36,37 +47,47 @@
         >
           {{ node.type }}
         </Text>
-      </div>
 
-      <Text
-        tag="p"
-        :size="isActive ? 'base' : 'sm'"
-        :weight="isActive ? 'bold' : 'medium'"
-        :color="isActive ? 'gray-900' : 'gray-700'"
-        class="truncate leading-tight"
-      >
-        {{ node.label }}
-      </Text>
-    </div>
+        <Text
+          tag="p"
+          :size="isActive ? 'base' : 'sm'"
+          :weight="isActive ? 'bold' : 'medium'"
+          :color="isActive ? 'gray-900' : 'gray-700'"
+          class="truncate leading-tight"
+        >
+          {{ node.label }}
+        </Text>
+      </Stack>
 
-    <div class="flex-shrink-0 self-center opacity-0 group-hover:opacity-100 transition-opacity">
-      <Button
-        variant="ghost"
-        size="sm"
-        iconOnly
-        iconName="ArrowRightCircle"
-        @click.stop="emit('teleport', node.id)"
-      />
-    </div>
-  </div>
+      <Box padding="none" class="self-center opacity-0 group-hover:opacity-100 transition-opacity">
+        <Button
+          variant="ghost"
+          size="sm"
+          icon-only
+          icon-name="ArrowRightCircle"
+          @click.stop="emit('teleport', node.id)"
+        />
+      </Box>
+    </Cluster>
+  </Box>
 </template>
 
 <script setup lang="ts">
+/**
+ * SidebarNodeItem (Molecule)
+ * Represents a node in the Conceptual Map with groundedness indicators.
+ * NOTE: inheritAttrs: false ensures $attrs doesn't break the animation Box.
+ */
 import { computed } from 'vue';
+import Box from '@/components/atoms/layout/Box.vue';
+import Stack from '@/components/atoms/layout/Stack.vue';
+import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   node: ConceptualNode;
@@ -79,7 +100,6 @@ const emit = defineEmits<{
   (e: 'teleport', nodeId: string, canvasId?: string): void;
 }>();
 
-// --- MAPPING: Consistent PascalCase Icon Names ---
 const typeIcon = computed(() => {
   const iconMap: Record<string, string> = {
     focus: 'MapPin',
@@ -106,14 +126,23 @@ const typeColor = computed(() => {
   return colorMap[props.node.type] || 'gray-500';
 });
 
-const solidityClass = computed(() => {
+const solidityStyles = computed(() => {
   switch (props.node.solidity) {
     case 'SOLID':
-      return 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]';
+      return {
+        colorClass: 'bg-emerald-500',
+        shadowClass: 'shadow-[0_0_8px_rgba(16,185,129,0.4)]'
+      };
     case 'PULSING':
-      return 'bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.3)]';
+      return {
+        colorClass: 'bg-amber-400',
+        shadowClass: 'shadow-[0_0_8px_rgba(251,191,36,0.3)]'
+      };
     default:
-      return 'bg-gray-300';
+      return {
+        colorClass: 'bg-gray-300',
+        shadowClass: ''
+      };
   }
 });
 </script>

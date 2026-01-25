@@ -10,47 +10,22 @@
         @new-entry="handleNewEntry"
       >
         <template #list-items>
-          <div
+          <ReflectionLogListItem
             v-for="entry in logEntries"
             :key="entry.id"
-            :class="[
-              'p-4 mb-2 rounded-xl border transition-all duration-200 cursor-pointer',
-              selectedEntryId === entry.id
-                ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-                : 'bg-white border-gray-100 hover:border-gray-300 hover:shadow-sm'
-            ]"
+            :entry="entry"
+            :is-active="selectedEntryId === entry.id"
             @click="handleSelectEntry(entry)"
-          >
-            <div class="flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <Text tag="span" size="xs" weight="bold" :color="selectedEntryId === entry.id ? 'indigo-600' : 'gray-400'">
-                  {{ formatDate(entry.updatedAt) }}
-                </Text>
-                <Badge v-if="entry.status === 'draft'" variant="amber" size="xs">Draft</Badge>
-              </div>
-
-              <Text
-                tag="p"
-                size="sm"
-                weight="semibold"
-                :color="selectedEntryId === entry.id ? 'indigo-900' : 'gray-900'"
-                class="truncate"
-              >
-                {{ entry.title || "Untitled Reflection" }}
-              </Text>
-
-              <Text tag="p" size="xs" color="gray-500" class="truncate line-clamp-1 italic">
-                {{ entry.content || "No content provided." }}
-              </Text>
-            </div>
-          </div>
+          />
         </template>
 
         <template #empty-state>
-          <div class="py-12 px-6 flex flex-col items-center">
-            <Icon name="DocumentPlus" size="lg" color="gray-200" class="mb-4" />
-            <Text size="sm" color="gray-400">Start your first reflection log to track your research journey.</Text>
-          </div>
+          <Stack align="center" gap="md" class="py-12 px-6 text-center">
+            <Icon name="DocumentPlus" size="lg" color="gray-200" />
+            <Text size="sm" color="gray-400">
+              Start your first reflection log to track your research journey.
+            </Text>
+          </Stack>
         </template>
       </MasterListPanel>
     </template>
@@ -70,16 +45,23 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * ReflectionLogForm (Page-level Organism / Template Controller)
+ * Orchestrates the Master-Detail flow for research reflections.
+ */
 import { ref, computed, watch } from 'vue';
 import { useInitiativeStore } from '@/stores/initiation';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
-// Components
+// Atoms & Layout
 import Text from '@/components/atoms/data-display/Text.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import Stack from '@/components/atoms/layout/Stack.vue';
+
+// Molecules & Organisms
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/organisms/layout/MasterListPanel.vue';
+import ReflectionLogListItem from '@/components/molecules/list-items/ReflectionLogListItem.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/forms/ReflectionLogEditorPanel.vue';
 
 const initiativeStore = useInitiativeStore();

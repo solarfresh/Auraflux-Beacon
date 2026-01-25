@@ -1,91 +1,103 @@
 <template>
-  <aside
-    class="flex flex-col overflow-hidden transition-all duration-200"
-    :class="$attrs.class"
+  <Box
+    tag="aside"
+    background="white"
+    border="right"
+    class="flex flex-col h-full overflow-hidden transition-all duration-200"
   >
-    <header
+    <Box
       v-if="$slots.header || title"
-      class="flex-shrink-0 z-10 sticky top-0"
+      tag="header"
+      padding="sidebar-header"
+      border="bottom"
+      class="flex-shrink-0 z-10 sticky top-0 bg-white/80 backdrop-blur-md"
     >
       <slot name="header">
-        <div class="pt-6 pb-4 px-5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-baseline gap-2">
-              <Text tag="h2" size="xl" weight="bold" color="gray-900">
-                {{ title }}
-              </Text>
-              <Text
-                v-if="itemCount !== undefined"
-                tag="span"
-                size="sm"
-                weight="medium"
-                color="gray-400"
-              >
-                ({{ itemCount }})
-              </Text>
-            </div>
+        <Cluster justify="between" align="center" full-width>
+          <Cluster gap="sm" align="baseline" class="min-w-0">
+            <Text tag="h2" size="xl" weight="bold" color="gray-900" truncate>
+              {{ title }}
+            </Text>
+            <Text v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="gray-400">
+              ({{ itemCount }})
+            </Text>
+          </Cluster>
+          <Cluster gap="xs">
             <slot name="header-actions" />
-          </div>
-        </div>
+          </Cluster>
+        </Cluster>
       </slot>
-
       <slot name="header-extension" />
-    </header>
+    </Box>
 
-    <div
+    <Box
+      tag="div"
       class="flex-1 overflow-y-auto overflow-x-hidden transition-all"
-      :class="[
-        bodyClass,
-        { 'stable-gutter': useStableGutter }
-      ]"
+      :class="{ 'stable-gutter': useStableGutter }"
     >
-      <slot name="body" />
+      <slot v-if="!isEmpty" name="body" />
 
-      <div v-if="isEmpty" class="flex flex-col items-center justify-center">
+      <Stack
+        v-else
+        full-height
+        align="center"
+        justify="center"
+        gap="md"
+        class="p-8 text-center"
+      >
         <slot name="empty-state" />
-      </div>
-    </div>
+      </Stack>
+    </Box>
 
-    <footer v-if="$slots.footer" class="flex-shrink-0 mt-auto">
+    <Box
+      v-if="$slots.footer"
+      tag="footer"
+      padding="md"
+      background="gray-50"
+      border="top"
+      class="mt-auto"
+    >
       <slot name="footer" />
-    </footer>
-  </aside>
+    </Box>
+  </Box>
 </template>
 
 <script setup lang="ts">
+/**
+ * BaseSidebarLayout (Organism)
+ * A clean structural shell.
+ * Removed 'bodyClass' prop to prevent recursive array nesting ['p-2', ['p-2']].
+ */
+import Box from '@/components/atoms/layout/Box.vue';
+import Stack from '@/components/atoms/layout/Stack.vue';
+import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
 
-/**
- * BaseSidebarLayout: A presentational "shell" component.
- * It handles the vertical stacking of Header, Body, and Footer
- * while remaining agnostic to business logic and specific visual themes.
- */
-withDefaults(defineProps<{
-  /** The main title shown in the default header */
+interface Props {
   title?: string;
-  /** Numerical badge shown next to title */
   itemCount?: number;
-  /** Controls visibility of the empty state slot */
   isEmpty?: boolean;
-  /** CSS classes to be applied specifically to the scrollable body container */
-  bodyClass?: string;
-  /** Whether to reserve space for the scrollbar to prevent layout shift */
   useStableGutter?: boolean;
-}>(), {
+}
+
+withDefaults(defineProps<Props>(), {
   title: '',
   itemCount: undefined,
   isEmpty: false,
-  bodyClass: '',
   useStableGutter: true,
 });
 </script>
 
 <style scoped>
-/**
- * Utility to prevent Layout Shift (Jank) when scrollbars appear.
- * Relies on the global CSS scrollbar-gutter configuration.
- */
 .stable-gutter {
   scrollbar-gutter: stable;
+}
+/* Industrial scrollbar */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 5px;
+}
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color: #E5E7EB;
+  border-radius: 10px;
 }
 </style>

@@ -1,49 +1,70 @@
 <template>
-  <li
+  <Box
+    tag="div"
+    padding="sm"
+    rounded
+    border="all"
+    clickable
+    v-bind="$attrs"
+    :background="styles.bgColor"
     :class="[
-      'flex items-center justify-between p-3 border transition duration-150 cursor-pointer',
-      'rounded-md', // Corrected from rounded-lg to match system standard
-      styles.classes
+      'transition-all duration-150',
+      styles.borderColor
     ]"
     @click="handleEditRequest"
   >
-    <div class="flex items-start space-x-3">
-      <Icon
-        :name="styles.icon"
-        type="outline"
+    <Cluster justify="between" align="center" full-width>
+      <Cluster gap="md" align="start">
+        <Icon
+          :name="styles.icon"
+          type="outline"
+          size="sm"
+          :color="styles.iconColor"
+          class="mt-1 flex-shrink-0"
+        />
+
+        <Stack gap="none">
+          <Text tag="span" size="base" weight="medium" :color="styles.iconColor">
+            {{ keyword.label }}
+          </Text>
+          <Text tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
+            {{ styles.secondaryText }}
+          </Text>
+        </Stack>
+      </Cluster>
+
+      <Button
+        variant="ghost"
+        icon-only
+        :icon-name="styles.actionIcon"
         size="sm"
-        :color="styles.iconColor"
-        class="mt-1 flex-shrink-0"
+        :aria-label="`Edit keyword ${keyword.label}`"
+        class="flex-shrink-0"
       />
-
-      <div class="flex flex-col">
-        <Text tag="span" size="base" weight="medium" :color="styles.iconColor">
-          {{ keyword.label }}
-        </Text>
-        <Text tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
-          {{ styles.secondaryText }}
-        </Text>
-      </div>
-    </div>
-
-    <Button
-      variant="ghost"
-      iconOnly
-      :iconName="styles.actionIcon"
-      size="sm"
-      :aria-label="`Edit keyword ${keyword.label}`"
-      class="flex-shrink-0"
-    />
-  </li>
+    </Cluster>
+  </Box>
 </template>
 
 <script setup lang="ts">
+/**
+ * KeywordListItem (Molecule)
+ * Refactored to use 100% Layout Atoms.
+ * No external margins; no raw HTML tags.
+ */
 import { computed } from 'vue';
+import Box from '@/components/atoms/layout/Box.vue';
+import Stack from '@/components/atoms/layout/Stack.vue';
+import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import type { EntityStatus } from '@/interfaces/core';
-import type { ProcessedKeyword, TopicKeywordStyle } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/initiation';
+
+// Explicitly disable inheritance to control the binding point in the template
+defineOptions({
+  inheritAttrs: false
+});
 
 const props = defineProps<{
   keyword: ProcessedKeyword;
@@ -54,14 +75,15 @@ const emit = defineEmits<{
   (e: 'edit-request', payload: { index: number, keyword: ProcessedKeyword }): void;
 }>();
 
-/** * Computes styling tokens based on entity status.
- * All colors are aligned with the Tailwind palette provided by Atoms.
+/** * Refactored Style Mapping
+ * Now maps directly to Atom Props (bgColor) and Tailwind tokens.
  */
-const styles = computed<TopicKeywordStyle>(() => {
+const styles = computed(() => {
   switch (props.keyword.entityStatus as EntityStatus) {
     case 'LOCKED':
       return {
-          classes: 'bg-indigo-50 border-indigo-200 hover:bg-indigo-100',
+          bgColor: 'indigo-50' as const,
+          borderColor: 'border-indigo-200 hover:border-indigo-300',
           icon: 'LockClosed',
           iconColor: 'indigo-600',
           secondaryText: 'LOCKED (Committed)',
@@ -69,7 +91,8 @@ const styles = computed<TopicKeywordStyle>(() => {
       };
     case 'AI_EXTRACTED':
       return {
-          classes: 'bg-yellow-50 border-yellow-200 hover:bg-yellow-100',
+          bgColor: 'gray-50' as const, // Standardized to system palette
+          borderColor: 'border-yellow-200 hover:border-yellow-300',
           icon: 'Sparkles',
           iconColor: 'yellow-600',
           secondaryText: 'AI Capture (Needs Review)',
@@ -77,7 +100,8 @@ const styles = computed<TopicKeywordStyle>(() => {
       };
     case 'ON_HOLD':
       return {
-          classes: 'bg-gray-100 border-gray-300 hover:bg-gray-200',
+          bgColor: 'gray-100' as const,
+          borderColor: 'border-gray-300 hover:border-gray-400',
           icon: 'ArchiveBox',
           iconColor: 'gray-500',
           secondaryText: 'ON HOLD (Excluded)',
@@ -86,7 +110,8 @@ const styles = computed<TopicKeywordStyle>(() => {
     case 'USER_DRAFT':
     default:
       return {
-          classes: 'bg-white border-gray-200 hover:bg-gray-50',
+          bgColor: 'white' as const,
+          borderColor: 'border-gray-200 hover:border-gray-300',
           icon: 'ClipboardDocumentList',
           iconColor: 'gray-600',
           secondaryText: 'User Draft (Pending Lock)',

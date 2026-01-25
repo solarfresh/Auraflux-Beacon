@@ -1,59 +1,79 @@
 <template>
-  <li
+  <Box
+    tag="div"
     role="button"
+    padding="sm"
+    rounded
+    border="all"
+    clickable
+    v-bind="$attrs"
+    :background="uiStyles.bgColor"
     :class="[
-      'flex items-center justify-between p-3 border transition duration-150 cursor-pointer',
-      'rounded-md', // System standard rounding
-      statusClasses.container,
+      'transition-all duration-150 group',
+      uiStyles.borderColor,
+      { 'opacity-60 grayscale': scopeElement.entityStatus === 'ON_HOLD' }
     ]"
     @click="handleEdit"
   >
-    <div class="flex items-center space-x-3 w-full min-w-0">
-      <Icon
-        :name="statusClasses.icon"
-        type="outline"
-        size="xs"
-        :color="statusClasses.iconColor"
-        class="flex-shrink-0"
-      />
+    <Cluster justify="between" align="center" gap="md" full-width>
 
-      <div class="flex items-center min-w-0 flex-1 gap-2">
-        <Text
-          tag="span"
-          size="sm"
-          weight="bold"
-          :color="statusClasses.labelColor"
+      <Cluster align="center" gap="sm" class="min-w-0 flex-1">
+        <Icon
+          :name="uiStyles.icon"
+          type="outline"
+          size="xs"
+          :color="uiStyles.accentColor"
           class="flex-shrink-0"
-        >
-          {{ scopeElement.label }}:
-        </Text>
+        />
 
-        <Text
-          tag="span"
-          size="sm"
-          :color="statusClasses.valueColor"
-          class="truncate"
-        >
-          {{ scopeElement.rationale || 'No rationale provided' }}
-        </Text>
-      </div>
-    </div>
+        <Cluster gap="xs" align="center" class="min-w-0 flex-1">
+          <Text
+            tag="span"
+            size="sm"
+            weight="bold"
+            :color="uiStyles.labelColor"
+            class="flex-shrink-0"
+          >
+            {{ scopeElement.label }}:
+          </Text>
 
-    <Icon
-      name="ChevronRight"
-      size="sm"
-      :color="statusClasses.iconColor"
-      class="flex-shrink-0 ml-2 opacity-50 group-hover:opacity-100 transition-opacity"
-    />
-  </li>
+          <Text
+            tag="span"
+            size="sm"
+            :color="uiStyles.valueColor"
+            class="truncate"
+          >
+            {{ scopeElement.rationale || 'No rationale provided' }}
+          </Text>
+        </Cluster>
+      </Cluster>
+
+      <Icon
+        name="ChevronRight"
+        size="sm"
+        :color="uiStyles.accentColor"
+        class="flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
+      />
+    </Cluster>
+  </Box>
 </template>
 
 <script setup lang="ts">
+/**
+ * ScopeListItem (Molecule)
+ * Standardized for research boundaries (Inclusion/Exclusion criteria).
+ * Refactored to eliminate manual flex/spacing in favor of Cluster/Box.
+ */
 import { computed } from 'vue';
+import Box from '@/components/atoms/layout/Box.vue';
+import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
-import type { EntityStatus } from '@/interfaces/core'
+import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedScope } from '@/interfaces/initiation';
+
+// Ensure attributes are applied to the Box and not the root wrapper
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   scopeElement: ProcessedScope;
@@ -64,44 +84,47 @@ const emit = defineEmits<{
   (e: 'edit-request', payload: { index: number, scope: ProcessedScope }): void;
 }>();
 
-/** * Centralized Style Mapping
- * Returns standardized color names compatible with Atom props.
+/** * Logic: Maps EntityStatus to Atomic Props and Token Colors
  */
-const statusClasses = computed(() => {
+const uiStyles = computed(() => {
   const status: EntityStatus = props.scopeElement.entityStatus;
 
   switch (status) {
     case 'AI_EXTRACTED':
     case 'USER_DRAFT':
       return {
-        container: 'border-yellow-200 bg-yellow-50 hover:bg-yellow-100',
+        bgColor: 'gray-50' as const, // Standardized fallback for yellow hues
+        borderColor: 'border-yellow-200 hover:border-yellow-300',
         labelColor: 'yellow-800',
         valueColor: 'yellow-700',
-        iconColor: 'yellow-600',
+        accentColor: 'yellow-600',
         icon: status === 'AI_EXTRACTED' ? 'LightBulb' : 'PencilSquare',
       };
     case 'LOCKED':
       return {
-        container: 'border-indigo-200 bg-indigo-50 hover:bg-indigo-100',
+        bgColor: 'indigo-50' as const,
+        borderColor: 'border-indigo-200 hover:border-indigo-300',
         labelColor: 'indigo-800',
         valueColor: 'indigo-600',
-        iconColor: 'indigo-500',
+        accentColor: 'indigo-500',
         icon: 'LockClosed',
       };
     case 'ON_HOLD':
       return {
-        container: 'border-gray-200 bg-gray-50 opacity-60 grayscale',
+        bgColor: 'gray-50' as const,
+        borderColor: 'border-gray-200',
         labelColor: 'gray-500',
         valueColor: 'gray-400',
-        iconColor: 'gray-400',
+        accentColor: 'gray-400',
         icon: 'ArchiveBox',
       };
     default:
       return {
-        container: 'border-gray-200 bg-white hover:bg-gray-50',
+        bgColor: 'white' as const,
+        borderColor: 'border-gray-200 hover:border-gray-300',
         labelColor: 'gray-800',
         valueColor: 'gray-600',
-        iconColor: 'gray-500',
+        accentColor: 'gray-500',
         icon: 'InformationCircle',
       };
   }

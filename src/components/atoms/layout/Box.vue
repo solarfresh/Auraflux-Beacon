@@ -2,30 +2,25 @@
   <component
     :is="tag"
     :class="[
-      // Base styles
+      // 1. Base Atomic Styles
       'box-border',
-
-      // Padding tokens
       paddingClasses[padding],
-
-      // Background colors
       backgroundClasses[background],
-
-      // Border tokens
       borderClasses[border],
-
-      // Shadow tokens
       shadow && shadowClasses[shadow],
-
-      // Border Radius
       rounded && 'rounded-md',
       roundedFull && 'rounded-full',
 
-      // Accessibility & Layout
+      // 2. Behavioral Classes
       {
         'overflow-hidden': clip,
         'cursor-pointer': clickable
-      }
+      },
+
+      // 3. External Class Injection
+      // By placing $attrs.class last, we allow external styles
+      // to potentially override base styles if necessary.
+      $attrs.class
     ]"
   >
     <slot />
@@ -35,33 +30,41 @@
 <script setup lang="ts">
 /**
  * Box Atom
- * The fundamental container component. Handles padding, borders,
- * and backgrounds using standardized design tokens.
+ * The primary structural container for the design system.
+ * Handles padding, backgrounds, and borders using tokens.
+ * * NOTE: This component uses fallthrough attributes ($attrs)
+ * to automatically merge external classes with internal tokens.
  */
+
+// Disable attribute inheritance on the root if you want precise control,
+// but here we leverage it for seamless class merging.
+defineOptions({
+  inheritAttrs: false
+});
 
 type Spacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'sidebar-header';
 type Color = 'transparent' | 'white' | 'gray-50' | 'gray-100' | 'indigo-50';
-type Border = 'none' | 'all' | 'bottom' | 'right';
+type Border = 'none' | 'all' | 'bottom' | 'right' | 'top';
 type Shadow = 'sm' | 'md' | 'lg';
 
 interface Props {
-  /** The HTML tag to render for semantic correctness */
+  /** Semantic HTML tag */
   tag?: string;
-  /** Internal spacing */
+  /** Internal padding token */
   padding?: Spacing;
   /** Background color token */
   background?: Color;
   /** Border configuration */
   border?: Border;
-  /** Elevation shadow */
+  /** Shadow elevation */
   shadow?: Shadow;
-  /** Whether to apply standard rounded corners */
+  /** Standard corner radius (6px/md) */
   rounded?: boolean;
-  /** Whether to apply pill-style corners */
+  /** Pill-shaped radius */
   roundedFull?: boolean;
-  /** Whether to hide overflow content */
+  /** Overflow clipping */
   clip?: boolean;
-  /** Visual affordance for interactivity */
+  /** Pointer cursor affordance */
   clickable?: boolean;
 }
 
@@ -77,7 +80,6 @@ const props = withDefaults(defineProps<Props>(), {
   clickable: false,
 });
 
-// Mapping props to Tailwind utility classes
 const paddingClasses: Record<Spacing, string> = {
   none: 'p-0',
   xs: 'p-2',
@@ -101,6 +103,7 @@ const borderClasses: Record<Border, string> = {
   all: 'border border-gray-200',
   bottom: 'border-b border-gray-100',
   right: 'border-r border-gray-200',
+  top: 'border-t border-gray-100',
 };
 
 const shadowClasses: Record<Shadow, string> = {

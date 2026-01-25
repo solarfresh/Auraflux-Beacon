@@ -1,62 +1,76 @@
 <template>
-  <li
+  <Box
+    tag="div"
     role="button"
     :aria-selected="isActive"
-    @click="$emit('select')"
+    padding="sm"
+    rounded
+    border="all"
+    clickable
+    v-bind="$attrs"
+    :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
-      'group flex items-center justify-between p-2.5 transition-all duration-150 cursor-pointer border',
-      'rounded-md', // System standard
-      isActive
-        ? 'bg-indigo-50 border-indigo-200 shadow-sm'
-        : 'bg-transparent border-transparent hover:bg-gray-50'
+      'transition-all duration-150 group',
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50'
     ]"
+    @click="$emit('select')"
   >
-    <div class="flex items-center min-w-0 flex-1 space-x-3">
-      <Icon
-        name="ViewColumns"
-        size="sm"
-        :color="isActive ? 'indigo-600' : 'gray-400'"
-        class="flex-shrink-0"
-      />
+    <Cluster justify="between" align="center" full-width>
 
-      <Text
-        tag="span"
-        size="sm"
-        :weight="isActive ? 'bold' : 'medium'"
-        :color="isActive ? 'indigo-900' : 'gray-700'"
-        class="truncate"
-      >
-        {{ name }}
-      </Text>
-    </div>
+      <Cluster gap="md" align="center" class="min-w-0 flex-1">
+        <Icon
+          name="ViewColumns"
+          size="sm"
+          :color="isActive ? 'indigo-600' : 'gray-400'"
+          class="flex-shrink-0"
+        />
 
-    <div class="flex items-center">
-      <div
-        v-if="isActive"
-        class="w-1.5 h-1.5 rounded-full bg-indigo-500 mr-1"
-      ></div>
+        <Text
+          tag="span"
+          size="sm"
+          :weight="isActive ? 'bold' : 'medium'"
+          :color="isActive ? 'indigo-900' : 'gray-700'"
+          class="truncate"
+        >
+          {{ name }}
+        </Text>
+      </Cluster>
 
-      <Button
-        v-if="!isActive"
-        variant="ghost"
-        size="xs"
-        iconOnly
-        iconName="ChevronRight"
-        class="opacity-0 group-hover:opacity-100 transition-opacity"
-      />
-    </div>
-  </li>
+      <Cluster gap="xs" align="center">
+        <Box
+          v-if="isActive"
+          padding="none"
+          rounded-full
+          background="indigo-50"
+          class="w-1.5 h-1.5 bg-indigo-500"
+        />
+
+        <Button
+          v-if="!isActive"
+          variant="ghost"
+          size="xs"
+          icon-only
+          icon-name="ChevronRight"
+          class="opacity-0 group-hover:opacity-100 transition-opacity"
+        />
+      </Cluster>
+    </Cluster>
+  </Box>
 </template>
 
 <script setup lang="ts">
+/**
+ * ViewListItem (Molecule)
+ * Refactored to use Atom Layouts for consistent navigation spacing.
+ */
+import Box from '@/components/atoms/layout/Box.vue';
+import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
-/**
- * ViewListItem Molecule
- * Used for switching between different workspace views or perspectives.
- */
+defineOptions({ inheritAttrs: false });
+
 defineProps<{
   /** Name of the view (e.g., "Table View", "Grid View") */
   name: string;
