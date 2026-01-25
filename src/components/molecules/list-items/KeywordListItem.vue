@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     tag="div"
     padding="sm"
     rounded
@@ -13,8 +13,8 @@
     ]"
     @click="handleEditRequest"
   >
-    <Cluster justify="between" align="center" full-width>
-      <Cluster gap="md" align="start">
+    <VCluster justify="between" align="center" full-width>
+      <VCluster gap="md" align="start">
         <VIcon
           :name="styles.icon"
           type="outline"
@@ -23,15 +23,15 @@
           class="mt-1 flex-shrink-0"
         />
 
-        <Stack gap="none">
+        <VStack gap="none">
           <VTypography tag="span" size="base" weight="medium" :color="styles.iconColor">
             {{ keyword.label }}
           </VTypography>
           <VTypography tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
             {{ styles.secondaryVTypography }}
           </VTypography>
-        </Stack>
-      </Cluster>
+        </VStack>
+      </VCluster>
 
       <Button
         variant="ghost"
@@ -41,8 +41,8 @@
         :aria-label="`Edit keyword ${keyword.label}`"
         class="flex-shrink-0"
       />
-    </Cluster>
-  </Box>
+    </VCluster>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -52,9 +52,9 @@
  * No external margins; no raw HTML tags.
  */
 import { computed } from 'vue';
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';

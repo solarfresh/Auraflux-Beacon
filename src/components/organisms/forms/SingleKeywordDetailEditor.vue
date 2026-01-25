@@ -1,24 +1,24 @@
 <template>
-  <Box tag="section" background="white" class="flex flex-col h-full overflow-hidden">
+  <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
 
-    <Box padding="lg" border="bottom" class="flex-shrink-0">
-      <Cluster gap="md" align="center">
-        <Box padding="sm" background="indigo-50" rounded="xl" class="text-indigo-600 shadow-sm">
+    <VBox padding="lg" border="bottom" class="flex-shrink-0">
+      <VCluster gap="md" align="center">
+        <VBox padding="sm" background="indigo-50" rounded="xl" class="text-indigo-600 shadow-sm">
           <VIcon name="PencilSquare" size="md" />
-        </Box>
-        <Stack gap="none">
+        </VBox>
+        <VStack gap="none">
           <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
             Refine Keyword
           </VTypography>
           <VTypography size="xs" color="gray-500">
             Precisely define this core concept to guide AI exploration.
           </VTypography>
-        </Stack>
-      </Cluster>
-    </Box>
+        </VStack>
+      </VCluster>
+    </VBox>
 
-    <Box tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
-      <Stack gap="xl">
+    <VBox tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
+      <VStack gap="xl">
 
         <FormField id="keyword-input" label="Keyword Text">
           <template #hint>
@@ -28,7 +28,7 @@
           </template>
 
           <template #default="{ id }">
-            <Stack gap="xs">
+            <VStack gap="xs">
               <Textarea
                 :id="id"
                 v-model="draftText"
@@ -37,47 +37,47 @@
                 class="w-full text-lg font-medium p-4 resize-none"
                 :class="{ 'border-red-500 ring-red-100': !draftText.trim() }"
               />
-              <Cluster v-if="!draftText.trim()" gap="xs" align="center" class="text-red-500">
+              <VCluster v-if="!draftText.trim()" gap="xs" align="center" class="text-red-500">
                 <VIcon name="ExclamationCircle" size="xs" />
                 <VTypography size="xs">Keyword text cannot be empty.</VTypography>
-              </Cluster>
-            </Stack>
+              </VCluster>
+            </VStack>
           </template>
         </FormField>
 
-        <Box
+        <VBox
           padding="md"
           rounded="xl"
           border="all"
           :class="[statusUI.bgClass, 'transition-all duration-300']"
         >
-          <Cluster justify="between" align="center" full-width>
-            <Cluster gap="md" align="center">
-              <Box padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
+          <VCluster justify="between" align="center" full-width>
+            <VCluster gap="md" align="center">
+              <VBox padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
                 <VIcon :name="statusUI.icon" size="sm" />
-              </Box>
-              <Stack gap="none">
+              </VBox>
+              <VStack gap="none">
                 <VTypography size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
                   Current Status
                 </VTypography>
                 <VTypography size="sm" weight="bold" :class="statusUI.textColor">
                   {{ initialKeyword.entityStatus }}
                 </VTypography>
-              </Stack>
-            </Cluster>
+              </VStack>
+            </VCluster>
 
-            <Box v-if="isTextModified" padding="none" class="text-right">
+            <VBox v-if="isTextModified" padding="none" class="text-right">
               <VTypography size="xs" color="amber-600" italic class="leading-tight">
                 Saving will update content <br/> and persist the choice below.
               </VTypography>
-            </Box>
-          </Cluster>
-        </Box>
-      </Stack>
-    </Box>
+            </VBox>
+          </VCluster>
+        </VBox>
+      </VStack>
+    </VBox>
 
-    <Box padding="md" background="gray-50" border="top" class="flex-shrink-0">
-      <Cluster justify="end" gap="md">
+    <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
+      <VCluster justify="end" gap="md">
         <Button variant="tertiary" @click="handleCancelAndCheck">
           Cancel
         </Button>
@@ -120,9 +120,9 @@
             Save Changes
           </Button>
         </template>
-      </Cluster>
-    </Box>
-  </Box>
+      </VCluster>
+    </VBox>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -132,9 +132,9 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { useInitiativeStore } from '@/stores/initiation';
 
 // Atoms & Molecules
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';

@@ -62,9 +62,9 @@ Atoms do not fetch data or hold global state (Pinia). They receive data via prop
 
 ```vue
 <template>
-  <Box tag="aside" padding="md" background="white" border="right">
+  <VBox tag="aside" padding="md" background="white" border="right">
 
-    <Stack gap="lg">
+    <VStack gap="lg">
 
       <VTypography tag="h2" size="xl" weight="bold">Research Panel</VTypography
 
@@ -72,9 +72,9 @@ Atoms do not fetch data or hold global state (Pinia). They receive data via prop
         Create New Topic
       </Button>
 
-    </Stack>
+    </VStack>
 
-  </Box>
+  </VBox>
 </template>
 
 ```

@@ -52,18 +52,18 @@ A state-aware trigger for session management.
 ### Standard Industrial Pattern
 
 ```vue
-<Stack gap="sm" v-bind="$attrs">
+<VStack gap="sm" v-bind="$attrs">
   <FormField id="search" label="Global Search">
     <template #default="{ id }">
-      <Cluster gap="none">
+      <VCluster gap="none">
         <Input :id="id" size="md" class="rounded-r-none" />
         <Button size="md" variant="primary" class="rounded-l-none">
           Search
         </Button>
-      </Cluster>
+      </VCluster>
     </template>
   </FormField>
-</Stack>
+</VStack>
 
 ```
 

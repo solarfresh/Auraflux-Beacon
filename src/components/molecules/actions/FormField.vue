@@ -1,6 +1,6 @@
 <template>
-  <Stack gap="xs" v-bind="$attrs" class="w-full">
-    <Cluster v-if="label" justify="between" align="center">
+  <VStack gap="xs" v-bind="$attrs" class="w-full">
+    <VCluster v-if="label" justify="between" align="center">
       <VTypography
         tag="label"
         :for="id"
@@ -13,9 +13,9 @@
       </VTypography>
 
       <slot name="hint" />
-    </Cluster>
+    </VCluster>
 
-    <Box padding="none" class="relative">
+    <VBox padding="none" class="relative">
       <slot :id="id" :is-disabled="disabled" />
 
       <transition
@@ -32,7 +32,7 @@
           {{ error }}
         </VTypography>
       </transition>
-    </Box>
+    </VBox>
 
     <VTypography
       v-if="description && !error"
@@ -42,7 +42,7 @@
     >
       {{ description }}
     </VTypography>
-  </Stack>
+  </VStack>
 </template>
 
 <script setup lang="ts">
@@ -51,9 +51,9 @@
  * A structural wrapper for form controls to ensure consistent
  * labeling, error states, and spacing across the application.
  */
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {

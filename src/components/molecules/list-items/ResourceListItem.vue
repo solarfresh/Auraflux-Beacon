@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     padding="sm"
     rounded
     border="all"
@@ -9,9 +9,9 @@
     class="group cursor-grab shadow-sm hover:shadow-md transition-shadow active:cursor-grabbing"
     @dragstart="handleDragStart"
   >
-    <Stack gap="sm">
-      <Cluster justify="between" align="start" gap="sm">
-        <Stack gap="none" class="flex-1 min-w-0">
+    <VStack gap="sm">
+      <VCluster justify="between" align="start" gap="sm">
+        <VStack gap="none" class="flex-1 min-w-0">
           <VTypography
             tag="h4"
             size="sm"
@@ -23,11 +23,11 @@
             {{ resource.label }}
           </VTypography>
 
-          <Cluster gap="xs" class="mt-1">
+          <VCluster gap="xs" class="mt-1">
             <VBadge :variant="sourceVariant" size="xs">{{ resource.sourceType }}</VBadge>
             <VBadge variant="gray" size="xs">{{ resource.format }}</VBadge>
-          </Cluster>
-        </Stack>
+          </VCluster>
+        </VStack>
 
         <Button
           variant="ghost"
@@ -37,15 +37,15 @@
           class="opacity-0 group-hover:opacity-100 transition-opacity"
           @click.stop="$emit('edit', resource)"
         />
-      </Cluster>
+      </VCluster>
 
       <VTypography tag="p" size="xs" color="gray-600" class="line-clamp-2 leading-relaxed">
         <VTypography tag="span" weight="bold" color="gray-900">Summary: </VTypography>
         {{ resource.summary || 'No distillation available.' }}
       </VTypography>
 
-      <Cluster justify="between" align="center">
-        <Cluster gap="xs">
+      <VCluster justify="between" align="center">
+        <VCluster gap="xs">
           <VBadge
             v-for="keyword in resource.keywords.slice(0, 2)"
             :key="keyword"
@@ -57,14 +57,14 @@
           <VTypography v-if="resource.keywords.length > 2" tag="span" size="xs" color="gray-400">
             +{{ resource.keywords.length - 2 }}
           </VTypography>
-        </Cluster>
+        </VCluster>
 
-        <Box v-if="resource.userNotes" padding="none" title="Has user notes">
+        <VBox v-if="resource.userNotes" padding="none" title="Has user notes">
           <VIcon name="DocumentVTypography" size="xs" color="amber-500" />
-        </Box>
-      </Cluster>
-    </Stack>
-  </Box>
+        </VBox>
+      </VCluster>
+    </VStack>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -77,9 +77,9 @@ import { computed } from 'vue';
 import type { ResourceItem } from '@/interfaces/knowledge';
 
 // Layout Atoms
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 
 // Data Display Atoms
 import VTypography from '@/components/atoms/indicators/VTypography.vue';

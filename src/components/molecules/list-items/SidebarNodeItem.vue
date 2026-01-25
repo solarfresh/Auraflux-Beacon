@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     padding="xs"
     rounded
     clickable
@@ -15,9 +15,9 @@
     @mouseenter="emit('hover', node.id)"
     @mouseleave="emit('hover', null)"
   >
-    <Cluster align="start" gap="md" full-width>
+    <VCluster align="start" gap="md" full-width>
 
-      <Box padding="none" class="relative mt-1.5 flex-shrink-0">
+      <VBox padding="none" class="relative mt-1.5 flex-shrink-0">
         <div
           :class="[
             'w-3 h-3 rounded-full transition-all duration-500',
@@ -26,7 +26,7 @@
             { 'animate-pulse': node.solidity === 'PULSING' }
           ]"
         />
-        <Box
+        <VBox
           padding="none"
           background="white"
           rounded-full
@@ -34,10 +34,10 @@
           class="absolute -top-1.5 -right-1.5 p-0.5 shadow-sm"
         >
           <VIcon :name="typeIcon" :color="typeColor" size="xs" />
-        </Box>
-      </Box>
+        </VBox>
+      </VBox>
 
-      <Stack gap="none" class="flex-1 min-w-0">
+      <VStack gap="none" class="flex-1 min-w-0">
         <VTypography
           tag="span"
           size="xs"
@@ -57,9 +57,9 @@
         >
           {{ node.label }}
         </VTypography>
-      </Stack>
+      </VStack>
 
-      <Box padding="none" class="self-center opacity-0 group-hover:opacity-100 transition-opacity">
+      <VBox padding="none" class="self-center opacity-0 group-hover:opacity-100 transition-opacity">
         <Button
           variant="ghost"
           size="sm"
@@ -67,9 +67,9 @@
           icon-name="ArrowRightCircle"
           @click.stop="emit('teleport', node.id)"
         />
-      </Box>
-    </Cluster>
-  </Box>
+      </VBox>
+    </VCluster>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -79,9 +79,9 @@
  * NOTE: inheritAttrs: false ensures $attrs doesn't break the animation Box.
  */
 import { computed } from 'vue';
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';

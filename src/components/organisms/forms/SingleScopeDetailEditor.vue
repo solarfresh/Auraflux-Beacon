@@ -1,10 +1,10 @@
 <template>
-  <Box tag="section" background="white" class="flex flex-col h-full overflow-hidden">
+  <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
 
-    <Box padding="lg" border="bottom" class="flex-shrink-0">
-      <Cluster justify="between" align="center">
-        <Cluster gap="md" align="center">
-          <Box
+    <VBox padding="lg" border="bottom" class="flex-shrink-0">
+      <VCluster justify="between" align="center">
+        <VCluster gap="md" align="center">
+          <VBox
             padding="sm"
             rounded="xl"
             class="shadow-sm"
@@ -12,21 +12,21 @@
             :class="initialScopeElement.boundaryType === 'INCLUSION' ? 'text-emerald-600' : 'text-rose-600'"
           >
             <VIcon :name="initialScopeElement.boundaryType === 'INCLUSION' ? 'PlusCircle' : 'MinusCircle'" size="md" />
-          </Box>
-          <Stack gap="none">
+          </VBox>
+          <VStack gap="none">
             <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
               Refine Scope: {{ initialScopeElement.label }}
             </VTypography>
             <VBadge :variant="initialScopeElement.boundaryType === 'INCLUSION' ? 'emerald' : 'red'" size="xs">
               {{ initialScopeElement.boundaryType }} CRITERIA
             </VBadge>
-          </Stack>
-        </Cluster>
-      </Cluster>
-    </Box>
+          </VStack>
+        </VCluster>
+      </VCluster>
+    </VBox>
 
-    <Box tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
-      <Stack gap="xl">
+    <VBox tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
+      <VStack gap="xl">
 
         <FormField id="scope-value-input" label="Boundary Specification">
           <template #hint>
@@ -36,7 +36,7 @@
           </template>
 
           <template #default="{ id }">
-            <Stack gap="xs">
+            <VStack gap="xs">
               <Textarea
                 :id="id"
                 v-model="draftValue"
@@ -45,65 +45,65 @@
                 class="w-full text-md font-medium leading-relaxed p-4"
                 :class="{ 'border-red-500 ring-red-100': !draftValue?.trim() }"
               />
-              <Cluster v-if="!draftValue?.trim()" gap="xs" align="center" class="text-red-500">
+              <VCluster v-if="!draftValue?.trim()" gap="xs" align="center" class="text-red-500">
                 <VIcon name="ExclamationCircle" size="xs" />
                 <VTypography size="xs">Specification cannot be empty.</VTypography>
-              </Cluster>
-            </Stack>
+              </VCluster>
+            </VStack>
           </template>
         </FormField>
 
-        <Box
+        <VBox
           padding="md"
           rounded="xl"
           border="all"
           :class="[statusUI.bgClass, 'transition-all']"
         >
-          <Cluster gap="md" align="center">
-            <Box padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
+          <VCluster gap="md" align="center">
+            <VBox padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
               <VIcon :name="statusUI.icon" size="sm" />
-            </Box>
-            <Stack gap="none">
+            </VBox>
+            <VStack gap="none">
               <VTypography size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
                 Entity Status
               </VTypography>
               <VTypography size="sm" weight="bold" :class="statusUI.textColor">
                 {{ initialScopeElement.entityStatus }}
               </VTypography>
-            </Stack>
-          </Cluster>
-        </Box>
+            </VStack>
+          </VCluster>
+        </VBox>
 
-        <Box padding="lg" background="amber-50" rounded="xl" border="all" class="border-amber-100">
-          <Stack gap="md">
-            <Cluster gap="xs" align="center">
+        <VBox padding="lg" background="amber-50" rounded="xl" border="all" class="border-amber-100">
+          <VStack gap="md">
+            <VCluster gap="xs" align="center">
               <VIcon name="LightBulb" size="sm" class="text-amber-500" />
               <VTypography tag="h3" size="sm" weight="bold" color="amber-900">
                 Strategic Impact
               </VTypography>
-            </Cluster>
+            </VCluster>
 
-            <Stack gap="sm">
-              <Box padding="xs" background="white" rounded="lg" border="all" class="border-amber-100 shadow-sm">
-                <Cluster justify="between" align="center">
+            <VStack gap="sm">
+              <VBox padding="xs" background="white" rounded="lg" border="all" class="border-amber-100 shadow-sm">
+                <VCluster justify="between" align="center">
                   <VTypography size="xs" color="gray-500">Global Feasibility</VTypography>
                   <VBadge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
                     {{ feasibilityStatus }}
                   </VBadge>
-                </Cluster>
-              </Box>
+                </VCluster>
+              </VBox>
 
               <VTypography size="xs" color="amber-800" class="leading-relaxed">
                 Precisely defining <strong class="text-amber-900">{{ initialScopeElement.label }}</strong> will directly influence the volume and quality of resources the system can retrieve.
               </VTypography>
-            </Stack>
-          </Stack>
-        </Box>
-      </Stack>
-    </Box>
+            </VStack>
+          </VStack>
+        </VBox>
+      </VStack>
+    </VBox>
 
-    <Box padding="md" background="gray-50" border="top" class="flex-shrink-0">
-      <Cluster justify="end" gap="md">
+    <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
+      <VCluster justify="end" gap="md">
         <Button variant="tertiary" @click="handleCancelAndCheck">
           Cancel
         </Button>
@@ -146,9 +146,9 @@
             Save Changes
           </Button>
         </template>
-      </Cluster>
-    </Box>
-  </Box>
+      </VCluster>
+    </VBox>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -159,9 +159,9 @@ import type { EntityStatus, FeasibilityStatus } from '@/interfaces/core';
 import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms & Molecules
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';

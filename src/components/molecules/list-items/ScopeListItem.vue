@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     tag="div"
     role="button"
     padding="sm"
@@ -15,9 +15,9 @@
     ]"
     @click="handleEdit"
   >
-    <Cluster justify="between" align="center" gap="md" full-width>
+    <VCluster justify="between" align="center" gap="md" full-width>
 
-      <Cluster align="center" gap="sm" class="min-w-0 flex-1">
+      <VCluster align="center" gap="sm" class="min-w-0 flex-1">
         <VIcon
           :name="uiStyles.icon"
           type="outline"
@@ -26,7 +26,7 @@
           class="flex-shrink-0"
         />
 
-        <Cluster gap="xs" align="center" class="min-w-0 flex-1">
+        <VCluster gap="xs" align="center" class="min-w-0 flex-1">
           <VTypography
             tag="span"
             size="sm"
@@ -45,8 +45,8 @@
           >
             {{ scopeElement.rationale || 'No rationale provided' }}
           </VTypography>
-        </Cluster>
-      </Cluster>
+        </VCluster>
+      </VCluster>
 
       <VIcon
         name="ChevronRight"
@@ -54,8 +54,8 @@
         :color="uiStyles.accentColor"
         class="flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
       />
-    </Cluster>
-  </Box>
+    </VCluster>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -65,8 +65,8 @@
  * Refactored to eliminate manual flex/spacing in favor of Cluster/Box.
  */
 import { computed } from 'vue';
-import Box from '@/components/atoms/layout/Box.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';

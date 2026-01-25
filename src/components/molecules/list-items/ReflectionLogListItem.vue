@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     padding="sm"
     rounded
     border="all"
@@ -11,8 +11,8 @@
     ]"
     @click="$emit('click')"
   >
-    <Stack gap="xs">
-      <Cluster justify="between" align="center">
+    <VStack gap="xs">
+      <VCluster justify="between" align="center">
         <VTypography
           tag="span"
           size="xs"
@@ -22,7 +22,7 @@
           {{ formattedDate }}
         </VTypography>
         <VBadge v-if="entry.status === 'draft'" variant="amber" size="xs">Draft</VBadge>
-      </Cluster>
+      </VCluster>
 
       <VTypography
         tag="p"
@@ -42,16 +42,16 @@
       >
         {{ entry.content || "No content provided." }}
       </VTypography>
-    </Stack>
-  </Box>
+    </VStack>
+  </VBox>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 

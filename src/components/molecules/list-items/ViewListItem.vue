@@ -1,5 +1,5 @@
 <template>
-  <Box
+  <VBox
     tag="div"
     role="button"
     :aria-selected="isActive"
@@ -15,9 +15,9 @@
     ]"
     @click="$emit('select')"
   >
-    <Cluster justify="between" align="center" full-width>
+    <VCluster justify="between" align="center" full-width>
 
-      <Cluster gap="md" align="center" class="min-w-0 flex-1">
+      <VCluster gap="md" align="center" class="min-w-0 flex-1">
         <VIcon
           name="ViewColumns"
           size="sm"
@@ -34,10 +34,10 @@
         >
           {{ name }}
         </VTypography>
-      </Cluster>
+      </VCluster>
 
-      <Cluster gap="xs" align="center">
-        <Box
+      <VCluster gap="xs" align="center">
+        <VBox
           v-if="isActive"
           padding="none"
           rounded-full
@@ -53,9 +53,9 @@
           icon-name="ChevronRight"
           class="opacity-0 group-hover:opacity-100 transition-opacity"
         />
-      </Cluster>
-    </Cluster>
-  </Box>
+      </VCluster>
+    </VCluster>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -63,8 +63,8 @@
  * ViewListItem (Molecule)
  * Refactored to use Atom Layouts for consistent navigation spacing.
  */
-import Box from '@/components/atoms/layout/Box.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Button from '@/components/atoms/actions/Button.vue';

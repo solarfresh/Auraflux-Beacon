@@ -66,21 +66,21 @@ A lean molecule for switching workspace perspectives.
 
 ```vue
 <template>
-  <Box
+  <VBox
     padding="sm"
     rounded
     clickable
     v-bind="$attrs"
     :background="isActive ? 'indigo-50' : 'white'"
   >
-    <Cluster justify="between" align="center" full-width>
-      <Cluster gap="md" class="min-w-0 flex-1">
+    <VCluster justify="between" align="center" full-width>
+      <VCluster gap="md" class="min-w-0 flex-1">
         <VIcon :name="icon" />
         <VTypography truncate>{{ label }}</VTypography
-      </Cluster>
+      </VCluster>
       <Button variant="ghost" class="opacity-0 group-hover:opacity-100" />
-    </Cluster>
-  </Box>
+    </VCluster>
+  </VBox>
 </template>
 
 ```

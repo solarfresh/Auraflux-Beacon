@@ -20,12 +20,12 @@
         </template>
 
         <template #empty-state>
-          <Stack align="center" gap="md" class="py-12 px-6 text-center">
+          <VStack align="center" gap="md" class="py-12 px-6 text-center">
             <VIcon name="DocumentPlus" size="lg" color="gray-200" />
             <VTypography size="sm" color="gray-400">
               Start your first reflection log to track your research journey.
             </VTypography>
-          </Stack>
+          </VStack>
         </template>
       </MasterListPanel>
     </template>
@@ -56,7 +56,7 @@ import type { ReflectionLogEntry } from '@/interfaces/workflow';
 // Atoms & Layout
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 
 // Molecules & Organisms
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';

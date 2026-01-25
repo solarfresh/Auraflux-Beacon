@@ -50,11 +50,11 @@ Manages the top-level application identity and global actions.
      </template>
 
   <template #body>
-    <Box padding="xs" v-bind="$attrs">
-      <Stack gap="sm">
+    <VBox padding="xs" v-bind="$attrs">
+      <VStack gap="sm">
         <slot name="items" />
-      </Stack>
-    </Box>
+      </VStack>
+    </VBox>
   </template>
 </BaseSidebarLayout>
 

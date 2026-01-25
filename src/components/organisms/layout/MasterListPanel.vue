@@ -25,24 +25,24 @@
     </template>
 
     <template #body>
-      <Box
+      <VBox
         padding="xs"
         v-bind="$attrs"
       >
-        <Stack gap="sm">
+        <VStack gap="sm">
           <slot name="list-items" />
-        </Stack>
-      </Box>
+        </VStack>
+      </VBox>
     </template>
 
     <template #empty-state>
       <slot name="empty-state">
-        <Stack align="center" justify="center" gap="sm" class="py-16 px-6">
+        <VStack align="center" justify="center" gap="sm" class="py-16 px-6">
           <VIcon name="Inbox" size="lg" color="gray-300" />
           <VTypography size="sm" color="gray-500">
             No items found in {{ title.toLowerCase() }}.
           </VTypography>
-        </Stack>
+        </VStack>
       </slot>
     </template>
 
@@ -61,8 +61,8 @@
  * and applied directly to the internal Box to prevent array nesting.
  */
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';

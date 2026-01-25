@@ -1,29 +1,29 @@
 <template>
-  <Box tag="section" background="white" class="flex-1 h-full min-w-0 overflow-hidden flex flex-col">
+  <VBox tag="section" background="white" class="flex-1 h-full min-w-0 overflow-hidden flex flex-col">
 
     <template v-if="currentDraft">
-      <Box padding="lg" border="bottom" class="flex-shrink-0">
-        <Stack gap="xs">
-          <Cluster justify="between" align="center">
+      <VBox padding="lg" border="bottom" class="flex-shrink-0">
+        <VStack gap="xs">
+          <VCluster justify="between" align="center">
             <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
               {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
             </VTypography>
             <VBadge :variant="currentDraft.status === 'committed' ? 'emerald' : 'amber'" size="sm">
               {{ currentDraft.status === 'committed' ? 'Committed' : 'Draft' }}
             </VBadge>
-          </Cluster>
+          </VCluster>
 
-          <Cluster gap="xs" align="center">
+          <VCluster gap="xs" align="center">
             <VIcon name="Clock" size="xs" color="gray-400" />
             <VTypography size="xs" color="gray-400">
               Last Updated: {{ new Date(currentDraft.updatedAt).toLocaleString() }}
             </VTypography>
-          </Cluster>
-        </Stack>
-      </Box>
+          </VCluster>
+        </VStack>
+      </VBox>
 
-      <Box padding="lg" class="flex-1 overflow-y-auto stable-gutter">
-        <Stack gap="xl">
+      <VBox padding="lg" class="flex-1 overflow-y-auto stable-gutter">
+        <VStack gap="xl">
           <FormField id="entry-title" label="Entry Title" required>
             <template #default="{ id }">
               <Input
@@ -51,21 +51,21 @@
               />
             </template>
           </FormField>
-        </Stack>
-      </Box>
+        </VStack>
+      </VBox>
 
-      <Box padding="md" background="gray-50" border="top">
-        <Cluster justify="between" align="center" class="max-w-4xl mx-auto w-full">
-          <Cluster gap="sm">
+      <VBox padding="md" background="gray-50" border="top">
+        <VCluster justify="between" align="center" class="max-w-4xl mx-auto w-full">
+          <VCluster gap="sm">
             <Button
               v-if="!isNewEntry && !isEditing"
               variant="secondary"
               @click="$emit('enable-edit')"
             >
-              <Cluster gap="xs" align="center">
+              <VCluster gap="xs" align="center">
                 <VIcon name="PencilSquare" size="sm" />
                 <VTypography tag="span">Enable Editing</VTypography>
-              </Cluster>
+              </VCluster>
             </Button>
 
             <Button
@@ -75,9 +75,9 @@
             >
               Cancel Edit
             </Button>
-          </Cluster>
+          </VCluster>
 
-          <Cluster gap="md">
+          <VCluster gap="md">
             <Button
               variant="tertiary"
               :disabled="!isEditable"
@@ -92,25 +92,25 @@
             >
               Commit Entry
             </Button>
-          </Cluster>
-        </Cluster>
-      </Box>
+          </VCluster>
+        </VCluster>
+      </VBox>
     </template>
 
     <template v-else>
-      <Stack full-height align="center" justify="center" gap="lg" background="gray-50" class="opacity-80">
-        <Box padding="md" background="white" rounded border="all" class="shadow-sm">
+      <VStack full-height align="center" justify="center" gap="lg" background="gray-50" class="opacity-80">
+        <VBox padding="md" background="white" rounded border="all" class="shadow-sm">
           <VIcon name="DocumentText" size="lg" color="gray-300" />
-        </Box>
-        <Stack gap="xs" align="center">
+        </VBox>
+        <VStack gap="xs" align="center">
           <VTypography size="lg" weight="medium" color="gray-900">No Entry Selected</VTypography>
           <VTypography size="sm" color="gray-500" class="max-w-xs text-center">
             Select an entry from the list or start a new reflection to document your journey.
           </VTypography>
-        </Stack>
-      </Stack>
+        </VStack>
+      </VStack>
     </template>
-  </Box>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -118,9 +118,9 @@ import { computed } from 'vue';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
 // Atoms
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Input from '@/components/atoms/forms/Input.vue';

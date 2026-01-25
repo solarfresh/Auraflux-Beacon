@@ -1,11 +1,11 @@
 <template>
-  <Box
+  <VBox
     tag="aside"
     background="white"
     border="right"
     class="flex flex-col h-full overflow-hidden transition-all duration-200"
   >
-    <Box
+    <VBox
       v-if="$slots.header || title"
       tag="header"
       padding="sidebar-header"
@@ -13,31 +13,31 @@
       class="flex-shrink-0 z-10 sticky top-0 bg-white/80 backdrop-blur-md"
     >
       <slot name="header">
-        <Cluster justify="between" align="center" full-width>
-          <Cluster gap="sm" align="baseline" class="min-w-0">
+        <VCluster justify="between" align="center" full-width>
+          <VCluster gap="sm" align="baseline" class="min-w-0">
             <VTypography tag="h2" size="xl" weight="bold" color="gray-900" truncate>
               {{ title }}
             </VTypography>
             <VTypography v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="gray-400">
               ({{ itemCount }})
             </VTypography>
-          </Cluster>
-          <Cluster gap="xs">
+          </VCluster>
+          <VCluster gap="xs">
             <slot name="header-actions" />
-          </Cluster>
-        </Cluster>
+          </VCluster>
+        </VCluster>
       </slot>
       <slot name="header-extension" />
-    </Box>
+    </VBox>
 
-    <Box
+    <VBox
       tag="div"
       class="flex-1 overflow-y-auto overflow-x-hidden transition-all"
       :class="{ 'stable-gutter': useStableGutter }"
     >
       <slot v-if="!isEmpty" name="body" />
 
-      <Stack
+      <VStack
         v-else
         full-height
         align="center"
@@ -46,10 +46,10 @@
         class="p-8 text-center"
       >
         <slot name="empty-state" />
-      </Stack>
-    </Box>
+      </VStack>
+    </VBox>
 
-    <Box
+    <VBox
       v-if="$slots.footer"
       tag="footer"
       padding="md"
@@ -58,8 +58,8 @@
       class="mt-auto"
     >
       <slot name="footer" />
-    </Box>
-  </Box>
+    </VBox>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -68,9 +68,9 @@
  * A clean structural shell.
  * Removed 'bodyClass' prop to prevent recursive array nesting ['p-2', ['p-2']].
  */
-import Box from '@/components/atoms/layout/Box.vue';
-import Stack from '@/components/atoms/layout/Stack.vue';
-import Cluster from '@/components/atoms/layout/Cluster.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {
