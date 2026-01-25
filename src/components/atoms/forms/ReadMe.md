@@ -68,9 +68,9 @@ Multi-line text input for long-form research notes or AI prompts.
   :error="!!errorMessage"
   placeholder="Enter findings..."
 />
-<Text v-if="errorMessage" color="red-500" size="xs">
+<VTypography v-if="errorMessage" color="red-500" size="xs">
   {{ errorMessage }}
-</Text>
+</VTypography>
 
 <Checkbox
   v-model="isAgreed"

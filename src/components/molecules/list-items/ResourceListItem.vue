@@ -12,7 +12,7 @@
     <Stack gap="sm">
       <Cluster justify="between" align="start" gap="sm">
         <Stack gap="none" class="flex-1 min-w-0">
-          <Text
+          <VTypography
             tag="h4"
             size="sm"
             weight="bold"
@@ -21,11 +21,11 @@
             :title="resource.label"
           >
             {{ resource.label }}
-          </Text>
+          </VTypography>
 
           <Cluster gap="xs" class="mt-1">
-            <Badge :variant="sourceVariant" size="xs">{{ resource.sourceType }}</Badge>
-            <Badge variant="gray" size="xs">{{ resource.format }}</Badge>
+            <VBadge :variant="sourceVariant" size="xs">{{ resource.sourceType }}</VBadge>
+            <VBadge variant="gray" size="xs">{{ resource.format }}</VBadge>
           </Cluster>
         </Stack>
 
@@ -39,28 +39,28 @@
         />
       </Cluster>
 
-      <Text tag="p" size="xs" color="gray-600" class="line-clamp-2 leading-relaxed">
-        <Text tag="span" weight="bold" color="gray-900">Summary: </Text>
+      <VTypography tag="p" size="xs" color="gray-600" class="line-clamp-2 leading-relaxed">
+        <VTypography tag="span" weight="bold" color="gray-900">Summary: </VTypography>
         {{ resource.summary || 'No distillation available.' }}
-      </Text>
+      </VTypography>
 
       <Cluster justify="between" align="center">
         <Cluster gap="xs">
-          <Badge
+          <VBadge
             v-for="keyword in resource.keywords.slice(0, 2)"
             :key="keyword"
             variant="gray"
             size="xs"
           >
             #{{ keyword }}
-          </Badge>
-          <Text v-if="resource.keywords.length > 2" tag="span" size="xs" color="gray-400">
+          </VBadge>
+          <VTypography v-if="resource.keywords.length > 2" tag="span" size="xs" color="gray-400">
             +{{ resource.keywords.length - 2 }}
-          </Text>
+          </VTypography>
         </Cluster>
 
         <Box v-if="resource.userNotes" padding="none" title="Has user notes">
-          <Icon name="DocumentText" size="xs" color="amber-500" />
+          <VIcon name="DocumentVTypography" size="xs" color="amber-500" />
         </Box>
       </Cluster>
     </Stack>
@@ -82,9 +82,9 @@ import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
 
 // Data Display Atoms
-import Text from '@/components/atoms/data-display/Text.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
 const props = defineProps<{

@@ -18,7 +18,7 @@
       aria-label="Send message"
       @click="handleSend"
     >
-      <Icon name="PaperAirplane" type="solid" size="md" />
+      <VIcon name="PaperAirplane" type="solid" size="md" />
     </Button>
   </div>
 </template>
@@ -27,7 +27,7 @@
 import { ref } from 'vue';
 import Input from '@/components/atoms/forms/Input.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 
 /**
  * MessageInput Molecule

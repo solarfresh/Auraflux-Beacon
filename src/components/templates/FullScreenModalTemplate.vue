@@ -12,12 +12,12 @@
       <header class="flex justify-between items-center p-4 border-b">
 
         <!-- Replaced <h3> with Text component for consistent styling -->
-        <Text tag="h3" id="modal-title" size="xl" weight="semibold" color="gray-800">
+        <VTypography tag="h3" id="modal-title" size="xl" weight="semibold" color="gray-800">
           <!-- Default slot for custom header title -->
           <slot name="header">
             Auxiliary Panel
           </slot>
-        </Text>
+        </VTypography>
 
         <!-- Close Button Molecule -->
         <CloseButton @click="$emit('close')" aria-label="Close auxiliary panel" />
@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Modal from '@/components/molecules/overlays/Modal.vue';
 import CloseButton from '@/components/molecules/overlays/CloseButton.vue';
 

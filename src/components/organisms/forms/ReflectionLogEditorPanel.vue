@@ -5,19 +5,19 @@
       <Box padding="lg" border="bottom" class="flex-shrink-0">
         <Stack gap="xs">
           <Cluster justify="between" align="center">
-            <Text tag="h2" size="2xl" weight="bold" color="gray-900">
+            <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
               {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
-            </Text>
-            <Badge :variant="currentDraft.status === 'committed' ? 'emerald' : 'amber'" size="sm">
+            </VTypography>
+            <VBadge :variant="currentDraft.status === 'committed' ? 'emerald' : 'amber'" size="sm">
               {{ currentDraft.status === 'committed' ? 'Committed' : 'Draft' }}
-            </Badge>
+            </VBadge>
           </Cluster>
 
           <Cluster gap="xs" align="center">
-            <Icon name="Clock" size="xs" color="gray-400" />
-            <Text size="xs" color="gray-400">
+            <VIcon name="Clock" size="xs" color="gray-400" />
+            <VTypography size="xs" color="gray-400">
               Last Updated: {{ new Date(currentDraft.updatedAt).toLocaleString() }}
-            </Text>
+            </VTypography>
           </Cluster>
         </Stack>
       </Box>
@@ -63,8 +63,8 @@
               @click="$emit('enable-edit')"
             >
               <Cluster gap="xs" align="center">
-                <Icon name="PencilSquare" size="sm" />
-                <Text tag="span">Enable Editing</Text>
+                <VIcon name="PencilSquare" size="sm" />
+                <VTypography tag="span">Enable Editing</VTypography>
               </Cluster>
             </Button>
 
@@ -100,13 +100,13 @@
     <template v-else>
       <Stack full-height align="center" justify="center" gap="lg" background="gray-50" class="opacity-80">
         <Box padding="md" background="white" rounded border="all" class="shadow-sm">
-          <Icon name="DocumentText" size="lg" color="gray-300" />
+          <VIcon name="DocumentText" size="lg" color="gray-300" />
         </Box>
         <Stack gap="xs" align="center">
-          <Text size="lg" weight="medium" color="gray-900">No Entry Selected</Text>
-          <Text size="sm" color="gray-500" class="max-w-xs text-center">
+          <VTypography size="lg" weight="medium" color="gray-900">No Entry Selected</VTypography>
+          <VTypography size="sm" color="gray-500" class="max-w-xs text-center">
             Select an entry from the list or start a new reflection to document your journey.
-          </Text>
+          </VTypography>
         </Stack>
       </Stack>
     </template>
@@ -121,11 +121,11 @@ import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Input from '@/components/atoms/forms/Input.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
 // Molecules

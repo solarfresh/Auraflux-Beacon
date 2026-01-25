@@ -15,9 +15,9 @@
       >
         <header v-if="$slots.header || title" class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
           <slot name="header">
-            <Text tag="h3" size="lg" weight="bold" class="text-gray-900">
+            <VTypography tag="h3" size="lg" weight="bold" class="text-gray-900">
               {{ title }}
-            </Text>
+            </VTypography>
           </slot>
 
           <Button
@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, watch } from 'vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
 const props = defineProps({

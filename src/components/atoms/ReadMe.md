@@ -24,7 +24,7 @@ To optimize for AI context windows and developer ergonomics, Atoms are categoriz
 
 **The Voice & Vision.**
 
-* Components: `Text`, `Icon`, `Badge`, `BarSegment`, `MarkdownRenderer`.
+* Components: `Text`, `Icon`, `Badge`, `VProgressSegment`, `MarkdownRenderer`.
 * Responsibility: Presenting information semantically and accessible. Strictly read-only.
 
 ### 4. [Forms](forms/README.md) `atoms/forms/`
@@ -66,7 +66,7 @@ Atoms do not fetch data or hold global state (Pinia). They receive data via prop
 
     <Stack gap="lg">
 
-      <Text tag="h2" size="xl" weight="bold">Research Panel</Text>
+      <VTypography tag="h2" size="xl" weight="bold">Research Panel</VTypography
 
       <Button variant="primary" iconName="PlusCircle">
         Create New Topic

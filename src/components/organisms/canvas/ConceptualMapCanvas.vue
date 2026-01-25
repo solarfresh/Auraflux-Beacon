@@ -28,13 +28,13 @@
           :class="nodeUI[data.type as keyof typeof nodeUI]?.borderClass || 'border-gray-200'"
         >
           <div class="flex items-center justify-between mb-2">
-            <Badge
+            <VBadge
               :variant="nodeUI[data.type as keyof typeof nodeUI]?.badgeVariant || 'gray'"
               size="xs"
               class="uppercase tracking-tighter"
             >
               {{ data.type }}
-            </Badge>
+            </VBadge>
 
             <Button
               variant="tertiary"
@@ -47,22 +47,22 @@
           </div>
 
           <div class="space-y-2">
-            <Text tag="h4" size="sm" weight="bold" color="gray-900" class="leading-snug break-words line-clamp-2">
+            <VTypography tag="h4" size="sm" weight="bold" color="gray-900" class="leading-snug break-words line-clamp-2">
               {{ data.label }}
-            </Text>
+            </VTypography>
 
             <div v-if="data.type === 'RESOURCE'" class="flex items-center gap-1.5 py-1 px-2 bg-blue-50/50 rounded-lg">
-              <Icon name="Link" size="xs" class="text-blue-500" />
-              <Text tag="span" size="xs" color="blue-600" class="truncate max-w-[120px] font-mono">
+              <VIcon name="Link" size="xs" class="text-blue-500" />
+              <VTypography tag="span" size="xs" color="blue-600" class="truncate max-w-[120px] font-mono">
                 {{ data.resource_id?.substring(0, 8) }}
-              </Text>
+              </VTypography>
             </div>
 
             <div v-if="data.user_notes" class="flex gap-2 p-2 bg-amber-50 rounded-lg border border-amber-100">
-              <Icon name="ChatBubbleBottomCenterText" size="xs" class="text-amber-500 mt-0.5 flex-shrink-0" />
-              <Text tag="p" size="xs" color="amber-800" class="italic line-clamp-2 leading-tight">
+              <VIcon name="ChatBubbleBottomCenterText" size="xs" class="text-amber-500 mt-0.5 flex-shrink-0" />
+              <VTypography tag="p" size="xs" color="amber-800" class="italic line-clamp-2 leading-tight">
                 {{ data.user_notes }}
-              </Text>
+              </VTypography>
             </div>
           </div>
 
@@ -79,20 +79,20 @@
     >
       <template #header>
         <div class="flex items-center gap-2">
-          <Icon name="DocumentText" class="text-indigo-600" />
-          <Text tag="span" weight="bold">Refine Research Node</Text>
+          <VIcon name="DocumentText" class="text-indigo-600" />
+          <VTypography tag="span" weight="bold">Refine Research Node</VTypography>
         </div>
       </template>
 
       <template #content>
         <div v-if="editingNode" class="space-y-6 py-4">
           <div class="space-y-2">
-            <Text tag="label" size="sm" weight="bold" color="gray-700">Concept / Label</Text>
+            <VTypography tag="label" size="sm" weight="bold" color="gray-700">Concept / Label</VTypography>
             <Input v-model="localLabel" placeholder="e.g., Socio-economic Resilience" size="lg" />
           </div>
 
           <div class="space-y-2">
-            <Text tag="label" size="sm" weight="bold" color="gray-700">Strategic Reflection</Text>
+            <VTypography tag="label" size="sm" weight="bold" color="gray-700">Strategic Reflection</VTypography>
             <Textarea
               v-model="localNotes"
               :rows="5"
@@ -126,12 +126,12 @@ import { MiniMap } from '@vue-flow/minimap';
 import { v4 as uuidv4 } from 'uuid';
 
 // Atoms & Templates
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import Input from '@/components/atoms/forms/Input.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Interfaces

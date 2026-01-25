@@ -15,12 +15,12 @@
       <slot name="header">
         <Cluster justify="between" align="center" full-width>
           <Cluster gap="sm" align="baseline" class="min-w-0">
-            <Text tag="h2" size="xl" weight="bold" color="gray-900" truncate>
+            <VTypography tag="h2" size="xl" weight="bold" color="gray-900" truncate>
               {{ title }}
-            </Text>
-            <Text v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="gray-400">
+            </VTypography>
+            <VTypography v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="gray-400">
               ({{ itemCount }})
-            </Text>
+            </VTypography>
           </Cluster>
           <Cluster gap="xs">
             <slot name="header-actions" />
@@ -71,7 +71,7 @@
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   title?: string;

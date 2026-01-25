@@ -17,14 +17,14 @@
           role="tab"
           @click="selectTab(tab.id)"
         >
-          <Text
+          <VTypography
             tag="span"
             size="sm"
             :weight="activeTab === tab.id ? 'bold' : 'medium'"
             :class="activeTab === tab.id ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
           >
             <slot :name="`tab-${tab.id}-title`">{{ tab.label }}</slot>
-          </Text>
+          </VTypography>
         </Button>
       </nav>
     </div>
@@ -45,7 +45,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 /**
  * TabbedPanel Molecule

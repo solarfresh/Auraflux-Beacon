@@ -8,9 +8,9 @@
       @click="handlePhaseTransition"
     >
       <div class="flex items-center space-x-2">
-        <Text tag="span" weight="bold">
+        <VTypography tag="span" weight="bold">
           {{ isTransitioning ? 'Finalizing Data...' : 'Lock & Proceed to Exploration Phase' }}
-        </Text>
+        </VTypography>
       </div>
     </Button>
   </div>
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import { useWorkflowAuth } from '@/composables/useWorkflowAuth';
 
 /**

@@ -3,22 +3,22 @@
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300">
       <header class="pt-8 pb-6 px-8 text-center bg-gray-50/50 border-b border-gray-100">
         <div class="inline-flex p-3 bg-white rounded-2xl shadow-sm border border-gray-100 mb-4">
-          <Icon name="LockClosed" size="lg" class="text-indigo-600" />
+          <VIcon name="LockClosed" size="lg" class="text-indigo-600" />
         </div>
-        <Text tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-2">
+        <VTypography tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-2">
           User Login
-        </Text>
-        <Text tag="p" size="sm" color="gray-500">
+        </VTypography>
+        <VTypography tag="p" size="sm" color="gray-500">
           Access your research initiatives and strategic workspace.
-        </Text>
+        </VTypography>
       </header>
 
       <div class="p-8">
         <form @submit.prevent="handleLogin" class="space-y-5">
           <div class="space-y-1.5">
-            <Text tag="label" for="username" size="sm" weight="bold" color="gray-700">
+            <VTypography tag="label" for="username" size="sm" weight="bold" color="gray-700">
               Username
-            </Text>
+            </VTypography>
             <Input
               id="username"
               v-model="username"
@@ -32,9 +32,9 @@
 
           <div class="space-y-1.5">
             <div class="flex justify-between items-center">
-              <Text tag="label" for="password" size="sm" weight="bold" color="gray-700">
+              <VTypography tag="label" for="password" size="sm" weight="bold" color="gray-700">
                 Password
-              </Text>
+              </VTypography>
               </div>
             <Input
               id="password"
@@ -51,10 +51,10 @@
             v-if="error"
             class="flex items-start gap-2 p-3 bg-red-50 border border-red-100 rounded-xl animate-in slide-in-from-top-2"
           >
-            <Icon name="ExclamationCircle" size="xs" class="text-red-600 mt-0.5" />
-            <Text tag="p" size="xs" weight="medium" color="red-600">
+            <VIcon name="ExclamationCircle" size="xs" class="text-red-600 mt-0.5" />
+            <VTypography tag="p" size="xs" weight="medium" color="red-600">
               {{ error }}
-            </Text>
+            </VTypography>
           </div>
 
           <div class="pt-2">
@@ -65,7 +65,7 @@
               :disabled="isSubmitting || !username || !password"
               class="w-full flex justify-center py-3"
             >
-              <Icon v-if="isSubmitting" name="ArrowPath" size="sm" class="animate-spin mr-2" />
+              <VIcon v-if="isSubmitting" name="ArrowPath" size="sm" class="animate-spin mr-2" />
               {{ isSubmitting ? 'Verifying Account...' : 'Sign In' }}
             </Button>
           </div>
@@ -73,9 +73,9 @@
       </div>
 
       <footer class="px-8 pb-8 text-center">
-        <Text tag="p" size="xs" color="gray-400">
+        <VTypography tag="p" size="xs" color="gray-400">
           By logging in, you agree to our research workspace protocols.
-        </Text>
+        </VTypography>
       </footer>
     </div>
   </Modal>
@@ -89,8 +89,8 @@ import { useAuthStore } from '@/stores/auth';
 // Atoms & Molecules
 import Button from '@/components/atoms/actions/Button.vue';
 import Input from '@/components/atoms/forms/Input.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Modal from '@/components/molecules/overlays/Modal.vue';
 
 /**

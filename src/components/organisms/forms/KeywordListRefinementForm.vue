@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col h-full space-y-6">
     <div class="space-y-3 p-1">
-      <Text tag="label" size="sm" weight="bold" color="gray-700">
+      <VTypography tag="label" size="sm" weight="bold" color="gray-700">
         Add Research Keyword
-      </Text>
+      </VTypography>
       <div class="flex gap-2">
         <Input
           v-model="newKeywordLabel"
@@ -16,18 +16,18 @@
           Add
         </Button>
       </div>
-      <Text tag="p" size="xs" color="gray-400">
+      <VTypography tag="p" size="xs" color="gray-400">
         Keywords help the system narrow down relevant resources and insights.
-      </Text>
+      </VTypography>
     </div>
 
     <div class="flex-1 flex flex-col min-h-0 space-y-3">
       <div class="flex justify-between items-center px-1">
         <div class="flex items-center gap-2">
-          <Text tag="h4" size="sm" weight="bold" color="gray-700">
+          <VTypography tag="h4" size="sm" weight="bold" color="gray-700">
             Current Keywords
-          </Text>
-          <Badge variant="gray" size="xs">{{ localKeywords.length }}</Badge>
+          </VTypography>
+          <VBadge variant="gray" size="xs">{{ localKeywords.length }}</VBadge>
         </div>
       </div>
 
@@ -36,11 +36,11 @@
         class="flex-1 border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center bg-gray-50/30 transition-colors"
       >
         <div class="p-3 bg-white rounded-xl shadow-sm mb-3">
-          <Icon name="Hashtag" size="md" color="gray-300" />
+          <VIcon name="Hashtag" size="md" color="gray-300" />
         </div>
-        <Text tag="span" size="sm" color="gray-400" class="text-center italic">
+        <VTypography tag="span" size="sm" color="gray-400" class="text-center italic">
           Your list is empty. <br/> Add terms to focus your inquiry.
-        </Text>
+        </VTypography>
       </div>
 
       <div
@@ -53,18 +53,18 @@
             :key="keyword.label + index"
             class="flex items-center bg-white border border-gray-200 pl-3 pr-1.5 py-1.5 rounded-xl group hover:border-indigo-300 hover:shadow-sm transition-all animate-in fade-in zoom-in duration-200"
           >
-            <Icon
+            <VIcon
               :name="getStatusIcon(keyword.entityStatus)"
               size="xs"
               :class="getStatusColorClass(keyword.entityStatus)"
               class="mr-2"
             />
 
-            <Text tag="span" size="sm" weight="medium" color="gray-700" class="mr-3">
+            <VTypography tag="span" size="sm" weight="medium" color="gray-700" class="mr-3">
               {{ keyword.label }}
-            </Text>
+            </VTypography>
 
-            <IconButton
+            <VIconButton
               variant="danger"
               size="xs"
               icon-name="XMark"
@@ -94,11 +94,11 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 // Atoms
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import IconButton from '@/components/atoms/IconButton.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VIconButton from '@/components/atoms/IconButton.vue';
 import Input from '@/components/atoms/forms/Input.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 const props = defineProps<{
   initialValue: ProcessedKeyword[];

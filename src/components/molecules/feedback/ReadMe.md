@@ -35,14 +35,14 @@ A status card used to display the feasibility or stability of a research topic.
 
 A localized indicator for specific research entities.
 
-* **Composition**: `Text` + `BarSegment`.
+* **Composition**: `Text` + `VProgressSegment`.
 * **Logic**: Maps internal numeric scores to qualitative labels (e.g., "Stable", "Incomplete").
 
 ### 4. ProgressTracker
 
 A structural molecule for tracking multi-stage workflows (e.g., Research Initiation).
 
-* **Composition**: `Icon` + `Text` + `BarSegment`.
+* **Composition**: `Icon` + `Text` + `VProgressSegment`.
 
 ---
 

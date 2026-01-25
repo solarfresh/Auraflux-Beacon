@@ -8,7 +8,7 @@
       @click="toggleSection"
     >
       <div class="flex items-center gap-2">
-        <Icon
+        <VIcon
           v-if="isCollapsible"
           name="ChevronRight"
           size="xs"
@@ -17,17 +17,17 @@
         />
 
         <div class="flex items-baseline gap-1.5">
-          <Text
+          <VTypography
             tag="span"
             size="xs"
             weight="bold"
             class="uppercase tracking-widest text-gray-500 group-hover:text-indigo-600 transition-colors"
           >
             {{ title }}
-          </Text>
-          <Text size="xs" color="gray-300" weight="medium">
+          </VTypography>
+          <VTypography size="xs" color="gray-300" weight="medium">
             {{ nodes.length }}
-          </Text>
+          </VTypography>
         </div>
       </div>
 
@@ -39,14 +39,14 @@
         class="opacity-0 group-hover:opacity-100 transition-opacity"
         @click.stop="emit('add')"
       >
-        <Icon name="Plus" size="xs" color="gray-500" />
+        <VIcon name="Plus" size="xs" color="gray-500" />
       </Button>
     </header>
 
     <transition name="section-slide">
       <div v-if="isExpanded" class="px-2 pb-3 space-y-0.5">
         <div v-if="nodes.length === 0" class="py-8 text-center flex flex-col items-center gap-1">
-          <Text size="xs" color="gray-400" italic>No items available</Text>
+          <VTypography size="xs" color="gray-400" italic>No items available</VTypography>
         </div>
 
         <SidebarNodeItem
@@ -65,8 +65,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.vue';
 import type { ID } from '@/interfaces/core';

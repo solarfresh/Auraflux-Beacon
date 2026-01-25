@@ -3,11 +3,11 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-indigo-600 pl-3">
-        <Text tag="h4" size="md" weight="bold" color="gray-900">Core Research Question</Text>
+        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Core Research Question</VTypography>
       </div>
-      <Text tag="p" size="sm" color="gray-500" class="italic leading-relaxed">
+      <VTypography tag="p" size="sm" color="gray-500" class="italic leading-relaxed">
         The ultimate objective of this ISP session. Changing this will trigger a full re-evaluation of node health.
-      </Text>
+      </VTypography>
 
       <Textarea
         v-model="localData.finalQuestion"
@@ -20,11 +20,11 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-emerald-600 pl-3">
-        <Text tag="h4" size="md" weight="bold" color="gray-900">Topic Scope & Boundaries</Text>
+        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Topic Scope & Boundaries</VTypography>
       </div>
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-2">
-          <Text tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Inclusions</Text>
+          <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Inclusions</VTypography>
           <Input
             v-model="localData.scopeIn"
             size="md"
@@ -33,7 +33,7 @@
           />
         </div>
         <div class="space-y-2">
-          <Text tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Exclusions</Text>
+          <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Exclusions</VTypography
           <Input
             v-model="localData.scopeOut"
             size="md"
@@ -46,7 +46,7 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-amber-500 pl-3">
-        <Text tag="h4" size="md" weight="bold" color="gray-900">Knowledge Anchors</Text>
+        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Knowledge Anchors</VTypography>
       </div>
 
       <div class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200 min-h-[56px] items-center">
@@ -55,7 +55,7 @@
           :key="index"
           class="flex items-center gap-2 px-2.5 py-1 bg-white rounded border border-gray-300 shadow-sm hover:border-amber-500 transition-colors"
         >
-          <Text tag="span" size="xs" color="gray-700">{{ tag }}</Text>
+          <VTypography tag="span" size="xs" color="gray-700">{{ tag }}</VTypography>
           <button @click="removeTag(index)" class="text-gray-400 hover:text-red-500 text-lg leading-none transition-colors">×</button>
         </div>
 
@@ -74,10 +74,10 @@
 
     <footer class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
       <Button variant="tertiary" @click="$emit('close')">
-        <Text tag="span" size="sm" color="gray-500">Cancel</Text>
+        <VTypography tag="span" size="sm" color="gray-500">Cancel</VTypography>
       </Button>
       <Button variant="primary" @click="handleSave" class="px-8">
-        <Text tag="span" size="sm" weight="bold" color="white">Apply Alignment</Text>
+        <VTypography tag="span" size="sm" weight="bold" color="white">Apply Alignment</VTypography>
       </Button>
     </footer>
 
@@ -92,9 +92,9 @@
  */
 import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
 import Input from '@/components/atoms/forms/Input.vue';
 
 import type { ManagementType } from '@/interfaces/exploration.ts';

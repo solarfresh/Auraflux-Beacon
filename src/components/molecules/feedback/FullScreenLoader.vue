@@ -1,7 +1,7 @@
 <template>
   <div class="fixed inset-0 bg-white/80 backdrop-blur-md z-[100] flex flex-col items-center justify-center p-8">
 
-    <Icon
+    <VIcon
       name="ArrowPath"
       type="solid"
       size="2xl"
@@ -9,19 +9,19 @@
       class="animate-spin mb-6"
     />
 
-    <Text tag="p" size="xl" weight="bold" color="gray-900">
+    <VTypography tag="p" size="xl" weight="bold" color="gray-900">
       {{ message }}
-    </Text>
+    </VTypography>
 
-    <Text v-if="detail" tag="p" size="sm" color="gray-500" class="mt-2 text-center max-w-xs">
+    <VTypography v-if="detail" tag="p" size="sm" color="gray-500" class="mt-2 text-center max-w-xs">
       {{ detail }}
-    </Text>
+    </VTypography>
   </div>
 </template>
 
 <script setup lang="ts">
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 /**
  * FullScreenLoader Molecule

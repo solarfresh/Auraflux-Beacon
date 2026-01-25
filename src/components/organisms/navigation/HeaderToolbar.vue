@@ -4,41 +4,41 @@
 
       <div class="flex items-center gap-3 group cursor-pointer">
         <div class="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
-          <Icon name="Target" size="sm" class="text-white" />
+          <VIcon name="Target" size="sm" class="text-white" />
         </div>
         <div class="flex flex-col">
-          <Text tag="h1" size="lg" weight="black" color="gray-900" class="leading-none tracking-tight">
+          <VTypography tag="h1" size="lg" weight="black" color="gray-900" class="leading-none tracking-tight">
             Strategic Research ISP
-          </Text>
-          <Text tag="span" size="xs" color="gray-400" class="font-bold tracking-widest uppercase mt-0.5">
+          </VTypography>
+          <VTypography tag="span" size="xs" color="gray-400" class="font-bold tracking-widest uppercase mt-0.5">
             Intelligence Platform
-          </Text>
+          </VTypography>
         </div>
       </div>
 
       <nav class="hidden lg:flex items-center bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100">
         <div class="flex items-center gap-2">
-          <Badge
+          <VBadge
             :variant="currentStep === 'INITIATION' ? 'indigo' : 'gray'"
             size="xs"
             class="transition-all"
           >
             1. Initiation
-          </Badge>
-          <Icon name="ChevronRight" size="xs" class="text-gray-300" />
-          <Badge
+          </VBadge>
+          <VIcon name="ChevronRight" size="xs" class="text-gray-300" />
+          <VBadge
             :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
           >
             2. Exploration
-          </Badge>
-          <Icon name="ChevronRight" size="xs" class="text-gray-300" />
-          <Badge
+          </VBadge>
+          <VIcon name="ChevronRight" size="xs" class="text-gray-300" />
+          <VBadge
             :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
           >
             3. Synthesis
-          </Badge>
+          </VBadge>
         </div>
       </nav>
 
@@ -61,9 +61,9 @@
  * The main navigational anchor of the application.
  * Manages branding, global progress visibility, and user session actions.
  */
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import AuthButton from '@/components/molecules/actions/AuthButton.vue';
 import type { ISPStep } from '@/interfaces/workflow';
 

@@ -6,17 +6,17 @@
   >
     <div class="flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <Icon
+        <VIcon
           name="ClipboardDocumentList"
           size="md"
           color="indigo-600"
         />
-        <Text tag="span" size="sm" weight="bold" color="indigo-900">
+        <VTypography tag="span" size="sm" weight="bold" color="indigo-900">
           Review Needed: {{ totalUnreviewedCount }} items in Keywords & Scope
-        </Text>
+        </VTypography>
       </div>
 
-      <Icon
+      <VIcon
         name="ChevronRight"
         size="xs"
         color="indigo-600"
@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 
 const props = defineProps<{

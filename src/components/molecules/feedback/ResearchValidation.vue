@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col gap-2">
-    <Text v-if="title" tag="h3" size="sm" weight="bold" color="gray-500" class="uppercase tracking-wider px-1">
+    <VTypography v-if="title" tag="h3" size="sm" weight="bold" color="gray-500" class="uppercase tracking-wider px-1">
       {{ title }}
-    </Text>
+    </VTypography>
 
     <div
       :class="[
@@ -11,21 +11,21 @@
       ]"
     >
       <div class="flex items-center gap-2">
-        <Icon
+        <VIcon
           :name="statusClasses.icon"
           type="solid"
           size="sm"
           :color="statusClasses.color"
         />
 
-        <Text tag="span" size="base" weight="bold" :color="statusClasses.color">
+        <VTypography tag="span" size="base" weight="bold" :color="statusClasses.color">
           Feasibility: {{ status }}
-        </Text>
+        </VTypography>
       </div>
 
-      <Text tag="p" size="sm" :color="statusClasses.color" class="opacity-90 leading-relaxed">
+      <VTypography tag="p" size="sm" :color="statusClasses.color" class="opacity-90 leading-relaxed">
         {{ description || "Status evaluation pending system analysis." }}
-      </Text>
+      </VTypography>
     </div>
   </div>
 </template>
@@ -33,8 +33,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { FeasibilityStatus } from '@/interfaces/core';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 const props = defineProps<{
   /** Optional header text (e.g., "Research Validation") */

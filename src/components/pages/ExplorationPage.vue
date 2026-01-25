@@ -37,9 +37,9 @@
               size="sm"
               class="rounded-full !px-4 hover:bg-slate-800 group"
             >
-              <Text tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
+              <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
                 {{ mode }}
-              </Text>
+              </VTypography>
             </Button>
           </div>
         </main>
@@ -66,9 +66,9 @@
               :disabled="!explorationStore.isExplorationSufficient"
               class="!bg-indigo-600 shadow-xl shadow-indigo-900/20 group"
             >
-              <Text tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
+              <VTypography tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
                 Commit to Formulation
-              </Text>
+              </VTypography>
             </Button>
           </template>
         </ActionBar>
@@ -83,8 +83,8 @@
     >
       <template #header>
         <div class="flex items-center gap-2 px-2">
-          <Text tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</Text>
-          <Text tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</Text>
+          <VTypography tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</VTypography>
+          <VTypography tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</VTypography>
         </div>
       </template>
       <template #content>
@@ -98,7 +98,7 @@
         />
         <div v-else class="flex flex-col h-80 items-center justify-center gap-4">
           <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <Text tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</Text>
+          <VTypography tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</VTypography>
         </div>
  -->
       </template>
@@ -118,7 +118,7 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

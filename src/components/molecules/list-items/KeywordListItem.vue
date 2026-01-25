@@ -15,7 +15,7 @@
   >
     <Cluster justify="between" align="center" full-width>
       <Cluster gap="md" align="start">
-        <Icon
+        <VIcon
           :name="styles.icon"
           type="outline"
           size="sm"
@@ -24,12 +24,12 @@
         />
 
         <Stack gap="none">
-          <Text tag="span" size="base" weight="medium" :color="styles.iconColor">
+          <VTypography tag="span" size="base" weight="medium" :color="styles.iconColor">
             {{ keyword.label }}
-          </Text>
-          <Text tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
-            {{ styles.secondaryText }}
-          </Text>
+          </VTypography>
+          <VTypography tag="span" size="xs" :color="styles.iconColor" class="opacity-80">
+            {{ styles.secondaryVTypography }}
+          </VTypography>
         </Stack>
       </Cluster>
 
@@ -55,8 +55,8 @@ import { computed } from 'vue';
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
@@ -86,7 +86,7 @@ const styles = computed(() => {
           borderColor: 'border-indigo-200 hover:border-indigo-300',
           icon: 'LockClosed',
           iconColor: 'indigo-600',
-          secondaryText: 'LOCKED (Committed)',
+          secondaryVTypography: 'LOCKED (Committed)',
           actionIcon: 'ChevronRight',
       };
     case 'AI_EXTRACTED':
@@ -95,16 +95,16 @@ const styles = computed(() => {
           borderColor: 'border-yellow-200 hover:border-yellow-300',
           icon: 'Sparkles',
           iconColor: 'yellow-600',
-          secondaryText: 'AI Capture (Needs Review)',
+          secondaryVTypography: 'AI Capture (Needs Review)',
           actionIcon: 'ExclamationCircle',
       };
     case 'ON_HOLD':
       return {
-          bgColor: 'gray-100' as const,
+          bgColor: 'gray-50' as const,
           borderColor: 'border-gray-300 hover:border-gray-400',
           icon: 'ArchiveBox',
           iconColor: 'gray-500',
-          secondaryText: 'ON HOLD (Excluded)',
+          secondaryVTypography: 'ON HOLD (Excluded)',
           actionIcon: 'ArrowPath',
       };
     case 'USER_DRAFT':
@@ -114,7 +114,7 @@ const styles = computed(() => {
           borderColor: 'border-gray-200 hover:border-gray-300',
           icon: 'ClipboardDocumentList',
           iconColor: 'gray-600',
-          secondaryText: 'User Draft (Pending Lock)',
+          secondaryVTypography: 'User Draft (Pending Lock)',
           actionIcon: 'PencilSquare',
       };
   }

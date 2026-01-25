@@ -12,10 +12,10 @@
 
     <template #stats>
       <div class="flex items-center gap-1.5 px-2 py-1 bg-indigo-50 rounded text-indigo-700">
-        <Icon name="LockClosed" size="xs" color="indigo-500" />
-        <Text tag="span" size="xs" weight="bold">
+        <VIcon name="LockClosed" size="xs" color="indigo-500" />
+        <VTypography tag="span" size="xs" weight="bold">
           {{ lockedCount }}/{{ scope.length }} Locked
-        </Text>
+        </VTypography>
       </div>
 
       <Button
@@ -25,7 +25,7 @@
         @click="isReviewGroupOpen = true"
         class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
       >
-        <Icon name="ExclamationCircle" size="xs" color="amber-500" class="mr-1" />
+        <VIcon name="ExclamationCircle" size="xs" color="amber-500" class="mr-1" />
         {{ unreviewedCount }} To Review
       </Button>
     </template>
@@ -92,8 +92,8 @@
 import { computed, ref } from 'vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
 import ScopeListItem from '@/components/molecules/list-items/ScopeListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';

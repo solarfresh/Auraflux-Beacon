@@ -18,7 +18,7 @@
     <Cluster justify="between" align="center" gap="md" full-width>
 
       <Cluster align="center" gap="sm" class="min-w-0 flex-1">
-        <Icon
+        <VIcon
           :name="uiStyles.icon"
           type="outline"
           size="xs"
@@ -27,7 +27,7 @@
         />
 
         <Cluster gap="xs" align="center" class="min-w-0 flex-1">
-          <Text
+          <VTypography
             tag="span"
             size="sm"
             weight="bold"
@@ -35,20 +35,20 @@
             class="flex-shrink-0"
           >
             {{ scopeElement.label }}:
-          </Text>
+          </VTypography>
 
-          <Text
+          <VTypography
             tag="span"
             size="sm"
             :color="uiStyles.valueColor"
             class="truncate"
           >
             {{ scopeElement.rationale || 'No rationale provided' }}
-          </Text>
+          </VTypography>
         </Cluster>
       </Cluster>
 
-      <Icon
+      <VIcon
         name="ChevronRight"
         size="sm"
         :color="uiStyles.accentColor"
@@ -67,8 +67,8 @@
 import { computed } from 'vue';
 import Box from '@/components/atoms/layout/Box.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedScope } from '@/interfaces/initiation';
 

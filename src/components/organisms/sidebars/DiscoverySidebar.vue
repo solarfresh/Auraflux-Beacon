@@ -67,15 +67,15 @@
 
     <template #footer>
       <div class="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-        <Text size="xs" color="gray-500" weight="medium">Canvas Stability</Text>
+        <VTypography size="xs" color="gray-500" weight="medium">Canvas Stability</VTypography>
         <div class="flex items-center gap-2">
            <div
              class="w-2 h-2 rounded-full shadow-sm"
              :class="stabilityScore < 4 ? 'bg-red-400' : 'bg-emerald-400'"
            ></div>
-           <Text size="xs" weight="bold" :color="stabilityScore < 4 ? 'red-600' : 'emerald-600'">
+           <VTypography size="xs" weight="bold" :color="stabilityScore < 4 ? 'red-600' : 'emerald-600'">
              {{ stabilityScore }}/10
-           </Text>
+           </VTypography>
         </div>
       </div>
     </template>
@@ -93,7 +93,7 @@ import type { ID } from '@/interfaces/core';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 /**
  * DiscoverySidebar: The control center for the Research Canvas.

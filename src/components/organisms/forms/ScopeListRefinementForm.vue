@@ -3,11 +3,11 @@
     <div class="bg-gray-50/80 p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
       <div class="flex items-center gap-2">
         <div class="p-1.5 bg-indigo-100 rounded-lg text-indigo-600">
-          <Icon name="ArrowsPointingIn" size="xs" />
+          <VIcon name="ArrowsPointingIn" size="xs" />
         </div>
-        <Text tag="span" size="sm" weight="bold" color="gray-800">
+        <VTypography tag="span" size="sm" weight="bold" color="gray-800">
           Define Research Boundary
-        </Text>
+        </VTypography>
       </div>
 
       <div class="flex flex-col gap-4">
@@ -54,9 +54,9 @@
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-            <Text tag="h4" size="sm" weight="bold" color="emerald-900">Inclusions</Text>
+            <VTypography tag="h4" size="sm" weight="bold" color="emerald-900">Inclusions</VTypography>
           </div>
-          <Badge variant="emerald" size="xs">{{ inclusions.length }}</Badge>
+          <VBadge variant="emerald" size="xs">{{ inclusions.length }}</VBadge>
         </div>
 
         <div class="flex-1 overflow-y-auto space-y-2 pr-1 stable-gutter">
@@ -65,10 +65,10 @@
             :key="item.label"
             class="flex items-start justify-between bg-emerald-50/40 border border-emerald-100 p-3 rounded-xl group hover:border-emerald-300 transition-all"
           >
-            <Text tag="p" size="xs" color="emerald-950" class="leading-relaxed flex-1 mr-3">
+            <VTypography tag="p" size="xs" color="emerald-950" class="leading-relaxed flex-1 mr-3">
               {{ item.label }}
-            </Text>
-            <IconButton
+            </VTypography>
+            <VIconButton
               variant="danger"
               size="xs"
               icon-name="XMark"
@@ -77,7 +77,7 @@
             />
           </div>
           <div v-if="inclusions.length === 0" class="h-32 flex flex-col items-center justify-center border border-dashed border-gray-100 rounded-xl bg-gray-50/30">
-            <Text size="xs" color="gray-400" italic>No inclusion criteria.</Text>
+            <VTypography size="xs" color="gray-400" italic>No inclusion criteria.</VTypography>
           </div>
         </div>
       </div>
@@ -86,9 +86,9 @@
         <div class="flex items-center justify-between px-1">
           <div class="flex items-center gap-2">
             <div class="w-2 h-2 rounded-full bg-rose-500"></div>
-            <Text tag="h4" size="sm" weight="bold" color="rose-900">Exclusions</Text>
+            <VTypography tag="h4" size="sm" weight="bold" color="rose-900">Exclusions</VTypography>
           </div>
-          <Badge variant="red" size="xs">{{ exclusions.length }}</Badge>
+          <VBadge variant="red" size="xs">{{ exclusions.length }}</VBadge>
         </div>
 
         <div class="flex-1 overflow-y-auto space-y-2 pr-1 stable-gutter">
@@ -97,10 +97,10 @@
             :key="item.label"
             class="flex items-start justify-between bg-rose-50/40 border border-rose-100 p-3 rounded-xl group hover:border-rose-300 transition-all"
           >
-            <Text tag="p" size="xs" color="rose-950" class="leading-relaxed flex-1 mr-3">
+            <VTypography tag="p" size="xs" color="rose-950" class="leading-relaxed flex-1 mr-3">
               {{ item.label }}
-            </Text>
-            <IconButton
+            </VTypography>
+            <VIconButton
               variant="danger"
               size="xs"
               icon-name="XMark"
@@ -109,7 +109,7 @@
             />
           </div>
           <div v-if="exclusions.length === 0" class="h-32 flex flex-col items-center justify-center border border-dashed border-gray-100 rounded-xl bg-gray-50/30">
-            <Text size="xs" color="gray-400" italic>No exclusion criteria.</Text>
+            <VTypography size="xs" color="gray-400" italic>No exclusion criteria.</VTypography>
           </div>
         </div>
       </div>
@@ -131,12 +131,12 @@ import { ref, computed } from 'vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Input from '@/components/atoms/forms/Input.vue';
-import IconButton from '@/components/atoms/IconButton.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIconButton from '@/components/atoms/IconButton.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 const props = defineProps<{
   initialValue: ProcessedScope[];

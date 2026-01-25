@@ -7,7 +7,7 @@
       :class="[variantClasses.border, isClosed ? 'opacity-60 hover:opacity-100' : 'opacity-100']"
       @click="toggle"
     >
-      <Text
+      <VTypography
         tag="h4"
         size="xs"
         weight="bold"
@@ -15,9 +15,9 @@
         class="uppercase tracking-wider"
       >
         {{ title }} <span v-if="count !== undefined">({{ count }})</span>
-      </Text>
+      </VTypography>
 
-      <Icon
+      <VIcon
         :name="!isClosed ? 'ChevronUp' : 'ChevronDown'"
         size="xs"
         :color="variantClasses.icon"
@@ -29,7 +29,7 @@
       class="flex items-center gap-2 border-b pb-1"
       :class="variantClasses.border"
     >
-      <Text
+      <VTypography
         tag="h4"
         size="xs"
         weight="bold"
@@ -37,7 +37,7 @@
         class="uppercase tracking-wider"
       >
         {{ title }}
-      </Text>
+      </VTypography>
     </div>
 
     <ul v-if="!collapsible || !isClosed" class="flex flex-col gap-1.5">
@@ -51,8 +51,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   title: string;

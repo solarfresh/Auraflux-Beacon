@@ -21,10 +21,10 @@
 
         <template #empty-state>
           <Stack align="center" gap="md" class="py-12 px-6 text-center">
-            <Icon name="DocumentPlus" size="lg" color="gray-200" />
-            <Text size="sm" color="gray-400">
+            <VIcon name="DocumentPlus" size="lg" color="gray-200" />
+            <VTypography size="sm" color="gray-400">
               Start your first reflection log to track your research journey.
-            </Text>
+            </VTypography>
           </Stack>
         </template>
       </MasterListPanel>
@@ -54,8 +54,8 @@ import { useInitiativeStore } from '@/stores/initiation';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
 // Atoms & Layout
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 
 // Molecules & Organisms

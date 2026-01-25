@@ -50,22 +50,22 @@
 
       <div class="space-y-6">
         <div class="space-y-2">
-          <Text tag="h3" size="sm" weight="bold" color="gray-900" class="px-2">
+          <VTypography tag="h3" size="sm" weight="bold" color="gray-900" class="px-2">
             Final Research Question
-          </Text>
+          </VTypography>
           <div
             class="mx-2 p-4 bg-white rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-indigo-300 transition-all group"
             @click="handleViewDetails('final-question')"
           >
-            <Text tag="p" size="sm" color="gray-700" class="italic leading-relaxed">
+            <VTypography tag="p" size="sm" color="gray-700" class="italic leading-relaxed">
               "{{ finalQuestion || 'Click to define your core inquiry...' }}"
-            </Text>
+            </VTypography>
           </div>
         </div>
 
         <div class="space-y-2 px-2 pb-4">
           <div class="flex items-center justify-between">
-            <Text tag="h3" size="sm" weight="bold" color="gray-900">Latest Reflection</Text>
+            <VTypography tag="h3" size="sm" weight="bold" color="gray-900">Latest Reflection</VTypography>
             <Button
               variant="ghost"
               size="xs"
@@ -91,7 +91,7 @@ import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfa
 // Layout & UI Components
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 // Molecules
 import ResearchValidation from '@/components/molecules/feedback/ResearchValidation.vue';

@@ -1,9 +1,9 @@
 <template>
   <section class="flex flex-col gap-5">
     <header class="flex items-center justify-between">
-      <Text tag="h3" size="lg" weight="bold" color="gray-900">
+      <VTypography tag="h3" size="lg" weight="bold" color="gray-900">
         {{ title }}
-      </Text>
+      </VTypography>
       <slot name="header-actions"></slot>
     </header>
 
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 defineProps<{
   title: string;

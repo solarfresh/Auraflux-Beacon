@@ -10,7 +10,7 @@
     @click="$emit('click', $event)"
   >
     <template v-if="iconOnly && iconName">
-      <Icon :name="iconName" :size="size === 'xs' ? 'xs' : 'sm'" color="current" />
+      <VIcon :name="iconName" :size="size === 'xs' ? 'xs' : 'sm'" color="current" />
     </template>
     <slot v-else></slot>
   </button>
@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import { ButtonProps } from '@/interfaces/button';
 
 const props = withDefaults(defineProps<ButtonProps>(), {

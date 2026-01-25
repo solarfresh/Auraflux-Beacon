@@ -53,7 +53,7 @@ The central asset hub for research materials.
     </template>
 
     <template #stats>
-      <Badge variant="indigo">3 Locked</Badge>
+      <VBadge variant="indigo">3 Locked</VBadge>
     </template>
 
     <template #content>

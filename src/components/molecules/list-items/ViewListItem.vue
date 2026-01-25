@@ -18,14 +18,14 @@
     <Cluster justify="between" align="center" full-width>
 
       <Cluster gap="md" align="center" class="min-w-0 flex-1">
-        <Icon
+        <VIcon
           name="ViewColumns"
           size="sm"
           :color="isActive ? 'indigo-600' : 'gray-400'"
           class="flex-shrink-0"
         />
 
-        <Text
+        <VTypography
           tag="span"
           size="sm"
           :weight="isActive ? 'bold' : 'medium'"
@@ -33,7 +33,7 @@
           class="truncate"
         >
           {{ name }}
-        </Text>
+        </VTypography>
       </Cluster>
 
       <Cluster gap="xs" align="center">
@@ -65,8 +65,8 @@
  */
 import Box from '@/components/atoms/layout/Box.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
 defineOptions({ inheritAttrs: false });

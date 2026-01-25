@@ -75,8 +75,8 @@ A lean molecule for switching workspace perspectives.
   >
     <Cluster justify="between" align="center" full-width>
       <Cluster gap="md" class="min-w-0 flex-1">
-        <Icon :name="icon" />
-        <Text truncate>{{ label }}</Text>
+        <VIcon :name="icon" />
+        <VTypography truncate>{{ label }}</VTypography
       </Cluster>
       <Button variant="ghost" class="opacity-0 group-hover:opacity-100" />
     </Cluster>

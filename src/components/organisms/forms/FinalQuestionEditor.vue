@@ -3,27 +3,27 @@
     <header class="p-6 pb-4 border-b border-gray-100 flex-shrink-0">
       <div class="flex items-center gap-3 mb-2">
         <div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
-          <Icon name="Flag" size="md" />
+          <VIcon name="Flag" size="md" />
         </div>
-        <Text tag="h2" size="2xl" weight="bold" color="gray-900">
+        <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
           Final Research Question
-        </Text>
+        </VTypography>
       </div>
-      <Text tag="p" size="sm" color="gray-500" class="max-w-xl">
+      <VTypography tag="p" size="sm" color="gray-500" class="max-w-xl">
         This definitive statement will guide your subsequent exploration and formulation phases.
         Ensure it is clear, researchable, and aligned with your findings.
-      </Text>
+      </VTypography>
     </header>
 
     <main class="flex-1 p-6 space-y-6 overflow-y-auto stable-gutter">
       <div class="space-y-2">
         <div class="flex justify-between items-end">
-          <Text tag="label" size="sm" weight="bold" color="gray-700" for="final-question-input">
+          <VTypography tag="label" size="sm" weight="bold" color="gray-700" for="final-question-input">
             Research Statement
-          </Text>
-          <Text size="xs" color="gray-400">
+          </VTypography>
+          <VTypography size="xs" color="gray-400">
             {{ draftQuestion.length }} / 500 characters
-          </Text>
+          </VTypography>
         </div>
 
         <Textarea
@@ -36,38 +36,38 @@
         />
 
         <p v-if="hasError" class="flex items-center gap-1 text-sm text-red-600">
-          <Icon name="ExclamationTriangle" size="xs" />
+          <VIcon name="ExclamationTriangle" size="xs" />
           {{ errorMessage }}
         </p>
       </div>
 
       <div class="p-5 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
-        <Text tag="h4" size="xs" weight="bold" class="uppercase tracking-widest text-gray-400">
+        <VTypography tag="h4" size="xs" weight="bold" class="uppercase tracking-widest text-gray-400">
           Current Context Feedback
-        </Text>
+        </VTypography>
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-1">
-            <Text size="xs" color="gray-500">Stability Score</Text>
+            <VTypography size="xs" color="gray-500">Stability Score</VTypography>
             <div class="flex items-center gap-2">
               <div
                 class="w-2 h-2 rounded-full"
                 :class="stabilityScore < 7 ? 'bg-amber-400' : 'bg-emerald-400'"
               ></div>
-              <Text size="sm" weight="bold" color="gray-900">{{ stabilityScore }} / 10</Text>
+              <VTypography size="sm" weight="bold" color="gray-900">{{ stabilityScore }} / 10</VTypography>
             </div>
           </div>
           <div class="space-y-1">
-            <Text size="xs" color="gray-500">Resource Feasibility</Text>
-            <Badge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
+            <VTypography size="xs" color="gray-500">Resource Feasibility</VTypography>
+            <VBadge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
               {{ feasibilityStatus }}
-            </Badge>
+            </VBadge>
           </div>
         </div>
 
         <div v-if="stabilityScore < 7" class="pt-2">
-          <Text size="xs" color="amber-700" italic class="bg-amber-50 p-2 rounded border border-amber-100 block">
+          <VTypography size="xs" color="amber-700" italic class="bg-amber-50 p-2 rounded border border-amber-100 block">
             Note: Your stability score is currently moderate. Consider if the question needs further narrowing before locking.
-          </Text>
+          </VTypography>
         </div>
       </div>
     </main>
@@ -83,7 +83,7 @@
           :disabled="!isSaveEnabled"
           @click="handleSaveAndLock"
         >
-          <Icon name="LockClosed" size="sm" class="mr-2" />
+          <VIcon name="LockClosed" size="sm" class="mr-2" />
           Confirm & Finalize Question
         </Button>
       </div>
@@ -97,10 +97,10 @@ import type { FeasibilityStatus } from '@/interfaces/core';
 
 // Atoms & Molecules
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 const props = defineProps<{
   initialValue: string;

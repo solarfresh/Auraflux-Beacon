@@ -4,15 +4,15 @@
     <Box padding="lg" border="bottom" class="flex-shrink-0">
       <Cluster gap="md" align="center">
         <Box padding="sm" background="indigo-50" rounded="xl" class="text-indigo-600 shadow-sm">
-          <Icon name="PencilSquare" size="md" />
+          <VIcon name="PencilSquare" size="md" />
         </Box>
         <Stack gap="none">
-          <Text tag="h2" size="xl" weight="bold" color="gray-900">
+          <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
             Refine Keyword
-          </Text>
-          <Text size="xs" color="gray-500">
+          </VTypography>
+          <VTypography size="xs" color="gray-500">
             Precisely define this core concept to guide AI exploration.
-          </Text>
+          </VTypography>
         </Stack>
       </Cluster>
     </Box>
@@ -22,9 +22,9 @@
 
         <FormField id="keyword-input" label="Keyword Text">
           <template #hint>
-            <Badge v-if="isTextModified" variant="amber" size="xs" class="animate-pulse">
+            <VBadge v-if="isTextModified" variant="amber" size="xs" class="animate-pulse">
               Unsaved Changes
-            </Badge>
+            </VBadge>
           </template>
 
           <template #default="{ id }">
@@ -38,8 +38,8 @@
                 :class="{ 'border-red-500 ring-red-100': !draftText.trim() }"
               />
               <Cluster v-if="!draftText.trim()" gap="xs" align="center" class="text-red-500">
-                <Icon name="ExclamationCircle" size="xs" />
-                <Text size="xs">Keyword text cannot be empty.</Text>
+                <VIcon name="ExclamationCircle" size="xs" />
+                <VTypography size="xs">Keyword text cannot be empty.</VTypography>
               </Cluster>
             </Stack>
           </template>
@@ -54,22 +54,22 @@
           <Cluster justify="between" align="center" full-width>
             <Cluster gap="md" align="center">
               <Box padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
-                <Icon :name="statusUI.icon" size="sm" />
+                <VIcon :name="statusUI.icon" size="sm" />
               </Box>
               <Stack gap="none">
-                <Text size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
+                <VTypography size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
                   Current Status
-                </Text>
-                <Text size="sm" weight="bold" :class="statusUI.textColor">
+                </VTypography>
+                <VTypography size="sm" weight="bold" :class="statusUI.textColor">
                   {{ initialKeyword.entityStatus }}
-                </Text>
+                </VTypography>
               </Stack>
             </Cluster>
 
             <Box v-if="isTextModified" padding="none" class="text-right">
-              <Text size="xs" color="amber-600" italic class="leading-tight">
+              <VTypography size="xs" color="amber-600" italic class="leading-tight">
                 Saving will update content <br/> and persist the choice below.
-              </Text>
+              </VTypography>
             </Box>
           </Cluster>
         </Box>
@@ -136,10 +136,10 @@ import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import FormField from '@/components/molecules/actions/FormField.vue';
 
 const props = defineProps<{

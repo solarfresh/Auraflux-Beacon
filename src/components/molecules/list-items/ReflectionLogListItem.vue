@@ -13,18 +13,18 @@
   >
     <Stack gap="xs">
       <Cluster justify="between" align="center">
-        <Text
+        <VTypography
           tag="span"
           size="xs"
           weight="bold"
           :color="isActive ? 'indigo-600' : 'gray-400'"
         >
           {{ formattedDate }}
-        </Text>
-        <Badge v-if="entry.status === 'draft'" variant="amber" size="xs">Draft</Badge>
+        </VTypography>
+        <VBadge v-if="entry.status === 'draft'" variant="amber" size="xs">Draft</VBadge>
       </Cluster>
 
-      <Text
+      <VTypography
         tag="p"
         size="sm"
         weight="semibold"
@@ -32,16 +32,16 @@
         truncate
       >
         {{ entry.title || "Untitled Reflection" }}
-      </Text>
+      </VTypography>
 
-      <Text
+      <VTypography
         tag="p"
         size="xs"
         color="gray-500"
         class="truncate italic"
       >
         {{ entry.content || "No content provided." }}
-      </Text>
+      </VTypography>
     </Stack>
   </Box>
 </template>
@@ -52,8 +52,8 @@ import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 const props = defineProps<{
   entry: ReflectionLogEntry;

@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-3">
-    <Text tag="h3" size="lg" weight="semibold" color="gray-800">
+    <VTypography tag="h3" size="lg" weight="semibold" color="gray-800">
       {{ label }}
-    </Text>
+    </VTypography>
 
     <div
       class="bg-gray-100 rounded-full h-2.5 overflow-hidden"
@@ -11,37 +11,37 @@
       aria-valuemin="0"
       aria-valuemax="100"
     >
-      <BarSegment
+      <VProgressSegment
         :width="clampedPercentage"
         :color="color"
       />
     </div>
 
     <div class="flex items-center space-x-2">
-      <Text
+      <VTypography
         tag="span"
         size="sm"
         weight="bold"
         :color="statusColor"
       >
         {{ clarityStatusLabel }}
-      </Text>
+      </VTypography>
 
-      <Text
+      <VTypography
         tag="span"
         size="sm"
         color="gray-500"
       >
         {{ description }}
-      </Text>
+      </VTypography>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BarSegment from '@/components/atoms/data-display/BarSegment.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VProgressSegment from '@/components/atoms/indicators/VProgressSegment.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import { getStabilityContext } from '@/logic/workflow';
 
 /**

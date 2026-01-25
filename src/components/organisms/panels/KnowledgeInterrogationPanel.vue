@@ -16,39 +16,39 @@
         <div class="flex items-center justify-between mb-10">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-red-600 rounded-lg text-white shadow-lg shadow-red-200">
-              <Icon name="ExclamationTriangle" size="sm" />
+              <VIcon name="ExclamationTriangle" size="sm" />
             </div>
-            <Text tag="h3" size="lg" weight="black" color="red-600" class="tracking-tighter uppercase italic">
+            <VTypography tag="h3" size="lg" weight="black" color="red-600" class="tracking-tighter uppercase italic">
               Adversarial Intercept
-            </Text>
+            </VTypography>
           </div>
           <div class="w-3 h-3 bg-red-600 rounded-full animate-ping"></div>
         </div>
 
         <div class="flex-grow space-y-8">
           <div class="space-y-2">
-            <Text tag="span" size="xs" weight="black" color="red-400" class="uppercase tracking-widest">
+            <VTypography tag="span" size="xs" weight="black" color="red-400" class="uppercase tracking-widest">
               Anomaly Detected
-            </Text>
-            <Text tag="p" size="2xl" weight="bold" color="gray-900" class="leading-tight">
+            </VTypography>
+            <VTypography tag="p" size="2xl" weight="bold" color="gray-900" class="leading-tight">
               Logical Paradox <br/> in Research Arc
-            </Text>
+            </VTypography>
           </div>
 
           <div class="p-6 bg-red-50 rounded-2xl border border-red-100 relative overflow-hidden group">
-            <Icon name="ChatBubbleBottomCenterText" size="xl" class="absolute -right-4 -bottom-4 text-red-100 group-hover:scale-110 transition-transform" />
-            <Text tag="p" size="md" color="red-900" class="leading-relaxed font-serif italic relative z-10">
+            <VIcon name="ChatBubbleBottomCenterText" size="xl" class="absolute -right-4 -bottom-4 text-red-100 group-hover:scale-110 transition-transform" />
+            <VTypography tag="p" size="md" color="red-900" class="leading-relaxed font-serif italic relative z-10">
               "{{ store.adversaryData.critique }}"
-            </Text>
+            </VTypography>
           </div>
         </div>
 
         <div class="flex flex-col gap-4 mt-auto">
           <Button variant="primary" size="lg" class="w-full bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200" @click="handleAdversaryAction('acknowledge')">
-            <Text tag="span" weight="bold" color="white">Acknowledge Critique</Text>
+            <VTypography tag="span" weight="bold" color="white">Acknowledge Critique</VTypography>
           </Button>
           <Button variant="tertiary" size="md" class="w-full border border-red-200 text-red-600 hover:bg-red-50" @click="handleAdversaryAction('add-reflection')">
-            <Icon name="DocumentPlus" size="xs" class="mr-2" />
+            <VIcon name="DocumentPlus" size="xs" class="mr-2" />
             Inject Correction Node
           </Button>
         </div>
@@ -62,9 +62,9 @@
     >
       <template #tab-1-title>
         <div class="flex items-center gap-2.5 px-1 py-1">
-          <Icon name="Briefcase" size="xs" />
-          <Text tag="span" size="sm" weight="bold">Repository</Text>
-          <Badge variant="gray" size="xs" class="font-mono">{{ store.resources.length }}</Badge>
+          <VIcon name="Briefcase" size="xs" />
+          <VTypography tag="span" size="sm" weight="bold">Repository</VTypography>
+          <VBadge variant="gray" size="xs" class="font-mono">{{ store.resources.length }}</VBadge>
         </div>
       </template>
       <template #tab-1-content>
@@ -78,8 +78,8 @@
 
       <template #tab-2-title>
         <div class="relative py-1 flex items-center gap-2.5">
-          <Icon name="CommandLine" size="xs" />
-          <Text tag="span" size="sm" weight="bold">Interrogator</Text>
+          <VIcon name="CommandLine" size="xs" />
+          <VTypography tag="span" size="sm" weight="bold">Interrogator</VTypography>
           <span
             v-if="store.hasUnreadAIChat"
             class="absolute -top-1 -right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-bounce"
@@ -108,10 +108,10 @@
 import { useExplorationStore } from '@/stores/exploration';
 
 // Atoms & Molecules
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';
 
 // Organisms

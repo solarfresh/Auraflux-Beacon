@@ -36,8 +36,8 @@
 
     <template #content>
       <div v-if="filteredResources.length === 0" class="flex flex-col items-center justify-center py-12 opacity-40">
-        <Icon name="Inbox" size="lg" />
-        <Text size="sm" class="mt-2">No research materials found.</Text>
+        <VIcon name="Inbox" size="lg" />
+        <VTypography size="sm" class="mt-2">No research materials found.</VTypography>
       </div>
 
       <ul class="flex flex-col gap-3">
@@ -56,18 +56,18 @@
     <template #content>
       <div v-if="editingResource" class="flex flex-col gap-6">
         <div class="space-y-2">
-          <Text tag="h5" weight="bold" size="sm">AI Distillation</Text>
+          <VTypography tag="h5" weight="bold" size="sm">AI Distillation</VTypography>
           <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-            <Text size="sm" color="gray-700" class="leading-relaxed">
+            <VTypography size="sm" color="gray-700" class="leading-relaxed">
               {{ editingResource.summary }}
-            </Text>
+            </VTypography>
           </div>
         </div>
 
         <div class="space-y-2">
           <div class="flex justify-between items-center">
-            <Text tag="h5" weight="bold" size="sm">Personal Reflections</Text>
-            <Text size="xs" color="gray-400">Supports Markdown</Text>
+            <VTypography tag="h5" weight="bold" size="sm">Personal Reflections</VTypography>
+            <VTypography size="xs" color="gray-400">Supports Markdown</VTypography>
           </div>
           <Textarea
             v-model="localNotes"
@@ -91,11 +91,11 @@ import type { ResourceItem, ResourceSource } from '@/interfaces/knowledge';
 
 // Atoms, Molecules & Layouts
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Input from '@/components/atoms/forms/Input.vue';
 import Checkbox from '@/components/atoms/forms/Checkbox.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
 import ResourceListItem from '@/components/molecules/list-items/ResourceListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

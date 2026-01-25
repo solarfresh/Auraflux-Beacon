@@ -4,32 +4,32 @@
       <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
 
         <div class="flex items-center space-x-3">
-          <Icon name="LightBulb" type="solid" size="md" />
-          <Text tag="span" size="base" weight="medium">
+          <VIcon name="LightBulb" type="solid" size="md" />
+          <VTypography tag="span" size="base" weight="medium">
             ISP Stage: {{ currentStage }}
-          </Text>
+          </VTypography>
         </div>
 
         <div class="w-full md:w-2/3 lg:w-1/2 flex items-center space-x-3">
 
-          <Text
+          <VTypography
             tag="span"
             size="sm"
             class="flex-shrink-0 whitespace-nowrap hidden sm:block opacity-90"
           >
             {{ stageMessage }}
-          </Text>
+          </VTypography>
 
           <div class="w-full bg-indigo-500/50 rounded-full h-2.5 overflow-hidden">
-            <BarSegment
+            <VProgressSegment
               :width="completionPercentage"
               color="white"
             />
           </div>
 
-          <Text tag="span" size="sm" weight="semibold" class="flex-shrink-0 w-10 text-right">
+          <VTypography tag="span" size="sm" weight="semibold" class="flex-shrink-0 w-10 text-right">
             {{ completionPercentage }}%
-          </Text>
+          </VTypography>
         </div>
       </div>
     </div>
@@ -38,9 +38,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import BarSegment from '@/components/atoms/data-display/BarSegment.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VProgressSegment from '@/components/atoms/indicators/VProgressSegment.vue';
 
 /**
  * ProgressTracker Molecule

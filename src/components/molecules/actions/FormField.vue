@@ -1,7 +1,7 @@
 <template>
   <Stack gap="xs" v-bind="$attrs" class="w-full">
     <Cluster v-if="label" justify="between" align="center">
-      <Text
+      <VTypography
         tag="label"
         :for="id"
         size="sm"
@@ -10,7 +10,7 @@
       >
         {{ label }}
         <span v-if="required" class="text-red-500 ml-0.5">*</span>
-      </Text>
+      </VTypography>
 
       <slot name="hint" />
     </Cluster>
@@ -23,25 +23,25 @@
         enter-from-class="transform -translate-y-1 opacity-0"
         enter-to-class="transform translate-y-0 opacity-100"
       >
-        <Text
+        <VTypography
           v-if="error"
           size="xs"
           color="red-500"
           class="mt-1 ml-1"
         >
           {{ error }}
-        </Text>
+        </VTypography>
       </transition>
     </Box>
 
-    <Text
+    <VTypography
       v-if="description && !error"
       size="xs"
       color="gray-400"
       class="ml-1"
     >
       {{ description }}
-    </Text>
+    </VTypography>
   </Stack>
 </template>
 
@@ -54,7 +54,7 @@
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   /** Unique ID for the input/label association */

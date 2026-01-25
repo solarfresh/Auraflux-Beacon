@@ -38,10 +38,10 @@
     <template #empty-state>
       <slot name="empty-state">
         <Stack align="center" justify="center" gap="sm" class="py-16 px-6">
-          <Icon name="Inbox" size="lg" color="gray-300" />
-          <Text size="sm" color="gray-500">
+          <VIcon name="Inbox" size="lg" color="gray-300" />
+          <VTypography size="sm" color="gray-500">
             No items found in {{ title.toLowerCase() }}.
-          </Text>
+          </VTypography>
         </Stack>
       </slot>
     </template>
@@ -64,8 +64,8 @@ import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.v
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 
 // We disable attribute inheritance on the root so we can
 // manually bind $attrs to the specific internal Box container.

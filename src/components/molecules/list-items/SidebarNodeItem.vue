@@ -33,12 +33,12 @@
           border="all"
           class="absolute -top-1.5 -right-1.5 p-0.5 shadow-sm"
         >
-          <Icon :name="typeIcon" :color="typeColor" size="xs" />
+          <VIcon :name="typeIcon" :color="typeColor" size="xs" />
         </Box>
       </Box>
 
       <Stack gap="none" class="flex-1 min-w-0">
-        <Text
+        <VTypography
           tag="span"
           size="xs"
           weight="bold"
@@ -46,9 +46,9 @@
           class="uppercase tracking-tighter"
         >
           {{ node.type }}
-        </Text>
+        </VTypography>
 
-        <Text
+        <VTypography
           tag="p"
           :size="isActive ? 'base' : 'sm'"
           :weight="isActive ? 'bold' : 'medium'"
@@ -56,7 +56,7 @@
           class="truncate leading-tight"
         >
           {{ node.label }}
-        </Text>
+        </VTypography>
       </Stack>
 
       <Box padding="none" class="self-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -82,8 +82,8 @@ import { computed } from 'vue';
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 

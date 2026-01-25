@@ -11,15 +11,15 @@
             :background="initialScopeElement.boundaryType === 'INCLUSION' ? 'emerald-50' as any : 'rose-50' as any"
             :class="initialScopeElement.boundaryType === 'INCLUSION' ? 'text-emerald-600' : 'text-rose-600'"
           >
-            <Icon :name="initialScopeElement.boundaryType === 'INCLUSION' ? 'PlusCircle' : 'MinusCircle'" size="md" />
+            <VIcon :name="initialScopeElement.boundaryType === 'INCLUSION' ? 'PlusCircle' : 'MinusCircle'" size="md" />
           </Box>
           <Stack gap="none">
-            <Text tag="h2" size="xl" weight="bold" color="gray-900">
+            <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
               Refine Scope: {{ initialScopeElement.label }}
-            </Text>
-            <Badge :variant="initialScopeElement.boundaryType === 'INCLUSION' ? 'emerald' : 'red'" size="xs">
+            </VTypography>
+            <VBadge :variant="initialScopeElement.boundaryType === 'INCLUSION' ? 'emerald' : 'red'" size="xs">
               {{ initialScopeElement.boundaryType }} CRITERIA
-            </Badge>
+            </VBadge>
           </Stack>
         </Cluster>
       </Cluster>
@@ -30,9 +30,9 @@
 
         <FormField id="scope-value-input" label="Boundary Specification">
           <template #hint>
-            <Badge v-if="isValueModified" variant="amber" size="xs" class="animate-pulse">
+            <VBadge v-if="isValueModified" variant="amber" size="xs" class="animate-pulse">
               Unsaved Changes
-            </Badge>
+            </VBadge>
           </template>
 
           <template #default="{ id }">
@@ -46,8 +46,8 @@
                 :class="{ 'border-red-500 ring-red-100': !draftValue?.trim() }"
               />
               <Cluster v-if="!draftValue?.trim()" gap="xs" align="center" class="text-red-500">
-                <Icon name="ExclamationCircle" size="xs" />
-                <Text size="xs">Specification cannot be empty.</Text>
+                <VIcon name="ExclamationCircle" size="xs" />
+                <VTypography size="xs">Specification cannot be empty.</VTypography>
               </Cluster>
             </Stack>
           </template>
@@ -61,15 +61,15 @@
         >
           <Cluster gap="md" align="center">
             <Box padding="sm" background="white" rounded="md" border="all" :class="statusUI.iconColor" class="shadow-sm">
-              <Icon :name="statusUI.icon" size="sm" />
+              <VIcon :name="statusUI.icon" size="sm" />
             </Box>
             <Stack gap="none">
-              <Text size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
+              <VTypography size="xs" weight="bold" color="gray-400" class="uppercase tracking-widest">
                 Entity Status
-              </Text>
-              <Text size="sm" weight="bold" :class="statusUI.textColor">
+              </VTypography>
+              <VTypography size="sm" weight="bold" :class="statusUI.textColor">
                 {{ initialScopeElement.entityStatus }}
-              </Text>
+              </VTypography>
             </Stack>
           </Cluster>
         </Box>
@@ -77,25 +77,25 @@
         <Box padding="lg" background="amber-50" rounded="xl" border="all" class="border-amber-100">
           <Stack gap="md">
             <Cluster gap="xs" align="center">
-              <Icon name="LightBulb" size="sm" class="text-amber-500" />
-              <Text tag="h3" size="sm" weight="bold" color="amber-900">
+              <VIcon name="LightBulb" size="sm" class="text-amber-500" />
+              <VTypography tag="h3" size="sm" weight="bold" color="amber-900">
                 Strategic Impact
-              </Text>
+              </VTypography>
             </Cluster>
 
             <Stack gap="sm">
               <Box padding="xs" background="white" rounded="lg" border="all" class="border-amber-100 shadow-sm">
                 <Cluster justify="between" align="center">
-                  <Text size="xs" color="gray-500">Global Feasibility</Text>
-                  <Badge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
+                  <VTypography size="xs" color="gray-500">Global Feasibility</VTypography>
+                  <VBadge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
                     {{ feasibilityStatus }}
-                  </Badge>
+                  </VBadge>
                 </Cluster>
               </Box>
 
-              <Text size="xs" color="amber-800" class="leading-relaxed">
+              <VTypography size="xs" color="amber-800" class="leading-relaxed">
                 Precisely defining <strong class="text-amber-900">{{ initialScopeElement.label }}</strong> will directly influence the volume and quality of resources the system can retrieve.
-              </Text>
+              </VTypography>
             </Stack>
           </Stack>
         </Box>
@@ -163,10 +163,10 @@ import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Textarea from '@/components/atoms/forms/Textarea.vue';
-import Badge from '@/components/atoms/data-display/Badge.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import FormField from '@/components/molecules/actions/FormField.vue';
 
 const props = defineProps<{

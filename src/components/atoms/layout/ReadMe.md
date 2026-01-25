@@ -95,16 +95,16 @@ Controlled via the `rounded` prop on the `Box` atom.
     <Cluster justify="between" align="center">
       <Cluster gap="xs">
         <Box padding="xs" background="indigo-50" rounded="xl" class="text-indigo-600">
-          <Icon name="Beaker" size="sm" />
+          <VIcon name="Beaker" size="sm" />
         </Box>
-        <Text weight="bold">Experiment #42</Text>
+        <VTypography weight="bold">Experiment #42</VTypography
       </Cluster>
-      <Badge variant="emerald">Stable</Badge>
+      <VBadge variant="emerald">Stable</VBadge>
     </Cluster>
 
-    <Text color="gray-600" size="sm">
+    <VTypography color="gray-600" size="sm">
       Standardized layout ensures that all spacing and shapes are mathematically aligned.
-    </Text>
+    </VTypography>
   </Stack>
 </Box>
 

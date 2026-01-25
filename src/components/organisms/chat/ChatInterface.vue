@@ -18,7 +18,7 @@
             class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
             :class="message.role === 'user' ? 'bg-indigo-100 text-indigo-600' : 'bg-white border border-gray-100 text-amber-500'"
           >
-            <Icon :name="message.role === 'user' ? 'User' : 'Sparkles'" size="xs" />
+            <VIcon :name="message.role === 'user' ? 'User' : 'Sparkles'" size="xs" />
           </div>
 
           <div
@@ -30,21 +30,21 @@
             ]"
           >
             <template v-if="message.role === 'system'">
-              <MarkdownRenderer :content="message.content" class="prose prose-sm max-w-none text-gray-800" />
+              <VMarkdown :content="message.content" class="prose prose-sm max-w-none text-gray-800" />
             </template>
 
             <template v-else>
-              <Text tag="p" size="base" color="current" class="leading-relaxed whitespace-pre-wrap">
+              <VTypography tag="p" size="base" color="current" class="leading-relaxed whitespace-pre-wrap">
                 {{ message.content }}
-              </Text>
+              </VTypography>
             </template>
           </div>
         </div>
 
         <div class="mt-1 px-11">
-          <Text tag="span" size="xs" color="gray-400" weight="medium">
+          <VTypography tag="span" size="xs" color="gray-400" weight="medium">
             {{ message.role === 'user' ? 'Sent' : 'Agent Intelligence' }}
-          </Text>
+          </VTypography>
         </div>
       </div>
 
@@ -54,7 +54,7 @@
           <span class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
           <span class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
         </div>
-        <Text tag="span" size="xs" color="gray-400">AI is analyzing...</Text>
+        <VTypography tag="span" size="xs" color="gray-400">AI is analyzing...</VTypography>
       </div>
     </div>
 
@@ -66,9 +66,9 @@
           class="shadow-lg shadow-gray-200/50"
         />
         <div class="mt-2 text-center">
-          <Text tag="p" size="xs" color="gray-400">
+          <VTypography tag="p" size="xs" color="gray-400">
             ISP Agent uses advanced heuristics. Please verify critical strategic data.
-          </Text>
+          </VTypography>
         </div>
       </div>
     </footer>
@@ -80,9 +80,9 @@ import { nextTick, ref, watch } from 'vue';
 import type { ChatMessage } from '@/interfaces/core';
 
 // Atoms & Molecules
-import MarkdownRenderer from '@/components/atoms/data-display/MarkdownRenderer.vue';
-import Text from '@/components/atoms/data-display/Text.vue';
-import Icon from '@/components/atoms/data-display/Icon.vue';
+import VMarkdown from '@/components/atoms/indicators/VMarkdown.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import MessageInput from '@/components/molecules/actions/MessageInput.vue';
 
 const props = defineProps<{
