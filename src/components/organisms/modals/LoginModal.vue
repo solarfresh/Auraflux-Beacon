@@ -19,7 +19,7 @@
             <VTypography tag="label" for="username" size="sm" weight="bold" color="gray-700">
               Username
             </VTypography>
-            <Input
+            <VInput
               id="username"
               v-model="username"
               type="text"
@@ -36,7 +36,7 @@
                 Password
               </VTypography>
               </div>
-            <Input
+            <VInput
               id="password"
               v-model="password"
               type="password"
@@ -88,7 +88,7 @@ import { useAuthStore } from '@/stores/auth';
 
 // Atoms & Molecules
 import Button from '@/components/atoms/actions/Button.vue';
-import Input from '@/components/atoms/forms/Input.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import Modal from '@/components/molecules/overlays/Modal.vue';

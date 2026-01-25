@@ -11,7 +11,7 @@
       </div>
 
       <div class="flex flex-col gap-4">
-        <Input
+        <VInput
           v-model="newScopeText"
           placeholder="e.g., Only English publications, Post-2010 studies..."
           size="md"
@@ -134,7 +134,7 @@ import type { ProcessedScope } from '@/interfaces/initiation';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Input from '@/components/atoms/forms/Input.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
 import VIconButton from '@/components/atoms/IconButton.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 

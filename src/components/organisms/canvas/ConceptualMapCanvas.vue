@@ -88,12 +88,12 @@
         <div v-if="editingNode" class="space-y-6 py-4">
           <div class="space-y-2">
             <VTypography tag="label" size="sm" weight="bold" color="gray-700">Concept / Label</VTypography>
-            <Input v-model="localLabel" placeholder="e.g., Socio-economic Resilience" size="lg" />
+            <VInput v-model="localLabel" placeholder="e.g., Socio-economic Resilience" size="lg" />
           </div>
 
           <div class="space-y-2">
             <VTypography tag="label" size="sm" weight="bold" color="gray-700">Strategic Reflection</VTypography>
-            <Textarea
+            <VTextarea
               v-model="localNotes"
               :rows="5"
               placeholder="Record why this concept is critical to your core research question..."
@@ -128,8 +128,8 @@ import { v4 as uuidv4 } from 'uuid';
 // Atoms & Templates
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Input from '@/components/atoms/forms/Input.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

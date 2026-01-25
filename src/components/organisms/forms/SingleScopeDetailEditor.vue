@@ -37,7 +37,7 @@
 
           <template #default="{ id }">
             <VStack gap="xs">
-              <Textarea
+              <VTextarea
                 :id="id"
                 v-model="draftValue"
                 :rows="3"
@@ -165,7 +165,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import FormField from '@/components/molecules/actions/FormField.vue';
 

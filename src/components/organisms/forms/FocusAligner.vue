@@ -9,7 +9,7 @@
         The ultimate objective of this ISP session. Changing this will trigger a full re-evaluation of node health.
       </VTypography>
 
-      <Textarea
+      <VTextarea
         v-model="localData.finalQuestion"
         size="lg"
         :rows="4"
@@ -25,7 +25,7 @@
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-2">
           <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Inclusions</VTypography>
-          <Input
+          <VInput
             v-model="localData.scopeIn"
             size="md"
             placeholder="e.g., AI ethics, 2024 trends..."
@@ -34,7 +34,7 @@
         </div>
         <div class="space-y-2">
           <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Exclusions</VTypography
-          <Input
+          <VInput
             v-model="localData.scopeOut"
             size="md"
             placeholder="e.g., exclude healthcare..."
@@ -60,7 +60,7 @@
         </div>
 
         <div class="flex-grow min-w-[150px]">
-          <Input
+          <VInput
             v-model="tempTag"
             variant="search"
             size="sm"
@@ -94,8 +94,8 @@ import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
-import Input from '@/components/atoms/forms/Input.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
 
 import type { ManagementType } from '@/interfaces/exploration.ts';
 

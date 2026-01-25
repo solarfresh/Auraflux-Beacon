@@ -26,7 +26,7 @@
           </VTypography>
         </div>
 
-        <Textarea
+        <VTextarea
           id="final-question-input"
           v-model="draftQuestion"
           :rows="6"
@@ -99,7 +99,7 @@ import type { FeasibilityStatus } from '@/interfaces/core';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 const props = defineProps<{

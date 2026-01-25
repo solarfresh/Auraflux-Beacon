@@ -5,7 +5,7 @@
         Add Research Keyword
       </VTypography>
       <div class="flex gap-2">
-        <Input
+        <VInput
           v-model="newKeywordLabel"
           placeholder="e.g., Sustainable Energy, Behavioral Economics..."
           size="md"
@@ -96,7 +96,7 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VIconButton from '@/components/atoms/IconButton.vue';
-import Input from '@/components/atoms/forms/Input.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 

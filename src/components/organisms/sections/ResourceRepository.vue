@@ -14,7 +14,7 @@
 
     <template #stats>
       <div class="flex flex-col gap-3 w-full">
-        <Input
+        <VInput
           v-model="searchTerm"
           placeholder="Search by title, keywords, or notes..."
           size="sm"
@@ -22,7 +22,7 @@
         />
 
         <div class="flex flex-wrap gap-x-4 gap-y-2">
-          <Checkbox
+          <VCheckbox
             v-for="source in SOURCE_TYPES"
             :key="source"
             :model-value="activeSources.includes(source)"
@@ -69,7 +69,7 @@
             <VTypography tag="h5" weight="bold" size="sm">Personal Reflections</VTypography>
             <VTypography size="xs" color="gray-400">Supports Markdown</VTypography>
           </div>
-          <Textarea
+          <VTextarea
             v-model="localNotes"
             placeholder="Record connections to other nodes or potential conflicts..."
             :rows="8"
@@ -93,9 +93,9 @@ import type { ResourceItem, ResourceSource } from '@/interfaces/knowledge';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Input from '@/components/atoms/forms/Input.vue';
-import Checkbox from '@/components/atoms/forms/Checkbox.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
+import VCheckbox from '@/components/atoms/forms/VCheckbox.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import ResourceListItem from '@/components/molecules/list-items/ResourceListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

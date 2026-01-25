@@ -1,6 +1,6 @@
 <template>
   <div class="flex space-x-3 items-end w-full">
-    <Input
+    <VInput
       v-model="inputContent"
       type="text"
       placeholder="Type your question or statement..."
@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Input from '@/components/atoms/forms/Input.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 

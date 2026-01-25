@@ -26,7 +26,7 @@
         <VStack gap="xl">
           <FormField id="entry-title" label="Entry Title" required>
             <template #default="{ id }">
-              <Input
+              <VInput
                 :id="id"
                 v-model="currentDraft.title"
                 :disabled="!isEditable"
@@ -42,7 +42,7 @@
             description="Your thoughts will be saved as a draft unless committed."
           >
             <template #default="{ id }">
-              <Textarea
+              <VTextarea
                 :id="id"
                 v-model="currentDraft.content"
                 :placeholder="editorPlaceholder"
@@ -123,8 +123,8 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Input from '@/components/atoms/forms/Input.vue';
-import VTypographyarea from '@/components/atoms/forms/Textarea.vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
+import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
