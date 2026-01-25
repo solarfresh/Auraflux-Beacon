@@ -32,7 +32,7 @@
 
     <template #content>
 
-      <SectionGroup title="Locked Core" variant="indigo">
+      <VNavGroup title="Locked Core" variant="indigo">
         <VTagListItem
           v-for="(kw, idx) in getGroupData('LOCKED')"
           :key="kw.id"
@@ -51,9 +51,9 @@
             View All ({{ lockedCount - LIMITS.LOCKED }} more)
           </VButton>
         </template>
-      </SectionGroup>
+      </VNavGroup>
 
-      <SectionGroup title="To Review / Draft" variant="amber" collapsible>
+      <VNavGroup title="To Review / Draft" variant="amber" collapsible>
         <VTagListItem
           v-for="(kw, idx) in getGroupData('REVIEW')"
           :key="kw.id"
@@ -61,9 +61,9 @@
           :index="idx"
           @edit-request="handleKeywordEdit"
         />
-      </SectionGroup>
+      </VNavGroup>
 
-      <SectionGroup
+      <VNavGroup
         title="On Hold"
         :count="onHoldCount"
         variant="gray"
@@ -88,7 +88,7 @@
             View All ({{ onHoldCount - LIMITS.ON_HOLD }} more)
           </VButton>
         </template>
-      </SectionGroup>
+      </VNavGroup>
 
     </template>
   </BaseSectionLayout>
@@ -100,7 +100,7 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
+import VNavGroup from '@/components/molecules/navs/VNavGroup.vue';
 import VTagListItem from '@/components/molecules/navs/VTagListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 

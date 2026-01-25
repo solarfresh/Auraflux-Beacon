@@ -7,7 +7,7 @@
   >
     <template #header-extension>
       <div class="px-5 pb-2">
-        <UnifiedReviewAlert
+        <VNavAlert
           :keywords="keywords"
           :scope="scope"
           @scroll-to-review="handleScrollToReview"
@@ -96,7 +96,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 // Molecules
 import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
 import VStatusScore from '@/components/molecules/indicators/VStatusScore.vue';
-import UnifiedReviewAlert from '@/components/molecules/navigation/UnifiedReviewAlert.vue';
+import VNavAlert from '@/components/molecules/navs/VNavAlert.vue';
 
 // Specialized Sections
 import KeywordManagementSection from '@/components/organisms/sections/KeywordManagementSection.vue';

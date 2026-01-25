@@ -55,7 +55,7 @@
       </div>
     </transition>
 
-    <TabbedPanel
+    <VNavTabs
       class="flex-grow flex flex-col overflow-hidden bg-white"
       active-tab-class="text-indigo-600"
       @active-tab-updated="handleTabSwitch"
@@ -95,7 +95,7 @@
           class="bg-white"
         />
       </template>
-    </TabbedPanel>
+    </VNavTabs>
   </aside>
 </template>
 
@@ -112,7 +112,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
-import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';
+import VNavTabs from '@/components/molecules/navs/VNavTabs.vue';
 
 // Organisms
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';

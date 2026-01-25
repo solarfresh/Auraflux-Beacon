@@ -32,7 +32,7 @@
 
     <template #content>
 
-      <SectionGroup title="Core Boundaries" variant="indigo">
+      <VNavGroup title="Core Boundaries" variant="indigo">
         <VActionListItem
           v-for="(item, idx) in getGroupData('LOCKED')"
           :key="item.id"
@@ -40,9 +40,9 @@
           :index="idx"
           @edit-request="handleScopeEdit"
         />
-      </SectionGroup>
+      </VNavGroup>
 
-      <SectionGroup
+      <VNavGroup
         title="To Review / Draft"
         variant="amber"
         collapsible
@@ -55,9 +55,9 @@
           :index="idx"
           @edit-request="handleScopeEdit"
         />
-      </SectionGroup>
+      </VNavGroup>
 
-      <SectionGroup
+      <VNavGroup
         title="On Hold"
         :count="onHoldCount"
         variant="gray"
@@ -82,7 +82,7 @@
             View All ({{ onHoldCount - LIMITS.ON_HOLD }} more)
           </VButton>
         </template>
-      </SectionGroup>
+      </VNavGroup>
 
     </template>
   </BaseSectionLayout>
@@ -94,7 +94,7 @@ import type { ProcessedScope } from '@/interfaces/initiation';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
+import VNavGroup from '@/components/molecules/navs/VNavGroup.vue';
 import VActionListItem from '@/components/molecules/navs/VActionListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 
