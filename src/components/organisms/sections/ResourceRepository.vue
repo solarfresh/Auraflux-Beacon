@@ -41,7 +41,7 @@
       </div>
 
       <ul class="flex flex-col gap-3">
-        <ResourceListItem
+        <VMetaListItem
           v-for="resource in filteredResources"
           :key="resource.id"
           :resource="resource"
@@ -96,7 +96,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VCheckbox from '@/components/atoms/forms/VCheckbox.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
-import ResourceListItem from '@/components/molecules/list-items/ResourceListItem.vue';
+import VMetaListItem from '@/components/molecules/navs/VMetaListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 

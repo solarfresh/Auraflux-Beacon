@@ -10,7 +10,7 @@
         @new-entry="handleNewEntry"
       >
         <template #list-items>
-          <ReflectionLogListItem
+          <VTimelineItem
             v-for="entry in logEntries"
             :key="entry.id"
             :entry="entry"
@@ -61,7 +61,7 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 // Molecules & Organisms
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/organisms/layout/MasterListPanel.vue';
-import ReflectionLogListItem from '@/components/molecules/list-items/ReflectionLogListItem.vue';
+import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/forms/ReflectionLogEditorPanel.vue';
 
 const initiativeStore = useInitiativeStore();

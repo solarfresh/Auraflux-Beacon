@@ -49,7 +49,7 @@
           <VTypography size="xs" color="gray-400" italic>No items available</VTypography>
         </div>
 
-        <SidebarNodeItem
+        <VTreeItem
           v-for="node in nodes"
           :key="node.id"
           :node="node"
@@ -68,7 +68,7 @@ import { ref, computed } from 'vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
-import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.vue';
+import VTreeItem from '@/components/molecules/navs/VTreeItem.vue';
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 

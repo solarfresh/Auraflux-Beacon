@@ -33,7 +33,7 @@
     <template #content>
 
       <SectionGroup title="Locked Core" variant="indigo">
-        <KeywordListItem
+        <VTagListItem
           v-for="(kw, idx) in getGroupData('LOCKED')"
           :key="kw.id"
           :keyword="kw"
@@ -54,7 +54,7 @@
       </SectionGroup>
 
       <SectionGroup title="To Review / Draft" variant="amber" collapsible>
-        <KeywordListItem
+        <VTagListItem
           v-for="(kw, idx) in getGroupData('REVIEW')"
           :key="kw.id"
           :keyword="kw"
@@ -70,7 +70,7 @@
         collapsible
         default-closed
       >
-        <KeywordListItem
+        <VTagListItem
           v-for="(kw, idx) in getGroupData('ON_HOLD')"
           :key="kw.id"
           :keyword="kw"
@@ -101,7 +101,7 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
-import KeywordListItem from '@/components/molecules/list-items/KeywordListItem.vue';
+import VTagListItem from '@/components/molecules/navs/VTagListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 
 const props = defineProps<{

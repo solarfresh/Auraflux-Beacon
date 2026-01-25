@@ -33,7 +33,7 @@
     <template #content>
 
       <SectionGroup title="Core Boundaries" variant="indigo">
-        <ScopeListItem
+        <VActionListItem
           v-for="(item, idx) in getGroupData('LOCKED')"
           :key="item.id"
           :scope-element="item"
@@ -48,7 +48,7 @@
         collapsible
         v-model:open="isReviewGroupOpen"
       >
-        <ScopeListItem
+        <VActionListItem
           v-for="(item, idx) in getGroupData('REVIEW')"
           :key="item.id"
           :scope-element="item"
@@ -64,7 +64,7 @@
         collapsible
         default-closed
       >
-        <ScopeListItem
+        <VActionListItem
           v-for="(item, idx) in getGroupData('ON_HOLD')"
           :key="item.id"
           :scope-element="item"
@@ -95,7 +95,7 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
-import ScopeListItem from '@/components/molecules/list-items/ScopeListItem.vue';
+import VActionListItem from '@/components/molecules/navs/VActionListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 
 const props = defineProps<{
