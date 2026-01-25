@@ -94,8 +94,8 @@ import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Textarea from '@/components/atoms/Textarea.vue';
-import Input from '@/components/atoms/Input.vue';
+import Textarea from '@/components/atoms/forms/Textarea.vue';
+import Input from '@/components/atoms/forms/Input.vue';
 
 import type { ManagementType } from '@/interfaces/exploration.ts';
 

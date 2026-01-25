@@ -96,7 +96,7 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import IconButton from '@/components/atoms/IconButton.vue';
-import Input from '@/components/atoms/Input.vue';
+import Input from '@/components/atoms/forms/Input.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Badge from '@/components/atoms/data-display/Badge.vue';
 

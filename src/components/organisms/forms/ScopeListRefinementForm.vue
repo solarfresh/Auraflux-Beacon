@@ -134,7 +134,7 @@ import type { ProcessedScope } from '@/interfaces/initiation';
 import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
-import Input from '@/components/atoms/Input.vue';
+import Input from '@/components/atoms/forms/Input.vue';
 import IconButton from '@/components/atoms/IconButton.vue';
 import Badge from '@/components/atoms/data-display/Badge.vue';
 

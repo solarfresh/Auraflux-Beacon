@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Input from '@/components/atoms/Input.vue';
+import Input from '@/components/atoms/forms/Input.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 

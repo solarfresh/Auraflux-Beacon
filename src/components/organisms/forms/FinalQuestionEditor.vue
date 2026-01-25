@@ -99,7 +99,7 @@ import type { FeasibilityStatus } from '@/interfaces/core';
 import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/data-display/Icon.vue';
 import Text from '@/components/atoms/data-display/Text.vue';
-import Textarea from '@/components/atoms/Textarea.vue';
+import Textarea from '@/components/atoms/forms/Textarea.vue';
 import Badge from '@/components/atoms/data-display/Badge.vue';
 
 const props = defineProps<{
