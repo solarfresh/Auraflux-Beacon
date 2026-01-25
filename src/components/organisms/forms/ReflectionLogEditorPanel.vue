@@ -24,30 +24,33 @@
 
       <Box padding="lg" class="flex-1 overflow-y-auto stable-gutter">
         <Stack gap="xl">
-          <Stack gap="xs">
-            <Text tag="label" for="entry-title" size="sm" weight="bold" color="gray-700">
-              Entry Title
-            </Text>
-            <Input
-              id="entry-title"
-              v-model="currentDraft.title"
-              :disabled="!isEditable"
-              required
-              placeholder="e.g., 'Initial Scope Review'..."
-            />
-          </Stack>
+          <FormField id="entry-title" label="Entry Title" required>
+            <template #default="{ id }">
+              <Input
+                :id="id"
+                v-model="currentDraft.title"
+                :disabled="!isEditable"
+                required
+                placeholder="e.g., 'Initial Scope Review'..."
+              />
+            </template>
+          </FormField>
 
-          <Stack gap="xs" class="min-h-[400px]">
-            <Text tag="label" size="sm" weight="bold" color="gray-700">
-              Reflection Content
-            </Text>
-            <Textarea
-              v-model="currentDraft.content"
-              :placeholder="editorPlaceholder"
-              :disabled="!isEditable"
-              class="flex-1 resize-none font-serif leading-relaxed text-gray-800"
-            />
-          </Stack>
+          <FormField
+            id="entry-content"
+            label="Reflection Content"
+            description="Your thoughts will be saved as a draft unless committed."
+          >
+            <template #default="{ id }">
+              <Textarea
+                :id="id"
+                v-model="currentDraft.content"
+                :placeholder="editorPlaceholder"
+                :disabled="!isEditable"
+                class="flex-1 min-h-[400px] resize-none font-serif leading-relaxed text-gray-800"
+              />
+            </template>
+          </FormField>
         </Stack>
       </Box>
 
@@ -59,9 +62,9 @@
               variant="secondary"
               @click="$emit('enable-edit')"
             >
-              <Cluster gap="xs">
+              <Cluster gap="xs" align="center">
                 <Icon name="PencilSquare" size="sm" />
-                <span>Enable Editing</span>
+                <Text tag="span">Enable Editing</Text>
               </Cluster>
             </Button>
 
@@ -114,7 +117,7 @@
 import { computed } from 'vue';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
-// Atoms & Molecules
+// Atoms
 import Box from '@/components/atoms/layout/Box.vue';
 import Stack from '@/components/atoms/layout/Stack.vue';
 import Cluster from '@/components/atoms/layout/Cluster.vue';
@@ -124,6 +127,9 @@ import Input from '@/components/atoms/forms/Input.vue';
 import Textarea from '@/components/atoms/forms/Textarea.vue';
 import Badge from '@/components/atoms/data-display/Badge.vue';
 import Button from '@/components/atoms/actions/Button.vue';
+
+// Molecules
+import FormField from '@/components/molecules/actions/FormField.vue';
 
 const props = defineProps<{
   currentDraft: ReflectionLogEntry | null;

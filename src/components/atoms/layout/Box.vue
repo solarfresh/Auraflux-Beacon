@@ -2,26 +2,21 @@
   <component
     :is="tag"
     :class="[
-      // 1. Base Atomic Styles
-      'box-border',
-      paddingClasses[padding],
-      backgroundClasses[background],
-      borderClasses[border],
-      shadow && shadowClasses[shadow],
-      rounded && 'rounded-md',
-      roundedFull && 'rounded-full',
+      // 1. Spacing
+      padding && paddingMap[padding],
 
-      // 2. Behavioral Classes
-      {
-        'overflow-hidden': clip,
-        'cursor-pointer': clickable
-      },
+      // 2. Shape & Border
+      roundedClass,
+      border && borderMap[border],
 
-      // 3. External Class Injection
-      // By placing $attrs.class last, we allow external styles
-      // to potentially override base styles if necessary.
+      // 3. Color & Interaction
+      background && backgroundMap[background],
+      { 'cursor-pointer select-none active:opacity-80 transition-opacity': clickable },
+
+      // 4. Custom overrides from parent
       $attrs.class
     ]"
+    v-bind="filteredAttrs"
   >
     <slot />
   </component>
@@ -29,86 +24,86 @@
 
 <script setup lang="ts">
 /**
- * Box Atom
- * The primary structural container for the design system.
- * Handles padding, backgrounds, and borders using tokens.
- * * NOTE: This component uses fallthrough attributes ($attrs)
- * to automatically merge external classes with internal tokens.
+ * Box Atom (The "Skin" layer)
+ * A foundational container that manages padding, borders, and backgrounds.
+ * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
+import { computed, useAttrs } from 'vue';
 
-// Disable attribute inheritance on the root if you want precise control,
-// but here we leverage it for seamless class merging.
-defineOptions({
-  inheritAttrs: false
-});
-
-type Spacing = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'sidebar-header';
-type Color = 'transparent' | 'white' | 'gray-50' | 'gray-100' | 'indigo-50';
-type Border = 'none' | 'all' | 'bottom' | 'right' | 'top';
-type Shadow = 'sm' | 'md' | 'lg';
+type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+type BorderToken = 'all' | 'top' | 'bottom' | 'none';
+type BackgroundToken = 'white' | 'gray-50' | 'indigo-50' | 'amber-50' | 'transparent';
 
 interface Props {
-  /** Semantic HTML tag */
+  /** HTML tag to render */
   tag?: string;
-  /** Internal padding token */
-  padding?: Spacing;
-  /** Background color token */
-  background?: Color;
-  /** Border configuration */
-  border?: Border;
-  /** Shadow elevation */
-  shadow?: Shadow;
-  /** Standard corner radius (6px/md) */
-  rounded?: boolean;
-  /** Pill-shaped radius */
-  roundedFull?: boolean;
-  /** Overflow clipping */
-  clip?: boolean;
-  /** Pointer cursor affordance */
+  /** Internal spacing token */
+  padding?: SpacingToken;
+  /** Radius token. If true, uses 'md' (8px) as default */
+  rounded?: RoundedToken;
+  /** Border position token */
+  border?: BorderToken;
+  /** Semantic background token */
+  background?: BackgroundToken;
+  /** Adds pointer cursor and active state */
   clickable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   tag: 'div',
   padding: 'none',
-  background: 'transparent',
-  border: 'none',
-  shadow: undefined,
   rounded: false,
-  roundedFull: false,
-  clip: false,
-  clickable: false,
+  border: 'none',
+  background: 'transparent',
+  clickable: false
 });
 
-const paddingClasses: Record<Spacing, string> = {
+// --- Token Mapping ---
+
+const paddingMap: Record<SpacingToken, string> = {
   none: 'p-0',
-  xs: 'p-2',
-  sm: 'p-3',
-  md: 'p-4',
-  lg: 'p-6',
-  xl: 'p-8',
-  'sidebar-header': 'pt-6 pb-4 px-5',
+  xs: 'p-2',   // 8px
+  sm: 'p-3',   // 12px
+  md: 'p-4',   // 16px
+  lg: 'p-6',   // 24px
+  xl: 'p-8'    // 32px
 };
 
-const backgroundClasses: Record<Color, string> = {
-  transparent: 'bg-transparent',
+const borderMap: Record<BorderToken, string> = {
+  all: 'border border-gray-100',
+  top: 'border-t border-gray-100',
+  bottom: 'border-b border-gray-100',
+  none: 'border-none'
+};
+
+const backgroundMap: Record<BackgroundToken, string> = {
   white: 'bg-white',
   'gray-50': 'bg-gray-50',
-  'gray-100': 'bg-gray-100',
   'indigo-50': 'bg-indigo-50',
+  'amber-50': 'bg-amber-50',
+  transparent: 'bg-transparent'
 };
 
-const borderClasses: Record<Border, string> = {
-  none: '',
-  all: 'border border-gray-200',
-  bottom: 'border-b border-gray-100',
-  right: 'border-r border-gray-200',
-  top: 'border-t border-gray-100',
-};
+// --- Computed Logic ---
 
-const shadowClasses: Record<Shadow, string> = {
-  sm: 'shadow-sm',
-  md: 'shadow-md',
-  lg: 'shadow-lg',
-};
+/**
+ * Resolves the rounding class based on boolean or token input.
+ * Fixed the type issue where rounded="xl" was previously invalid.
+ */
+const roundedClass = computed(() => {
+  if (props.rounded === true) return 'rounded-md';
+  if (props.rounded === false || props.rounded === 'none') return 'rounded-none';
+  return `rounded-${props.rounded}`;
+});
+
+/**
+ * Ensure attributes (like @click) are passed down correctly
+ * while we manually handle 'class'.
+ */
+const attrs = useAttrs();
+const filteredAttrs = computed(() => {
+  const { class: _, ...rest } = attrs;
+  return rest;
+});
 </script>
