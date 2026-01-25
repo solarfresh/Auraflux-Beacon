@@ -4,7 +4,7 @@ Molecules are groups of **Atoms** bonded together to form the smallest functiona
 
 ## 🏗 The Architecture
 
-To maintain a flat and predictable structure, all molecules are categorized into four core families that mirror the Atoms layer.
+To maintain a flat and predictable structure, all molecules are categorized into three core families that mirror the Atoms layer.
 
 ### 1. 📝 [Forms](forms/README.md) (Input Groups)
 
@@ -15,21 +15,17 @@ Complex input patterns that combine labels, inputs, and actions.
 
 ### 2. 📢 [Indicators](indicators/README.md) (Feedback & Overlays)
 
-Composite components that communicate status or manage contextual focus.
+Composite components that communicate status or manage contextual focus. **This family uses the `VAlert` base for all semantic feedback.**
 
-* **Key Components:** `VModal`, `VStatusCard`, `VOverlayLoader`, `VStepProgress`.
+* **Key Components:** `VAlert`, `VStatusCard`, `VFeasibilityStatus`, `VEntityWorkflowStatus`, `VModal`, `VOverlayLoader`.
 * **Focus:** Material elevation, backdrop management, and semantic signaling.
 
 ### 3. 🧭 [Navs](navs/README.md) (Navigation & Lists)
 
 Structural clusters used for moving through the application's architecture.
 
-* **Key Components:** `VNavGroup`, `VNavTabs`, `VNavListItem`, `VNavAlert`.
+* **Key Components:** `VNavGroup`, `VNavTabs`, `VNavListItem`, `VActionListItem`, `VTagListItem`, `VTimelineItem`.
 * **Focus:** Hierarchical depth, active state management, and responsive truncation.
-
-### 4. 🔘 Buttons (Action Groups)
-
-*(Note: Most button clusters are handled via `VButtonToolbar` in the Forms or Navs category to minimize depth.)*
 
 ---
 
@@ -39,41 +35,43 @@ Structural clusters used for moving through the application's architecture.
 
 Molecules **must** be built using layout atoms (`VBox`, `VStack`, `VCluster`). Never use raw Flexbox or Grid classes inside a molecule if a layout atom can achieve the same result.
 
-* **Wrong:** `<div class="flex gap-4">...</div>`
 * **Right:** `<VCluster gap="md">...</VCluster>`
 
-### 2. Source of Truth
+### 2. Semantic Hierarchy (Specific to Indicators)
+
+Indicators follow a specialized inheritance pattern to ensure visual consistency:
+
+1. **Base:** `VAlert` handles semantic tokens (Success, Warning, Danger).
+2. **Layout:** `VStatusCard` wraps `VAlert` to provide a standard Icon + Title layout.
+3. **Business:** `VFeasibilityStatus` wraps `VStatusCard` to map domain data.
+
+### 3. Source of Truth
 
 The molecule is responsible for synchronized state. If an input is `disabled`, the molecule must propagate that state to its child buttons and labels.
 
-### 3. Slot Flexibility
-
-To prevent "Prop Drilling," molecules should use **Slots** for their core content (especially `VFormField` and `VNavGroup`). This allows atoms to be swapped easily without changing the molecule's logic.
-
 ### 4. Attribute Inheritance
 
-Always use `inheritAttrs: false` in the component script and bind `$attrs` to the root layout atom. This ensures that parent-injected spacing (like `flex-1`) is applied correctly to the outer container.
+Always use `inheritAttrs: false` in the component script and bind `$attrs` to the root layout atom. This ensures that parent-injected spacing is applied correctly to the outer container.
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: Atomic Integrity.** A molecule must be composed of 2 or more Atoms. If it only contains 1 Atom, it should remain in the Atoms layer.
-> **Rule 2: Semantic Prefix.** All molecules must use the `V` prefix (e.g., `VFormField`).
-> **Rule 3: No Margin Leakage.** Molecules do not define external margins. Use the parent's `gap` prop for spacing.
+> **Rule 1: Atomic Integrity.** A molecule must be composed of 2 or more Atoms.
+> **Rule 2: Semantic Prefix.** All molecules must use the `V` prefix (e.g., `VStatusCard`).
+> **Rule 3: Bootstrap Alignment.** Naming should reflect Bootstrap semantics (e.g., `NavTabs` for navigation, `Alert` for feedback).
 
-### Correct Composition Pattern
+### Correct Composition Pattern (Indicator Example)
 
 ```vue
-<VBox padding="md" rounded="lg" border="all">
-  <VStack gap="sm">
-    <VCluster justify="between">
-      <VTypography weight="bold">Molecule Title</VTypography>
-      <VCloseButton />
-    </VCluster>
-    <slot /> </VStack>
-</VBox>
+<VStatusCard
+  variant="success"
+  icon-name="CheckCircle"
+>
+  <template #title>Data Verified</template>
+  <VTypography size="xs">Grounding check completed successfully.</VTypography>
+</VStatusCard>
 
 ```
 
@@ -83,9 +81,9 @@ Always use `inheritAttrs: false` in the component script and bind `$attrs` to th
 
 ```text
 src/components/molecules/
-├── forms/          # Input clusters (VFormField, VInputGroup)
-├── indicators/     # Feedback & Modals (VModal, VStatusCard)
-├── navs/           # Lists & Tabs (VNavGroup, VNavTabs)
+├── forms/          # VFormField, VInputGroup, VButtonToolbar
+├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal
+├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem
 └── README.md       # You are here
 
 ```

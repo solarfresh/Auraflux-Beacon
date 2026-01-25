@@ -1,100 +1,111 @@
 # Molecules: Indicators
 
-Indicator molecules are functional clusters designed to provide feedback, display status, or manage high-priority user tasks via overlays. They represent the "Observer" level of our UI, ensuring the application remains transparent and responsive to user data.
+Indicator molecules are functional clusters designed to provide feedback, display status, or manage high-priority user tasks. They represent the **"Observer"** layer of our UI, ensuring the application remains transparent by mapping system data to human-readable semantic tones.
 
 ## 🧭 Design Principles
 
-* **Dual-Channel Feedback**: Never rely on color alone to communicate status. Always pair semantic colors with specific icons (e.g., `CheckCircle` for success) to ensure accessibility.
+* **Dual-Channel Feedback**: Never rely on color alone to communicate status. Always pair semantic colors with specific icons (e.g., `LockClosed` for info) to ensure accessibility for color-blind users.
 * **Contextual Layering**: Overlays must use the highest **Material Elevation** tokens (`shadow-xl`) and `backdrop-blur` to separate contextual tasks from the main content.
-* **Semantic Tones**:
+* **Bootstrap Semantic Mapping**:
 * **Success**: `emerald` (Verified/Stable data).
-* **Warning**: `amber` (AI-generated/Action required).
-* **Danger**: `red` (Errors/Destructive warnings).
+* **Warning**: `amber` (AI-generated/Review required).
+* **Danger**: `red` (Errors/Critical risks).
+* **Info**: `indigo` (System status/Locked states).
+* **Secondary**: `gray` (Drafts/Neutral states).
 
 
-* **Read-Only Intent**: Most indicators are for observation. If an indicator requires input, it should be composed of **Forms** atoms within its structure.
 
 ---
 
 ## 🛠 Component Catalog
 
-### 1. VModal
+This is the finalized **Component Catalog** for the `molecules/indicators/` directory. It reflects the architecture where **VAlert** acts as the semantic engine, **VStatusCard** provides the structural layout, and specialized components handle business logic.
 
-The primary container for focused contextual tasks.
+### 1. VAlert
 
-* **Bootstrap Mapping**: Equivalent to `.modal`.
-* **Composition**: `VBox` (Backdrop) > `VBox` (Surface) > [`VStack` (Header), `Slot` (Body), `VButtonToolbar` (Footer)].
-* **Features**: Managed focus trapping, scroll locking, and dismissal via `VCloseButton`.
+The **Atomic-Logic** foundation. It contains no layout rules (other than padding/rounded) but owns the entire semantic color system of the application.
+
+* **Physical Layer**: `VBox`.
+* **Responsibility**: Maps `variant` (success, info, etc.) to background and text tokens.
+* **Key Props**: `variant`, `border`, `padding`, `rounded`.
 
 ### 2. VStatusCard
 
-A composite alert or summary box for data quality or system notices.
+The **Structural Shell**. It dictates a specific UI pattern: a bold header with an icon followed by a body description.
 
-* **Bootstrap Mapping**: Equivalent to `.alert`.
-* **Composition**: `VBox` > `VStack` > [`VCluster` (Icon + Title), `VTypography` (Description)].
+* **Physical Layer**: `VAlert` > `VStack` > `VCluster`.
+* **Responsibility**: Standardizes the "Alert Box" look across all sidebars and dashboards.
+* **Key Props**: `variant`, `iconName`, `title`.
 
-### 3. VOverlayLoader
+### 3. VFeasibilityStatus
 
-A global or section-level blocking state to prevent interaction during processing.
+A **Domain Specialist**. It bridges the gap between raw data and visual feedback.
 
-* **Composition**: `VBox` (Backdrop) > `VStack` > [`VIcon` (Spinner), `VTypography` (Message)].
+* **Physical Layer**: `VStatusCard`.
+* **Responsibility**: Automatically converts `HIGH` / `MEDIUM` / `LOW` enums into appropriate colors and icons.
+* **Usage**: Research result summaries, Topic stability reports.
 
-### 4. VStatusScore
+### 4. VEntityWorkflowStatus
 
-A localized indicator combining text with visual progress.
+A **Lifecycle Specialist**. It communicates the "Administrative" state of a resource.
 
-* **Composition**: `VStack` > [`VTypography` (Label), `VProgressSegment`].
+* **Physical Layer**: `VStatusCard`.
+* **Responsibility**: Manages the visual representation of `LOCKED`, `AI_EXTRACTED`, and `ON_HOLD`.
+* **Usage**: Detail editors, sidebar status badges.
 
-### 5. VStepProgress
+### 5. VModal
 
-A workflow tracker for multi-stage research or onboarding processes.
+The **Contextual Master**. A high-focus overlay for critical tasks.
 
-* **Composition**: `VCluster` > [`VIcon` (Step Marker), `VTypography` (Step Name)].
+* **Physical Layer**: `VBox` (Backdrop) > `VBox` (Surface) > `VStack`.
+* **Responsibility**: Handling z-index, accessibility (Esc key), and focus management.
+* **Key Props**: `v-model:open`, `title`, `size`.
+
+### 6. VOverlayLoader
+
+The **Blocking Feedback**. Used when a specific container or the whole screen is waiting for an API response.
+
+* **Physical Layer**: `VBox` > `VStack` > `VIcon` (Spinner).
+* **Responsibility**: Preventing user interaction during "destructive" or "long-running" tasks.
+
+### 7. VStatusScore
+
+The **Quantitative Indicator**. Merges qualitative labels with quantitative bars.
+
+* **Physical Layer**: `VStack` > `VTypography` + `VProgressSegment`.
+* **Usage**: Confidence scores, search relevance, or completeness bars.
+
+### 8. VStepProgress
+
+The **Sequential Tracker**. Communicates progress through a multi-stage wizard.
+
+* **Physical Layer**: `VCluster` > `VIcon` (Step Marker) + `VTypography`.
+* **Usage**: Research initiation steps, Onboarding flows.
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: Accessible Dismissal.** Every `VModal` must include a `VCloseButton` and handle the `Escape` key by default.
-> **Rule 2: Flat Attributes.** Use `inheritAttrs: false` on complex indicators like `VModal` to ensure layout classes are applied only to the intended surface.
-> **Rule 3: Animation Standards.** Use `transition-all duration-200` for overlays. Limit `animate-spin` to the `VIcon` within a loader to minimize visual fatigue.
+> **Rule 1: Composition over Duplication.** Never write raw Tailwind classes for status colors. Always wrap your content in `VAlert` or `VStatusCard`.
+> **Rule 2: Icon Consistency.** Use **Solid** Heroicons for status indicators to ensure visual weight is consistent with the bold typography.
+> **Rule 3: Business Logic Boundary.** Domain-specific logic (e.g., mapping `LOCKED` to `indigo`) belongs in `VEntityWorkflowStatus`, not in the base `VStatusCard`.
 
 ### Standard Implementation Pattern
 
 ```vue
-<VStatusCard
-  variant="warning"
-  icon-name="ExclamationTriangle"
-  title="AI-Generated Content"
->
-  <VTypography size="sm">
-    This summary was generated by AI. Please verify citations before publishing.
-  </VTypography>
-</VStatusCard>
+<VFeasibilityStatus
+  :status="keyword.feasibility"
+  :description="keyword.rationale"
+/>
 
-<VModal v-model:open="isConfirmOpen" title="Delete Resource">
-  <VStack gap="md">
-    <VTypography>Are you sure you want to remove this file?</VTypography>
-    <VButtonToolbar justify="end">
-      <VButton variant="ghost" @click="isConfirmOpen = false">Cancel</VButton>
-      <VButton variant="danger">Confirm</VButton>
-    </VButtonToolbar>
-  </VStack>
-</VModal>
+<VEntityWorkflowStatus :status="keyword.entityStatus">
+  <template #default>
+    This keyword is currently locked by the administrator.
+  </template>
+</VEntityWorkflowStatus>
 
 ```
-
----
-
-## 🎨 Design Tokens (Feedback & Depth)
-
-| Intent | Tailwind Class | Material Elevation | Bootstrap Ref |
-| --- | --- | --- | --- |
-| **Success** | `bg-emerald-50 text-emerald-700` | N/A | `.alert-success` |
-| **Warning** | `bg-amber-50 text-amber-700` | N/A | `.alert-warning` |
-| **Danger** | `bg-red-50 text-red-700` | N/A | `.alert-danger` |
-| **Overlay** | `backdrop-blur-sm bg-slate-900/50` | `shadow-2xl` | `.modal-backdrop` |
 
 ---
 
@@ -102,11 +113,14 @@ A workflow tracker for multi-stage research or onboarding processes.
 
 ```text
 src/components/molecules/indicators/
-├── VModal.vue           # High-focus dialog (Overlay)
-├── VOverlayLoader.vue   # Blocking state feedback
-├── VStatusCard.vue      # Contextual alerts (was ResearchValidation)
-├── VStatusScore.vue     # Text + Progress bar (was TopicStatusIndicator)
-├── VStepProgress.vue    # Multi-stage workflow tracker
-└── README.md            # You are here
+├── VAlert.vue                # Base semantic container (Atoms-plus)
+├── VStatusCard.vue           # Standardized layout (Icon + Title + Body)
+├── VFeasibilityStatus.vue    # Business: Data quality (was ResearchValidation)
+├── VEntityWorkflowStatus.vue # Business: Lifecycle (Locked/Draft)
+├── VModal.vue                # High-focus dialog (Overlay)
+├── VOverlayLoader.vue        # Blocking state feedback
+├── VStatusScore.vue          # Text + Progress bar (was TopicStatusIndicator)
+├── VStepProgress.vue         # Multi-stage workflow tracker
+└── README.md                 # You are here
 
 ```
