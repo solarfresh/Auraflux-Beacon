@@ -1,9 +1,9 @@
 <template>
   <!--
-    The Modal component handles the backdrop, z-index, accessibility,
+    The VModal component handles the backdrop, z-index, accessibility,
     and the Esc key/scroll lock logic.
   -->
-  <Modal :is-open="isOpen" :max-width-class="maxWidthClass" @close="$emit('close')">
+  <VModal :is-open="isOpen" :max-width-class="maxWidthClass" @close="$emit('close')">
     <div
       class="relative w-full bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"
       @click.stop
@@ -20,7 +20,7 @@
         </VTypography>
 
         <!-- Close Button Molecule -->
-        <CloseButton @click="$emit('close')" aria-label="Close auxiliary panel" />
+        <VCloseButton @click="$emit('close')" aria-label="Close auxiliary panel" />
       </header>
 
       <!-- Modal Body Content -->
@@ -28,18 +28,18 @@
         <slot name="content" />
       </main>
     </div>
-  </Modal>
+  </VModal>
 </template>
 
 <script setup lang="ts">
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import Modal from '@/components/molecules/overlays/Modal.vue';
-import CloseButton from '@/components/molecules/overlays/CloseButton.vue';
+import VModal from '@/components/molecules/navs/VModal.vue';
+import VCloseButton from '@/components/atoms/buttons/VCloseButton.vue';
 
 // Define the component's props and events
 const props = defineProps<{
   /**
-   * The visibility state of the modal, passed down to Modal.vue.
+   * The visibility state of the modal, passed down to VModal.vue.
    */
   isOpen: boolean;
   maxWidthClass?: string;

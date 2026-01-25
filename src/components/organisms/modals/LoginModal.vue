@@ -1,5 +1,5 @@
 <template>
-  <Modal :isOpen="isOpen" @close="$emit('close')">
+  <VModal :isOpen="isOpen" @close="$emit('close')">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300">
       <header class="pt-8 pb-6 px-8 text-center bg-gray-50/50 border-b border-gray-100">
         <div class="inline-flex p-3 bg-white rounded-2xl shadow-sm border border-gray-100 mb-4">
@@ -78,7 +78,7 @@
         </VTypography>
       </footer>
     </div>
-  </Modal>
+  </VModal>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +91,7 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import Modal from '@/components/molecules/overlays/Modal.vue';
+import VModal from '@/components/molecules/navs/VModal.vue';
 
 /**
  * LoginModal: Handles user authentication flow.
