@@ -8,7 +8,7 @@
     <VBox
       v-if="$slots.header || title"
       tag="header"
-      padding="sidebar-header"
+      padding="md"
       border="bottom"
       class="flex-shrink-0 z-10 sticky top-0 bg-white/80 backdrop-blur-md"
     >
