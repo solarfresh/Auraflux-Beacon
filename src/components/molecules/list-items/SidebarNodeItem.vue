@@ -65,7 +65,7 @@
 import { computed } from 'vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{

@@ -96,7 +96,7 @@ import { computed, ref, watch } from 'vue';
 import type { FeasibilityStatus } from '@/interfaces/core';
 
 // Atoms & Molecules
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';

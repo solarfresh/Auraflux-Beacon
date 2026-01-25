@@ -93,7 +93,7 @@ import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 // Atoms
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import IconButton from '@/components/atoms/IconButton.vue';
 import Input from '@/components/atoms/Input.vue';

@@ -90,7 +90,7 @@ import { ref, computed } from 'vue';
 import type { ResourceItem, ResourceSource } from '@/interfaces/knowledge';
 
 // Atoms, Molecules & Layouts
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Input from '@/components/atoms/Input.vue';

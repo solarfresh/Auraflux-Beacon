@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 
 /**
  * AuthButton Molecule

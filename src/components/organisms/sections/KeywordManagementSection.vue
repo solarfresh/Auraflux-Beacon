@@ -97,7 +97,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';

@@ -56,7 +56,7 @@
 import { computed } from 'vue';
 import type { ResourceItem } from '@/interfaces/knowledge';
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Badge from '@/components/atoms/Badge.vue';
 import Icon from '@/components/atoms/Icon.vue';
 

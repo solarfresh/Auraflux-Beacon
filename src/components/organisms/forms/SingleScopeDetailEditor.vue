@@ -149,7 +149,7 @@ import type { EntityStatus, FeasibilityStatus } from '@/interfaces/core';
 import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';

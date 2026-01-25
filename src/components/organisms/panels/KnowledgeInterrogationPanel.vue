@@ -109,7 +109,7 @@ import { useExplorationStore } from '@/stores/exploration';
 
 // Atoms & Molecules
 import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Badge from '@/components/atoms/Badge.vue';
 import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';

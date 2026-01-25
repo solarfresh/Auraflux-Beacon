@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Text from '@/components/atoms/Text.vue';
 import { useWorkflowAuth } from '@/composables/useWorkflowAuth';
 

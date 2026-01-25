@@ -90,7 +90,7 @@ import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfa
 
 // Layout & UI Components
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Text from '@/components/atoms/Text.vue';
 
 // Molecules

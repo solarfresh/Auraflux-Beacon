@@ -127,7 +127,7 @@ import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { useInitiativeStore } from '@/stores/initiation';
 
 // Atoms
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import Icon from '@/components/atoms/Icon.vue';
 import Text from '@/components/atoms/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';

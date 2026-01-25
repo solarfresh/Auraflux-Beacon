@@ -67,7 +67,7 @@
 import { ref, computed } from 'vue';
 import Text from '@/components/atoms/Text.vue';
 import Icon from '@/components/atoms/Icon.vue';
-import Button from '@/components/atoms/Button.vue';
+import Button from '@/components/atoms/actions/Button.vue';
 import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.vue';
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
