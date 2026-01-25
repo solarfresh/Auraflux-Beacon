@@ -20,12 +20,12 @@
         </template>
 
         <template #empty-state>
-          <VStack align="center" gap="md" class="py-12 px-6 text-center">
-            <VIcon name="DocumentPlus" size="lg" color="gray-200" />
-            <VTypography size="sm" color="gray-400">
-              Start your first reflection log to track your research journey.
-            </VTypography>
-          </VStack>
+          <VEmptyState
+            icon="DocumentPlus"
+            title="Start your journey"
+          >
+            Create your first reflection log to track research insights.
+          </VEmptyState>
         </template>
       </MasterListPanel>
     </template>
@@ -46,25 +46,21 @@
 
 <script setup lang="ts">
 /**
- * ReflectionLogForm (Page-level Organism / Template Controller)
- * Orchestrates the Master-Detail flow for research reflections.
+ * ReflectionLogForm
+ * Orchestrates the Master-Detail flow using standardized molecules.
  */
 import { ref, computed, watch } from 'vue';
 import { useInitiativeStore } from '@/stores/initiation';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
-// Atoms & Layout
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
+// Molecules
+import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';
+import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
 
-// Molecules & Organisms
+// Organisms & Templates
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/organisms/layout/MasterListPanel.vue';
-import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/forms/ReflectionLogEditorPanel.vue';
-
-const initiativeStore = useInitiativeStore();
 
 const props = defineProps<{
   initialEntries: ReflectionLogEntry[];
@@ -74,7 +70,9 @@ const emit = defineEmits<{
   (e: 'close-modal'): void;
 }>();
 
-// --- State Management ---
+const initiativeStore = useInitiativeStore();
+
+// --- State ---
 const logEntries = ref<ReflectionLogEntry[]>(props.initialEntries || []);
 const selectedEntryId = ref<string | null>(null);
 const originalEntry = ref<ReflectionLogEntry | null>(null);
@@ -83,30 +81,26 @@ const isEditing = ref(false);
 
 // --- Computed ---
 const isNewEntry = computed(() => !selectedEntryId.value && !!currentDraft.value);
+
 const isDirty = computed(() => {
   if (!currentDraft.value || !originalEntry.value) return false;
   return currentDraft.value.content.trim() !== originalEntry.value.content.trim() ||
          currentDraft.value.title.trim() !== originalEntry.value.title.trim();
 });
 
-// --- Helpers ---
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-};
-
 // --- Watchers ---
 watch(() => props.initialEntries, (newEntries) => {
-    logEntries.value = newEntries;
+  logEntries.value = newEntries;
 }, { deep: true });
 
-// --- Methods ---
+// --- Selection & Lifecycle Methods ---
 function handleSelectEntry(entry: ReflectionLogEntry) {
   if (isEditing.value && isDirty.value && selectedEntryId.value !== entry.id) {
     if (!window.confirm("Discard unsaved changes?")) return;
   }
 
   selectedEntryId.value = entry.id;
+  // Deep clone to isolate draft from original
   originalEntry.value = JSON.parse(JSON.stringify(entry));
   currentDraft.value = JSON.parse(JSON.stringify(entry));
   isEditing.value = false;

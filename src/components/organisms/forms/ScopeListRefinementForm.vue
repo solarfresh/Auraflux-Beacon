@@ -1,129 +1,144 @@
 <template>
-  <div class="flex flex-col h-full space-y-6">
-    <div class="bg-gray-50/80 p-5 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-      <div class="flex items-center gap-2">
-        <div class="p-1.5 bg-indigo-100 rounded-lg text-indigo-600">
-          <VIcon name="ArrowsPointingIn" size="xs" />
-        </div>
-        <VTypography tag="span" size="sm" weight="bold" color="gray-800">
-          Define Research Boundary
-        </VTypography>
-      </div>
+  <VBox tag="section" full-height class="flex flex-col">
 
-      <div class="flex flex-col gap-4">
-        <VInput
-          v-model="newScopeText"
-          placeholder="e.g., Only English publications, Post-2010 studies..."
-          size="md"
-          class="w-full bg-white"
-          @keyup.enter="addScope"
-        />
+    <VBox padding="lg" background="gray-50" rounded="2xl" border="all" class="mb-6 shadow-sm">
+      <VStack gap="md">
+        <VCluster gap="sm" align="center">
+          <VBox padding="xs" background="indigo-50" rounded="lg" class="text-indigo-600">
+            <VIcon name="ArrowsPointingIn" size="xs" />
+          </VBox>
+          <VTypography tag="span" size="sm" weight="bold" color="gray-800">
+            Define Research Boundary
+          </VTypography>
+        </VCluster>
 
-        <div class="flex items-center justify-between">
-          <div class="flex bg-gray-200/50 p-1 rounded-xl">
-            <button
-              v-for="type in (['INCLUSION', 'EXCLUSION'] as const)"
-              :key="type"
-              @click="activeType = type"
-              :class="[
-                'px-5 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-lg transition-all duration-200',
-                activeType === type
-                  ? (type === 'INCLUSION' ? 'bg-emerald-600 text-white shadow-md' : 'bg-rose-600 text-white shadow-md')
-                  : 'text-gray-500 hover:text-gray-700'
-              ]"
+        <VStack gap="sm">
+          <VInput
+            v-model="newScopeText"
+            placeholder="e.g., Only English publications, Post-2010 studies..."
+            class="w-full bg-white"
+            @keyup.enter="addScope"
+          />
+
+          <VCluster justify="between" align="center">
+            <VBox background="gray-50" padding="xs" rounded="xl" class="flex gap-1">
+              <VButton
+                v-for="type in (['INCLUSION', 'EXCLUSION'] as const)"
+                :key="type"
+                size="xs"
+                :variant="activeType === type ? 'primary' : 'tertiary'"
+                :class="[
+                  'px-5 py-1.5 !rounded-lg transition-all duration-300',
+                  activeType === type
+                    ? (type === 'INCLUSION' ? '!bg-emerald-600 !shadow-md' : '!bg-rose-600 !shadow-md')
+                    : 'text-gray-500'
+                ]"
+                @click="activeType = type"
+              >
+                {{ type }}
+              </VButton>
+            </VBox>
+
+            <VButton
+              variant="primary"
+              :disabled="!newScopeText.trim()"
+              @click="addScope"
             >
-              {{ type }}
-            </button>
-          </div>
+              Add to Scope
+            </VButton>
+          </VCluster>
+        </VStack>
+      </VStack>
+    </VBox>
 
-          <VButton
-            variant="primary"
-            size="md"
-            @click="addScope"
-            :disabled="!newScopeText.trim()"
-          >
-            Add to Scope
-          </VButton>
-        </div>
-      </div>
-    </div>
+    <VBox class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8 min-h-0 overflow-hidden">
 
-    <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 min-h-0 overflow-hidden">
-
-      <div class="flex flex-col space-y-3 min-h-0">
-        <div class="flex items-center justify-between px-1">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+      <VStack gap="md" class="min-h-0">
+        <VCluster justify="between" align="center" padding="xs">
+          <VCluster gap="xs" align="center">
+            <VBox rounded="full" class="w-2 h-2 bg-emerald-500" />
             <VTypography tag="h4" size="sm" weight="bold" color="emerald-900">Inclusions</VTypography>
-          </div>
+          </VCluster>
           <VBadge variant="emerald" size="xs">{{ inclusions.length }}</VBadge>
-        </div>
+        </VCluster>
 
-        <div class="flex-1 overflow-y-auto space-y-2 pr-1 stable-gutter">
-          <div
-            v-for="item in inclusions"
-            :key="item.label"
-            class="flex items-start justify-between bg-emerald-50/40 border border-emerald-100 p-3 rounded-xl group hover:border-emerald-300 transition-all"
-          >
-            <VTypography tag="p" size="xs" color="emerald-950" class="leading-relaxed flex-1 mr-3">
-              {{ item.label }}
-            </VTypography>
-            <VIconButton
-              variant="danger"
-              size="xs"
-              icon-name="XMark"
-              class="opacity-0 group-hover:opacity-100 transition-opacity"
-              @click="removeScope(item.label)"
-            />
-          </div>
-          <div v-if="inclusions.length === 0" class="h-32 flex flex-col items-center justify-center border border-dashed border-gray-100 rounded-xl bg-gray-50/30">
-            <VTypography size="xs" color="gray-400" italic>No inclusion criteria.</VTypography>
-          </div>
-        </div>
-      </div>
+        <VBox overflow-y-auto class="flex-1 pr-1 stable-gutter">
+          <VStack v-if="inclusions.length > 0" gap="sm">
+            <VBox
+              v-for="item in inclusions"
+              :key="item.id"
+              padding="md"
+              background="emerald-50"
+              rounded="xl"
+              border="all"
+              class="border-emerald-100 group hover:border-emerald-300 transition-all"
+            >
+              <VCluster justify="between" align="start" no-wrap>
+                <VTypography size="xs" color="emerald-950" class="leading-relaxed">
+                  {{ item.label }}
+                </VTypography>
+                <VButton
+                  variant="danger"
+                  size="xs"
+                  icon-name="XMark"
+                  icon-only
+                  class="opacity-0 group-hover:opacity-100 transition-opacity -mt-1 -mr-1"
+                  @click="removeScope(item.id)"
+                />
+              </VCluster>
+            </VBox>
+          </VStack>
+          <VEmptyState v-else title="No inclusions" size="sm" class="h-32 opacity-60" />
+        </VBox>
+      </VStack>
 
-      <div class="flex flex-col space-y-3 min-h-0">
-        <div class="flex items-center justify-between px-1">
-          <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-rose-500"></div>
+      <VStack gap="md" class="min-h-0">
+        <VCluster justify="between" align="center" padding="xs">
+          <VCluster gap="xs" align="center">
+            <VBox rounded="full" class="w-2 h-2 bg-rose-500" />
             <VTypography tag="h4" size="sm" weight="bold" color="rose-900">Exclusions</VTypography>
-          </div>
+          </VCluster>
           <VBadge variant="red" size="xs">{{ exclusions.length }}</VBadge>
-        </div>
+        </VCluster>
 
-        <div class="flex-1 overflow-y-auto space-y-2 pr-1 stable-gutter">
-          <div
-            v-for="item in exclusions"
-            :key="item.label"
-            class="flex items-start justify-between bg-rose-50/40 border border-rose-100 p-3 rounded-xl group hover:border-rose-300 transition-all"
-          >
-            <VTypography tag="p" size="xs" color="rose-950" class="leading-relaxed flex-1 mr-3">
-              {{ item.label }}
-            </VTypography>
-            <VIconButton
-              variant="danger"
-              size="xs"
-              icon-name="XMark"
-              class="opacity-0 group-hover:opacity-100 transition-opacity"
-              @click="removeScope(item.label)"
-            />
-          </div>
-          <div v-if="exclusions.length === 0" class="h-32 flex flex-col items-center justify-center border border-dashed border-gray-100 rounded-xl bg-gray-50/30">
-            <VTypography size="xs" color="gray-400" italic>No exclusion criteria.</VTypography>
-          </div>
-        </div>
-      </div>
-    </div>
+        <VBox overflow-y-auto class="flex-1 pr-1 stable-gutter">
+          <VStack v-if="exclusions.length > 0" gap="sm">
+            <VBox
+              v-for="item in exclusions"
+              :key="item.id"
+              padding="md"
+              background="rose-50"
+              rounded="xl"
+              border="all"
+              class="border-rose-100 group hover:border-rose-300 transition-all"
+            >
+              <VCluster justify="between" align="start" no-wrap>
+                <VTypography size="xs" color="rose-950" class="leading-relaxed">
+                  {{ item.label }}
+                </VTypography>
+                <VButton
+                  variant="danger"
+                  size="xs"
+                  icon-name="XMark"
+                  icon-only
+                  class="opacity-0 group-hover:opacity-100 transition-opacity -mt-1 -mr-1"
+                  @click="removeScope(item.id)"
+                />
+              </VCluster>
+            </VBox>
+          </VStack>
+          <VEmptyState v-else title="No exclusions" size="sm" class="h-32 opacity-60" />
+        </VBox>
+      </VStack>
+    </VBox>
 
-    <div class="flex justify-end items-center space-x-3 pt-6 border-t border-gray-100">
-      <VButton variant="tertiary" size="md" @click="$emit('cancel')">
-        Cancel
-      </VButton>
-      <VButton variant="primary" size="md" @click="handleSave">
-        Save Scope Changes
-      </VButton>
-    </div>
-  </div>
+    <VBox padding="md" border="top" class="mt-6">
+      <VCluster justify="end" gap="md">
+        <VButton variant="tertiary" @click="$emit('cancel')">Cancel</VButton>
+        <VButton variant="primary" @click="handleSave">Save Scope Changes</VButton>
+      </VCluster>
+    </VBox>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -131,12 +146,17 @@ import { ref, computed } from 'vue';
 import type { ProcessedScope } from '@/interfaces/initiation';
 
 // Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
-import VIconButton from '@/components/atoms/IconButton.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
+
+// Molecules
+import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
 
 const props = defineProps<{
   initialValue: ProcessedScope[];
@@ -157,7 +177,6 @@ const inclusions = computed(() => localScope.value.filter(s => s.boundaryType ==
 const exclusions = computed(() => localScope.value.filter(s => s.boundaryType === 'EXCLUSION'));
 
 // --- METHODS ---
-
 function addScope() {
   const text = newScopeText.value.trim();
   if (!text) return;
@@ -167,7 +186,7 @@ function addScope() {
     return;
   }
 
-  localScope.value.unshift({ // Add to top for visibility
+  localScope.value.unshift({
     id: `scope-${Date.now()}`,
     label: text,
     boundaryType: activeType.value,
@@ -179,8 +198,8 @@ function addScope() {
   newScopeText.value = '';
 }
 
-function removeScope(label: string) {
-  localScope.value = localScope.value.filter(s => s.label !== label);
+function removeScope(id: string) {
+  localScope.value = localScope.value.filter(s => s.id !== id);
 }
 
 function handleSave() {

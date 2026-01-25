@@ -1,90 +1,82 @@
 <template>
-  <div class="flex flex-col h-full space-y-6">
-    <div class="space-y-3 p-1">
-      <VTypography tag="label" size="sm" weight="bold" color="gray-700">
-        Add Research Keyword
-      </VTypography>
-      <div class="flex gap-2">
-        <VInput
-          v-model="newKeywordLabel"
-          placeholder="e.g., Sustainable Energy, Behavioral Economics..."
-          size="md"
-          class="flex-1"
-          @keyup.enter="addKeyword"
-        />
-        <VButton variant="primary" size="md" @click="addKeyword">
-          Add
-        </VButton>
-      </div>
-      <VTypography tag="p" size="xs" color="gray-400">
-        Keywords help the system narrow down relevant resources and insights.
-      </VTypography>
-    </div>
+  <VBox tag="section" full-height class="flex flex-col">
+    <VBox padding="xs" class="mb-8">
+      <VStack gap="sm">
+        <VTypography tag="label" size="sm" weight="bold" color="gray-700">
+          Add Research Keyword
+        </VTypography>
 
-    <div class="flex-1 flex flex-col min-h-0 space-y-3">
-      <div class="flex justify-between items-center px-1">
-        <div class="flex items-center gap-2">
+        <VCluster gap="sm">
+          <VInput
+            v-model="newKeywordLabel"
+            placeholder="e.g., Sustainable Energy, Behavioral Economics..."
+            class="flex-1"
+            @keyup.enter="addKeyword"
+          />
+          <VButton
+            variant="primary"
+            :disabled="!newKeywordLabel.trim()"
+            @click="addKeyword"
+          >
+            Add
+          </VButton>
+        </VCluster>
+
+        <VTypography size="xs" color="gray-400">
+          Keywords help the system narrow down relevant resources and insights.
+        </VTypography>
+      </VStack>
+    </VBox>
+
+    <VBox tag="main" class="flex-1 min-h-0 flex flex-col">
+      <VCluster justify="between" align="center" class="px-1 mb-4">
+        <VCluster gap="sm" align="center">
           <VTypography tag="h4" size="sm" weight="bold" color="gray-700">
             Current Keywords
           </VTypography>
           <VBadge variant="gray" size="xs">{{ localKeywords.length }}</VBadge>
-        </div>
-      </div>
+        </VCluster>
+      </VCluster>
 
-      <div
+      <VEmptyState
         v-if="localKeywords.length === 0"
-        class="flex-1 border-2 border-dashed border-gray-100 rounded-2xl flex flex-col items-center justify-center bg-gray-50/30 transition-colors"
-      >
-        <div class="p-3 bg-white rounded-xl shadow-sm mb-3">
-          <VIcon name="Hashtag" size="md" color="gray-300" />
-        </div>
-        <VTypography tag="span" size="sm" color="gray-400" class="text-center italic">
-          Your list is empty. <br/> Add terms to focus your inquiry.
-        </VTypography>
-      </div>
+        icon="Hashtag"
+        title="No keywords added"
+        description="Your list is empty. Add terms to focus your inquiry."
+        class="flex-1 border-2 border-dashed border-gray-100 rounded-2xl"
+      />
 
-      <div
+      <VBox
         v-else
-        class="flex-1 overflow-y-auto pr-2 stable-gutter transition-all"
+        flex-1
+        overflow-y-auto
+        class="pr-2 stable-gutter transition-all"
       >
-        <div class="flex flex-wrap gap-3 p-1">
-          <div
+        <VCluster gap="md" wrap class="p-1">
+          <VEntityChip
             v-for="(keyword, index) in localKeywords"
-            :key="keyword.label + index"
-            class="flex items-center bg-white border border-gray-200 pl-3 pr-1.5 py-1.5 rounded-xl group hover:border-indigo-300 hover:shadow-sm transition-all animate-in fade-in zoom-in duration-200"
-          >
-            <VIcon
-              :name="getStatusIcon(keyword.entityStatus)"
-              size="xs"
-              :class="getStatusColorClass(keyword.entityStatus)"
-              class="mr-2"
-            />
+            :key="keyword.id"
+            :label="keyword.label"
+            :icon-name="getStatusIcon(keyword.entityStatus)"
+            :icon-class="getStatusColorClass(keyword.entityStatus)"
+            removable
+            @remove="removeKeyword(index)"
+          />
+        </VCluster>
+      </VBox>
+    </VBox>
 
-            <VTypography tag="span" size="sm" weight="medium" color="gray-700" class="mr-3">
-              {{ keyword.label }}
-            </VTypography>
-
-            <VIconButton
-              variant="danger"
-              size="xs"
-              icon-name="XMark"
-              class="opacity-0 group-hover:opacity-100 transition-opacity bg-red-50 hover:bg-red-100 rounded-lg"
-              @click="removeKeyword(index)"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex justify-end items-center space-x-3 pt-6 border-t border-gray-100">
-      <VButton variant="tertiary" size="md" @click="$emit('cancel')">
-        Cancel
-      </VButton>
-      <VButton variant="primary" size="md" @click="handleSave">
-        Save Changes
-      </VButton>
-    </div>
-  </div>
+    <VBox padding="md" border="top" class="mt-6">
+      <VCluster justify="end" gap="md">
+        <VButton variant="tertiary" @click="$emit('cancel')">
+          Cancel
+        </VButton>
+        <VButton variant="primary" @click="handleSave">
+          Save Changes
+        </VButton>
+      </VCluster>
+    </VBox>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -93,12 +85,17 @@ import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 // Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VIconButton from '@/components/atoms/IconButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
+
+// Molecules
+import VEntityChip from '@/components/molecules/indicators/VEntityChip.vue';
+import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
 
 const props = defineProps<{
   initialValue: ProcessedKeyword[];
@@ -113,8 +110,7 @@ const emit = defineEmits<{
 const localKeywords = ref<ProcessedKeyword[]>([...props.initialValue]);
 const newKeywordLabel = ref('');
 
-// --- LOGIC ---
-
+// --- CORE LOGIC ---
 function addKeyword() {
   const label = newKeywordLabel.value.trim();
   if (!label) return;
@@ -128,7 +124,7 @@ function addKeyword() {
     return;
   }
 
-  localKeywords.value.unshift({ // Add to top for better visibility
+  localKeywords.value.unshift({
     id: `temp-${Date.now()}`,
     label,
     entityStatus: 'USER_DRAFT',
@@ -147,30 +143,24 @@ function handleSave() {
   emit('save', localKeywords.value);
 }
 
-// --- UI HELPERS ---
-
+// --- UI MAPPING (Could be moved to a helper or the Molecule itself) ---
 function getStatusIcon(status?: EntityStatus): string {
-  switch (status) {
-    case 'LOCKED': return 'LockClosed';
-    case 'ON_HOLD': return 'ArchiveBox';
-    case 'AI_EXTRACTED': return 'Sparkles';
-    default: return 'PencilSquare';
-  }
+  const map: Record<string, string> = {
+    LOCKED: 'LockClosed',
+    ON_HOLD: 'ArchiveBox',
+    AI_EXTRACTED: 'Sparkles',
+    USER_DRAFT: 'PencilSquare'
+  };
+  return map[status || 'USER_DRAFT'];
 }
 
-/** * Returns Tailwind text color classes instead of raw hex/color names
- * for better integration with the template.
- */
 function getStatusColorClass(status?: EntityStatus): string {
-  switch (status) {
-    case 'LOCKED': return 'text-indigo-500';
-    case 'AI_EXTRACTED': return 'text-amber-500';
-    case 'ON_HOLD': return 'text-gray-400';
-    default: return 'text-gray-300';
-  }
+  const map: Record<string, string> = {
+    LOCKED: 'text-indigo-500',
+    AI_EXTRACTED: 'text-amber-500',
+    ON_HOLD: 'text-gray-400',
+    USER_DRAFT: 'text-gray-300'
+  };
+  return map[status || 'USER_DRAFT'];
 }
 </script>
-
-<style scoped>
-/* Scoped styles are minimal, relying on global stable-gutter */
-</style>

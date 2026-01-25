@@ -20,16 +20,16 @@ Buttons are the primary interactive atoms used to trigger events, submit forms, 
 
 ### 1. VButton
 
-The universal action trigger.
+The **Universal Action Trigger**. It manages all interactive states, from text-heavy primary actions to minimalist icon-only controls.
 
-* **Props**:
-* `variant`: `primary` | `secondary` | `ghost` | `danger` | `outline`.
-* `size`: `sm` | `md` | `lg`.
-* `iconOnly`: Boolean (ensures perfect 1:1 aspect ratio).
-* `loading`: Boolean (replaces text/icon with a spinner).
-
-
-* **Tailwind Implementation**: Uses `inline-flex`, `items-center`, `justify-center`, and `transition-colors`.
+* **Role**: **"Interaction" provider**. Handles semantic variants, sizing, and feedback states (loading/disabled).
+* **Design Intent**: Replaces the legacy `VIconButton`. Use `iconOnly` to create perfect square/circular hit areas for toolbars and chips.
+* **Key Props**:
+* `variant`: `primary` | `secondary` | `tertiary` | `danger` | `outline` | `ghost`.
+* `size`: `xs` | `sm` | `md` | `lg`.
+* `iconName`: The Heroicon name string.
+* `iconOnly`: (Boolean) Removes padding and text rendering for icon-centric UI.
+* `loading`: (Boolean) Swaps content for a spinner and disables interaction.
 
 ### 2. VCloseButton
 

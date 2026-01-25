@@ -96,6 +96,19 @@ A **Navigational Molecule**. Handles the "Zero Data" scenario to prevent user di
 * **Composition**: `VStack` > [`VBox` > `VIcon`, `VTypography` (Title), `Slot` (Description), `Slot` (Actions)].
 * **Key Props**: `icon`, `title`, `description`.
 
+### 11. VEntityChip
+
+A **Business Molecule** designed for metadata visualization. It transforms a static string or object into an interactive "tag" that communicates status and allows for management actions.
+
+* **Role**: **"Entity Representation"**. Standardizes how keywords, research scopes, and identified concepts are displayed across the platform.
+* **Composition**: `VBox` > `VCluster` > [`VIcon`, `VTypography`, `VButton` (iconOnly)].
+* **Design Intent**: Uses `group-hover` logic to hide/show management actions (like removal), reducing visual clutter in dense lists.
+* **Key Props**:
+* `label`: The display text.
+* `iconName`: Semantic icon representing the entity's source or status (e.g., `Sparkles` for AI-generated).
+* `iconClass`: Tailwind classes for semantic coloring (e.g., `text-amber-500`).
+* `removable`: (Boolean) Enables the hover-to-reveal delete button.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -132,6 +145,7 @@ src/components/molecules/indicators/
 ├── VFeasibilityStatus.vue    # Business: Data quality (was ResearchValidation)
 ├── VEntityWorkflowStatus.vue # Business: Lifecycle (Locked/Draft)
 ├── VReflectionStatus.vue     # Business: Log persistence mapping
+├── VEntityChip.vue           # Business: Metadata/Keyword tag
 ├── VEmptyState.vue           # Navigation: Zero-data guidance
 ├── VModal.vue                # High-focus dialog (Overlay)
 ├── VOverlayLoader.vue        # Blocking state feedback

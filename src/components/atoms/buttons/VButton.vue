@@ -1,74 +1,80 @@
 <template>
   <button
-    :type="type"
-    :disabled="disabled"
     :class="[
-      baseClass,
-      variantClass,
-      computedSizeClass
+      'inline-flex items-center justify-center transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
+      // Variant Mapping
+      variantClasses[variant],
+      // Size & Shape Mapping
+      iconOnly ? iconSizeClasses[size] : textSizeClasses[size],
+      // Rounded logic
+      iconOnly ? 'rounded-lg' : 'rounded-xl'
     ]"
-    @click="$emit('click', $event)"
+    :disabled="disabled || loading"
+    v-bind="$attrs"
   >
-    <template v-if="iconOnly && iconName">
-      <VIcon :name="iconName" :size="size === 'xs' ? 'xs' : 'sm'" color="current" />
+    <VIcon v-if="loading" name="ArrowPath" size="sm" class="animate-spin" />
+
+    <template v-else>
+      <VIcon
+        v-if="iconName"
+        :name="iconName"
+        :size="size === 'lg' ? 'md' : 'sm'"
+        :class="{ 'mr-2': !iconOnly }"
+      />
+
+      <VTypography
+        v-if="!iconOnly"
+        tag="span"
+        weight="semibold"
+        class="whitespace-nowrap"
+      >
+        <slot />
+      </VTypography>
     </template>
-    <slot v-else></slot>
   </button>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import { ButtonProps } from '@/interfaces/button';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
-const props = withDefaults(defineProps<VButtonProps>(), {
+interface Props {
+  variant?: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'outline';
+  size?: 'xs' | 'sm' | 'md' | 'lg';
+  iconName?: string;
+  iconOnly?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   size: 'md',
-  iconOnly: false,
-  iconName: '',
-  type: 'button'
+  iconOnly: false
 });
 
-defineEmits(['click']);
+// --- Style Maps ---
+const variantClasses = {
+  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm',
+  secondary: 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100',
+  tertiary: 'bg-transparent text-gray-600 hover:bg-gray-100',
+  danger: 'bg-red-50 text-red-600 hover:bg-red-100',
+  outline: 'bg-transparent border border-gray-200 text-gray-700 hover:border-gray-300',
+  ghost: 'bg-transparent text-gray-400 hover:text-gray-600'
+};
 
-const baseClass = 'inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed border';
+const textSizeClasses = {
+  xs: 'px-2.5 py-1.5 text-xs',
+  sm: 'px-3 py-2 text-sm',
+  md: 'px-5 py-2.5 text-base',
+  lg: 'px-6 py-3 text-lg'
+};
 
-const variantClass = computed(() => {
-  switch (props.variant) {
-    case 'primary':
-      return 'border-transparent text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500';
-    case 'secondary':
-      return 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-indigo-500 shadow-sm';
-    case 'tertiary':
-      return 'border-transparent bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-indigo-500';
-    case 'destructive':
-      return 'border-transparent bg-red-600 text-white hover:bg-red-700 focus:ring-red-500';
-    case 'ghost':
-      return 'border-transparent bg-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-100';
-    case 'danger-ghost':
-      return 'border-transparent bg-transparent text-gray-400 hover:text-red-600 hover:bg-red-50';
-    default:
-      return 'border-transparent';
-  }
-});
-
-const computedSizeClass = computed(() => {
-  // If it's iconOnly, we use square paddings
-  if (props.iconOnly) {
-    switch (props.size) {
-      case 'xs': return 'p-0.5'; // Ultra-compact for list actions
-      case 'sm': return 'p-1';
-      case 'lg': return 'p-3';
-      default:   return 'p-2';   // md
-    }
-  }
-
-  // Standard button paddings
-  switch (props.size) {
-    case 'xs': return 'px-2 py-0.5 text-xs';
-    case 'sm': return 'px-2.5 py-1.5 text-sm';
-    case 'lg': return 'px-6 py-3 text-lg';
-    default:   return 'px-4 py-2 text-sm'; // md
-  }
-});
+const iconSizeClasses = {
+  xs: 'p-1',
+  sm: 'p-1.5',
+  md: 'p-2.5',
+  lg: 'p-3'
+};
 </script>

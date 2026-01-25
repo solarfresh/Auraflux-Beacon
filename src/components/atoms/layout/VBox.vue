@@ -33,7 +33,7 @@ import { computed, useAttrs } from 'vue';
 type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 type BorderToken = 'all' | 'top' | 'bottom' | 'right' | 'none';
-type BackgroundToken = 'white' | 'gray-50' | 'indigo-50' | 'amber-50' | 'transparent';
+type BackgroundToken = 'white' | 'gray-50' | 'indigo-50' | 'amber-50' | 'rose-50' | 'emerald-50' | 'transparent';
 
 interface Props {
   /** HTML tag to render */
@@ -83,6 +83,8 @@ const backgroundMap: Record<BackgroundToken, string> = {
   'gray-50': 'bg-gray-50',
   'indigo-50': 'bg-indigo-50',
   'amber-50': 'bg-amber-50',
+  'rose-50': 'bg-rose-50',
+  'emerald-50': 'bg-emerald-50',
   transparent: 'bg-transparent'
 };
 
