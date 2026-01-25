@@ -1,62 +1,69 @@
-## Molecules: Actions
+# Molecules: Actions
 
-Action molecules are functional clusters designed to capture user input or trigger significant application events. They combine input atoms with trigger atoms to create unified, purposeful interaction units.
+Action molecules are functional clusters designed to capture user input or trigger application events. They represent the "Verb" of our UI, focusing on capturing intent and maintaining strict state synchronization between inputs and triggers.
 
 ## 🧭 Design Principles
 
-* **Intent-Driven**: Every action molecule must have a clear primary goal (e.g., "Submit", "Login", "Search").
-* **State Synchronization**: Trigger buttons must reflect the state of associated inputs (e.g., staying disabled until validation passes).
-* **Feedback Loops**: Action molecules should provide immediate visual feedback upon interaction (e.g., loading states or variant changes).
-* **Keyboard Accessibility**: Components must support standard keyboard interactions, such as `Enter` for submission.
+* **Atomic Bones**: Action molecules must never use raw HTML containers. Use `Stack` for vertical forms and `Cluster` for horizontal input groups to ensure consistent spacing.
+* **Scale Integrity**: Maintain a 1:1 scale ratio between sibling atoms. An `md` Input must always be paired with an `md` Button to ensure optical alignment.
+* **State Propagation**: The molecule is the "Source of Truth" for its internal atoms. If the molecule is `disabled` or `loading`, this state must be propagated to all child components.
+* **Proximity Logic**: Use specific gap tokens (`gap="xs"`) to bind labels to inputs, and larger tokens (`gap="md"`) to separate independent action groups.
 
 ---
 
 ## 🛠 Component Catalog
 
-### 1. MessageInput
+### 1. FormField
+
+A structural wrapper that binds labels, inputs, and validation messages.
+
+* **Composition**: `Stack` > [`Cluster` (Label/Hint), `Slot` (Input/Textarea), `Text` (Error/Description)].
+* **Responsibility**: Manages the visual relationship between a form control and its metadata.
+
+### 2. MessageInput
 
 A composite entry field for chat-style interactions or search queries.
 
-* **Composition**: `Input` + `Button` + `Icon`.
+* **Composition**: `Box` > `Cluster` > [`Input`, `Button` (Submit Icon)].
 * **Standardization**: Uses `size="lg"` for high-visibility interaction areas.
-* **Logic**: Trims whitespace and prevents empty emissions.
 
-### 2. ActionBar
+### 3. ActionBar
 
-A persistent footer container used for high-level workflow transitions.
+A persistent container for workflow transitions, typically found in footers.
 
-* **Composition**: `Button[variant="primary"]` + `Text`.
-* **Usage**: Typically positioned at the bottom of a panel to "Commit" or "Proceed" to the next research phase.
+* **Composition**: `Box` > `Cluster` > [`Button` (Cancel/Secondary), `Button` (Primary/Submit)].
+* **Layout Rule**: Aligns primary actions to the right (end) to follow standard UX patterns.
 
-### 3. AuthButton
+### 4. AuthButton
 
 A state-aware trigger for session management.
 
-* **Composition**: `Button` wrapper that toggles between `primary/secondary` variants.
-* **Logic**: Automatically switches icons (`ArrowRightOnRectangle` vs. `UserMinus`) and labels based on the `isLoggedIn` prop.
+* **Logic**: Automatically handles variant switching and icon toggling based on the user's authentication state.
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: Matching Scales.** Always maintain consistent sizing between sibling atoms within an action group (e.g., an `lg` Input must be paired with an `lg` Button).
-> **Rule 2: Propagated States.** Action molecules must propagate the `disabled` or `loading` state to all internal children to prevent accidental double-submissions.
-> **Rule 3: Atomic Synergy.** Leverage the `Button` atom's internal icon handling instead of manually nesting `Icon` atoms to keep the template clean.
+> **Rule 1: No Magic Spacing.** Replace all `space-x-*` or `mb-*` classes with the `gap` prop on `Stack` or `Cluster`.
+> **Rule 2: Flat Attributes.** Use `inheritAttrs: false` and `v-bind="$attrs"` to ensure that layout classes injected by parents (like `flex-1`) are applied to the root Box/Stack.
+> **Rule 3: Label Accessibility.** Always ensure the `FormField` provides a scoped ID to the input slot to maintain the `label[for]` and `input[id]` connection.
 
-### Correct Composition Pattern
+### Standard Industrial Pattern
 
 ```vue
-<div class="flex space-x-3 items-end">
-  <Input size="lg" :disabled="busy" v-model="data" />
-  <Button
-    size="lg"
-    :disabled="busy || !data"
-    variant="primary"
-  >
-     Submit
-  </Button>
-</div>
+<Stack gap="sm" v-bind="$attrs">
+  <FormField id="search" label="Global Search">
+    <template #default="{ id }">
+      <Cluster gap="none">
+        <Input :id="id" size="md" class="rounded-r-none" />
+        <Button size="md" variant="primary" class="rounded-l-none">
+          Search
+        </Button>
+      </Cluster>
+    </template>
+  </FormField>
+</Stack>
 
 ```
 
@@ -66,6 +73,7 @@ A state-aware trigger for session management.
 
 ```text
 src/components/molecules/actions/
+├── FormField.vue           # Added: Core input wrapper
 ├── ActionBar.vue           # Workflow transition control
 ├── AuthButton.vue          # Session state toggle
 ├── MessageInput.vue        # Primary data entry

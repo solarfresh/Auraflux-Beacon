@@ -15,7 +15,7 @@ Molecules are the second layer of our Atomic Design system. They are groups of t
 
 | Category | Description | Key Components |
 | --- | --- | --- |
-| **`actions/`** | Triggers and entry points for user intent. | `MessageInput`, `AuthButton`, `ActionBar` |
+| **`actions/`** | Triggers and entry points for user intent. | `MessageInput`, `AuthButton`, `ActionBar`, `FormField` |
 | **`navigation/`** | Components that help users move through the app. | `TabbedPanel` |
 | **`feedback/`** | Status indicators and progress communication. | `ResearchValidation`, `FullScreenLoader` |
 | **`overlays/`** | Content that floats above the main UI. | `Modal`, `CloseButton` |
