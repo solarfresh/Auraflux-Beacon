@@ -75,9 +75,9 @@ import { useInitiativeStore } from '@/stores/initiation';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
 // Components
-import Text from '@/components/atoms/Text.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Badge from '@/components/atoms/Badge.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';
 import MasterListPanel from '@/components/organisms/layout/MasterListPanel.vue';
 import ReflectionLogEditorPanel from '@/components/organisms/forms/ReflectionLogEditorPanel.vue';

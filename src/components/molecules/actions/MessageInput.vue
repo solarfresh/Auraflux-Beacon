@@ -27,7 +27,7 @@
 import { ref } from 'vue';
 import Input from '@/components/atoms/Input.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 
 /**
  * MessageInput Molecule

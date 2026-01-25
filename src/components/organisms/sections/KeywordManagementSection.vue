@@ -98,8 +98,8 @@
 import { computed, ref } from 'vue';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import SectionGroup from '@/components/molecules/navigation/SectionGroup.vue';
 import KeywordListItem from '@/components/molecules/list-items/KeywordListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';

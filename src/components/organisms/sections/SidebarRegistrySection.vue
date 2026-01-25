@@ -65,8 +65,8 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import Text from '@/components/atoms/Text.vue';
-import Icon from '@/components/atoms/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import SidebarNodeItem from '@/components/molecules/list-items/SidebarNodeItem.vue';
 import type { ID } from '@/interfaces/core';

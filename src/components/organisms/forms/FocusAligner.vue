@@ -92,7 +92,7 @@
  */
 import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
 import Input from '@/components/atoms/Input.vue';

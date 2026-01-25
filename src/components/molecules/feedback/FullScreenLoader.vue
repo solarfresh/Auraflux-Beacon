@@ -20,8 +20,8 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 
 /**
  * FullScreenLoader Molecule

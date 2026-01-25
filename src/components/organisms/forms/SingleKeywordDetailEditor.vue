@@ -128,10 +128,10 @@ import { useInitiativeStore } from '@/stores/initiation';
 
 // Atoms
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import Badge from '@/components/atoms/Badge.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
 
 /**
  * SingleKeywordDetailEditor: Refines a specific keyword's text and status.

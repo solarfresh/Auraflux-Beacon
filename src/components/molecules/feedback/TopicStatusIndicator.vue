@@ -40,8 +40,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import BarSegment from '@/components/atoms/BarSegment.vue';
-import Text from '@/components/atoms/Text.vue';
+import BarSegment from '@/components/atoms/data-display/BarSegment.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import { getStabilityContext } from '@/logic/workflow';
 
 /**

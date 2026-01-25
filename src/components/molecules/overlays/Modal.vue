@@ -44,7 +44,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, watch } from 'vue';
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 
 const props = defineProps({

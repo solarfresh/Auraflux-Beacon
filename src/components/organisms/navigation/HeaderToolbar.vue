@@ -61,9 +61,9 @@
  * The main navigational anchor of the application.
  * Manages branding, global progress visibility, and user session actions.
  */
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
-import Badge from '@/components/atoms/Badge.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
 import AuthButton from '@/components/molecules/actions/AuthButton.vue';
 import type { ISPStep } from '@/interfaces/workflow';
 

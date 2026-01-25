@@ -97,10 +97,10 @@ import type { FeasibilityStatus } from '@/interfaces/core';
 
 // Atoms & Molecules
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import Badge from '@/components/atoms/Badge.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
 
 const props = defineProps<{
   initialValue: string;

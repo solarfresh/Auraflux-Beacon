@@ -118,7 +118,7 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';

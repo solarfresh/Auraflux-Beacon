@@ -80,9 +80,9 @@ import { nextTick, ref, watch } from 'vue';
 import type { ChatMessage } from '@/interfaces/core';
 
 // Atoms & Molecules
-import MarkdownRenderer from '@/components/atoms/MarkdownRenderer.vue';
-import Text from '@/components/atoms/Text.vue';
-import Icon from '@/components/atoms/Icon.vue';
+import MarkdownRenderer from '@/components/atoms/data-display/MarkdownRenderer.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 import MessageInput from '@/components/molecules/actions/MessageInput.vue';
 
 const props = defineProps<{

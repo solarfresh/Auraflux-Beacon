@@ -108,10 +108,10 @@
 import { useExplorationStore } from '@/stores/exploration';
 
 // Atoms & Molecules
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Badge from '@/components/atoms/Badge.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
 import TabbedPanel from '@/components/molecules/navigation/TabbedPanel.vue';
 
 // Organisms

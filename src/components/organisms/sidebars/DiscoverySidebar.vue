@@ -93,7 +93,7 @@ import type { ID } from '@/interfaces/core';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 
 /**
  * DiscoverySidebar: The control center for the Research Canvas.

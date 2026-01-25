@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/atoms/Icon.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 import { ButtonProps } from '@/interfaces/button';
 
 const props = withDefaults(defineProps<ButtonProps>(), {

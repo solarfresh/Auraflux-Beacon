@@ -63,8 +63,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 

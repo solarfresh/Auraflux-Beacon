@@ -53,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 
 /**
  * BaseSidebarLayout: A presentational "shell" component.

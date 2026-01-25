@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Modal from '@/components/molecules/overlays/Modal.vue';
 import CloseButton from '@/components/molecules/overlays/CloseButton.vue';
 

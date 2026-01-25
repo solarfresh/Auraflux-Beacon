@@ -126,12 +126,12 @@ import { MiniMap } from '@vue-flow/minimap';
 import { v4 as uuidv4 } from 'uuid';
 
 // Atoms & Templates
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
 import Input from '@/components/atoms/Input.vue';
 import Textarea from '@/components/atoms/Textarea.vue';
-import Badge from '@/components/atoms/Badge.vue';
-import Icon from '@/components/atoms/Icon.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Interfaces

@@ -91,8 +91,8 @@ import type { ResourceItem, ResourceSource } from '@/interfaces/knowledge';
 
 // Atoms, Molecules & Layouts
 import Button from '@/components/atoms/actions/Button.vue';
-import Icon from '@/components/atoms/Icon.vue';
-import Text from '@/components/atoms/Text.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Input from '@/components/atoms/Input.vue';
 import Checkbox from '@/components/atoms/Checkbox.vue';
 import Textarea from '@/components/atoms/Textarea.vue';

@@ -55,10 +55,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { ResourceItem } from '@/interfaces/knowledge';
-import Text from '@/components/atoms/Text.vue';
+import Text from '@/components/atoms/data-display/Text.vue';
 import Button from '@/components/atoms/actions/Button.vue';
-import Badge from '@/components/atoms/Badge.vue';
-import Icon from '@/components/atoms/Icon.vue';
+import Badge from '@/components/atoms/data-display/Badge.vue';
+import Icon from '@/components/atoms/data-display/Icon.vue';
 
 const props = defineProps<{
   resource: ResourceItem;
