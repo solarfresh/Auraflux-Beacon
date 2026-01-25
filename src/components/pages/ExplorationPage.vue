@@ -3,14 +3,14 @@
     <ThreePaneWorkspaceTemplate>
 
       <template #header>
-        <ProgressTracker
+        <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
       </template>
 
       <template #left-sidebar>
-        <CanvasStructureSidebar
+        <DiscoverySidebar
           @select-node="handleNodeSelect"
           @request-teleport="handleTeleport"
         />
@@ -30,17 +30,17 @@
           />
 
           <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-1 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-full shadow-2xl z-10">
-            <Button
+            <VButton
               v-for="mode in ['Matrix', 'Causal', 'Radial']"
               :key="mode"
               variant="tertiary"
               size="sm"
               class="rounded-full !px-4 hover:bg-slate-800 group"
             >
-              <Text tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
+              <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
                 {{ mode }}
-              </Text>
-            </Button>
+              </VTypography>
+            </VButton>
           </div>
         </main>
       </template>
@@ -54,24 +54,24 @@
       </template>
 
       <template #footer>
-        <ActionBar
+        <VButtonToolbar
           :is-proceed-ready="false"
           :proceed-label="'Proceed to Formulation'"
           @transition-request="handlePhaseTransitionRequest"
         >
           <template #action-button>
-            <Button
+            <VButton
               variant="primary"
               size="lg"
               :disabled="!explorationStore.isExplorationSufficient"
               class="!bg-indigo-600 shadow-xl shadow-indigo-900/20 group"
             >
-              <Text tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
+              <VTypography tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
                 Commit to Formulation
-              </Text>
-            </Button>
+              </VTypography>
+            </VButton>
           </template>
-        </ActionBar>
+        </VButtonToolbar>
       </template>
 
     </ThreePaneWorkspaceTemplate>
@@ -83,8 +83,8 @@
     >
       <template #header>
         <div class="flex items-center gap-2 px-2">
-          <Text tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</Text>
-          <Text tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</Text>
+          <VTypography tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</VTypography>
+          <VTypography tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</VTypography>
         </div>
       </template>
       <template #content>
@@ -98,7 +98,7 @@
         />
         <div v-else class="flex flex-col h-80 items-center justify-center gap-4">
           <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <Text tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</Text>
+          <VTypography tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</VTypography>
         </div>
  -->
       </template>
@@ -118,18 +118,18 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
-import Text from '@/components/atoms/Text.vue';
-import Button from '@/components/atoms/Button.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Organisms
-import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-import ActionBar from '@/components/molecules/ActionBar.vue';
-import CanvasStructureSidebar from '@/components/organisms/CanvasStructureSidebar.vue';
-import ConceptualMapCanvas from '@/components/organisms/ConceptualMapCanvas.vue';
-import KnowledgeInterrogationPanel from '@/components/organisms/KnowledgeInterrogationPanel.vue';
-import FocusAligner from '@/components/organisms/FocusAligner.vue';
+import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
+import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
+import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
+import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';
+import KnowledgeInterrogationPanel from '@/components/organisms/panels/KnowledgeInterrogationPanel.vue';
+import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';

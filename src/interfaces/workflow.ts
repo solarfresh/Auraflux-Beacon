@@ -1,7 +1,7 @@
 import { DateTimeString, EntityStatus, ID, ParticipantRole, Percentage } from './core';
 
 export type ISPStep =
-  | 'TOPIC_DEFINITION_LOCKIN' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
+  | 'INITIATION' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
   | 'EXPLORATION'           // Focus: Dealing with information overload (Confusion/Frustration) by sifting and evaluating sources.
   | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
   | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
@@ -16,7 +16,7 @@ export type ReflectionLogStatus = 'draft' | 'committed';
 export type StabilityStatus = 'Finalizing' | 'Refining' | 'Defining';
 
 export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
-    TOPIC_DEFINITION_LOCKIN: {
+    INITIATION: {
         name: 'Topic Definition & Lock-in',
         description: 'Defining the research question and locking scope',
         percentage: 10,

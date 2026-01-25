@@ -1,0 +1,64 @@
+<template>
+  <div class="flex space-x-3 items-end w-full">
+    <VInput
+      v-model="inputContent"
+      type="text"
+      placeholder="Type your question or statement..."
+      :disabled="isDisabled"
+      size="lg"
+      class="flex-1"
+      @keyup.enter="handleSend"
+    />
+
+    <VButton
+      variant="primary"
+      size="lg"
+      class="flex-shrink-0"
+      :disabled="isDisabled || !inputContent.trim()"
+      aria-label="Send message"
+      @click="handleSend"
+    >
+      <VIcon name="PaperAirplane" type="solid" size="md" />
+    </VButton>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import VInput from '@/components/atoms/forms/VInput.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+
+/**
+ * MessageInput Molecule
+ * A composite component for message entry in chat interfaces.
+ * Combines Input and Button atoms with localized sending logic.
+ */
+const props = defineProps({
+  /** Prevents interaction during processing states */
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+const emit = defineEmits<{
+  /**
+   * Fires when a valid message is submitted.
+   * @param content The trimmed string content.
+   */
+  (e: 'sendMessage', content: string): void;
+}>();
+
+const inputContent = ref('');
+
+/** Handles validation and emission of the message */
+const handleSend = () => {
+  const content = inputContent.value.trim();
+
+  if (content && !props.isDisabled) {
+    emit('sendMessage', content);
+    inputContent.value = ''; // Reset input after successful emission
+  }
+};
+</script>

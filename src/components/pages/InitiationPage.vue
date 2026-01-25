@@ -6,7 +6,7 @@
       <!-- Slot: status-tracker (Shows ISP steps) -->
 
       <template #status-tracker>
-        <ProgressTracker
+        <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
@@ -14,7 +14,7 @@
 
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
-        <SidebarContent
+        <InitiationSidebar
           :feasibility-status="feasibilityStatus"
           :final-question="finalQuestion"
           :keywords="topicKeywords"
@@ -37,7 +37,7 @@
 
       <!-- Slot: action-bar (Flow Control) -->
       <template #action-bar>
-        <ActionBar
+        <VButtonToolbar
           :is-proceed-ready="true"
           @transition-request="handlePhaseTransitionRequest"
         />
@@ -61,13 +61,13 @@
           :stability-score="initiativeStore.stabilityScore"
           @close-modal="isManagementModalOpen = false"
         />
-        <SingleKeywordDetailEditor
+        <KeywordDetailEditor
           v-else-if="managementModalType === 'keyword'"
           :initial-keyword="editingInitialKeyword!"
           :keyword-index="editingKeywordIndex!"
           @close-modal="isManagementModalOpen = false"
         />
-        <SingleScopeDetailEditor
+        <ScopeDetailEditor
           v-else-if="managementModalType === 'scope'"
           :initial-scope-element="editingInitialScope!"
           :scope-index="editingScopeIndex!"
@@ -95,16 +95,16 @@ import { useWorkflowStore } from '@/stores/workflow';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import ActionBar from '@/components/molecules/ActionBar.vue';
-import ProgressTracker from '@/components/molecules/ProgressTracker.vue';
-import ChatInterface from '@/components/organisms/ChatInterface.vue';
-import FinalQuestionEditor from '@/components/organisms/FinalQuestionEditor.vue';
-import SingleKeywordDetailEditor from '@/components/organisms/SingleKeywordDetailEditor.vue';
-import SingleScopeDetailEditor from '@/components/organisms/SingleScopeDetailEditor.vue';
+import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
+import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
+import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
+import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
+import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEditor.vue';
+import ScopeDetailEditor from '@/components/organisms/forms/ScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import SidebarContent from '@/components/templates/SidebarContent.vue';
-import ReflectionLogForm from '../organisms/ReflectionLogForm.vue';
+import InitiationSidebar from '@/components/organisms/sidebars/InitiationSidebar.vue';
+import ReflectionLogForm from '@/components/organisms/forms/ReflectionLogForm.vue';
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { apiService } from '@/api/apiService';

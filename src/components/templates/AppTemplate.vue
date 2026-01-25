@@ -18,7 +18,7 @@
       @close="loginStore.closeModal"
     />
 
-    <FullScreenLoader
+    <VOverlayLoader
       v-if="authStore.loading"
       message="Loading application..."
       detail="Please wait while we initialize the research canvas."
@@ -27,9 +27,9 @@
 </template>
 
 <script setup lang="ts">
-import FullScreenLoader from '@/components/molecules/FullScreenLoader.vue';
-import HeaderToolbar from '@/components/organisms/HeaderToolbar.vue';
-import LoginModal from '@/components/organisms/LoginModal.vue';
+import VOverlayLoader from '@/components/molecules/indicators/VOverlayLoader.vue';
+import HeaderToolbar from '@/components/organisms/navigation/HeaderToolbar.vue';
+import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
 import { useNotificationStore } from '@/stores/notification';

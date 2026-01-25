@@ -12,7 +12,7 @@ export const useWorkflowStore = defineStore('workflow', () => {
     // --- State (Refs) ---
 
     /** The current stage of the Information Search Process (ISP). */
-    const currentStep = ref<ISPStep>('TOPIC_DEFINITION_LOCKIN');
+    const currentStep = ref<ISPStep>('INITIATION');
 
     /** Flag to indicate if any long-running operation is in progress (for UI loading spinners). */
     // const isLoading = ref(false);
@@ -34,7 +34,7 @@ export const useWorkflowStore = defineStore('workflow', () => {
 
     /**
      * Retrieves the user-friendly name for the current ISP step from the map.
-     * E.g., 'TOPIC_DEFINITION_LOCKIN' becomes 'Topic Definition & Lock-in'.
+     * E.g., 'INITIATION' becomes 'Topic Definition & Lock-in'.
      */
     const currentStepName = computed(() => {
         // Accesses the 'name' property of the mapped object
