@@ -29,7 +29,7 @@
           v-if="unreviewedCount > 0"
           variant="secondary"
           size="xs"
-          @click="isReviewGroupOpen = true"
+          @click="openReviewGroup"
           class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
         >
           <VCluster gap="xs" align="center">
@@ -60,6 +60,7 @@
           variant="amber"
           collapsible
           v-model:open="isReviewGroupOpen"
+          ref="reviewGroupRefEl"
         >
           <VStack gap="xs">
             <VActionListItem
@@ -108,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, nextTick } from 'vue';
 
 // Layout Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';
@@ -151,6 +152,8 @@ const lockedCount = computed(() => props.scope.filter(k => k.entityStatus === 'L
 const unreviewedCount = computed(() => props.scope.filter(k => ['AI_EXTRACTED', 'USER_DRAFT'].includes(k.entityStatus)).length);
 const onHoldCount = computed(() => props.scope.filter(k => k.entityStatus === 'ON_HOLD').length);
 
+const reviewGroupRefEl = ref<InstanceType<typeof VNavGroup> | null>(null);
+
 /**
  * Filters scope elements based on their processing status and handles view limits.
  */
@@ -168,4 +171,18 @@ const getGroupData = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
 const handleScopeEdit = (payload: { index: number, scope: ProcessedScope }) => {
   emit('edit-request', payload);
 };
+
+
+const openReviewGroup = async () => {
+  isReviewGroupOpen.value = true;
+
+  // Wait for the next DOM update cycle to ensure the element is rendered
+  await nextTick();
+
+  // Access the DOM element via the ref's .value property and call scrollIntoView
+  reviewGroupRefEl.value?.$el?.scrollIntoView({
+    behavior: 'smooth', // Optional: for smooth scrolling animation
+    block: 'start'      // Optional: align the top of the element to the top of the viewport
+  });
+}
 </script>

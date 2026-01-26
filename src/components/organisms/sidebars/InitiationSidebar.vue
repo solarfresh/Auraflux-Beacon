@@ -3,110 +3,122 @@
     :title="'Initiation'"
     :item-count="keywords.length + scope.length"
     class="bg-slate-50 border-r border-gray-200 h-full"
-    body-class="p-2 space-y-6"
+    body-class="p-0"
   >
     <template #header-extension>
-      <div class="px-5 pb-2">
+      <VBox padding="md" class="pt-0 pb-2">
         <VNavAlert
           :keywords="keywords"
           :scope="scope"
           @scroll-to-review="handleScrollToReview"
         />
-      </div>
+      </VBox>
     </template>
 
     <template #body>
-      <div class="flex flex-col gap-4">
-        <VStatusScore
-          :stability-score="stabilityScore"
-          label="Topic Refinement"
-          color="indigo"
-        />
-        <VStatusCard
-          :status="feasibilityStatus"
-          :description="getFeasibilityDescription(feasibilityStatus)"
-        />
-      </div>
+      <VStack gap="lg" padding="md">
 
-      <hr class="border-gray-200 mx-2" />
+        <VStack gap="md">
+          <VStatusScore
+            :stability-score="stabilityScore"
+            label="Topic Refinement"
+            color="indigo"
+          />
+          <VStatusCard
+            :status="feasibilityStatus"
+            :description="getFeasibilityDescription(feasibilityStatus)"
+          />
+        </VStack>
 
-      <div class="space-y-2">
-        <KeywordManagementSection
-          ref="keywordSectionRef"
-          :keywords="keywords"
-          @add-request="handleKeywordAction('keyword-add')"
-          @edit-request="(payload) => handleKeywordAction('keyword', payload)"
-        />
+        <hr class="border-gray-200" />
 
-        <ScopeManagementSection
-          ref="scopeSectionRef"
-          :scope="scope"
-          @add-request="handleScopeAction('scope-add')"
-          @edit-request="(payload) => handleScopeAction('scope', payload)"
-        />
-      </div>
+        <VStack gap="md">
+          <KeywordManagementSection
+            ref="keywordSectionRef"
+            :keywords="keywords"
+            @add-request="handleKeywordAction('keyword-add')"
+            @edit-request="(payload) => handleKeywordAction('keyword', payload)"
+          />
 
-      <hr class="border-gray-200 mx-2" />
+          <ScopeManagementSection
+            ref="scopeSectionRef"
+            :scope="scope"
+            @add-request="handleScopeAction('scope-add')"
+            @edit-request="(payload) => handleScopeAction('scope', payload)"
+          />
+        </VStack>
 
-      <div class="space-y-6">
-        <div class="space-y-2">
-          <VTypography tag="h3" size="sm" weight="bold" color="gray-900" class="px-2">
-            Final Research Question
-          </VTypography>
-          <div
-            class="mx-2 p-4 bg-white rounded-xl border border-gray-200 shadow-sm cursor-pointer hover:border-indigo-300 transition-all group"
-            @click="handleViewDetails('final-question')"
-          >
-            <VTypography tag="p" size="sm" color="gray-700" class="italic leading-relaxed">
-              "{{ finalQuestion || 'Click to define your core inquiry...' }}"
+        <hr class="border-gray-200" />
+
+        <VStack gap="lg" class="pb-6">
+          <VStack gap="xs">
+            <VTypography tag="h3" size="sm" weight="bold" class="px-2 text-slate-900">
+              Final Research Question
             </VTypography>
-          </div>
-        </div>
+            <VBox
+              background="white"
+              padding="md"
+              rounded="xl"
+              border="all"
+              class="shadow-sm cursor-pointer hover:border-indigo-300 transition-all group mx-2"
+              @click="handleViewDetails('final-question')"
+            >
+              <VTypography tag="p" size="sm" class="text-slate-700 italic leading-relaxed">
+                "{{ finalQuestion || 'Click to define your core inquiry...' }}"
+              </VTypography>
+            </VBox>
+          </VStack>
 
-        <div class="space-y-2 px-2 pb-4">
-          <div class="flex items-center justify-between">
-            <VTypography tag="h3" size="sm" weight="bold" color="gray-900">Latest Reflection</VTypography>
-            <VButton
-              variant="ghost"
-              size="xs"
-              iconOnly
-              iconName="BookOpen"
-              @click="handleViewDetails('reflection-log')"
-            />
-          </div>
-          <div class="p-3 bg-white/50 rounded-lg border border-gray-100 text-xs italic text-slate-500">
-            {{ latestReflection || "No recent reflections logged." }}
-          </div>
-        </div>
-      </div>
+          <VStack gap="xs" class="px-2">
+            <VCluster justify="between" align="center">
+              <VTypography tag="h3" size="sm" weight="bold" class="text-slate-900">
+                Latest Reflection
+              </VTypography>
+              <VButton
+                variant="ghost"
+                size="xs"
+                icon-only
+                icon-name="BookOpen"
+                @click="handleViewDetails('reflection-log')"
+              />
+            </VCluster>
+            <VBox background="transparent" padding="sm" rounded="lg" border="all" class="border-slate-100 border-dashed">
+              <VTypography size="xs" italic class="text-slate-500">
+                {{ latestReflection || "No recent reflections logged." }}
+              </VTypography>
+            </VBox>
+          </VStack>
+        </VStack>
+
+      </VStack>
     </template>
   </BaseSidebarLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
-import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
-import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 
-// Layout & UI Components
-import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
+// Layout Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+
+// Standard Atoms
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
-// Molecules
+// Molecules & Specialized Sections
 import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
 import VStatusScore from '@/components/molecules/indicators/VStatusScore.vue';
 import VNavAlert from '@/components/molecules/navs/VNavAlert.vue';
-
-// Specialized Sections
 import KeywordManagementSection from '@/components/organisms/sections/KeywordManagementSection.vue';
 import ScopeManagementSection from '@/components/organisms/sections/ScopeManagementSection.vue';
 
-/**
- * InitiationSidebar: Orchestrates research startup data.
- * It uses BaseSidebarLayout to define the visual frame and manages
- * local navigation (scrolling) and event bubbling to the view level.
- */
+import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
+
+import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
+import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+
 const props = defineProps<{
   keywords: ProcessedKeyword[];
   scope: ProcessedScope[];
@@ -120,12 +132,10 @@ const emit = defineEmits<{
   (e: 'viewDetails', type: ManagementType, index?: number, value?: any): void;
 }>();
 
-// --- Template Refs for Scrolling Logic ---
 const keywordSectionRef = ref<InstanceType<typeof KeywordManagementSection> | null>(null);
 const scopeSectionRef = ref<InstanceType<typeof ScopeManagementSection> | null>(null);
 
-// --- Business Logic Helpers ---
-
+// --- Domain Logic ---
 const getFeasibilityDescription = (status: TFeasibilityStatus) => {
   const descriptions: Record<TFeasibilityStatus, string> = {
     HIGH: "Data and resources are readily available.",
@@ -135,8 +145,7 @@ const getFeasibilityDescription = (status: TFeasibilityStatus) => {
   return descriptions[status] || "Status pending.";
 };
 
-// --- Action & Navigation Handlers ---
-
+// --- Handlers ---
 const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: any) => {
   type === 'keyword-add'
     ? emit('viewDetails', 'keyword')
@@ -153,13 +162,11 @@ const handleViewDetails = (type: ManagementType, index?: number, value?: any) =>
   emit('viewDetails', type, index, value);
 };
 
-/** Handles smooth scrolling to sections when user clicks on Alert notifications */
 const handleScrollToReview = (firstSection: 'keyword' | 'scope') => {
   nextTick(() => {
     const target = firstSection === 'keyword'
       ? keywordSectionRef.value?.$el
       : scopeSectionRef.value?.$el;
-
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 };
