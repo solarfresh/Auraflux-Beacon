@@ -15,7 +15,7 @@
           <VIcon
             v-if="isCollapsible"
             name="ChevronRight"
-            size="4"
+            size="sm"
             class="transition-transform duration-200 text-slate-400"
             :class="{ 'rotate-90': isExpanded }"
           />

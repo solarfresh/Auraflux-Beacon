@@ -27,6 +27,8 @@
         tag="span"
         weight="semibold"
         class="whitespace-nowrap"
+        :size="size"
+        :color="textColorClasses[variant]"
       >
         <slot />
       </VTypography>
@@ -70,6 +72,15 @@ const textSizeClasses = {
   md: 'px-5 py-2.5 text-base',
   lg: 'px-6 py-3 text-lg'
 };
+
+const textColorClasses = {
+  primary: 'text-white',
+  secondary: 'text-indigo-700',
+  tertiary: 'text-gray-600',
+  danger: 'text-red-600',
+  outline: 'text-gray-700',
+  ghost: 'text-gray-400'
+}
 
 const iconSizeClasses = {
   xs: 'p-1',

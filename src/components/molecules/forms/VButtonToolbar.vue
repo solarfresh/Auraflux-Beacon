@@ -8,7 +8,7 @@
       @click="handlePhaseTransition"
     >
       <div class="flex items-center space-x-2">
-        <VTypography tag="span" weight="bold">
+        <VTypography tag="span" weight="bold" color="text-white">
           {{ isTransitioning ? 'Finalizing Data...' : 'Lock & Proceed to Exploration Phase' }}
         </VTypography>
       </div>

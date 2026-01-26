@@ -18,7 +18,7 @@
             <div class="p-2 bg-red-600 rounded-lg text-white shadow-lg shadow-red-200">
               <VIcon name="ExclamationTriangle" size="sm" />
             </div>
-            <VTypography tag="h3" size="lg" weight="black" color="red-600" class="tracking-tighter uppercase italic">
+            <VTypography tag="h3" size="lg" weight="bold" color="red-600" class="tracking-tighter uppercase italic">
               Adversarial Intercept
             </VTypography>
           </div>
@@ -27,7 +27,7 @@
 
         <div class="flex-grow space-y-8">
           <div class="space-y-2">
-            <VTypography tag="span" size="xs" weight="black" color="red-400" class="uppercase tracking-widest">
+            <VTypography tag="span" size="xs" weight="bold" color="red-400" class="uppercase tracking-widest">
               Anomaly Detected
             </VTypography>
             <VTypography tag="p" size="2xl" weight="bold" color="gray-900" class="leading-tight">

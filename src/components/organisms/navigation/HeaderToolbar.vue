@@ -7,7 +7,7 @@
           <VIcon name="Target" size="sm" class="text-white" />
         </div>
         <div class="flex flex-col">
-          <VTypography tag="h1" size="lg" weight="black" color="gray-900" class="leading-none tracking-tight">
+          <VTypography tag="h1" size="lg" weight="bold" color="gray-900" class="leading-none tracking-tight">
             Strategic Research ISP
           </VTypography>
           <VTypography tag="span" size="xs" color="gray-400" class="font-bold tracking-widest uppercase mt-0.5">
