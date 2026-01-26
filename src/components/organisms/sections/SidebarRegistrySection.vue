@@ -2,7 +2,7 @@
   <VBox
     tag="section"
     border="bottom"
-    :background="sectionBackground"
+    :background="sectionBackground as BackgroundToken"
     class="transition-colors duration-300"
   >
     <VBox
@@ -50,7 +50,7 @@
 
     <transition name="section-slide">
       <VBox v-if="isExpanded" padding="sm" class="pt-0">
-        <VStack gap="1">
+        <VStack gap="sm">
           <VEmptyState
             v-if="nodes.length === 0"
             title="No items available"
@@ -93,6 +93,7 @@ import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
+import type { BackgroundToken } from '@/interfaces/layout';
 
 /**
  * VStabilitySection: Represents a gradient of data stability in ISP.

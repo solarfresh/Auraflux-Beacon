@@ -29,11 +29,7 @@
  * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed, useAttrs } from 'vue';
-
-type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-type BorderToken = 'all' | 'top' | 'bottom' | 'right' | 'none';
-type BackgroundToken = 'white' | 'slate-50' | 'indigo-50' | 'amber-50' | 'rose-50' | 'emerald-50' | 'transparent';
+import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@/interfaces/layout';
 
 interface Props {
   /** HTML tag to render */

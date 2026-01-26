@@ -21,10 +21,7 @@
  * Manages horizontal layout (flex-direction: row).
  * Used for grouping elements side-by-side with consistent spacing.
  */
-
-type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg';
-type Alignment = 'start' | 'center' | 'end' | 'baseline' | 'stretch';
-type Justification = 'start' | 'center' | 'end' | 'between' | 'around';
+import type {GapSize, Alignment, Justification} from '@/interfaces/layout';
 
 interface Props {
   /** HTML element to render */
@@ -59,6 +56,7 @@ const gapClasses: Record<GapSize, string> = {
   sm: 'gap-2', // 8px
   md: 'gap-4', // 16px
   lg: 'gap-6', // 24px
+  xl: 'gap-8',     // 32px
 };
 
 const alignClasses: Record<Alignment, string> = {
