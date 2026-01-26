@@ -5,7 +5,7 @@
       <div class="flex items-center gap-2 border-l-2 border-indigo-600 pl-3">
         <VTypography tag="h4" size="md" weight="bold" color="gray-900">Core Research Question</VTypography>
       </div>
-      <VTypography tag="p" size="sm" color="gray-500" class="italic leading-relaxed">
+      <VTypography tag="p" size="sm" color="slate-500" class="italic leading-relaxed">
         The ultimate objective of this ISP session. Changing this will trigger a full re-evaluation of node health.
       </VTypography>
 
@@ -24,7 +24,7 @@
       </div>
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-2">
-          <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Inclusions</VTypography>
+          <VTypography tag="label" size="xs" weight="semibold" color="slate-500" class="uppercase tracking-wider">Inclusions</VTypography>
           <VInput
             v-model="localData.scopeIn"
             size="md"
@@ -33,7 +33,7 @@
           />
         </div>
         <div class="space-y-2">
-          <VTypography tag="label" size="xs" weight="semibold" color="gray-500" class="uppercase tracking-wider">Exclusions</VTypography
+          <VTypography tag="label" size="xs" weight="semibold" color="slate-500" class="uppercase tracking-wider">Exclusions</VTypography
           <VInput
             v-model="localData.scopeOut"
             size="md"
@@ -49,7 +49,7 @@
         <VTypography tag="h4" size="md" weight="bold" color="gray-900">Knowledge Anchors</VTypography>
       </div>
 
-      <div class="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200 min-h-[56px] items-center">
+      <div class="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-gray-200 min-h-[56px] items-center">
         <div
           v-for="(tag, index) in localData.keywords"
           :key="index"
@@ -74,7 +74,7 @@
 
     <footer class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
       <VButton variant="tertiary" @click="$emit('close')">
-        <VTypography tag="span" size="sm" color="gray-500">Cancel</VTypography>
+        <VTypography tag="span" size="sm" color="slate-500">Cancel</VTypography>
       </VButton>
       <VButton variant="primary" @click="handleSave" class="px-8">
         <VTypography tag="span" size="sm" weight="bold" color="white">Apply Alignment</VTypography>
@@ -88,7 +88,7 @@
 /**
  * FocusAligner.vue
  * Re-aligned for Light Mode design.
- * Using standard grey scales (gray-50 to gray-900) instead of dark-mode slate.
+ * Using standard grey scales (slate-50 to gray-900) instead of dark-mode slate.
  */
 import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';

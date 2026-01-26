@@ -37,7 +37,7 @@
       <VTypography
         tag="p"
         size="xs"
-        color="gray-500"
+        color="slate-500"
         class="truncate italic"
       >
         {{ entry.content || "No content provided." }}

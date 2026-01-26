@@ -20,7 +20,7 @@ The universal text entry field.
 * **Bootstrap Mapping**: Replaces `.form-control`.
 * **Variants**:
 * `default`: Rectangular with standard rounding.
-* `filled`: Material-style background (gray-50) with a bottom-border emphasis.
+* `filled`: Material-style background (slate-50) with a bottom-border emphasis.
 
 
 * **Props**: `type`, `size`, `error` (boolean), `loading`.

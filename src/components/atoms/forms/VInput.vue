@@ -11,7 +11,7 @@
       sizeClasses,
       variantClasses,
       // Unified disabled styling
-      disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
+      disabled ? 'bg-slate-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
     ]"
   />
 </template>

@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <nav class="hidden lg:flex items-center bg-gray-50 px-4 py-1.5 rounded-full border border-gray-100">
+      <nav class="hidden lg:flex items-center bg-slate-50 px-4 py-1.5 rounded-full border border-gray-100">
         <div class="flex items-center gap-2">
           <VBadge
             :variant="currentStep === 'INITIATION' ? 'indigo' : 'gray'"

@@ -1,14 +1,14 @@
 <template>
   <VModal :isOpen="isOpen" @close="$emit('close')">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300">
-      <header class="pt-8 pb-6 px-8 text-center bg-gray-50/50 border-b border-gray-100">
+      <header class="pt-8 pb-6 px-8 text-center bg-slate-50/50 border-b border-gray-100">
         <div class="inline-flex p-3 bg-white rounded-2xl shadow-sm border border-gray-100 mb-4">
           <VIcon name="LockClosed" size="lg" class="text-indigo-600" />
         </div>
         <VTypography tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-2">
           User Login
         </VTypography>
-        <VTypography tag="p" size="sm" color="gray-500">
+        <VTypography tag="p" size="sm" color="slate-500">
           Access your research initiatives and strategic workspace.
         </VTypography>
       </header>

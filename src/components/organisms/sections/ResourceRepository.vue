@@ -57,7 +57,7 @@
       <div v-if="editingResource" class="flex flex-col gap-6">
         <div class="space-y-2">
           <VTypography tag="h5" weight="bold" size="sm">AI Distillation</VTypography>
-          <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
+          <div class="p-3 bg-slate-50 rounded-lg border border-gray-100">
             <VTypography size="sm" color="gray-700" class="leading-relaxed">
               {{ editingResource.summary }}
             </VTypography>

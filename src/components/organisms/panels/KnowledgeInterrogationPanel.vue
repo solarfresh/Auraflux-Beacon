@@ -72,7 +72,7 @@
           :resources="store.resources"
           :node-summary="store.currentNodeSummary"
           @drop-to-canvas="handleDrop"
-          class="bg-gray-50/30"
+          class="bg-slate-50/30"
         />
       </template>
 

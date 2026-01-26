@@ -11,7 +11,7 @@
     :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
       'transition-all duration-150 group',
-      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50'
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-slate-50'
     ]"
     @click="$emit('select')"
   >

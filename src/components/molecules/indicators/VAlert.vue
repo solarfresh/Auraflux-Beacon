@@ -71,7 +71,7 @@ const theme = computed(() => {
       text: 'text-indigo-700'
     },
     secondary: {
-      bg: 'gray-50',
+      bg: 'slate-50',
       border: 'border-gray-200',
       text: 'text-gray-600'
     }

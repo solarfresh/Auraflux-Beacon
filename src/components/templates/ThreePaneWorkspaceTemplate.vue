@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex flex-col bg-gray-50">
+  <div class="h-full w-full flex flex-col bg-slate-50">
 
     <header class="flex-shrink-0 border-b border-gray-200 bg-white">
       <div class="px-6 py-2">
@@ -24,7 +24,7 @@
       </section>
 
       <section
-        class="flex-shrink-0 w-96 border-l border-gray-200 overflow-hidden bg-gray-50"
+        class="flex-shrink-0 w-96 border-l border-gray-200 overflow-hidden bg-slate-50"
         aria-label="Tools and Assistants"
       >
         <div class="h-full flex flex-col">

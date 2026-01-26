@@ -11,7 +11,7 @@
       'border-gray-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600 rounded-md',
       sizeClasses,
       // State styling: unified disabled look
-      disabled ? 'bg-gray-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
+      disabled ? 'bg-slate-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
     ]"
   >
     <slot></slot>

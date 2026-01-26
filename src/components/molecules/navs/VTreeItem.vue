@@ -7,7 +7,7 @@
     :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
       'relative border-2 transition-all duration-200 group',
-      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50',
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-slate-50',
       // Anti-hallucination Jitter logic
       { 'animate-jitter border-red-500 bg-red-50': node.groundedness < 4 }
     ]"
@@ -123,7 +123,7 @@ const typeColor = computed(() => {
     group: 'purple-500',
     navigation: 'rose-500'
   };
-  return colorMap[props.node.type] || 'gray-500';
+  return colorMap[props.node.type] || 'slate-500';
 });
 
 const solidityStyles = computed(() => {

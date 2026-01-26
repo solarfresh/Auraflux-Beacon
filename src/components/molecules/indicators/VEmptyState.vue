@@ -4,7 +4,7 @@
     align="center"
     justify="center"
     gap="lg"
-    background="gray-50"
+    background="slate-50"
     class="opacity-90 transition-opacity duration-300"
   >
     <VBox
@@ -33,7 +33,7 @@
 
       <VTypography
         size="sm"
-        color="gray-500"
+        color="slate-500"
         class="leading-relaxed"
       >
         <slot>{{ description }}</slot>

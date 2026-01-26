@@ -21,7 +21,7 @@
             tag="span"
             size="sm"
             :weight="activeTab === tab.id ? 'bold' : 'medium'"
-            :class="activeTab === tab.id ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
+            :class="activeTab === tab.id ? 'text-indigo-600' : 'text-slate-500 hover:text-gray-700'"
           >
             <slot :name="`tab-${tab.id}-title`">{{ tab.label }}</slot>
           </VTypography>

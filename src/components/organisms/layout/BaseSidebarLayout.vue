@@ -53,7 +53,7 @@
       v-if="$slots.footer"
       tag="footer"
       padding="md"
-      background="gray-50"
+      background="slate-50"
       border="top"
       class="mt-auto"
     >

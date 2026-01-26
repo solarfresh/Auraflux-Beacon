@@ -56,7 +56,7 @@
         </VStack>
       </VBox>
 
-      <VBox padding="md" background="gray-50" border="top">
+      <VBox padding="md" background="slate-50" border="top">
         <VCluster justify="between" align="center" class="max-w-4xl mx-auto w-full">
           <VCluster gap="sm">
             <VButton

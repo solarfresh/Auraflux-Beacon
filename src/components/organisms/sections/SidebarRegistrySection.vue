@@ -1,88 +1,106 @@
 <template>
-  <section
-    class="flex flex-col border-b border-gray-100 last:border-0 transition-colors duration-300"
-    :class="sectionPhysicsClass"
+  <VBox
+    tag="section"
+    border="bottom"
+    :background="sectionBackground"
+    class="transition-colors duration-300"
   >
-    <header
-      class="px-4 py-2.5 flex items-center justify-between hover:bg-gray-50/80 transition-colors group cursor-pointer"
+    <VBox
+      padding="md"
+      class="cursor-pointer group hover:bg-slate-50/80 transition-colors"
       @click="toggleSection"
     >
-      <div class="flex items-center gap-2">
-        <VIcon
-          v-if="isCollapsible"
-          name="ChevronRight"
+      <VCluster justify="between" align="center">
+        <VCluster gap="xs" align="center">
+          <VIcon
+            v-if="isCollapsible"
+            name="ChevronRight"
+            size="4"
+            class="transition-transform duration-200 text-slate-400"
+            :class="{ 'rotate-90': isExpanded }"
+          />
+
+          <VCluster gap="xs" align="baseline">
+            <VTypography
+              tag="span"
+              size="xs"
+              weight="bold"
+              class="uppercase tracking-widest text-slate-500 group-hover:text-indigo-600 transition-colors"
+            >
+              {{ title }}
+            </VTypography>
+            <VTypography size="xs" class="text-slate-300" weight="medium">
+              {{ nodes.length }}
+            </VTypography>
+          </VCluster>
+        </VCluster>
+
+        <VButton
+          v-if="canAdd"
+          variant="ghost"
           size="xs"
-          class="transition-transform duration-200 text-gray-400"
-          :class="{ 'rotate-90': isExpanded }"
-        />
-
-        <div class="flex items-baseline gap-1.5">
-          <VTypography
-            tag="span"
-            size="xs"
-            weight="bold"
-            class="uppercase tracking-widest text-gray-500 group-hover:text-indigo-600 transition-colors"
-          >
-            {{ title }}
-          </VTypography>
-          <VTypography size="xs" color="gray-300" weight="medium">
-            {{ nodes.length }}
-          </VTypography>
-        </div>
-      </div>
-
-      <VButton
-        v-if="canAdd"
-        variant="ghost"
-        size="xs"
-        icon-only
-        class="opacity-0 group-hover:opacity-100 transition-opacity"
-        @click.stop="emit('add')"
-      >
-        <VIcon name="Plus" size="xs" color="gray-500" />
-      </VButton>
-    </header>
+          icon-only
+          class="opacity-0 group-hover:opacity-100 transition-opacity"
+          @click.stop="emit('add')"
+        >
+          <VIcon name="Plus" size="4" />
+        </VButton>
+      </VCluster>
+    </VBox>
 
     <transition name="section-slide">
-      <div v-if="isExpanded" class="px-2 pb-3 space-y-0.5">
-        <div v-if="nodes.length === 0" class="py-8 text-center flex flex-col items-center gap-1">
-          <VTypography size="xs" color="gray-400" italic>No items available</VTypography>
-        </div>
+      <VBox v-if="isExpanded" padding="sm" class="pt-0">
+        <VStack gap="1">
+          <VEmptyState
+            v-if="nodes.length === 0"
+            title="No items available"
+            class="py-8"
+          >
+            <template #description>
+              <VTypography size="xs" class="text-slate-400" italic>
+                Ready for exploration
+              </VTypography>
+            </template>
+          </VEmptyState>
 
-        <VTreeItem
-          v-for="node in nodes"
-          :key="node.id"
-          :node="node"
-          :is-active="selectedNodeId === node.id"
-          :allow-jitter="sectionType !== 'TOP'"
-          @click="emit('select', node.id)"
-          @teleport="data => emit('teleport', data)"
-        />
-      </div>
+          <VTreeItem
+            v-for="node in nodes"
+            :key="node.id"
+            :node="node"
+            :is-active="selectedNodeId === node.id"
+            :allow-jitter="sectionType !== 'TOP'"
+            @click="emit('select', node.id)"
+            @teleport="data => emit('teleport', data)"
+          />
+        </VStack>
+      </VBox>
     </transition>
-  </section>
+  </VBox>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+// Atomic Imports
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
+// Molecule Imports
 import VTreeItem from '@/components/molecules/navs/VTreeItem.vue';
+import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 
 /**
- * SidebarRegistrySection: Manages groups of conceptual nodes.
- * Used primarily within the Discovery/Exploration sidebar to represent
- * the "Stability Gradient" of the research data.
+ * VStabilitySection: Represents a gradient of data stability in ISP.
+ * Aligns with "Molecules: Navs" (VNavGroup pattern).
  */
-
 const props = withDefaults(defineProps<{
   title: string;
-  /** Visual mapping of data stability: TOP (Stable) -> BOTTOM (Volatile) */
   sectionType: 'TOP' | 'MIDDLE' | 'BOTTOM';
-  nodeTypes: NodeType[];
   nodes: ConceptualNode[];
   selectedNodeId: ID | null;
   isCollapsible?: boolean;
@@ -94,45 +112,36 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'select', id: ID): void;
-  /** Teleports the canvas view to a specific node */
-  (e: 'teleport', nodeId: string, canvasId?: string): void;
+  (e: 'teleport', data: any): void;
   (e: 'add'): void;
 }>();
 
-// --- State Management ---
-// Defaulting to expanded for the high-priority "TOP" section
+// --- State ---
 const isExpanded = ref(props.sectionType === 'TOP' || !props.isCollapsible);
 
-// --- Logic Handlers ---
 const toggleSection = () => {
-  if (props.isCollapsible) {
-    isExpanded.value = !isExpanded.value;
-  }
+  if (props.isCollapsible) isExpanded.value = !isExpanded.value;
 };
 
-/**
- * Section Physics Logic:
- * Provides background tints to visually represent the stability level.
- */
-const sectionPhysicsClass = computed(() => {
+// --- Architectural Layout Logic ---
+const sectionBackground = computed(() => {
   const mapping = {
-    TOP: 'bg-transparent',          // Pure, focused stability
-    MIDDLE: 'bg-gray-50/40',       // Standard structural layout
-    BOTTOM: 'bg-indigo-50/15',     // Fluid, exploration zone
+    TOP: 'white',           // Stable foundation
+    MIDDLE: 'slate-50',     // Transitioning
+    BOTTOM: 'indigo-50',    // High-volatility exploration
   };
-  return mapping[props.sectionType] || '';
+  return mapping[props.sectionType] || 'white';
 });
 </script>
 
 <style scoped>
-/* Smooth expand/collapse transitions */
+/* Motion tokens for expanding/collapsing content */
 .section-slide-enter-active,
 .section-slide-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   max-height: 1200px;
   overflow: hidden;
 }
-
 .section-slide-enter-from,
 .section-slide-leave-to {
   opacity: 0;

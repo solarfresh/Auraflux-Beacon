@@ -30,7 +30,7 @@
       <VTypography
         tag="span"
         size="sm"
-        color="gray-500"
+        color="slate-500"
       >
         {{ description }}
       </VTypography>

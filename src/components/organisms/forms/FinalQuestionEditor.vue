@@ -10,7 +10,7 @@
           <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
             Final Research Question
           </VTypography>
-          <VTypography size="sm" color="gray-500" class="max-w-xl">
+          <VTypography size="sm" color="slate-500" class="max-w-xl">
             This definitive statement will guide your subsequent exploration and formulation phases.
           </VTypography>
         </VStack>
@@ -53,10 +53,10 @@
             Current Context Feedback
           </VTypography>
 
-          <VBox padding="md" background="gray-50" rounded="xl" border="all">
+          <VBox padding="md" background="slate-50" rounded="xl" border="all">
             <div class="grid grid-cols-2 gap-8">
               <VStack gap="xs">
-                <VTypography size="xs" color="gray-500">Stability Score</VTypography>
+                <VTypography size="xs" color="slate-500">Stability Score</VTypography>
                 <VCluster gap="sm" align="center">
                   <div
                     class="w-2.5 h-2.5 rounded-full"
@@ -69,7 +69,7 @@
               </VStack>
 
               <VStack gap="xs">
-                <VTypography size="xs" color="gray-500">Resource Feasibility</VTypography>
+                <VTypography size="xs" color="slate-500">Resource Feasibility</VTypography>
                 <VBadge :variant="feasibilityStatus === 'HIGH' ? 'emerald' : 'amber'" size="xs">
                   {{ feasibilityStatus }}
                 </VBadge>
@@ -89,7 +89,7 @@
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="emit('close-modal')">
           Cancel

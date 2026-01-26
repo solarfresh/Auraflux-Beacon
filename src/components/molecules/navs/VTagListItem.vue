@@ -91,7 +91,7 @@ const styles = computed(() => {
       };
     case 'AI_EXTRACTED':
       return {
-          bgColor: 'gray-50' as const, // Standardized to system palette
+          bgColor: 'slate-50' as const, // Standardized to system palette
           borderColor: 'border-yellow-200 hover:border-yellow-300',
           icon: 'Sparkles',
           iconColor: 'yellow-600',
@@ -100,10 +100,10 @@ const styles = computed(() => {
       };
     case 'ON_HOLD':
       return {
-          bgColor: 'gray-50' as const,
+          bgColor: 'slate-50' as const,
           borderColor: 'border-gray-300 hover:border-gray-400',
           icon: 'ArchiveBox',
-          iconColor: 'gray-500',
+          iconColor: 'slate-500',
           secondaryVTypography: 'ON HOLD (Excluded)',
           actionIcon: 'ArrowPath',
       };

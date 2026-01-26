@@ -2,7 +2,7 @@
   <BaseSidebarLayout
     :title="'Initiation'"
     :item-count="keywords.length + scope.length"
-    class="bg-gray-50 border-r border-gray-200 h-full"
+    class="bg-slate-50 border-r border-gray-200 h-full"
     body-class="p-2 space-y-6"
   >
     <template #header-extension>
@@ -74,7 +74,7 @@
               @click="handleViewDetails('reflection-log')"
             />
           </div>
-          <div class="p-3 bg-white/50 rounded-lg border border-gray-100 text-xs italic text-gray-500">
+          <div class="p-3 bg-white/50 rounded-lg border border-gray-100 text-xs italic text-slate-500">
             {{ latestReflection || "No recent reflections logged." }}
           </div>
         </div>

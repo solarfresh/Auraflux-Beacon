@@ -67,7 +67,7 @@
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="handleCancel">
           Cancel

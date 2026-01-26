@@ -37,7 +37,7 @@ const colorClass = computed(() => {
     case 'green':
       return 'bg-green-600';
     case 'gray':
-      return 'bg-gray-500';
+      return 'bg-slate-500';
     case 'white':
       return 'bg-white';
     case 'indigo':

@@ -13,7 +13,7 @@
       {{ message }}
     </VTypography>
 
-    <VTypography v-if="detail" tag="p" size="sm" color="gray-500" class="mt-2 text-center max-w-xs">
+    <VTypography v-if="detail" tag="p" size="sm" color="slate-500" class="mt-2 text-center max-w-xs">
       {{ detail }}
     </VTypography>
   </div>
