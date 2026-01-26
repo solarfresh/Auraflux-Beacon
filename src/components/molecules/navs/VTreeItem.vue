@@ -4,6 +4,7 @@
     rounded
     clickable
     v-bind="$attrs"
+    :draggable="true"
     :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
       'relative border-2 transition-all duration-200 group',
@@ -14,6 +15,7 @@
     @click="emit('select', node.id)"
     @mouseenter="emit('hover', node.id)"
     @mouseleave="emit('hover', null)"
+    @dragstart="handleDragStart"
   >
     <VCluster align="start" gap="md" full-width>
 
@@ -86,8 +88,11 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import { useCanvasDrop } from '@/composables/useCanvasDrop';
 
 defineOptions({ inheritAttrs: false });
+
+const { onDragStart } = useCanvasDrop();
 
 const props = defineProps<{
   node: ConceptualNode;
@@ -145,6 +150,10 @@ const solidityStyles = computed(() => {
       };
   }
 });
+
+const handleDragStart = (event: DragEvent) => {
+  onDragStart(event, props.node);
+}
 </script>
 
 <style scoped>
