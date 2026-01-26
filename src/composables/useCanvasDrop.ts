@@ -5,11 +5,10 @@
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
 import { ref } from 'vue';
+import { useExplorationStore } from '@/stores/exploration';
 
 export function useCanvasDrop() {
-  const isDragging = ref(false);
-  const isDragOver = ref(false);
-  const draggedNode = ref<ConceptualNode | null>(null);
+  const store = useExplorationStore();
 
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
 
@@ -19,44 +18,45 @@ export function useCanvasDrop() {
       event.dataTransfer.effectAllowed = 'move'
     }
 
-    isDragging.value = true;
-    draggedNode.value = node;
+    store.isDragging = true;
+    store.draggedNode = node;
     document.addEventListener('drop', onDragEnd)
   };
 
   const onDragOver = (event: DragEvent) => {
     event.preventDefault(); // Required to allow drop
-    if (!isDragOver.value) isDragOver.value = true;
+    if (!store.isDragOver) store.isDragOver = true;
 
     if (event.dataTransfer) {
       event.dataTransfer.dropEffect = 'move';
     }
   };
 
-  const onDragLeave = () => {
-    isDragOver.value = false;
+  const onDragLeave = (event: DragEvent) => {
+    store.isDragOver = false;
   };
 
   const onDragEnd = () => {
-    isDragging.value = false;
-    isDragOver.value = false;
-    draggedNode.value = null;
+    store.isDragging = false;
+    store.isDragOver = false;
+    store.draggedNode = null;
     document.removeEventListener('drop', onDragEnd)
   };
 
   const onDrop = (event: DragEvent) => {
-    if (draggedNode.value === null) return;
+    if (store.draggedNode === null) return;
 
     const position = screenToFlowCoordinate({
       x: event.clientX,
       y: event.clientY,
     })
 
-    const node = draggedNode.value;
+    const node = store.draggedNode;
 
     const newNode = {
       id: node?.id,
-      type: node?.type,
+      // type: node?.type,
+      type: 'default',
       position,
       data: { ...node },
     }
@@ -78,9 +78,6 @@ export function useCanvasDrop() {
   }
 
   return {
-    isDragging,
-    isDragOver,
-    draggedNode,
     onDragStart,
     onDragOver,
     onDragLeave,

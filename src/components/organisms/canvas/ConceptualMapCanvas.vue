@@ -12,16 +12,17 @@
       @edge-update="handleEdgeUpdate"
       @node-double-click="handleNodeDoubleClick"
       @drop="handleDrop"
-      @drag-over="handleDragOver"
+      @dragover="handleDragOver"
+      @dragleave="handleDragLeave"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
-
+<!--
       <MiniMap
         position="bottom-right"
         class="mr-4 mb-4 border border-slate-100 rounded-xl overflow-hidden shadow-xl"
       />
-
+ -->
       <template #node-default="{ data }">
         <VBox
           tag="article"
@@ -131,32 +132,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { VueFlow, useVueFlow, Handle, type NodeDragEvent, type EdgeUpdateEvent, type Position } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { MiniMap } from '@vue-flow/minimap';
+import { Handle, VueFlow, useVueFlow, type EdgeUpdateEvent, type NodeDragEvent, type Position } from '@vue-flow/core';
+import { computed, ref } from 'vue';
+// import { MiniMap } from '@vue-flow/minimap';
 import { v4 as uuidv4 } from 'uuid';
 
 // Atoms
-import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 
 // Molecules
-import VModal from '@/components/molecules/indicators/VModal.vue';
-import VAlert from '@/components/molecules/indicators/VAlert.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
+import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VAlert from '@/components/molecules/indicators/VAlert.vue';
+import VModal from '@/components/molecules/indicators/VModal.vue';
+import { useCanvasDrop } from '@/composables/useCanvasDrop';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ResourceItem } from '@/interfaces/knowledge';
+
+const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 
 const props = defineProps<{
   nodes: ConceptualNode[];
@@ -166,17 +170,14 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'node-update', node: ConceptualNode, action: 'move' | 'edit' | 'delete' | 'link'): void;
   (e: 'edge-update', edge: ConceptualEdge, action: 'create' | 'delete' | 'update'): void;
-  (e: 'add-resource', resource: ResourceItem, position: { x: number, y: number }): void;
 }>();
-
-const { screenToFlowCoordinate } = useVueFlow();
 
 // --- Data Transformations ---
 const vueFlowNodes = computed(() => props.nodes.map(n => ({
   id: n.id,
-  // position: { x: n.x, y: n.y },
+  position: { x: n.position?.x as number, y: n.position?.y as number},
   data: { ...n },
-  type: 'default',
+  type: n.type,
 })));
 
 const vueFlowEdges = computed(() => props.edges.map(e => ({
@@ -230,18 +231,16 @@ function handleNodeDoubleClick(event: any) {
   startEdit(event.node.id);
 }
 
-function handleDragOver(event: DragEvent) {
-  event.preventDefault();
-  if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+const handleDragLeave = (event: DragEvent) => {
+  onDragLeave(event);
 }
 
-function handleDrop(event: DragEvent) {
-  const resourceJson = event.dataTransfer?.getData('resource/json');
-  if (resourceJson) {
-    const resource = JSON.parse(resourceJson);
-    const position = screenToFlowCoordinate({ x: event.clientX, y: event.clientY });
-    emit('add-resource', resource, position);
-  }
+const handleDragOver = (event: DragEvent) => {
+  onDragOver(event);
+}
+
+const handleDrop = (event: DragEvent) => {
+  onDrop(event);
 }
 
 function startEdit(nodeId: string) {

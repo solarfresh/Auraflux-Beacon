@@ -14,6 +14,10 @@ export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
 		stabilityScore: 10,
 
+		isDragging: false,
+	  isDragOver: false,
+	  draggedNode: null,
+
 		resources: [],
 		canvasViews: [],
 		activeCanvasViewId: '',

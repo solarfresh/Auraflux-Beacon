@@ -80,15 +80,15 @@
  * Represents a node in the Conceptual Map with groundedness indicators.
  * NOTE: inheritAttrs: false ensures $attrs doesn't break the animation Box.
  */
-import { computed } from 'vue';
-import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import { computed } from 'vue';
 
 defineOptions({ inheritAttrs: false });
 
