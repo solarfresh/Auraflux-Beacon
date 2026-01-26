@@ -51,6 +51,8 @@
  * A structural wrapper for form controls to ensure consistent
  * labeling, error states, and spacing across the application.
  */
+import { v4 as uuidv4 } from 'uuid';
+
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
@@ -58,7 +60,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   /** Unique ID for the input/label association */
-  id: string;
+  id?: string;
   /** Primary label text */
   label?: string;
   /** Brief description shown below the input */
@@ -71,7 +73,7 @@ interface Props {
   disabled?: boolean;
 }
 
-defineProps<Props>();
+withDefaults(defineProps<Props>(), {id: `form-field-${uuidv4()}`});
 
 // Disable attribute inheritance to prevent classes bleeding onto the Stack
 defineOptions({

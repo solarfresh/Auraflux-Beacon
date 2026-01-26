@@ -10,7 +10,7 @@ To maintain a flat and predictable structure, all molecules are categorized into
 
 Complex input patterns that combine labels, inputs, and actions.
 
-* **Key Components:** `VFormField`, `VInputGroup`, `VButtonToolbar`.
+* **Key Components:** `VForm`, `VFormField`, `VInputGroup`, `VButtonToolbar`.
 * **Focus:** Accessibility (A11y), validation feedback, and input synchronization.
 
 ### 2. 📢 [Indicators](indicators/README.md) (Feedback & Overlays)
