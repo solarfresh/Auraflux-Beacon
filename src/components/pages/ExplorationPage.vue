@@ -207,7 +207,7 @@ function handleOpenAligner(type: ManagementType) {
  * Handle resource drop from Right Panel to Canvas
  */
 function handleDropResource(item: any, position: { x: number, y: number }) {
-  explorationStore.addResourceToCanvas(item, position);
+  // explorationStore.addResourceToCanvas(item, position);
 }
 
 /**

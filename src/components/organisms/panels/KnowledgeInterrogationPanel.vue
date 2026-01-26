@@ -68,12 +68,14 @@
         </div>
       </template>
       <template #tab-1-content>
+<!--
         <ResourceRepository
-          :resources="store.resources"
-          :node-summary="store.currentNodeSummary"
+          :resources="[]"
+          :node-summary="''"
           @drop-to-canvas="handleDrop"
           class="bg-slate-50/30"
         />
+ -->
       </template>
 
       <template #tab-2-title>
