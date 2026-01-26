@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full bg-[#f8fafc] relative group overflow-hidden">
+  <VBox class="h-full w-full relative group overflow-hidden" background="slate-50">
     <VueFlow
       :nodes="vueFlowNodes"
       :edges="vueFlowEdges"
@@ -13,132 +13,151 @@
       @node-double-click="handleNodeDoubleClick"
       @drop="handleDrop"
       @drag-over="handleDragOver"
-      class="conceptual-map-flow"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
+
       <MiniMap
         position="bottom-right"
-        class="mr-4 mb-4 border border-gray-100 rounded-xl overflow-hidden shadow-xl"
+        class="mr-4 mb-4 border border-slate-100 rounded-xl overflow-hidden shadow-xl"
       />
 
       <template #node-default="{ data }">
-        <div
-          class="group relative flex flex-col p-4 bg-white border-2 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 min-w-[180px]"
-          :class="nodeUI[data.type as keyof typeof nodeUI]?.borderClass || 'border-gray-200'"
+        <VBox
+          tag="article"
+          background="white"
+          padding="md"
+          rounded="xl"
+          class="group relative transition-all duration-300 min-w-[200px] border-2 shadow-sm hover:shadow-xl hover:-translate-y-1"
+          :class="nodeUI[data.type as keyof typeof nodeUI]?.borderClass || 'border-slate-200'"
         >
-          <div class="flex items-center justify-between mb-2">
-            <VBadge
-              :variant="nodeUI[data.type as keyof typeof nodeUI]?.badgeVariant || 'gray'"
-              size="xs"
-              class="uppercase tracking-tighter"
-            >
-              {{ data.type }}
-            </VBadge>
+          <VStack gap="xs">
+            <VCluster justify="between" align="center">
+              <VBadge
+                :variant="nodeUI[data.type as keyof typeof nodeUI]?.badgeVariant || 'gray'"
+                size="xs"
+                class="uppercase"
+              >
+                {{ data.type }}
+              </VBadge>
 
-            <VButton
-              variant="tertiary"
-              size="xs"
-              iconOnly
-              iconName="PencilSquare"
-              class="opacity-0 group-hover:opacity-100 transition-all duration-200"
-              @click.stop="startEdit(data.id)"
-            />
-          </div>
+              <VButton
+                variant="ghost"
+                size="xs"
+                iconOnly
+                iconName="PencilSquare"
+                class="opacity-0 group-hover:opacity-100 transition-opacity"
+                @click.stop="startEdit(data.id)"
+              />
+            </VCluster>
 
-          <div class="space-y-2">
-            <VTypography tag="h4" size="sm" weight="bold" color="gray-900" class="leading-snug break-words line-clamp-2">
-              {{ data.label }}
-            </VTypography>
-
-            <div v-if="data.type === 'RESOURCE'" class="flex items-center gap-1.5 py-1 px-2 bg-blue-50/50 rounded-lg">
-              <VIcon name="Link" size="xs" class="text-blue-500" />
-              <VTypography tag="span" size="xs" color="blue-600" class="truncate max-w-[120px] font-mono">
-                {{ data.resource_id?.substring(0, 8) }}
+            <VStack gap="xs">
+              <VTypography tag="h4" size="sm" weight="bold" class="text-slate-900 leading-snug line-clamp-2">
+                {{ data.label }}
               </VTypography>
-            </div>
 
-            <div v-if="data.user_notes" class="flex gap-2 p-2 bg-amber-50 rounded-lg border border-amber-100">
-              <VIcon name="ChatBubbleBottomCenterText" size="xs" class="text-amber-500 mt-0.5 flex-shrink-0" />
-              <VTypography tag="p" size="xs" color="amber-800" class="italic line-clamp-2 leading-tight">
-                {{ data.user_notes }}
-              </VTypography>
-            </div>
-          </div>
+              <VBox
+                v-if="data.type === 'RESOURCE'"
+                background="indigo-50"
+                padding="xs"
+                rounded="md"
+              >
+                <VCluster gap="xs" align="center">
+                  <VIcon name="Link" size="4" class="text-indigo-500" />
+                  <VTypography size="xs" class="text-indigo-600 truncate font-mono">
+                    {{ data.resource_id?.substring(0, 8) }}
+                  </VTypography>
+                </VCluster>
+              </VBox>
 
-          <Handle type="target" position="top" class="!w-3 !h-3 !bg-gray-300 border-2 border-white" />
-          <Handle type="source" position="bottom" class="!w-3 !h-3 !bg-gray-300 border-2 border-white" />
-        </div>
+              <VAlert
+                v-if="data.user_notes"
+                variant="warning"
+                padding="xs"
+                rounded="md"
+                class="border border-amber-100"
+              >
+                <VCluster gap="xs" align="start">
+                  <VIcon name="ChatBubbleBottomCenterText" size="4" class="mt-0.5" />
+                  <VTypography size="xs" italic class="line-clamp-2 leading-tight">
+                    {{ data.user_notes }}
+                  </VTypography>
+                </VCluster>
+              </VAlert>
+            </VStack>
+          </VStack>
+
+          <Handle type="target" :position="'top' as Position" class="!w-3 !h-3 !bg-slate-300 border-2 border-white" />
+          <Handle type="source" :position="'bottom' as Position" class="!w-3 !h-3 !bg-slate-300 border-2 border-white" />
+        </VBox>
       </template>
     </VueFlow>
 
-    <FullScreenModalTemplate
+    <VModal
       :is-open="isEditModalOpen"
-      max-width-class="max-w-lg"
-      @close="isEditModalOpen = false"
+      title="Refine Research Node"
+      size="md"
     >
-      <template #header>
-        <div class="flex items-center gap-2">
-          <VIcon name="DocumentText" class="text-indigo-600" />
-          <VTypography tag="span" weight="bold">Refine Research Node</VTypography>
-        </div>
+      <template #header-icon>
+        <VIcon name="DocumentText" class="text-indigo-600" />
       </template>
 
-      <template #content>
-        <div v-if="editingNode" class="space-y-6 py-4">
-          <div class="space-y-2">
-            <VTypography tag="label" size="sm" weight="bold" color="gray-700">Concept / Label</VTypography>
-            <VInput v-model="localLabel" placeholder="e.g., Socio-economic Resilience" size="lg" />
-          </div>
+      <VStack gap="lg" class="py-4">
+        <VFormField id="concept-label" label="Concept / Label">
+          <VInput
+            v-model="localLabel"
+            placeholder="e.g., Socio-economic Resilience"
+            size="lg"
+          />
+        </VFormField>
 
-          <div class="space-y-2">
-            <VTypography tag="label" size="sm" weight="bold" color="gray-700">Strategic Reflection</VTypography>
-            <VTextarea
-              v-model="localNotes"
-              :rows="5"
-              placeholder="Record why this concept is critical to your core research question..."
-            />
-          </div>
-        </div>
-      </template>
+        <VFormField id="strategic-reflection" label="Strategic Reflection">
+          <VTextarea
+            v-model="localNotes"
+            :rows="5"
+            placeholder="Record why this concept is critical..."
+          />
+        </VFormField>
+      </VStack>
 
       <template #footer>
-        <div class="flex justify-end gap-3 w-full">
-          <VButton variant="tertiary" size="md" @click="isEditModalOpen = false">Cancel</VButton>
-          <VButton variant="primary" size="md" @click="saveEdit">Apply Changes</VButton>
-        </div>
+        <VButtonToolbar :is-proceed-ready="false">
+          <VButton variant="ghost" @click="isEditModalOpen = false">Cancel</VButton>
+          <VButton variant="primary" @click="saveEdit">Apply Changes</VButton>
+        </VButtonToolbar>
       </template>
-    </FullScreenModalTemplate>
-  </div>
+    </VModal>
+  </VBox>
 </template>
 
 <script setup lang="ts">
-/**
- * ConceptualMapCanvas.vue
- * Core orchestration component for the Knowledge Graph.
- * Implements Vue Flow with strict Atom-based UI components.
- */
 import { ref, computed } from 'vue';
-import { VueFlow, useVueFlow, Handle, type NodeDragEvent, type EdgeUpdateEvent } from '@vue-flow/core';
+import { VueFlow, useVueFlow, Handle, type NodeDragEvent, type EdgeUpdateEvent, type Position } from '@vue-flow/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
 import { v4 as uuidv4 } from 'uuid';
 
-// Atoms & Templates
+// Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
-// Interfaces
+// Molecules
+import VModal from '@/components/molecules/indicators/VModal.vue';
+import VAlert from '@/components/molecules/indicators/VAlert.vue';
+import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
+
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ResourceItem } from '@/interfaces/knowledge';
 
-// --- Props & Emits ---
 const props = defineProps<{
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
@@ -150,13 +169,12 @@ const emit = defineEmits<{
   (e: 'add-resource', resource: ResourceItem, position: { x: number, y: number }): void;
 }>();
 
-// --- Vue Flow Context ---
 const { screenToFlowCoordinate } = useVueFlow();
 
-// --- Computed Data Transformations ---
+// --- Data Transformations ---
 const vueFlowNodes = computed(() => props.nodes.map(n => ({
   id: n.id,
-  position: { x: n.x, y: n.y },
+  // position: { x: n.x, y: n.y },
   data: { ...n },
   type: 'default',
 })));
@@ -170,11 +188,11 @@ const vueFlowEdges = computed(() => props.edges.map(e => ({
   style: { stroke: '#94a3b8', strokeWidth: 2 },
 })));
 
-// --- Node UI Semantic Mapping ---
+// --- UI Semantic Mapping (Aligning with Indicators Rule 2) ---
 const nodeUI = {
   RESOURCE: {
     borderClass: 'border-indigo-100 hover:border-indigo-400',
-    badgeVariant: 'indigo' as const // Changed from blue to indigo
+    badgeVariant: 'indigo' as const
   },
   CONCEPT: {
     borderClass: 'border-emerald-100 hover:border-emerald-400',
@@ -186,18 +204,16 @@ const nodeUI = {
   },
   REFLECTION: {
     borderClass: 'border-purple-100 hover:border-purple-400',
-    badgeVariant: 'purple' as const // Changed from indigo to purple
+    badgeVariant: 'purple' as const
   },
 };
 
-// --- Local State Management ---
 const isEditModalOpen = ref(false);
 const editingNode = ref<ConceptualNode | null>(null);
 const localLabel = ref('');
 const localNotes = ref('');
 
-// --- Event Handlers: Vue Flow Actions ---
-
+// --- Handlers ---
 function handleNodeDragStop({ node }: NodeDragEvent) {
   emit('node-update', { ...node.data, x: node.position.x, y: node.position.y }, 'move');
 }
@@ -214,8 +230,6 @@ function handleNodeDoubleClick(event: any) {
   startEdit(event.node.id);
 }
 
-// --- Drag and Drop Logic ---
-
 function handleDragOver(event: DragEvent) {
   event.preventDefault();
   if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
@@ -230,40 +244,19 @@ function handleDrop(event: DragEvent) {
   }
 }
 
-// --- Internal Refinement Logic ---
-
 function startEdit(nodeId: string) {
   const node = props.nodes.find(n => n.id === nodeId);
   if (node) {
     editingNode.value = node;
     localLabel.value = node.label;
-    localNotes.value = node.user_notes || '';
     isEditModalOpen.value = true;
   }
 }
 
 function saveEdit() {
   if (editingNode.value) {
-    emit('node-update', { ...editingNode.value, label: localLabel.value, user_notes: localNotes.value }, 'edit');
+    emit('node-update', { ...editingNode.value, label: localLabel.value }, 'edit');
     isEditModalOpen.value = false;
   }
 }
 </script>
-
-<style scoped>
-/* Scoped overrides for Vue Flow base styles */
-.conceptual-map-flow {
-  background-color: #f8fafc;
-}
-:deep(.vue-flow__edge-path) {
-  transition: stroke 0.3s ease;
-}
-:deep(.vue-flow__edge.selected .vue-flow__edge-path) {
-  stroke: #4f46e5;
-  stroke-width: 3;
-}
-/* Ensure the controls look integrated */
-:deep(.vue-flow__controls) {
-  @apply !border-none !shadow-lg !rounded-xl !overflow-hidden;
-}
-</style>

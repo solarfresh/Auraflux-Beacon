@@ -91,7 +91,7 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VModal from '@/components/molecules/navs/VModal.vue';
+import VModal from '@/components/molecules/indicators/VModal.vue';
 
 /**
  * LoginModal: Handles user authentication flow.
