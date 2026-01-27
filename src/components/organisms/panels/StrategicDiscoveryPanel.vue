@@ -53,15 +53,13 @@
               <VBox padding="xs" class="overflow-y-auto">
                 <VStack gap="sm">
                   <VNavGroup title="Search Results" :count="resources.length">
-                    <template #content>
-                      <VStack gap="xs">
-                        <VMetaListItem
-                          v-for="res in resources"
-                          :key="res.id"
-                          :resource="res"
-                        />
-                      </VStack>
-                    </template>
+                    <VStack gap="xs">
+                      <VMetaListItem
+                        v-for="res in resources"
+                        :key="res.id"
+                        :resource="res"
+                      />
+                    </VStack>
                   </VNavGroup>
 
                   <VEmptyState

@@ -40,8 +40,8 @@
       </VCluster>
 
       <VTypography tag="p" size="xs" color="slate-600" class="line-clamp-2 leading-relaxed">
-        <VTypography tag="span" weight="bold" color="slate-900">Summary: </VTypography>
-        {{ resource.summary || 'No distillation available.' }}
+        <!-- <VTypography tag="span" weight="bold" color="slate-900">Summary: </VTypography> -->
+        {{ resource.description }}
       </VTypography>
 
       <VCluster justify="between" align="center">
