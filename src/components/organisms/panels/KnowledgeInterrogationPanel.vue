@@ -13,14 +13,7 @@
         </div>
       </template>
       <template #tab-1-content>
-<!--
-        <ResourceRepository
-          :resources="[]"
-          :node-summary="''"
-          @drop-to-canvas="handleDrop"
-          class="bg-slate-50/30"
-        />
- -->
+        <ResourceRepository />
       </template>
 
       <template #tab-2-title>

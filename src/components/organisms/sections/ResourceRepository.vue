@@ -20,35 +20,9 @@
           size="sm"
           iconName="MagnifyingGlass"
         />
-
-        <div class="flex flex-wrap gap-x-4 gap-y-2">
-          <VCheckbox
-            v-for="source in SOURCE_TYPES"
-            :key="source"
-            :model-value="activeSources.includes(source)"
-            :value="source"
-            :label="formatSourceLabel(source)"
-            @update:model-value="(checked) => toggleSource(source, checked)"
-          />
-        </div>
       </div>
     </template>
 
-    <template #content>
-      <div v-if="filteredResources.length === 0" class="flex flex-col items-center justify-center py-12 opacity-40">
-        <VIcon name="Inbox" size="lg" />
-        <VTypography size="sm" class="mt-2">No research materials found.</VTypography>
-      </div>
-
-      <ul class="flex flex-col gap-3">
-        <VMetaListItem
-          v-for="resource in filteredResources"
-          :key="resource.id"
-          :resource="resource"
-          @edit="startEdit"
-        />
-      </ul>
-    </template>
   </BaseSectionLayout>
 
   <FullScreenModalTemplate :is-open="isEditModalOpen" @close="isEditModalOpen = false">
@@ -100,10 +74,6 @@ import VMetaListItem from '@/components/molecules/navs/VMetaListItem.vue';
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
-const props = defineProps<{
-  resources: ResourceItem[];
-}>();
-
 const emit = defineEmits<{
   (e: 'update-resource', resource: ResourceItem): void;
 }>();
@@ -124,26 +94,6 @@ const localNotes = ref('');
 const formatSourceLabel = (source: string) => {
   return source.charAt(0) + source.slice(1).toLowerCase().replace('_', ' ');
 };
-
-// --- Filtering Logic ---
-const filteredResources = computed(() => {
-  const term = searchTerm.value.toLowerCase().trim();
-
-  return props.resources.filter(res => {
-    // 1. Source Type Filter
-    if (!activeSources.value.includes(res.sourceType)) return false;
-
-    // 2. Search Term Filter (Title, Summary, Keywords, UserNotes)
-    if (!term) return true;
-
-    return (
-      res.label.toLowerCase().includes(term) ||
-      res.summary.toLowerCase().includes(term) ||
-      res.userNotes.toLowerCase().includes(term) ||
-      res.keywords.some(k => k.toLowerCase().includes(term))
-    );
-  });
-});
 
 // --- Modal Methods ---
 function startEdit(resource: ResourceItem) {
