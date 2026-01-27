@@ -1,78 +1,85 @@
 <template>
-  <div class="flex flex-col h-full bg-white relative overflow-hidden">
-    <div
+  <VBox tag="section" background="white" class="flex flex-col h-full w-full overflow-hidden">
+
+    <VBox v-if="$slots.header" border="bottom" padding="sm" background="white" class="flex-shrink-0 z-10">
+      <slot name="header" />
+    </VBox>
+
+    <VBox
       ref="chatHistoryRef"
-      class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 stable-gutter bg-slate-50/30"
+      background="slate-50"
+      padding="md"
+      class="flex-1 overflow-y-auto stable-gutter"
     >
-      <div
-        v-for="message in messages"
-        :key="message.id"
-        class="flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300"
-        :class="message.role === 'user' ? 'items-end' : 'items-start'"
-      >
+      <VStack gap="md" class="max-w-5xl mx-auto">
         <div
-          class="flex gap-3 max-w-[85%]"
-          :class="message.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
+          v-for="message in messages"
+          :key="message.id"
+          class="animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
-          <div
-            class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center shadow-sm"
-            :class="message.role === 'user' ? 'bg-indigo-100 text-indigo-600' : 'bg-white border border-slate-100 text-amber-500'"
-          >
-            <VIcon :name="message.role === 'user' ? 'User' : 'Sparkles'" size="xs" />
-          </div>
+          <VStack gap="xs" :align="message.role === 'user' ? 'end' : 'start'">
 
-          <div
-            class="p-4 rounded-2xl shadow-sm transition-all"
-            :class="[
-              message.role === 'user'
-                ? 'bg-indigo-600 text-white rounded-tr-none'
-                : 'bg-white border border-slate-100 text-slate-800 rounded-tl-none'
-            ]"
-          >
-            <template v-if="message.role === 'system'">
-              <VMarkdown :content="message.content" class="prose prose-sm max-w-none text-slate-800" />
-            </template>
+            <VCluster
+              gap="sm"
+              align="start"
+              class="max-w-[90%] md:max-w-[80%]"
+              :class="message.role === 'user' ? 'flex-row-reverse' : 'flex-row'"
+            >
+              <VBox
+                width="8"
+                height="8"
+                rounded="full"
+                class="flex-shrink-0 flex items-center justify-center shadow-sm"
+                :background="message.role === 'user' ? 'indigo-50' : 'white'"
+                :class="message.role === 'user' ? 'text-indigo-600' : 'text-amber-500 border border-slate-100'"
+              >
+                <VIcon :name="message.role === 'user' ? 'User' : 'Sparkles'" size="xs" />
+              </VBox>
 
-            <template v-else>
-              <VTypography tag="p" size="base" color="current" class="leading-relaxed whitespace-pre-wrap">
-                {{ message.content }}
+              <VBox
+                padding="md"
+                rounded="xl"
+                class="shadow-sm"
+                :background="message.role === 'user' ? 'indigo-50' : 'white'"
+                :border="message.role === 'user' ? 'none' : 'all'"
+                :class="[
+                  message.role === 'user' ? 'text-indigo-900 rounded-tr-none' : 'text-slate-800 rounded-tl-none border-slate-100'
+                ]"
+              >
+                <VMarkdown v-if="message.role === 'system'" :content="message.content" />
+                <VTypography v-else tag="p" size="base" color="current" class="leading-relaxed whitespace-pre-wrap">
+                  {{ message.content }}
+                </VTypography>
+              </VBox>
+            </VCluster>
+
+            <VBox padding="none" background="transparent" class="px-11">
+              <VTypography tag="span" size="xs" color="slate-400" weight="medium">
+                {{ message.role === 'user' ? 'Sent' : 'Agent Intelligence' }}
               </VTypography>
-            </template>
-          </div>
+            </VBox>
+          </VStack>
         </div>
 
-        <div class="mt-1 px-11">
-          <VTypography tag="span" size="xs" color="slate-400" weight="medium">
-            {{ message.role === 'user' ? 'Sent' : 'Agent Intelligence' }}
-          </VTypography>
-        </div>
-      </div>
+        <VBox v-if="isTyping" padding="none" background="transparent" class="pl-11">
+          <VCluster gap="xs" align="center" class="animate-pulse">
+            <VCluster gap="none" class="gap-[4px]">
+              <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+              <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+              <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
+            </VCluster>
+            <VTypography tag="span" size="xs" color="slate-400">AI is analyzing...</VTypography>
+          </VCluster>
+        </VBox>
+      </VStack>
+    </VBox>
 
-      <div v-if="isTyping" class="flex items-center gap-2 pl-11 animate-pulse">
-        <div class="flex gap-1">
-          <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
-          <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
-          <span class="w-1.5 h-1.5 bg-slate-300 rounded-full"></span>
-        </div>
-        <VTypography tag="span" size="xs" color="slate-400">AI is analyzing...</VTypography>
-      </div>
-    </div>
-
-    <footer class="flex-shrink-0 border-t border-slate-100 p-4 sm:p-6 bg-white/80 backdrop-blur-sm">
-      <div class="max-w-4xl mx-auto">
-        <VInputGroup
-          @send-message="$emit('sendMessage', $event)"
-          :is-disabled="isTyping"
-          class="shadow-lg shadow-slate-200/50"
-        />
-        <div class="mt-2 text-center">
-          <VTypography tag="p" size="xs" color="slate-400">
-            ISP Agent uses advanced heuristics. Please verify critical strategic data.
-          </VTypography>
-        </div>
-      </div>
-    </footer>
-  </div>
+    <VInputGroup
+      @send-message="$emit('sendMessage', $event)"
+      :is-disabled="isTyping"
+      class="shadow-lg shadow-slate-200/50"
+    />
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -80,6 +87,9 @@ import { nextTick, ref, watch } from 'vue';
 import type { ChatMessage } from '@/interfaces/core';
 
 // Atoms & Molecules
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VMarkdown from '@/components/atoms/indicators/VMarkdown.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
@@ -95,7 +105,7 @@ const emit = defineEmits<{
 }>();
 
 // --- Scroll Logic ---
-const chatHistoryRef = ref<HTMLDivElement | null>(null);
+const chatHistoryRef = ref<InstanceType<typeof VBox> | null>(null);
 
 /**
  * Automatically scrolls to the bottom of the chat when new messages arrive
@@ -104,8 +114,8 @@ const chatHistoryRef = ref<HTMLDivElement | null>(null);
 const scrollToBottom = async () => {
   await nextTick();
   if (chatHistoryRef.value) {
-    chatHistoryRef.value.scrollTo({
-      top: chatHistoryRef.value.scrollHeight,
+    chatHistoryRef.value?.$el.scrollTo({
+      top: chatHistoryRef.value?.$el.scrollHeight,
       behavior: 'smooth'
     });
   }

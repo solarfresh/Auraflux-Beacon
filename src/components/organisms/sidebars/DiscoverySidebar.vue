@@ -1,12 +1,11 @@
 <template>
   <BaseSidebarLayout
     title="Registry"
-    class="bg-white shadow-lg border-r border-slate-200 h-full"
-    :use-stable-gutter="true"
+    class="h-full border-r border-slate-200"
   >
     <template #header-extension>
-      <div class="px-5 pb-4 border-b border-slate-50">
-        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
+      <VBox padding="lg" class="pt-2 pb-2 border-b border-slate-50">
+        <VBox background="slate-50" padding="xs" rounded="lg" class="flex gap-1">
           <VButton
             size="sm"
             class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
@@ -23,12 +22,12 @@
           >
             Inbox ({{ inboxNodes.length }})
           </VButton>
-        </div>
-      </div>
+        </VBox>
+      </VBox>
     </template>
 
     <template #body>
-      <div class="flex flex-col">
+      <VStack gap="none" full-height scrollable>
         <SidebarRegistrySection
           title="Anchors & Portals"
           section-type="TOP"
@@ -62,22 +61,36 @@
           @select="selectNode"
           @teleport="handleTeleport"
         />
-      </div>
+      </VStack>
     </template>
 
     <template #footer>
-      <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
-        <VTypography size="xs" color="slate-500" weight="medium">Canvas Stability</VTypography>
-        <div class="flex items-center gap-2">
-           <div
-             class="w-2 h-2 rounded-full shadow-sm"
-             :class="stabilityScore < 4 ? 'bg-red-400' : 'bg-emerald-400'"
-           ></div>
-           <VTypography size="xs" weight="bold" :color="stabilityScore < 4 ? 'red-600' : 'emerald-600'">
-             {{ stabilityScore }}/10
-           </VTypography>
-        </div>
-      </div>
+      <VBox
+        background="slate-50"
+        padding="md"
+        border="top"
+        class="flex items-center justify-between"
+      >
+        <VTypography size="xs" color="slate-500" weight="medium">
+          Stability
+        </VTypography>
+
+        <VBox padding="none" class="flex items-center gap-2">
+          <VBox
+            padding="none"
+            class="w-2 h-2 rounded-full shadow-sm"
+            :background="stabilityScore < 4 ? 'rose-50' : 'emerald-50'"
+            :class="stabilityScore < 4 ? 'bg-red-400' : 'bg-emerald-400'"
+          />
+          <VTypography
+            size="xs"
+            weight="bold"
+            :class="stabilityScore < 4 ? 'text-red-600' : 'text-emerald-600'"
+          >
+            {{ stabilityScore }}/10
+          </VTypography>
+        </VBox>
+      </VBox>
     </template>
   </BaseSidebarLayout>
 </template>
@@ -88,6 +101,11 @@ import { useRegistry } from '@/composables/useRegistry';
 import { useExplorationStore } from '@/stores/exploration';
 import type { NodeType } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
+
+// Layout Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 
 // Layout & UI
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';

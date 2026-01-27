@@ -25,11 +25,6 @@ export const useExplorationStore = defineStore('exploration', {
 		conceptualNodes: new Map(),
 		conceptualEdges: [],
 
-		isAdversaryVisible: true,
-		adversaryData: {
-			critique: '',
-			conflicts: []
-		},
 		chatMessages: [],
 		isTyping: false,
 		aiSearchSuggestions: [],
@@ -62,54 +57,6 @@ export const useExplorationStore = defineStore('exploration', {
 	},
 
 	actions: {
-
-		addNodeFromKeyword(keyword: ProcessedKeyword, groundedness: number) {
-			const newNode: ConceptualNode = {
-				id: uuidv4(),
-				groundedness: groundedness,
-				solidity: 'DIMMED',
-				// canvases: [],
-				type: 'CONCEPT',
-				label: keyword.label,
-				// keywordId: keyword.id,
-				// data: keyword,
-				// ... other Resource Node properties
-			};
-			this.conceptualNodes.set(newNode.id, newNode);
-		},
-
-		/**
-		 * dismissAdversaryOverlay
-		 * Resets the friction layer and restores UI focus to the synthesis hub.
-		 * Triggered by the "Acknowledge" Button in the KnowledgeInterrogationPanel.
-		 */
-		dismissAdversaryOverlay() {
-			// 1. Terminate the 'Intentional Friction' visual state
-			this.isAdversaryVisible = false;
-
-			// 2. Optional: Log the acknowledgement for research traceability
-			// this.logReflection({
-			// 	type: 'adversary_ack',
-			// 	timestamp: new Date().toISOString(),
-			// 	context: this.adversaryData.critique
-			// });
-
-			// 3. Reset StabilityScore threshold to prevent immediate re-triggering
-			// We set it to a "Caution" state (e.g., 40) rather than full health
-			if (this.stabilityScore < 0) {
-				this.stabilityScore = 4;
-			}
-		},
-
-		/**
-		 * Triggered when the system detects high uncertainty or AI Hallucination
-		 */
-		triggerAdversaryWarning(critique: string) {
-			this.adversaryData.critique = critique;
-			this.isAdversaryVisible = true;
-			// Triggers the CSS transition in the Panel organism
-		},
-
 		// --- Initialization & Loading ---
 		async loadExplorationData() {
 			// Simulate loading data for the current active view and resources

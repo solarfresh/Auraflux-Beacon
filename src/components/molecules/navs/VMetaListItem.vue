@@ -40,21 +40,21 @@
       </VCluster>
 
       <VTypography tag="p" size="xs" color="slate-600" class="line-clamp-2 leading-relaxed">
-        <VTypography tag="span" weight="bold" color="slate-900">Summary: </VTypography>
-        {{ resource.summary || 'No distillation available.' }}
+        <!-- <VTypography tag="span" weight="bold" color="slate-900">Summary: </VTypography> -->
+        {{ resource.description }}
       </VTypography>
 
       <VCluster justify="between" align="center">
         <VCluster gap="xs">
           <VBadge
-            v-for="keyword in resource.keywords.slice(0, 2)"
+            v-for="keyword in resource.keywords?.slice(0, 2)"
             :key="keyword"
             variant="gray"
             size="xs"
           >
             #{{ keyword }}
           </VBadge>
-          <VTypography v-if="resource.keywords.length > 2" tag="span" size="xs" color="slate-400">
+          <VTypography v-if="resource.keywords?.length > 2" tag="span" size="xs" color="slate-400">
             +{{ resource.keywords.length - 2 }}
           </VTypography>
         </VCluster>

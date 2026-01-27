@@ -1,5 +1,5 @@
 <template>
-  <VBox tag="div" height="screen" width="full" background="slate-50" class="flex flex-col overflow-hidden">
+  <VBox tag="div" background="slate-50" class="flex flex-col h-screen w-full overflow-hidden">
 
     <VBox
       tag="header"
@@ -13,7 +13,7 @@
       </VBox>
     </VBox>
 
-    <main class="flex-1 flex overflow-hidden relative">
+    <main class="flex-1 flex h-full overflow-hidden relative">
 
       <VBox
         tag="section"
@@ -21,7 +21,7 @@
         background="white"
         border="right"
         aria-label="Sidebar Navigation"
-        class="flex-shrink-0 w-80 overflow-y-auto z-20"
+        class="flex-shrink-0 w-80 h-full overflow-hidden z-20"
       >
         <slot name="left-sidebar" />
       </VBox>
@@ -46,9 +46,7 @@
           isRightOpen ? 'w-96 border-l border-slate-100' : 'w-0 border-none overflow-hidden'
         ]"
       >
-        <VStack full-height gap="none">
-          <slot name="right-panel" />
-        </VStack>
+        <slot name="right-panel" />
       </VBox>
 
       <VFloatControl

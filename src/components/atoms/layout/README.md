@@ -20,37 +20,67 @@ Layout atoms are the **architectural primitives** of the application. They enfor
 
 The universal "Physical Shell." It implements **Bootstrap's Container** logic with **Material's Elevation**.
 
-* **Props**: `padding`, `rounded`, `background`, `border`, `tag`.
-* **Note**: If it doesn't need a background or padding, you might only need a `VStack` or `VCluster`.
+* **Props**: `padding`, `rounded`, `background`, `border`, `tag`, `width`, `height`.
+* **Constraint**: Must only use predefined `BackgroundToken` values.
 
 ### 2. VStack (Vertical)
 
 The vertical rhythm engine. Replaces `.flex-col` patterns.
 
-* **Bootstrap Ref**: Similar to a vertical `flex-column` with `gap` utilities.
-* **Props**: `gap`, `align` (items-center, etc.), `justify`.
+* **Props**: `gap`, `align`, `justify`.
+* **Reference**: Aligns with Bootstrap's vertical `flex-column`.
 
 ### 3. VCluster (Horizontal)
 
 The horizontal alignment engine. Replaces `.flex-row` patterns.
 
-* **Bootstrap Ref**: Similar to `.row` but without the negative margin complexity of grids.
 * **Props**: `gap`, `align`, `justify`, `wrap`.
+* **Reference**: Similar to `.row` but optimized for flexbox distribution.
 
 ### 4. VSpacer
 
-A utility to create dynamic "pushes" (using `flex-grow`).
+A utility to create dynamic "pushes" using `flex-grow`.
 
-* **Bootstrap Ref**: Replaces `.me-auto` or `.ms-auto` utilities.
+---
+
+## 📐 Design Tokens
+
+### Gap & Spacing (`GapSize`)
+
+All spatial distribution must follow the 8px grid system.
+
+| Token | Pixels | Tailwind | Use Case |
+| --- | --- | --- | --- |
+| `none` | 0px | `gap-0` | Input groups / Unified elements |
+| `xs` | 8px | `gap-2` | Tight groups (Icon + Text / Meta info) |
+| `sm` | 12px | `gap-3` | Component internals / Sidebar items |
+| `md` | 16px | `gap-4` | **Standard (Default)** / Section flow |
+| `lg` | 24px | `gap-6` | Card padding / Major layout blocks |
+| `xl` | 32px | `gap-8` | Page sections / Large whitespace |
+
+### Surface & Colors (`BackgroundToken`)
+
+To maintain semantic integrity, only the following tokens are permitted:
+
+| Token | Usage |
+| --- | --- |
+| `white` | Primary surfaces, Headers, Cards |
+| `slate-50` | Background of scroll areas, Secondary panels |
+| `indigo-50` | Primary action highlights, User message bubbles |
+| `amber-50` | AI-generated content areas, Warning states |
+| `rose-50` | Error feedback, Destructive action areas |
+| `emerald-50` | Success feedback, Verified data areas |
+| `transparent` | Nested containers with no visual skin |
 
 ---
 
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: No Bare Divs.** Never use a `<div>` for structural grouping. Use `<VStack>` or `<VCluster>`.
-> **Rule 2: Geometry Tokens.** For Material-style cards, always use `rounded="lg"` or `rounded="xl"`.
-> **Rule 3: Grid vs. Flex.** Use `VCluster` for linear rows (toolbars, tags). For complex 2D grids, consider a dedicated `Organism` or Tailwind's `grid-cols`.
+> **Rule 1: No Bare Divs.** Never use a `<div>` for structural grouping or spacing. Use `<VStack>` or `<VCluster>`.
+> **Rule 2: Token Discipline.** Strictly use `GapSize` and `BackgroundToken`. Custom hex codes or arbitrary Tailwind `bg-*` classes are prohibited.
+> **Rule 3: Geometric Consistency.** For Material-style cards, use `rounded="lg"` or `xl`. Layouts should always be responsive (e.g., `w-full h-full`).
+> **Rule 4: Zero Margin Bleed.** Ensure all spacing is handled via the `gap` prop of the parent.
 
 ### Correct Implementation Pattern
 
@@ -60,10 +90,12 @@ A utility to create dynamic "pushes" (using `flex-grow`).
     <VCluster justify="between" align="center">
       <VTypography tag="h3">System Log</VTypography>
       <VSpacer />
-      <VButton size="sm" variant="ghost" iconOnly iconName="Settings" />
+      <VButton size="xs" variant="ghost" iconOnly iconName="Settings" />
     </VCluster>
 
-    <VDivider /> <VMarkdown :content="logData" />
+    <VBox background="slate-50" padding="sm" rounded="md">
+      <VMarkdown :content="logData" />
+    </VBox>
   </VStack>
 </VBox>
 
@@ -71,25 +103,14 @@ A utility to create dynamic "pushes" (using `flex-grow`).
 
 ---
 
-## 🎨 Design Tokens (Alignment with Bootstrap)
-
-| Token | Pixels | Tailwind Utility | Use Case |
-| --- | --- | --- | --- |
-| `xs` | 8px | `p-2 / gap-2` | Tight groups (Icon + Text) |
-| `sm` | 12px | `p-3 / gap-3` | Small component internals |
-| `md` | 16px | `p-4 / gap-4` | **Standard (Bootstrap Default)** |
-| `lg` | 24px | `p-6 / gap-6` | Card padding / Section spacing |
-
----
-
 ## 📂 Directory Structure
 
 ```text
 src/components/atoms/layout/
-├── VBox.vue             # The Physical Shell
-├── VCluster.vue         # Horizontal Flex
-├── VSpacer.vue          # Flex Push
-├── VStack.vue           # Vertical Rhythm
-└── README.md
+├── VBox.vue             # The Physical Shell (Skin)
+├── VCluster.vue         # Horizontal Flex (Bones)
+├── VSpacer.vue          # Flex Push (Utility)
+├── VStack.vue           # Vertical Rhythm (Bones)
+└── README.md            # You are here
 
 ```

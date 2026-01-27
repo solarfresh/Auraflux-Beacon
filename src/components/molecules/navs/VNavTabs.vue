@@ -1,83 +1,90 @@
 <template>
-  <div class="h-full flex flex-col bg-white">
-    <div class="flex-shrink-0 border-b border-slate-200">
-      <nav class="-mb-px flex space-x-8 px-4" aria-label="Tabs" role="tablist">
+  <VStack gap="none" class="h-full w-full overflow-hidden">
+
+    <VBox
+      tag="nav"
+      background="white"
+      border="bottom"
+      padding="none"
+      class="flex-shrink-0"
+    >
+      <VCluster gap="md" align="center" class="px-4">
         <VButton
           v-for="tab in tabs"
           :key="tab.id"
           variant="ghost"
           size="md"
+          :aria-selected="modelValue === tab.id"
+          role="tab"
+          class="relative rounded-none border-b-2 py-4 px-1 transition-all duration-150"
           :class="[
-            'relative rounded-none border-b-2 py-4 px-1 transition-all duration-150',
-            activeTab === tab.id
+            modelValue === tab.id
               ? 'border-indigo-600'
               : 'border-transparent'
           ]"
-          :aria-selected="activeTab === tab.id"
-          role="tab"
           @click="selectTab(tab.id)"
         >
           <VTypography
             tag="span"
             size="sm"
-            :weight="activeTab === tab.id ? 'bold' : 'medium'"
-            :class="activeTab === tab.id ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'"
+            :weight="modelValue === tab.id ? 'bold' : 'medium'"
+            :class="modelValue === tab.id ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'"
           >
-            <slot :name="`tab-${tab.id}-title`">{{ tab.label }}</slot>
+            <slot :name="`tab-${tab.id}-title`" :tab="tab">{{ tab.label }}</slot>
           </VTypography>
         </VButton>
-      </nav>
-    </div>
+      </VCluster>
+    </VBox>
 
-    <div class="flex-1 overflow-y-auto" role="tabpanel">
+    <VBox
+      tag="section"
+      background="transparent"
+      class="flex-1 overflow-y-auto relative min-h-0"
+      role="tabpanel"
+    >
       <div
         v-for="tab in tabs"
         :key="tab.id"
-        v-show="activeTab === tab.id"
-        class="h-full"
+        v-show="modelValue === tab.id"
+        class="h-full w-full"
       >
-        <slot :name="`tab-${tab.id}-content`"></slot>
+        <slot :name="`tab-${tab.id}-content`" :tab="tab"></slot>
       </div>
-    </div>
-  </div>
+    </VBox>
+  </VStack>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+/**
+ * VNavTabs Molecule
+ * * Orchestrates navigation between different views.
+ * Uses v-model for state synchronization as per Molecule principles.
+ */
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
-/**
- * TabbedPanel Molecule
- * Organizes content into switchable views.
- * Correctly uses Button and Text atoms to maintain design system integrity.
- */
-const props = defineProps({
-  /** ID of the tab to be active on initial load */
-  initialTab: {
-    type: Number,
-    default: 1,
-  },
+interface TabItem {
+  id: string | number;
+  label: string;
+}
+
+const props = defineProps<{
+  /** Active Tab ID (Syncs with v-model) */
+  modelValue: string | number;
   /** Tab configuration array */
-  tabs: {
-    type: Array as () => Array<{ id: number; label: string }>,
-    default: () => [
-      { id: 1, label: 'Overview' },
-      { id: 2, label: 'Details' }
-    ],
-  }
-});
+  tabs: TabItem[];
+}>();
 
-const activeTab = ref(props.initialTab);
+const emit = defineEmits<{
+  (e: 'update:modelValue', id: string | number): void;
+  (e: 'change', id: string | number): void;
+}>();
 
-function selectTab(id: number) {
-  activeTab.value = id;
-}
+const selectTab = (id: string | number) => {
+  emit('update:modelValue', id);
+  emit('change', id);
+};
 </script>
-
-<style scoped>
-/* Ensure the flex container doesn't collapse incorrectly */
-.flex-1 {
-  min-height: 0;
-}
-</style>

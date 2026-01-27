@@ -35,8 +35,6 @@ export interface ExplorationState {
   conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
   // --- AI Interaction & State ---
-  isAdversaryVisible: boolean;
-  adversaryData: AdversaryData;
   chatMessages: AIChatMessage[];
   isTyping: boolean;
   aiSearchSuggestions: string[];

@@ -32,7 +32,7 @@
 
     <VBox
       tag="div"
-      class="flex-1 overflow-y-auto overflow-x-hidden transition-all"
+      class="flex-1 min-h-0 overflow-y-auto transition-all"
       :class="{ 'stable-gutter': useStableGutter }"
     >
       <slot v-if="!isEmpty" name="body" />
@@ -55,7 +55,7 @@
       padding="md"
       background="slate-50"
       border="top"
-      class="mt-auto"
+      class="flex-shrink-0 mt-auto"
     >
       <slot name="footer" />
     </VBox>

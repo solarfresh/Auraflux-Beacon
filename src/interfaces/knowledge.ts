@@ -57,11 +57,11 @@ export interface ResourceItem extends BaseKnowledgeElement {
   url?: string;
   format: ResourceFormat;
   sourceType: ResourceSource;
-  summary: string;          // AI-generated distillation
+  summary?: string;          // AI-generated distillation
   rawContent?: string;      // The original text for indexing
   keywords: string[];       // Derived keywords
-  userNotes: string;        // Explicit user reflections on the resource
-  relevanceScore: number;   // 1 to 5 scale
+  userNotes?: string;        // Explicit user reflections on the resource
+  relevanceScore?: number;   // 1 to 5 scale
 }
 
 /**

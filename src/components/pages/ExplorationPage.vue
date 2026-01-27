@@ -46,11 +46,7 @@
       </template>
 
       <template #right-panel>
-        <KnowledgeInterrogationPanel
-          @drop-to-canvas="handleDropResource"
-          @open-refinement="handleOpenAligner"
-          @send-message="explorationStore.getAgentResponse"
-        />
+        <StrategicDiscoveryPanel />
       </template>
 
       <template #footer>
@@ -128,7 +124,7 @@ import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';
-import KnowledgeInterrogationPanel from '@/components/organisms/panels/KnowledgeInterrogationPanel.vue';
+import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
