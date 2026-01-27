@@ -117,7 +117,7 @@ const emit = defineEmits<{
 }>();
 
 // --- Scroll Logic ---
-const chatHistoryRef = ref<HTMLDivElement | null>(null);
+const chatHistoryRef = ref<InstanceType<typeof VBox> | null>(null);
 
 /**
  * Automatically scrolls to the bottom of the chat when new messages arrive
@@ -126,8 +126,8 @@ const chatHistoryRef = ref<HTMLDivElement | null>(null);
 const scrollToBottom = async () => {
   await nextTick();
   if (chatHistoryRef.value) {
-    chatHistoryRef.value.scrollTo({
-      top: chatHistoryRef.value.scrollHeight,
+    chatHistoryRef.value?.$el.scrollTo({
+      top: chatHistoryRef.value?.$el.scrollHeight,
       behavior: 'smooth'
     });
   }
