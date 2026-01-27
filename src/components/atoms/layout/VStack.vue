@@ -2,12 +2,13 @@
   <component
     :is="tag"
     :class="[
-      'flex flex-col',
+      inline ? 'inline-flex' : 'flex',
+      'flex-col',
       alignClasses[align],
       justifyClasses[justify],
       gapClasses[gap],
-      inline ? 'inline-flex' : 'flex',
-      fullHeight ? 'h-full' : 'h-auto'
+      fullHeight ? 'h-full' : 'h-auto',
+      scrollable ? 'overflow-y-auto min-h-0' : 'overflow-visible'
     ]"
   >
     <slot />
@@ -35,6 +36,7 @@ interface Props {
   inline?: boolean;
   /** Force the stack to take up full available height */
   fullHeight?: boolean;
+  scrollable?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -44,6 +46,7 @@ const props = withDefaults(defineProps<Props>(), {
   justify: 'start',
   inline: false,
   fullHeight: false,
+  scrollable: false,
 });
 
 const gapClasses: Record<GapSize, string> = {

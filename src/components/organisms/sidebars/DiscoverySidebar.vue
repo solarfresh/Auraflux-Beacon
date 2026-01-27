@@ -4,7 +4,7 @@
     class="h-full border-r border-slate-200"
   >
     <template #header-extension>
-      <VBox padding="lg" class="pt-0 pb-4 border-b border-slate-50">
+      <VBox padding="lg" class="pt-2 pb-2 border-b border-slate-50">
         <VBox background="slate-50" padding="xs" rounded="lg" class="flex gap-1">
           <VButton
             size="sm"
@@ -27,7 +27,7 @@
     </template>
 
     <template #body>
-      <VStack gap="none" full-height>
+      <VStack gap="none" full-height scrollable>
         <SidebarRegistrySection
           title="Anchors & Portals"
           section-type="TOP"

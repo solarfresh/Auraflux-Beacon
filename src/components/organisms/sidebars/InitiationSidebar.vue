@@ -6,7 +6,7 @@
     body-class="p-0"
   >
     <template #header-extension>
-      <VBox padding="md" class="pt-0 pb-2">
+      <VBox padding="md" class="pt-2 pb-2">
         <VNavAlert
           :keywords="keywords"
           :scope="scope"
