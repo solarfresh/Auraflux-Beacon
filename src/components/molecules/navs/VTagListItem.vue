@@ -101,7 +101,7 @@ const styles = computed(() => {
     case 'ON_HOLD':
       return {
           bgColor: 'slate-50' as const,
-          borderColor: 'border-gray-300 hover:border-gray-400',
+          borderColor: 'border-slate-300 hover:border-slate-400',
           icon: 'ArchiveBox',
           iconColor: 'slate-500',
           secondaryVTypography: 'ON HOLD (Excluded)',
@@ -111,9 +111,9 @@ const styles = computed(() => {
     default:
       return {
           bgColor: 'white' as const,
-          borderColor: 'border-gray-200 hover:border-gray-300',
+          borderColor: 'border-slate-200 hover:border-slate-300',
           icon: 'ClipboardDocumentList',
-          iconColor: 'gray-600',
+          iconColor: 'slate-600',
           secondaryVTypography: 'User Draft (Pending Lock)',
           actionIcon: 'PencilSquare',
       };

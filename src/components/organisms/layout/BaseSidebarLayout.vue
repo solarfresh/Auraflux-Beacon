@@ -15,10 +15,10 @@
       <slot name="header">
         <VCluster justify="between" align="center" full-width>
           <VCluster gap="sm" align="baseline" class="min-w-0">
-            <VTypography tag="h2" size="xl" weight="bold" color="gray-900" truncate>
+            <VTypography tag="h2" size="xl" weight="bold" color="slate-900" truncate>
               {{ title }}
             </VTypography>
-            <VTypography v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="gray-400">
+            <VTypography v-if="itemCount !== undefined" tag="span" size="sm" weight="medium" color="slate-400">
               ({{ itemCount }})
             </VTypography>
           </VCluster>

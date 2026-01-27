@@ -2,7 +2,7 @@
   <VBox tag="section" full-height class="flex flex-col">
     <VBox padding="xs" class="mb-8">
       <VStack gap="sm">
-        <VTypography tag="label" size="sm" weight="bold" color="gray-700">
+        <VTypography tag="label" size="sm" weight="bold" color="slate-700">
           Add Research Keyword
         </VTypography>
 
@@ -22,7 +22,7 @@
           </VButton>
         </VCluster>
 
-        <VTypography size="xs" color="gray-400">
+        <VTypography size="xs" color="slate-400">
           Keywords help the system narrow down relevant resources and insights.
         </VTypography>
       </VStack>
@@ -31,7 +31,7 @@
     <VBox tag="main" class="flex-1 min-h-0 flex flex-col">
       <VCluster justify="between" align="center" class="px-1 mb-4">
         <VCluster gap="sm" align="center">
-          <VTypography tag="h4" size="sm" weight="bold" color="gray-700">
+          <VTypography tag="h4" size="sm" weight="bold" color="slate-700">
             Current Keywords
           </VTypography>
           <VBadge variant="gray" size="xs">{{ localKeywords.length }}</VBadge>
@@ -43,7 +43,7 @@
         icon="Hashtag"
         title="No keywords added"
         description="Your list is empty. Add terms to focus your inquiry."
-        class="flex-1 border-2 border-dashed border-gray-100 rounded-2xl"
+        class="flex-1 border-2 border-dashed border-slate-100 rounded-2xl"
       />
 
       <VBox
@@ -158,8 +158,8 @@ function getStatusColorClass(status?: EntityStatus): string {
   const map: Record<string, string> = {
     LOCKED: 'text-indigo-500',
     AI_EXTRACTED: 'text-amber-500',
-    ON_HOLD: 'text-gray-400',
-    USER_DRAFT: 'text-gray-300'
+    ON_HOLD: 'text-slate-400',
+    USER_DRAFT: 'text-slate-300'
   };
   return map[status || 'USER_DRAFT'];
 }

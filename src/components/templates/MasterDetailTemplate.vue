@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-full w-full overflow-hidden bg-white">
-    <div class="flex-shrink-0 w-80 md:w-96 border-r border-gray-100">
+    <div class="flex-shrink-0 w-80 md:w-96 border-r border-slate-100">
       <slot name="master-panel" />
     </div>
 

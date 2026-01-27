@@ -72,8 +72,8 @@ const theme = computed(() => {
     },
     secondary: {
       bg: 'slate-50',
-      border: 'border-gray-200',
-      text: 'text-gray-600'
+      border: 'border-slate-200',
+      text: 'text-slate-600'
     }
   };
   return map[props.variant];

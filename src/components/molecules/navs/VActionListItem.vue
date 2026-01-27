@@ -112,18 +112,18 @@ const uiStyles = computed(() => {
     case 'ON_HOLD':
       return {
         bgColor: 'slate-50' as const,
-        borderColor: 'border-gray-200',
+        borderColor: 'border-slate-200',
         labelColor: 'slate-500',
-        valueColor: 'gray-400',
-        accentColor: 'gray-400',
+        valueColor: 'slate-400',
+        accentColor: 'slate-400',
         icon: 'ArchiveBox',
       };
     default:
       return {
         bgColor: 'white' as const,
-        borderColor: 'border-gray-200 hover:border-gray-300',
-        labelColor: 'gray-800',
-        valueColor: 'gray-600',
+        borderColor: 'border-slate-200 hover:border-slate-300',
+        labelColor: 'slate-800',
+        valueColor: 'slate-600',
         accentColor: 'slate-500',
         icon: 'InformationCircle',
       };

@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col gap-8 p-6 bg-white rounded-xl border border-gray-200 shadow-sm">
+  <div class="flex flex-col gap-8 p-6 bg-white rounded-xl border border-slate-200 shadow-sm">
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-indigo-600 pl-3">
-        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Core Research Question</VTypography>
+        <VTypography tag="h4" size="md" weight="bold" color="slate-900">Core Research Question</VTypography>
       </div>
       <VTypography tag="p" size="sm" color="slate-500" class="italic leading-relaxed">
         The ultimate objective of this ISP session. Changing this will trigger a full re-evaluation of node health.
@@ -14,13 +14,13 @@
         size="lg"
         :rows="4"
         placeholder="Enter your refined research question..."
-        class="border-gray-300 focus:border-indigo-600 focus:ring-indigo-600"
+        class="border-slate-300 focus:border-indigo-600 focus:ring-indigo-600"
       />
     </section>
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-emerald-600 pl-3">
-        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Topic Scope & Boundaries</VTypography>
+        <VTypography tag="h4" size="md" weight="bold" color="slate-900">Topic Scope & Boundaries</VTypography>
       </div>
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-2">
@@ -46,17 +46,17 @@
 
     <section class="space-y-4">
       <div class="flex items-center gap-2 border-l-2 border-amber-500 pl-3">
-        <VTypography tag="h4" size="md" weight="bold" color="gray-900">Knowledge Anchors</VTypography>
+        <VTypography tag="h4" size="md" weight="bold" color="slate-900">Knowledge Anchors</VTypography>
       </div>
 
-      <div class="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-gray-200 min-h-[56px] items-center">
+      <div class="flex flex-wrap gap-2 p-3 bg-slate-50 rounded-lg border border-slate-200 min-h-[56px] items-center">
         <div
           v-for="(tag, index) in localData.keywords"
           :key="index"
-          class="flex items-center gap-2 px-2.5 py-1 bg-white rounded border border-gray-300 shadow-sm hover:border-amber-500 transition-colors"
+          class="flex items-center gap-2 px-2.5 py-1 bg-white rounded border border-slate-300 shadow-sm hover:border-amber-500 transition-colors"
         >
-          <VTypography tag="span" size="xs" color="gray-700">{{ tag }}</VTypography>
-          <button @click="removeTag(index)" class="text-gray-400 hover:text-red-500 text-lg leading-none transition-colors">×</button>
+          <VTypography tag="span" size="xs" color="slate-700">{{ tag }}</VTypography>
+          <button @click="removeTag(index)" class="text-slate-400 hover:text-red-500 text-lg leading-none transition-colors">×</button>
         </div>
 
         <div class="flex-grow min-w-[150px]">
@@ -65,14 +65,14 @@
             variant="search"
             size="sm"
             placeholder="Add keyword + Enter"
-            class="!bg-transparent !border-none !ring-0 !shadow-none text-gray-700"
+            class="!bg-transparent !border-none !ring-0 !shadow-none text-slate-700"
             @keydown.enter="addTag"
           />
         </div>
       </div>
     </section>
 
-    <footer class="flex items-center justify-end gap-3 pt-6 border-t border-gray-100">
+    <footer class="flex items-center justify-end gap-3 pt-6 border-t border-slate-100">
       <VButton variant="tertiary" @click="$emit('close')">
         <VTypography tag="span" size="sm" color="slate-500">Cancel</VTypography>
       </VButton>
@@ -88,7 +88,7 @@
 /**
  * FocusAligner.vue
  * Re-aligned for Light Mode design.
- * Using standard grey scales (slate-50 to gray-900) instead of dark-mode slate.
+ * Using standard grey scales (slate-50 to slate-900) instead of dark-mode slate.
  */
 import { ref, reactive } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';

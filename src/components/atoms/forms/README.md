@@ -84,7 +84,7 @@ Multi-line text input for long-form content.
 | --- | --- | --- | --- |
 | **Focus Ring** | Indigo 500 | `ring-2 ring-indigo-500 ring-offset-2` | `:focus` |
 | **Error Border** | Red 500 | `border-red-500 focus:ring-red-500` | `.is-invalid` |
-| **Disabled** | Gray 100 | `bg-gray-100 cursor-not-allowed` | `disabled` |
+| **Disabled** | Gray 100 | `bg-slate-100 cursor-not-allowed` | `disabled` |
 | **Height (sm)** | 32px | `h-8` | `.form-control-sm` |
 | **Height (md)** | 40px | `h-10` | Default |
 | **Height (lg)** | 48px | `h-12` | `.form-control-lg` |

@@ -6,7 +6,7 @@
         :for="id"
         size="sm"
         weight="bold"
-        color="gray-700"
+        color="slate-700"
       >
         {{ label }}
         <span v-if="required" class="text-red-500 ml-0.5">*</span>
@@ -37,7 +37,7 @@
     <VTypography
       v-if="description && !error"
       size="xs"
-      color="gray-400"
+      color="slate-400"
       class="ml-1"
     >
       {{ description }}

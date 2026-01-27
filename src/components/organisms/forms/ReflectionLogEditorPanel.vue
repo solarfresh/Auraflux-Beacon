@@ -5,7 +5,7 @@
       <VBox padding="lg" border="bottom" class="flex-shrink-0">
         <VStack gap="xs">
           <VCluster justify="between" align="center">
-            <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
+            <VTypography tag="h2" size="2xl" weight="bold" color="slate-900">
               {{ isNewEntry ? 'Create New Reflection' : 'Edit Reflection' }}
             </VTypography>
 
@@ -15,8 +15,8 @@
           </VCluster>
 
           <VCluster gap="xs" align="center">
-            <VIcon name="Clock" size="xs" color="gray-400" />
-            <VTypography size="xs" color="gray-400">
+            <VIcon name="Clock" size="xs" color="slate-400" />
+            <VTypography size="xs" color="slate-400">
               Last Updated: {{ new Date(currentDraft.updatedAt).toLocaleString() }}
             </VTypography>
           </VCluster>

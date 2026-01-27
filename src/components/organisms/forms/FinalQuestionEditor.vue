@@ -7,7 +7,7 @@
           <VIcon name="Flag" size="md" />
         </VBox>
         <VStack gap="none">
-          <VTypography tag="h2" size="2xl" weight="bold" color="gray-900">
+          <VTypography tag="h2" size="2xl" weight="bold" color="slate-900">
             Final Research Question
           </VTypography>
           <VTypography size="sm" color="slate-500" class="max-w-xl">
@@ -25,7 +25,7 @@
           label="Research Statement"
         >
           <template #hint>
-            <VTypography size="xs" color="gray-400">
+            <VTypography size="xs" color="slate-400">
               {{ draftQuestion.length }} / 500 characters
             </VTypography>
           </template>
@@ -49,7 +49,7 @@
         </VFormField>
 
         <VStack gap="md">
-          <VTypography tag="h4" size="xs" weight="bold" class="uppercase tracking-widest text-gray-400">
+          <VTypography tag="h4" size="xs" weight="bold" class="uppercase tracking-widest text-slate-400">
             Current Context Feedback
           </VTypography>
 
@@ -62,7 +62,7 @@
                     class="w-2.5 h-2.5 rounded-full"
                     :class="stabilityScore < 7 ? 'bg-amber-400' : 'bg-emerald-400'"
                   />
-                  <VTypography size="md" weight="bold" color="gray-900">
+                  <VTypography size="md" weight="bold" color="slate-900">
                     {{ stabilityScore }} / 10
                   </VTypography>
                 </VCluster>

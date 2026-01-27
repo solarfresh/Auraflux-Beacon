@@ -7,7 +7,7 @@
           <VIcon name="PencilSquare" size="md" />
         </VBox>
         <VStack gap="none">
-          <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
+          <VTypography tag="h2" size="xl" weight="bold" color="slate-900">
             Refine Keyword
           </VTypography>
           <VTypography size="xs" color="slate-500">

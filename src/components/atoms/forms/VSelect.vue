@@ -8,10 +8,10 @@
       // Base styles: consistent transition and layout
       'block w-full transition duration-150 ease-in-out',
       // Border and Focus: standardized to indigo-600 and rounded-md
-      'border-gray-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600 rounded-md',
+      'border-slate-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600 rounded-md',
       sizeClasses,
       // State styling: unified disabled look
-      disabled ? 'bg-slate-50 text-gray-400 cursor-not-allowed border-gray-200' : 'bg-white text-gray-900',
+      disabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-200' : 'bg-white text-slate-900',
     ]"
   >
     <slot></slot>

@@ -60,10 +60,10 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClasses = {
   primary: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm',
   secondary: 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100',
-  tertiary: 'bg-transparent text-gray-600 hover:bg-gray-100',
+  tertiary: 'bg-transparent text-slate-600 hover:bg-slate-100',
   danger: 'bg-red-50 text-red-600 hover:bg-red-100',
-  outline: 'bg-transparent border border-gray-200 text-gray-700 hover:border-gray-300',
-  ghost: 'bg-transparent text-gray-400 hover:text-gray-600'
+  outline: 'bg-transparent border border-slate-200 text-slate-700 hover:border-slate-300',
+  ghost: 'bg-transparent text-slate-400 hover:text-slate-600'
 };
 
 const textSizeClasses = {
@@ -76,10 +76,10 @@ const textSizeClasses = {
 const textColorClasses = {
   primary: 'text-white',
   secondary: 'text-indigo-700',
-  tertiary: 'text-gray-600',
+  tertiary: 'text-slate-600',
   danger: 'text-red-600',
-  outline: 'text-gray-700',
-  ghost: 'text-gray-400'
+  outline: 'text-slate-700',
+  ghost: 'text-slate-400'
 }
 
 const iconSizeClasses = {

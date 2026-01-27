@@ -44,7 +44,7 @@
           tag="span"
           size="xs"
           weight="bold"
-          :color="isActive ? 'indigo-600' : 'gray-400'"
+          :color="isActive ? 'indigo-600' : 'slate-400'"
           class="uppercase tracking-tighter"
         >
           {{ node.type }}
@@ -54,7 +54,7 @@
           tag="p"
           :size="isActive ? 'base' : 'sm'"
           :weight="isActive ? 'bold' : 'medium'"
-          :color="isActive ? 'gray-900' : 'gray-700'"
+          :color="isActive ? 'slate-900' : 'slate-700'"
           class="truncate leading-tight"
         >
           {{ node.label }}
@@ -145,7 +145,7 @@ const solidityStyles = computed(() => {
       };
     default:
       return {
-        colorClass: 'bg-gray-300',
+        colorClass: 'bg-slate-300',
         shadowClass: ''
       };
   }

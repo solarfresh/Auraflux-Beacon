@@ -6,7 +6,7 @@
         :item-count="logEntries.length"
         :disable-new-entry="isEditing"
         :is-empty="logEntries.length === 0"
-        class="bg-white border-r border-gray-100 h-full"
+        class="bg-white border-r border-slate-100 h-full"
         @new-entry="handleNewEntry"
       >
         <template #list-items>

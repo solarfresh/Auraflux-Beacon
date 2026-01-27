@@ -1,7 +1,7 @@
 <template>
   <section class="flex flex-col gap-5">
     <header class="flex items-center justify-between">
-      <VTypography tag="h3" size="lg" weight="bold" color="gray-900">
+      <VTypography tag="h3" size="lg" weight="bold" color="slate-900">
         {{ title }}
       </VTypography>
       <slot name="header-actions"></slot>

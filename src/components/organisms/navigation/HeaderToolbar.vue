@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-gray-100 shadow-sm">
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-slate-100 shadow-sm">
     <div class="max-w-[1600px] mx-auto px-6 h-16 flex justify-between items-center">
 
       <div class="flex items-center gap-3 group cursor-pointer">
@@ -7,16 +7,16 @@
           <VIcon name="Target" size="sm" class="text-white" />
         </div>
         <div class="flex flex-col">
-          <VTypography tag="h1" size="lg" weight="bold" color="gray-900" class="leading-none tracking-tight">
+          <VTypography tag="h1" size="lg" weight="bold" color="slate-900" class="leading-none tracking-tight">
             Strategic Research ISP
           </VTypography>
-          <VTypography tag="span" size="xs" color="gray-400" class="font-bold tracking-widest uppercase mt-0.5">
+          <VTypography tag="span" size="xs" color="slate-400" class="font-bold tracking-widest uppercase mt-0.5">
             Intelligence Platform
           </VTypography>
         </div>
       </div>
 
-      <nav class="hidden lg:flex items-center bg-slate-50 px-4 py-1.5 rounded-full border border-gray-100">
+      <nav class="hidden lg:flex items-center bg-slate-50 px-4 py-1.5 rounded-full border border-slate-100">
         <div class="flex items-center gap-2">
           <VBadge
             :variant="currentStep === 'INITIATION' ? 'indigo' : 'gray'"
@@ -25,14 +25,14 @@
           >
             1. Initiation
           </VBadge>
-          <VIcon name="ChevronRight" size="xs" class="text-gray-300" />
+          <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
           <VBadge
             :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
           >
             2. Exploration
           </VBadge>
-          <VIcon name="ChevronRight" size="xs" class="text-gray-300" />
+          <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
           <VBadge
             :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
@@ -43,7 +43,7 @@
       </nav>
 
       <div class="flex items-center gap-4">
-        <div class="h-6 w-[1px] bg-gray-200 mx-2 hidden md:block"></div>
+        <div class="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block"></div>
 
         <VAuthAction
           :isLoggedIn="isLoggedIn"

@@ -12,12 +12,12 @@
       background="white"
       rounded="2xl"
       border="all"
-      class="shadow-sm border-gray-200"
+      class="shadow-sm border-slate-200"
     >
       <VIcon
         :name="icon"
         size="lg"
-        class="text-gray-300"
+        class="text-slate-300"
       />
     </VBox>
 
@@ -26,7 +26,7 @@
         tag="h3"
         size="lg"
         weight="semibold"
-        color="gray-900"
+        color="slate-900"
       >
         {{ title }}
       </VTypography>

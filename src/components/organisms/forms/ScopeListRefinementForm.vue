@@ -7,7 +7,7 @@
           <VBox padding="xs" background="indigo-50" rounded="lg" class="text-indigo-600">
             <VIcon name="ArrowsPointingIn" size="xs" />
           </VBox>
-          <VTypography tag="span" size="sm" weight="bold" color="gray-800">
+          <VTypography tag="span" size="sm" weight="bold" color="slate-800">
             Define Research Boundary
           </VTypography>
         </VCluster>

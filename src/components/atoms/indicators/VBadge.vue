@@ -37,7 +37,7 @@ const themes: Record<BadgeColor, string> = {
     amber:   'bg-amber-50 text-amber-700 border-amber-100',
     emerald: 'bg-emerald-50 text-emerald-700 border-emerald-100',
     red:     'bg-red-50 text-red-700 border-red-100',
-    gray:    'bg-gray-100 text-gray-600 border-gray-200',
+    gray:    'bg-slate-100 text-slate-600 border-slate-200',
     purple:  'bg-purple-50 text-purple-700 border-purple-100',
     blue:    'bg-blue-50 text-blue-700 border-blue-100',
     slate:   'bg-slate-100 text-slate-700 border-slate-200'

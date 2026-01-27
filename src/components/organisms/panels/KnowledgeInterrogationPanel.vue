@@ -1,5 +1,5 @@
 <template>
-  <aside class="h-full flex flex-col relative bg-white border-l border-gray-100 overflow-hidden shadow-2xl">
+  <aside class="h-full flex flex-col relative bg-white border-l border-slate-100 overflow-hidden shadow-2xl">
 
     <transition
       enter-active-class="transition duration-600 cubic-bezier(0.16, 1, 0.3, 1)"
@@ -30,7 +30,7 @@
             <VTypography tag="span" size="xs" weight="bold" color="red-400" class="uppercase tracking-widest">
               Anomaly Detected
             </VTypography>
-            <VTypography tag="p" size="2xl" weight="bold" color="gray-900" class="leading-tight">
+            <VTypography tag="p" size="2xl" weight="bold" color="slate-900" class="leading-tight">
               Logical Paradox <br/> in Research Arc
             </VTypography>
           </div>

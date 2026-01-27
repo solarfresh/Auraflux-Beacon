@@ -9,7 +9,7 @@
       class="animate-spin mb-6"
     />
 
-    <VTypography tag="p" size="xl" weight="bold" color="gray-900">
+    <VTypography tag="p" size="xl" weight="bold" color="slate-900">
       {{ message }}
     </VTypography>
 

@@ -1,11 +1,11 @@
 <template>
   <div class="space-y-3">
-    <VTypography tag="h3" size="lg" weight="semibold" color="gray-800">
+    <VTypography tag="h3" size="lg" weight="semibold" color="slate-800">
       {{ label }}
     </VTypography>
 
     <div
-      class="bg-gray-100 rounded-full h-2.5 overflow-hidden"
+      class="bg-slate-100 rounded-full h-2.5 overflow-hidden"
       role="progressbar"
       :aria-valuenow="clampedPercentage"
       aria-valuemin="0"
@@ -89,6 +89,6 @@ const clarityStatusLabel = computed(() => {
 const statusColor = computed(() => {
   if (clampedPercentage.value >= 80) return 'green-700';
   if (clampedPercentage.value >= 40) return 'indigo-700';
-  return 'gray-700';
+  return 'slate-700';
 });
 </script>

@@ -67,10 +67,11 @@ const paddingMap: Record<SpacingToken, string> = {
 };
 
 const borderMap: Record<BorderToken, string> = {
-  all: 'border border-gray-100',
-  top: 'border-t border-gray-100',
-  bottom: 'border-b border-gray-100',
-  right: 'border-r border-gray-100',
+  all: 'border border-slate-100',
+  top: 'border-t border-slate-100',
+  bottom: 'border-b border-slate-100',
+  left: 'border-l border-slate-100',
+  right: 'border-r border-slate-100',
   none: 'border-none'
 };
 

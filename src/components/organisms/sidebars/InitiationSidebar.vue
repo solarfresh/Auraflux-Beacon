@@ -2,7 +2,7 @@
   <BaseSidebarLayout
     :title="'Initiation'"
     :item-count="keywords.length + scope.length"
-    class="bg-slate-50 border-r border-gray-200 h-full"
+    class="bg-slate-50 border-r border-slate-200 h-full"
     body-class="p-0"
   >
     <template #header-extension>
@@ -30,7 +30,7 @@
           />
         </VStack>
 
-        <hr class="border-gray-200" />
+        <hr class="border-slate-200" />
 
         <VStack gap="md">
           <KeywordManagementSection
@@ -48,7 +48,7 @@
           />
         </VStack>
 
-        <hr class="border-gray-200" />
+        <hr class="border-slate-200" />
 
         <VStack gap="lg" class="pb-6">
           <VStack gap="xs">
