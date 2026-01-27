@@ -74,23 +74,11 @@
       </VStack>
     </VBox>
 
-    <VBox
-      background="white"
-      padding="lg"
-      border="top"
-      class="flex-shrink-0 border-slate-100"
-    >
-      <VStack gap="sm" class="max-w-4xl mx-auto w-full">
-        <VInputGroup
-          @send-message="$emit('sendMessage', $event)"
-          :is-disabled="isTyping"
-          class="shadow-lg shadow-slate-200/50"
-        />
-        <VTypography tag="p" size="xs" color="slate-400" class="text-center">
-          ISP Agent uses advanced heuristics. Please verify critical strategic data.
-        </VTypography>
-      </VStack>
-    </VBox>
+    <VInputGroup
+      @send-message="$emit('sendMessage', $event)"
+      :is-disabled="isTyping"
+      class="shadow-lg shadow-slate-200/50"
+    />
   </VBox>
 </template>
 

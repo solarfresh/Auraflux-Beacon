@@ -46,9 +46,7 @@
           isRightOpen ? 'w-96 border-l border-slate-100' : 'w-0 border-none overflow-hidden'
         ]"
       >
-        <VStack full-height gap="none">
-          <slot name="right-panel" />
-        </VStack>
+        <slot name="right-panel" />
       </VBox>
 
       <VFloatControl

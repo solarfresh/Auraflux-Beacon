@@ -1,88 +1,80 @@
 <template>
-  <BaseSidebarLayout class="w-[384px] h-full border-l border-slate-100 shadow-xl">
+  <BaseSidebarLayout
+    title="Intelligence Hub"
+    class="w-[384px] h-full border-l border-slate-100 shadow-xl"
+  >
 
-    <template #header>
-      <VBox background="white" padding="none">
-        <VStack gap="none">
-        <VBox padding="md" border="bottom">
-            <VTypography tag="h2" size="lg" weight="bold">Intelligence Hub</VTypography>
+    <template #body>
+      <VNavTabs
+        class="h-full"
+        v-model="activeTabId"
+        :tabs="navigationTabs"
+      >
+        <template #tab-collaboration-content>
+          <VBox background="slate-50" class="h-full">
+            <VStack gap="none" full-height scrollable>
+              <ChatInterface
+                :messages="chatMessages"
+                :is-typing="isAiProcessing"
+                @send-message="handleAiCommand"
+              >
+<!--
+                <template #header>
+                  <VStatusCard
+                    variant="warning"
+                    icon-name="Sparkles"
+                    title="Strategic Context"
+                    class="m-4"
+                  >
+                    <VTypography size="xs">
+                      AI is mapping dependencies for <strong>Project Alpha</strong>.
+                    </VTypography>
+                  </VStatusCard>
+                </template>
+ -->
+              </ChatInterface>
+            </VStack>
           </VBox>
+        </template>
 
-          <VNavTabs
-            v-model="activeTabId"
-            :tabs="navigationTabs"
-          >
-            <template #tab-discovery-content>
-              <VBox background="slate-50" class="h-full">
-                <VStack gap="none">
-                  <VBox background="white" padding="md" border="bottom">
-                    <VFormField label="Source Discovery">
-                      <VInputGroup
-                        v-model="searchQuery"
-                        placeholder="Search strategic assets..."
-                        @search="handleSearch"
-                      />
-                    </VFormField>
-                  </VBox>
+        <template #tab-discovery-content>
+          <VBox background="slate-50" class="h-full">
+            <VStack gap="none">
+              <VBox background="white" padding="md" border="bottom">
+                <VFormField label="Source Discovery">
+                  <VInputGroup
+                    v-model="searchQuery"
+                    placeholder="Search strategic assets..."
+                    @search="handleSearch"
+                  />
+                </VFormField>
+              </VBox>
 
-                  <VBox padding="xs" class="overflow-y-auto">
-                    <VStack gap="sm">
-                      <VNavGroup title="Verified Sources" :count="resources.length">
-                        <template #content>
-                          <VStack gap="xs">
-                            <VMetaListItem
-                              v-for="res in resources"
-                              :key="res.id"
-                              :resource="res"
-                            />
-                          </VStack>
-                        </template>
-                      </VNavGroup>
+              <VBox padding="xs" class="overflow-y-auto">
+                <VStack gap="sm">
+                  <VNavGroup title="Search Results" :count="resources.length">
+                    <template #content>
+                      <VStack gap="xs">
+                        <VMetaListItem
+                          v-for="res in resources"
+                          :key="res.id"
+                          :resource="res"
+                        />
+                      </VStack>
+                    </template>
+                  </VNavGroup>
 
-                      <VEmptyState
-                        v-if="resources.length === 0"
-                        icon="MagnifyingGlass"
-                        title="No resources found"
-                      />
-                    </VStack>
-                  </VBox>
+                  <VEmptyState
+                    v-if="resources.length === 0"
+                    icon="MagnifyingGlass"
+                    title="No resources found"
+                  />
                 </VStack>
               </VBox>
-            </template>
-
-            <template #tab-collaboration-content>
-              <VBox background="slate-50" class="h-full">
-                <ChatInterface
-                  :messages="chatMessages"
-                  :is-typing="isAiProcessing"
-                  @send-message="handleAiCommand"
-                >
-                  <template #header>
-                    <VStatusCard
-                      variant="warning"
-                      icon-name="Sparkles"
-                      title="Strategic Context"
-                      class="m-4"
-                    >
-                      <VTypography size="xs">
-                        AI is mapping dependencies for <strong>Project Alpha</strong>.
-                      </VTypography>
-                    </VStatusCard>
-                  </template>
-                </ChatInterface>
-              </VBox>
-            </template>
-          </VNavTabs>
-        </VStack>
-      </VBox>
-    </template>
-
-    <template #footer v-if="activeTabId === 'discovery'">
-      <VBox background="white" padding="md" border="top">
-        <VButton variant="primary" block size="md">
-          Integrate Selection
-        </VButton>
-      </VBox>
+            </VStack>
+          </VBox>
+        </template>
+      </VNavTabs>
     </template>
   </BaseSidebarLayout>
 </template>
@@ -98,7 +90,6 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VCloseButton from '@/components/atoms/buttons/VCloseButton.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 
 import VNavTabs from '@/components/molecules/navs/VNavTabs.vue';
@@ -113,13 +104,13 @@ import VInputGroup from '@/components/molecules/forms/VInputGroup.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 
 // --- State Management ---
-const activeTabId = ref('discovery');
+const activeTabId = ref('collaboration');
 const searchQuery = ref('');
 const isAiProcessing = ref(false);
 
 const navigationTabs = [
-  { id: 'discovery', label: 'Discovery' },
-  { id: 'collaboration', label: 'Collaboration' }
+  { id: 'collaboration', label: 'Collaboration' },
+  { id: 'discovery', label: 'Discovery' }
 ];
 
 const resources = reactive<ResourceItem[]>([
