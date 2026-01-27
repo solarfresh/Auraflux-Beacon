@@ -1,60 +1,5 @@
 <template>
   <aside class="h-full flex flex-col relative bg-white overflow-hidden">
-
-    <transition
-      enter-active-class="transition duration-600 cubic-bezier(0.16, 1, 0.3, 1)"
-      enter-from-class="translate-y-full opacity-0"
-      enter-to-class="translate-y-0 opacity-100"
-      leave-active-class="transition duration-400 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div
-        v-if="store.isAdversaryVisible"
-        class="absolute inset-0 z-50 bg-white/95 backdrop-blur-2xl p-8 flex flex-col"
-      >
-        <div class="flex items-center justify-between mb-10">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-red-600 rounded-lg text-white shadow-lg shadow-red-200">
-              <VIcon name="ExclamationTriangle" size="sm" />
-            </div>
-            <VTypography tag="h3" size="lg" weight="bold" color="red-600" class="tracking-tighter uppercase italic">
-              Adversarial Intercept
-            </VTypography>
-          </div>
-          <div class="w-3 h-3 bg-red-600 rounded-full animate-ping"></div>
-        </div>
-
-        <div class="flex-grow space-y-8">
-          <div class="space-y-2">
-            <VTypography tag="span" size="xs" weight="bold" color="red-400" class="uppercase tracking-widest">
-              Anomaly Detected
-            </VTypography>
-            <VTypography tag="p" size="2xl" weight="bold" color="slate-900" class="leading-tight">
-              Logical Paradox <br/> in Research Arc
-            </VTypography>
-          </div>
-
-          <div class="p-6 bg-red-50 rounded-2xl border border-red-100 relative overflow-hidden group">
-            <VIcon name="ChatBubbleBottomCenterText" size="xl" class="absolute -right-4 -bottom-4 text-red-100 group-hover:scale-110 transition-transform" />
-            <VTypography tag="p" size="md" color="red-900" class="leading-relaxed font-serif italic relative z-10">
-              "{{ store.adversaryData.critique }}"
-            </VTypography>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-4 mt-auto">
-          <VButton variant="primary" size="lg" class="w-full bg-red-600 hover:bg-red-700 shadow-lg shadow-red-200" @click="handleAdversaryAction('acknowledge')">
-            <VTypography tag="span" weight="bold" color="white">Acknowledge Critique</VTypography>
-          </VButton>
-          <VButton variant="tertiary" size="md" class="w-full border border-red-200 text-red-600 hover:bg-red-50" @click="handleAdversaryAction('add-reflection')">
-            <VIcon name="DocumentPlus" size="xs" class="mr-2" />
-            Inject Correction Node
-          </VButton>
-        </div>
-      </div>
-    </transition>
-
     <VNavTabs
       class="flex-grow flex flex-col overflow-hidden bg-white"
       active-tab-class="text-indigo-600"
@@ -129,19 +74,6 @@ const emit = defineEmits<{
 }>();
 
 // --- Handlers ---
-
-/**
- * Handles actions from the Adversarial paradox overlay.
- */
-function handleAdversaryAction(action: 'acknowledge' | 'add-reflection') {
-  if (action === 'acknowledge') {
-    store.dismissAdversaryOverlay();
-  } else {
-    // Triggers a reflection node creation in the main canvas
-    emit('open-refinement', 'reflection-log');
-    store.dismissAdversaryOverlay();
-  }
-}
 
 /**
  * Passes items dragged from repository/chat onto the research canvas.
