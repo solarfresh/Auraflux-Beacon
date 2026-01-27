@@ -1,5 +1,5 @@
 <template>
-  <aside class="h-full flex flex-col relative bg-white border-l border-slate-100 overflow-hidden shadow-2xl">
+  <aside class="h-full flex flex-col relative bg-white overflow-hidden">
 
     <transition
       enter-active-class="transition duration-600 cubic-bezier(0.16, 1, 0.3, 1)"
@@ -11,7 +11,7 @@
     >
       <div
         v-if="store.isAdversaryVisible"
-        class="absolute inset-0 z-50 bg-white/95 backdrop-blur-2xl p-8 flex flex-col border-l-8 border-red-600 shadow-[-20px_0_50px_rgba(220,38,38,0.1)]"
+        class="absolute inset-0 z-50 bg-white/95 backdrop-blur-2xl p-8 flex flex-col"
       >
         <div class="flex items-center justify-between mb-10">
           <div class="flex items-center gap-3">

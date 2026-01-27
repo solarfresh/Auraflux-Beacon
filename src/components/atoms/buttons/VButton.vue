@@ -18,6 +18,7 @@
       <VIcon
         v-if="iconName"
         :name="iconName"
+        :color="iconColorClasses[variant]"
         :size="size === 'lg' ? 'md' : 'sm'"
         :class="{ 'mr-2': !iconOnly }"
       />
@@ -88,4 +89,13 @@ const iconSizeClasses = {
   md: 'p-2.5',
   lg: 'p-3'
 };
+
+const iconColorClasses = {
+  primary: 'white',
+  secondary: 'indigo-700',
+  tertiary: 'slate-600',
+  danger: 'red-600',
+  outline: 'slate-700',
+  ghost: 'slate-400'
+}
 </script>
