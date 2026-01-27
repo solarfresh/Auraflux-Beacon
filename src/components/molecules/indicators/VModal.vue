@@ -2,7 +2,7 @@
   <Transition name="modal-fade">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60 backdrop-blur-sm p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
       role="dialog"
       aria-modal="true"
       @click.self="$emit('close')"
@@ -13,9 +13,9 @@
           sizeClasses
         ]"
       >
-        <header v-if="$slots.header || title" class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <header v-if="$slots.header || title" class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <slot name="header">
-            <VTypography tag="h3" size="lg" weight="bold" class="text-gray-900">
+            <VTypography tag="h3" size="lg" weight="bold" class="text-slate-900">
               {{ title }}
             </VTypography>
           </slot>
@@ -34,7 +34,7 @@
           <slot></slot>
         </div>
 
-        <footer v-if="$slots.footer" class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end space-x-3">
+        <footer v-if="$slots.footer" class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end space-x-3">
           <slot name="footer"></slot>
         </footer>
       </div>

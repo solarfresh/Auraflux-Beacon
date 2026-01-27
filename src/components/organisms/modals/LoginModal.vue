@@ -1,103 +1,83 @@
 <template>
-  <VModal :isOpen="isOpen" @close="$emit('close')">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300">
-      <header class="pt-8 pb-6 px-8 text-center bg-gray-50/50 border-b border-gray-100">
-        <div class="inline-flex p-3 bg-white rounded-2xl shadow-sm border border-gray-100 mb-4">
-          <VIcon name="LockClosed" size="lg" class="text-indigo-600" />
-        </div>
-        <VTypography tag="h2" size="2xl" weight="bold" color="gray-900" class="mb-2">
-          User Login
-        </VTypography>
-        <VTypography tag="p" size="sm" color="gray-500">
-          Access your research initiatives and strategic workspace.
-        </VTypography>
-      </header>
+  <VModal :is-open="isOpen" size="md" @close="emit('close')">
+    <VBox tag="header" background="slate-50" padding="lg" border="bottom" class="text-center">
+      <VStack align="center" gap="md">
+        <VBox background="white" padding="sm" rounded="2xl" border="all" class="shadow-sm inline-flex">
+          <VIcon name="LockClosed" size="6" class="text-indigo-600" />
+        </VBox>
 
-      <div class="p-8">
-        <form @submit.prevent="handleLogin" class="space-y-5">
-          <div class="space-y-1.5">
-            <VTypography tag="label" for="username" size="sm" weight="bold" color="gray-700">
-              Username
-            </VTypography>
-            <VInput
-              id="username"
-              v-model="username"
-              type="text"
-              required
-              placeholder="Your username"
-              :disabled="isSubmitting"
-              class="w-full"
-            />
-          </div>
+        <VStack gap="xs">
+          <VTypography tag="h2" size="2xl" weight="bold">
+            User Login
+          </VTypography>
+          <VTypography size="sm" class="text-slate-500">
+            Access your research initiatives and strategic workspace.
+          </VTypography>
+        </VStack>
+      </VStack>
+    </VBox>
 
-          <div class="space-y-1.5">
-            <div class="flex justify-between items-center">
-              <VTypography tag="label" for="password" size="sm" weight="bold" color="gray-700">
-                Password
-              </VTypography>
-              </div>
-            <VInput
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              placeholder="••••••••"
-              :disabled="isSubmitting"
-              class="w-full"
-            />
-          </div>
+    <VBox padding="lg">
+      <VForm gap="md" @submit="handleLogin">
 
-          <div
-            v-if="error"
-            class="flex items-start gap-2 p-3 bg-red-50 border border-red-100 rounded-xl animate-in slide-in-from-top-2"
+        <VFormField label="Username" v-slot="{ id }">
+          <VInput :id="id" v-model="username" :disabled="isSubmitting" required />
+        </VFormField>
+
+        <VFormField label="Password" v-slot="{ id }">
+          <VInput :id="id" v-model="password" type="password" :disabled="isSubmitting" required />
+        </VFormField>
+
+        <transition name="fade">
+          <VAlert v-if="error" variant="danger">
+            <VCluster gap="xs">
+              <VIcon name="ExclamationCircle" size="4" />
+              <VTypography size="xs">{{ error }}</VTypography>
+            </VCluster>
+          </VAlert>
+        </transition>
+
+        <VBox class="pt-2">
+          <VButton
+            type="submit"
+            variant="primary"
+            size="lg"
+            class="w-full"
+            :disabled="isSubmitting"
           >
-            <VIcon name="ExclamationCircle" size="xs" class="text-red-600 mt-0.5" />
-            <VTypography tag="p" size="xs" weight="medium" color="red-600">
-              {{ error }}
-            </VTypography>
-          </div>
+            Sign In
+          </VButton>
+        </VBox>
 
-          <div class="pt-2">
-            <VButton
-              type="submit"
-              variant="primary"
-              size="lg"
-              :disabled="isSubmitting || !username || !password"
-              class="w-full flex justify-center py-3"
-            >
-              <VIcon v-if="isSubmitting" name="ArrowPath" size="sm" class="animate-spin mr-2" />
-              {{ isSubmitting ? 'Verifying Account...' : 'Sign In' }}
-            </VButton>
-          </div>
-        </form>
-      </div>
+      </VForm>
+    </VBox>
 
-      <footer class="px-8 pb-8 text-center">
-        <VTypography tag="p" size="xs" color="gray-400">
-          By logging in, you agree to our research workspace protocols.
-        </VTypography>
-      </footer>
-    </div>
+    <VBox tag="footer" padding="lg" class="pt-0 text-center">
+      <VTypography size="xs" class="text-slate-400">
+        By logging in, you agree to our research workspace protocols.
+      </VTypography>
+    </VBox>
   </VModal>
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
 
 // Atoms & Molecules
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VModal from '@/components/molecules/navs/VModal.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VForm from '@/components/molecules/forms/VForm.vue';
+import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VAlert from '@/components/molecules/indicators/VAlert.vue';
+import VModal from '@/components/molecules/indicators/VModal.vue';
 
-/**
- * LoginModal: Handles user authentication flow.
- * * Uses global authStore for state management.
- * * Automatically refreshes or redirects on success.
- */
 const props = defineProps<{
   isOpen: boolean;
 }>();
@@ -109,41 +89,28 @@ const emit = defineEmits<{
 const router = useRouter();
 const authStore = useAuthStore();
 
-// --- Local State ---
 const username = ref('');
 const password = ref('');
 const error = ref('');
 const isSubmitting = ref(false);
 
-// --- Business Logic ---
 const handleLogin = async () => {
   if (isSubmitting.value) return;
-
   error.value = '';
   isSubmitting.value = true;
 
   try {
-    const success = await authStore.loginUser(
-      username.value,
-      password.value,
-    );
-
+    const success = await authStore.loginUser(username.value, password.value);
     if (success) {
-      // Clear inputs for security
       username.value = '';
       password.value = '';
-
-      // Close modal before refreshing or navigating
       emit('close');
-
-      // Standard procedure for refreshing auth state across the app
       router.go(0);
     } else {
-      error.value = 'Invalid username or password. Please try again.';
+      error.value = 'Invalid username or password.';
     }
-
   } catch (err: any) {
-    error.value = err.message || 'The authentication server is currently unreachable.';
+    error.value = err.message || 'Authentication server unreachable.';
   } finally {
     isSubmitting.value = false;
   }

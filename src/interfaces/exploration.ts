@@ -18,6 +18,12 @@ export interface CanvasView {
 }
 
 export interface ExplorationState {
+  stabilityScore: number;
+
+	isDragging: boolean;
+	isDragOver: boolean;
+	draggedNode: ConceptualNode | null;
+
   // --- Resource Management ---
   resources: ResourceItem[];
 
@@ -30,7 +36,6 @@ export interface ExplorationState {
 
   // --- AI Interaction & State ---
   isAdversaryVisible: boolean;
-  stabilityScore: number;
   adversaryData: AdversaryData;
   chatMessages: AIChatMessage[];
   isTyping: boolean;

@@ -1,5 +1,5 @@
 <template>
-  <aside class="h-full flex flex-col relative bg-white border-l border-gray-100 overflow-hidden shadow-2xl">
+  <aside class="h-full flex flex-col relative bg-white overflow-hidden">
 
     <transition
       enter-active-class="transition duration-600 cubic-bezier(0.16, 1, 0.3, 1)"
@@ -11,14 +11,14 @@
     >
       <div
         v-if="store.isAdversaryVisible"
-        class="absolute inset-0 z-50 bg-white/95 backdrop-blur-2xl p-8 flex flex-col border-l-8 border-red-600 shadow-[-20px_0_50px_rgba(220,38,38,0.1)]"
+        class="absolute inset-0 z-50 bg-white/95 backdrop-blur-2xl p-8 flex flex-col"
       >
         <div class="flex items-center justify-between mb-10">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-red-600 rounded-lg text-white shadow-lg shadow-red-200">
               <VIcon name="ExclamationTriangle" size="sm" />
             </div>
-            <VTypography tag="h3" size="lg" weight="black" color="red-600" class="tracking-tighter uppercase italic">
+            <VTypography tag="h3" size="lg" weight="bold" color="red-600" class="tracking-tighter uppercase italic">
               Adversarial Intercept
             </VTypography>
           </div>
@@ -27,10 +27,10 @@
 
         <div class="flex-grow space-y-8">
           <div class="space-y-2">
-            <VTypography tag="span" size="xs" weight="black" color="red-400" class="uppercase tracking-widest">
+            <VTypography tag="span" size="xs" weight="bold" color="red-400" class="uppercase tracking-widest">
               Anomaly Detected
             </VTypography>
-            <VTypography tag="p" size="2xl" weight="bold" color="gray-900" class="leading-tight">
+            <VTypography tag="p" size="2xl" weight="bold" color="slate-900" class="leading-tight">
               Logical Paradox <br/> in Research Arc
             </VTypography>
           </div>
@@ -68,12 +68,14 @@
         </div>
       </template>
       <template #tab-1-content>
+<!--
         <ResourceRepository
-          :resources="store.resources"
-          :node-summary="store.currentNodeSummary"
+          :resources="[]"
+          :node-summary="''"
           @drop-to-canvas="handleDrop"
-          class="bg-gray-50/30"
+          class="bg-slate-50/30"
         />
+ -->
       </template>
 
       <template #tab-2-title>

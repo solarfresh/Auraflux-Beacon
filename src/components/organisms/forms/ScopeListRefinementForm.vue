@@ -1,13 +1,13 @@
 <template>
   <VBox tag="section" full-height class="flex flex-col">
 
-    <VBox padding="lg" background="gray-50" rounded="2xl" border="all" class="mb-6 shadow-sm">
+    <VBox padding="lg" background="slate-50" rounded="2xl" border="all" class="mb-6 shadow-sm">
       <VStack gap="md">
         <VCluster gap="sm" align="center">
           <VBox padding="xs" background="indigo-50" rounded="lg" class="text-indigo-600">
             <VIcon name="ArrowsPointingIn" size="xs" />
           </VBox>
-          <VTypography tag="span" size="sm" weight="bold" color="gray-800">
+          <VTypography tag="span" size="sm" weight="bold" color="slate-800">
             Define Research Boundary
           </VTypography>
         </VCluster>
@@ -21,7 +21,7 @@
           />
 
           <VCluster justify="between" align="center">
-            <VBox background="gray-50" padding="xs" rounded="xl" class="flex gap-1">
+            <VBox background="slate-50" padding="xs" rounded="xl" class="flex gap-1">
               <VButton
                 v-for="type in (['INCLUSION', 'EXCLUSION'] as const)"
                 :key="type"
@@ -31,7 +31,7 @@
                   'px-5 py-1.5 !rounded-lg transition-all duration-300',
                   activeType === type
                     ? (type === 'INCLUSION' ? '!bg-emerald-600 !shadow-md' : '!bg-rose-600 !shadow-md')
-                    : 'text-gray-500'
+                    : 'text-slate-500'
                 ]"
                 @click="activeType = type"
               >

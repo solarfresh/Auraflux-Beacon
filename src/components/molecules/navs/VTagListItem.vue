@@ -91,7 +91,7 @@ const styles = computed(() => {
       };
     case 'AI_EXTRACTED':
       return {
-          bgColor: 'gray-50' as const, // Standardized to system palette
+          bgColor: 'slate-50' as const, // Standardized to system palette
           borderColor: 'border-yellow-200 hover:border-yellow-300',
           icon: 'Sparkles',
           iconColor: 'yellow-600',
@@ -100,10 +100,10 @@ const styles = computed(() => {
       };
     case 'ON_HOLD':
       return {
-          bgColor: 'gray-50' as const,
-          borderColor: 'border-gray-300 hover:border-gray-400',
+          bgColor: 'slate-50' as const,
+          borderColor: 'border-slate-300 hover:border-slate-400',
           icon: 'ArchiveBox',
-          iconColor: 'gray-500',
+          iconColor: 'slate-500',
           secondaryVTypography: 'ON HOLD (Excluded)',
           actionIcon: 'ArrowPath',
       };
@@ -111,9 +111,9 @@ const styles = computed(() => {
     default:
       return {
           bgColor: 'white' as const,
-          borderColor: 'border-gray-200 hover:border-gray-300',
+          borderColor: 'border-slate-200 hover:border-slate-300',
           icon: 'ClipboardDocumentList',
-          iconColor: 'gray-600',
+          iconColor: 'slate-600',
           secondaryVTypography: 'User Draft (Pending Lock)',
           actionIcon: 'PencilSquare',
       };

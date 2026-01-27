@@ -4,16 +4,18 @@
     rounded
     clickable
     v-bind="$attrs"
+    :draggable="true"
     :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
       'relative border-2 transition-all duration-200 group',
-      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50',
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-slate-50',
       // Anti-hallucination Jitter logic
       { 'animate-jitter border-red-500 bg-red-50': node.groundedness < 4 }
     ]"
     @click="emit('select', node.id)"
     @mouseenter="emit('hover', node.id)"
     @mouseleave="emit('hover', null)"
+    @dragstart="handleDragStart"
   >
     <VCluster align="start" gap="md" full-width>
 
@@ -42,7 +44,7 @@
           tag="span"
           size="xs"
           weight="bold"
-          :color="isActive ? 'indigo-600' : 'gray-400'"
+          :color="isActive ? 'indigo-600' : 'slate-400'"
           class="uppercase tracking-tighter"
         >
           {{ node.type }}
@@ -52,7 +54,7 @@
           tag="p"
           :size="isActive ? 'base' : 'sm'"
           :weight="isActive ? 'bold' : 'medium'"
-          :color="isActive ? 'gray-900' : 'gray-700'"
+          :color="isActive ? 'slate-900' : 'slate-700'"
           class="truncate leading-tight"
         >
           {{ node.label }}
@@ -78,16 +80,19 @@
  * Represents a node in the Conceptual Map with groundedness indicators.
  * NOTE: inheritAttrs: false ensures $attrs doesn't break the animation Box.
  */
-import { computed } from 'vue';
-import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import { computed } from 'vue';
 
 defineOptions({ inheritAttrs: false });
+
+const { onDragStart } = useCanvasDrop();
 
 const props = defineProps<{
   node: ConceptualNode;
@@ -123,7 +128,7 @@ const typeColor = computed(() => {
     group: 'purple-500',
     navigation: 'rose-500'
   };
-  return colorMap[props.node.type] || 'gray-500';
+  return colorMap[props.node.type] || 'slate-500';
 });
 
 const solidityStyles = computed(() => {
@@ -140,11 +145,15 @@ const solidityStyles = computed(() => {
       };
     default:
       return {
-        colorClass: 'bg-gray-300',
+        colorClass: 'bg-slate-300',
         shadowClass: ''
       };
   }
 });
+
+const handleDragStart = (event: DragEvent) => {
+  onDragStart(event, props.node);
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="h-full flex flex-col bg-white">
-    <div class="flex-shrink-0 border-b border-gray-200">
+    <div class="flex-shrink-0 border-b border-slate-200">
       <nav class="-mb-px flex space-x-8 px-4" aria-label="Tabs" role="tablist">
         <VButton
           v-for="tab in tabs"
@@ -21,7 +21,7 @@
             tag="span"
             size="sm"
             :weight="activeTab === tab.id ? 'bold' : 'medium'"
-            :class="activeTab === tab.id ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'"
+            :class="activeTab === tab.id ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-700'"
           >
             <slot :name="`tab-${tab.id}-title`">{{ tab.label }}</slot>
           </VTypography>

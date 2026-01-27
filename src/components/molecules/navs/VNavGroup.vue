@@ -78,7 +78,7 @@ const variantClasses = computed(() => {
     case 'amber':
       return { border: 'border-amber-100', text: 'amber-700', icon: 'amber-400' };
     default:
-      return { border: 'border-gray-200', text: 'gray-500', icon: 'gray-400' };
+      return { border: 'border-slate-200', text: 'slate-500', icon: 'slate-400' };
   }
 });
 </script>

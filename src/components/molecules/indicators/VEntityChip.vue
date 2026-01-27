@@ -17,7 +17,7 @@
       tag="span"
       size="sm"
       weight="medium"
-      color="gray-700"
+      color="slate-700"
       :class="{ 'mr-3': removable }"
     >
       <slot>{{ label }}</slot>

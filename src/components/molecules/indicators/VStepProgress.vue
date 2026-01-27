@@ -5,7 +5,7 @@
 
         <div class="flex items-center space-x-3">
           <VIcon name="LightBulb" type="solid" size="md" />
-          <VTypography tag="span" size="base" weight="medium">
+          <VTypography tag="span" size="base" weight="medium" color="text=white">
             ISP Stage: {{ currentStage }}
           </VTypography>
         </div>
@@ -16,6 +16,7 @@
             tag="span"
             size="sm"
             class="flex-shrink-0 whitespace-nowrap hidden sm:block opacity-90"
+            color="text=white"
           >
             {{ stageMessage }}
           </VTypography>
@@ -27,7 +28,7 @@
             />
           </div>
 
-          <VTypography tag="span" size="sm" weight="semibold" class="flex-shrink-0 w-10 text-right">
+          <VTypography tag="span" size="sm" weight="semibold" color="text=white" class="flex-shrink-0 w-10 text-right">
             {{ completionPercentage }}%
           </VTypography>
         </div>

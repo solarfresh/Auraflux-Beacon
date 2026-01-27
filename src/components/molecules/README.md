@@ -10,7 +10,7 @@ To maintain a flat and predictable structure, all molecules are categorized into
 
 Complex input patterns that combine labels, inputs, and actions.
 
-* **Key Components:** `VFormField`, `VInputGroup`, `VButtonToolbar`.
+* **Key Components:** `VForm`, `VFormField`, `VInputGroup`, `VButtonToolbar`.
 * **Focus:** Accessibility (A11y), validation feedback, and input synchronization.
 
 ### 2. 📢 [Indicators](indicators/README.md) (Feedback & Overlays)
@@ -26,6 +26,15 @@ Structural clusters used for moving through the application's architecture.
 
 * **Key Components:** `VNavGroup`, `VNavTabs`, `VNavListItem`, `VActionListItem`, `VTagListItem`, `VTimelineItem`.
 * **Focus:** Hierarchical depth, active state management, and responsive truncation.
+
+參考你提供的 `Navs` 格式，以下是針對 `Layout` 分子類別的描述。這段文字適合放在 `molecules/README.md` 的總覽清單中：
+
+### 4. 🧭 [Layout](layout/README.md) (Spatial & Panel Controls)
+
+Orchestrators that manage the relationship between different spatial zones and interactive regions.
+
+* **Key Components:** `VFloatControl`, `VResizableSplitter`, `VLayoutDivider`, `VPanelHeader`.
+* **Focus:** Z-index hierarchy, coordinate synchronization, and reactive structural transitions.
 
 ---
 
@@ -83,6 +92,7 @@ Always use `inheritAttrs: false` in the component script and bind `$attrs` to th
 src/components/molecules/
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal
+├── layout/         # VFloatControl
 ├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem
 └── README.md       # You are here
 

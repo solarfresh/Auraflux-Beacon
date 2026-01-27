@@ -93,7 +93,7 @@ const uiStyles = computed(() => {
     case 'AI_EXTRACTED':
     case 'USER_DRAFT':
       return {
-        bgColor: 'gray-50' as const, // Standardized fallback for yellow hues
+        bgColor: 'slate-50' as const, // Standardized fallback for yellow hues
         borderColor: 'border-yellow-200 hover:border-yellow-300',
         labelColor: 'yellow-800',
         valueColor: 'yellow-700',
@@ -111,20 +111,20 @@ const uiStyles = computed(() => {
       };
     case 'ON_HOLD':
       return {
-        bgColor: 'gray-50' as const,
-        borderColor: 'border-gray-200',
-        labelColor: 'gray-500',
-        valueColor: 'gray-400',
-        accentColor: 'gray-400',
+        bgColor: 'slate-50' as const,
+        borderColor: 'border-slate-200',
+        labelColor: 'slate-500',
+        valueColor: 'slate-400',
+        accentColor: 'slate-400',
         icon: 'ArchiveBox',
       };
     default:
       return {
         bgColor: 'white' as const,
-        borderColor: 'border-gray-200 hover:border-gray-300',
-        labelColor: 'gray-800',
-        valueColor: 'gray-600',
-        accentColor: 'gray-500',
+        borderColor: 'border-slate-200 hover:border-slate-300',
+        labelColor: 'slate-800',
+        valueColor: 'slate-600',
+        accentColor: 'slate-500',
         icon: 'InformationCircle',
       };
   }

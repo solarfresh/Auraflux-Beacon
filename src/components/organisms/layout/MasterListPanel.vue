@@ -38,8 +38,8 @@
     <template #empty-state>
       <slot name="empty-state">
         <VStack align="center" justify="center" gap="sm" class="py-16 px-6">
-          <VIcon name="Inbox" size="lg" color="gray-300" />
-          <VTypography size="sm" color="gray-500">
+          <VIcon name="Inbox" size="lg" color="slate-300" />
+          <VTypography size="sm" color="slate-500">
             No items found in {{ title.toLowerCase() }}.
           </VTypography>
         </VStack>

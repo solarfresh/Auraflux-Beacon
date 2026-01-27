@@ -7,7 +7,7 @@
     :background="isActive ? 'indigo-50' : 'white'"
     :class="[
       'transition-all duration-200',
-      isActive ? 'border-indigo-200 shadow-sm' : 'border-gray-100 hover:border-gray-300'
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-slate-100 hover:border-slate-300'
     ]"
     @click="$emit('click')"
   >
@@ -17,7 +17,7 @@
           tag="span"
           size="xs"
           weight="bold"
-          :color="isActive ? 'indigo-600' : 'gray-400'"
+          :color="isActive ? 'indigo-600' : 'slate-400'"
         >
           {{ formattedDate }}
         </VTypography>
@@ -28,7 +28,7 @@
         tag="p"
         size="sm"
         weight="semibold"
-        :color="isActive ? 'indigo-900' : 'gray-900'"
+        :color="isActive ? 'indigo-900' : 'slate-900'"
         truncate
       >
         {{ entry.title || "Untitled Reflection" }}
@@ -37,7 +37,7 @@
       <VTypography
         tag="p"
         size="xs"
-        color="gray-500"
+        color="slate-500"
         class="truncate italic"
       >
         {{ entry.content || "No content provided." }}

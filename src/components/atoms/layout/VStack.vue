@@ -20,10 +20,7 @@
  * Manages vertical layout (flex-direction: column).
  * Responsible for consistent spacing (gap) between child elements.
  */
-
-type GapSize = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type Alignment = 'start' | 'center' | 'end' | 'baseline' | 'stretch';
-type Justification = 'start' | 'center' | 'end' | 'between';
+import type {GapSize, Alignment, Justification} from '@/interfaces/layout';
 
 interface Props {
   /** HTML element to render */
@@ -71,5 +68,6 @@ const justifyClasses: Record<Justification, string> = {
   center: 'justify-center',
   end: 'justify-end',
   between: 'justify-between',
+  around: 'justify-around',
 };
 </script>

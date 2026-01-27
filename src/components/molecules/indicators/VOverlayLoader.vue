@@ -9,11 +9,11 @@
       class="animate-spin mb-6"
     />
 
-    <VTypography tag="p" size="xl" weight="bold" color="gray-900">
+    <VTypography tag="p" size="xl" weight="bold" color="slate-900">
       {{ message }}
     </VTypography>
 
-    <VTypography v-if="detail" tag="p" size="sm" color="gray-500" class="mt-2 text-center max-w-xs">
+    <VTypography v-if="detail" tag="p" size="sm" color="slate-500" class="mt-2 text-center max-w-xs">
       {{ detail }}
     </VTypography>
   </div>

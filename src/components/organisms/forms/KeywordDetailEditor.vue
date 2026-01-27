@@ -7,10 +7,10 @@
           <VIcon name="PencilSquare" size="md" />
         </VBox>
         <VStack gap="none">
-          <VTypography tag="h2" size="xl" weight="bold" color="gray-900">
+          <VTypography tag="h2" size="xl" weight="bold" color="slate-900">
             Refine Keyword
           </VTypography>
-          <VTypography size="xs" color="gray-500">
+          <VTypography size="xs" color="slate-500">
             Precisely define this core concept to guide AI exploration.
           </VTypography>
         </VStack>
@@ -59,7 +59,7 @@
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="gray-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="handleCancel">
           Cancel

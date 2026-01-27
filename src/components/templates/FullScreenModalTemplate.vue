@@ -12,7 +12,7 @@
       <header class="flex justify-between items-center p-4 border-b">
 
         <!-- Replaced <h3> with Text component for consistent styling -->
-        <VTypography tag="h3" id="modal-title" size="xl" weight="semibold" color="gray-800">
+        <VTypography tag="h3" id="modal-title" size="xl" weight="semibold" color="slate-800">
           <!-- Default slot for custom header title -->
           <slot name="header">
             Auxiliary Panel
@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VModal from '@/components/molecules/navs/VModal.vue';
+import VModal from '@/components/molecules/indicators/VModal.vue';
 import VCloseButton from '@/components/atoms/buttons/VCloseButton.vue';
 
 // Define the component's props and events

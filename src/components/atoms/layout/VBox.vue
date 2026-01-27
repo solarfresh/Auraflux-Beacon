@@ -29,11 +29,7 @@
  * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed, useAttrs } from 'vue';
-
-type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-type RoundedToken = boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
-type BorderToken = 'all' | 'top' | 'bottom' | 'right' | 'none';
-type BackgroundToken = 'white' | 'gray-50' | 'indigo-50' | 'amber-50' | 'rose-50' | 'emerald-50' | 'transparent';
+import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@/interfaces/layout';
 
 interface Props {
   /** HTML tag to render */
@@ -71,16 +67,17 @@ const paddingMap: Record<SpacingToken, string> = {
 };
 
 const borderMap: Record<BorderToken, string> = {
-  all: 'border border-gray-100',
-  top: 'border-t border-gray-100',
-  bottom: 'border-b border-gray-100',
-  right: 'border-r border-gray-100',
+  all: 'border border-slate-100',
+  top: 'border-t border-slate-100',
+  bottom: 'border-b border-slate-100',
+  left: 'border-l border-slate-100',
+  right: 'border-r border-slate-100',
   none: 'border-none'
 };
 
 const backgroundMap: Record<BackgroundToken, string> = {
   white: 'bg-white',
-  'gray-50': 'bg-gray-50',
+  'slate-50': 'bg-slate-50',
   'indigo-50': 'bg-indigo-50',
   'amber-50': 'bg-amber-50',
   'rose-50': 'bg-rose-50',

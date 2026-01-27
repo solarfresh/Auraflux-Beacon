@@ -11,7 +11,7 @@
     :background="isActive ? 'indigo-50' : 'transparent'"
     :class="[
       'transition-all duration-150 group',
-      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-gray-50'
+      isActive ? 'border-indigo-200 shadow-sm' : 'border-transparent hover:bg-slate-50'
     ]"
     @click="$emit('select')"
   >
@@ -21,7 +21,7 @@
         <VIcon
           name="ViewColumns"
           size="sm"
-          :color="isActive ? 'indigo-600' : 'gray-400'"
+          :color="isActive ? 'indigo-600' : 'slate-400'"
           class="flex-shrink-0"
         />
 
@@ -29,7 +29,7 @@
           tag="span"
           size="sm"
           :weight="isActive ? 'bold' : 'medium'"
-          :color="isActive ? 'indigo-900' : 'gray-700'"
+          :color="isActive ? 'indigo-900' : 'slate-700'"
           class="truncate"
         >
           {{ name }}

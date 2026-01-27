@@ -40,6 +40,14 @@ A state-aware trigger for session management that combines identity display and 
 
 * **Composition**: `VCluster` > [`VAvatar`, `VButton`].
 
+#### 5. VForm (The Logical Wrapper)
+
+The semantic and behavioral engine for user submissions. It replaces raw `<form>` tags to enforce vertical rhythm and submission management.
+
+* **Composition**: `Native Form` > `VStack`.
+* **Responsibility**: Handles `@submit.prevent`, manages global loading/disabled states for nested fields, and enforces standardized spacing via `gap`.
+* **Key Props**: `gap` (defaulting to `md`).
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -75,6 +83,7 @@ A state-aware trigger for session management that combines identity display and 
 
 | Relationship | Logic | Token |
 | --- | --- | --- |
+| **Field to Field** | Vertical flow within `VForm` | `gap="md"` (16px) |
 | **Label to Input** | Immediate association | `gap="xs"` (8px) |
 | **Input to Error** | Feedback proximity | `gap="1"` (4px) |
 | **Button to Button** | Independent actions | `gap="md"` (16px) |
@@ -87,6 +96,7 @@ A state-aware trigger for session management that combines identity display and 
 ```text
 src/components/molecules/forms/
 ├── VButtonToolbar.vue      # Action clusters
+├── VForm.vue               # Semantic form & layout engine (New)
 ├── VFormField.vue          # Label + Input wrapper
 ├── VInputGroup.vue         # Combined input/button (Search)
 ├── VAuthAction.vue         # Identity + Session trigger

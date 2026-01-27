@@ -1,12 +1,12 @@
 <template>
   <BaseSidebarLayout
     title="Registry"
-    class="bg-white shadow-lg border-r border-gray-200 h-full"
+    class="bg-white shadow-lg border-r border-slate-200 h-full"
     :use-stable-gutter="true"
   >
     <template #header-extension>
-      <div class="px-5 pb-4 border-b border-gray-50">
-        <div class="flex gap-1 bg-gray-100 p-1 rounded-lg">
+      <div class="px-5 pb-4 border-b border-slate-50">
+        <div class="flex gap-1 bg-slate-100 p-1 rounded-lg">
           <VButton
             size="sm"
             class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
@@ -66,8 +66,8 @@
     </template>
 
     <template #footer>
-      <div class="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-        <VTypography size="xs" color="gray-500" weight="medium">Canvas Stability</VTypography>
+      <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+        <VTypography size="xs" color="slate-500" weight="medium">Canvas Stability</VTypography>
         <div class="flex items-center gap-2">
            <div
              class="w-2 h-2 rounded-full shadow-sm"

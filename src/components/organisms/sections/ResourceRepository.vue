@@ -57,8 +57,8 @@
       <div v-if="editingResource" class="flex flex-col gap-6">
         <div class="space-y-2">
           <VTypography tag="h5" weight="bold" size="sm">AI Distillation</VTypography>
-          <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
-            <VTypography size="sm" color="gray-700" class="leading-relaxed">
+          <div class="p-3 bg-slate-50 rounded-lg border border-slate-100">
+            <VTypography size="sm" color="slate-700" class="leading-relaxed">
               {{ editingResource.summary }}
             </VTypography>
           </div>
@@ -67,7 +67,7 @@
         <div class="space-y-2">
           <div class="flex justify-between items-center">
             <VTypography tag="h5" weight="bold" size="sm">Personal Reflections</VTypography>
-            <VTypography size="xs" color="gray-400">Supports Markdown</VTypography>
+            <VTypography size="xs" color="slate-400">Supports Markdown</VTypography>
           </div>
           <VTextarea
             v-model="localNotes"

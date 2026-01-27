@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col bg-gray-50 antialiased">
+  <div class="h-screen flex flex-col bg-slate-50 antialiased">
 
     <slot name="status-tracker">
     </slot>

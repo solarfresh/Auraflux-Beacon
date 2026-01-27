@@ -27,7 +27,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: 'current', // tailwind color, e.g., 'blue-500', 'gray-700'
+    default: 'current', // tailwind color, e.g., 'blue-500', 'slate-700'
   }
 });
 

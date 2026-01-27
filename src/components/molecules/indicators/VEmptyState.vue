@@ -4,7 +4,7 @@
     align="center"
     justify="center"
     gap="lg"
-    background="gray-50"
+    background="slate-50"
     class="opacity-90 transition-opacity duration-300"
   >
     <VBox
@@ -12,12 +12,12 @@
       background="white"
       rounded="2xl"
       border="all"
-      class="shadow-sm border-gray-200"
+      class="shadow-sm border-slate-200"
     >
       <VIcon
         :name="icon"
         size="lg"
-        class="text-gray-300"
+        class="text-slate-300"
       />
     </VBox>
 
@@ -26,14 +26,14 @@
         tag="h3"
         size="lg"
         weight="semibold"
-        color="gray-900"
+        color="slate-900"
       >
         {{ title }}
       </VTypography>
 
       <VTypography
         size="sm"
-        color="gray-500"
+        color="slate-500"
         class="leading-relaxed"
       >
         <slot>{{ description }}</slot>

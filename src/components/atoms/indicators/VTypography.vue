@@ -11,7 +11,7 @@ const props = defineProps({
   tag: {
     type: String,
     default: 'p',
-    validator: (value: string) => ['p', 'span', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'li'].includes(value),
+    validator: (value: string) => ['p', 'span', 'strong', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'li'].includes(value),
   },
   size: {
     type: String,
@@ -25,7 +25,7 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: 'gray-900', // e.g., 'gray-900', 'blue-500', 'white'
+    default: 'slate-900', // e.g., 'slate-900', 'blue-500', 'white'
   },
 });
 

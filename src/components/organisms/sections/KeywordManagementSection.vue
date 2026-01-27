@@ -4,105 +4,134 @@
       <VButton
         variant="ghost"
         size="xs"
-        iconOnly
-        iconName="Plus"
+        icon-only
+        icon-name="Plus"
         @click="emit('add-request')"
       />
     </template>
 
     <template #stats>
-      <div class="flex items-center gap-1.5 px-2 py-1 bg-indigo-50 rounded text-indigo-700">
-        <VIcon name="LockClosed" size="xs" color="indigo-500" />
-        <VTypography tag="span" size="xs" weight="bold">
-          {{ lockedCount }}/{{ keywords.length }} Locked
-        </VTypography>
-      </div>
+      <VCluster gap="xs" align="center">
+        <VBox
+          background="indigo-50"
+          padding="xs"
+          rounded="md"
+          class="text-indigo-700"
+        >
+          <VCluster gap="xs" align="center">
+            <VIcon name="LockClosed" size="xs" class="text-indigo-500" />
+            <VTypography tag="span" size="xs" weight="bold">
+              {{ lockedCount }}/{{ keywords.length }} Locked
+            </VTypography>
+          </VCluster>
+        </VBox>
 
-      <VButton
-        v-if="unreviewedCount > 0"
-        variant="secondary"
-        size="xs"
-        @click="isReviewGroupOpen = true"
-        class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
-      >
-        <VIcon name="ExclamationCircle" size="xs" color="amber-500" class="mr-1" />
-        {{ unreviewedCount }} To Review
-      </VButton>
+        <VButton
+          v-if="unreviewedCount > 0"
+          variant="secondary"
+          size="xs"
+          @click="openReviewGroup"
+          class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
+        >
+          <VCluster gap="xs" align="center">
+            <VIcon name="ExclamationCircle" size="xs" class="text-amber-500 mr-1" />
+            {{ unreviewedCount }} To Review
+          </VCluster>
+        </VButton>
+      </VCluster>
     </template>
 
     <template #content>
+      <VStack gap="md">
 
-      <VNavGroup title="Locked Core" variant="indigo">
-        <VTagListItem
-          v-for="(kw, idx) in getGroupData('LOCKED')"
-          :key="kw.id"
-          :keyword="kw"
-          :index="idx"
-          @edit-request="handleKeywordEdit"
-        />
-        <template #footer>
-          <VButton
-            v-if="lockedCount > LIMITS.LOCKED && !isLockedFullView"
-            variant="ghost"
-            size="xs"
-            @click="isLockedFullView = true"
-            class="self-start"
-          >
-            View All ({{ lockedCount - LIMITS.LOCKED }} more)
-          </VButton>
-        </template>
-      </VNavGroup>
+        <VNavGroup title="Locked Core" variant="indigo">
+          <VStack gap="xs">
+            <VTagListItem
+              v-for="(kw, idx) in getGroupData('LOCKED')"
+              :key="kw.id"
+              :keyword="kw"
+              :index="idx"
+              @edit-request="handleKeywordEdit"
+            />
+          </VStack>
 
-      <VNavGroup title="To Review / Draft" variant="amber" collapsible>
-        <VTagListItem
-          v-for="(kw, idx) in getGroupData('REVIEW')"
-          :key="kw.id"
-          :keyword="kw"
-          :index="idx"
-          @edit-request="handleKeywordEdit"
-        />
-      </VNavGroup>
+          <template #footer>
+            <VBox v-if="lockedCount > LIMITS.LOCKED && !isLockedFullView" class="pt-1">
+              <VButton
+                variant="ghost"
+                size="xs"
+                @click="isLockedFullView = true"
+              >
+                View All ({{ lockedCount - LIMITS.LOCKED }} more)
+              </VButton>
+            </VBox>
+          </template>
+        </VNavGroup>
 
-      <VNavGroup
-        title="On Hold"
-        :count="onHoldCount"
-        variant="gray"
-        collapsible
-        default-closed
-      >
-        <VTagListItem
-          v-for="(kw, idx) in getGroupData('ON_HOLD')"
-          :key="kw.id"
-          :keyword="kw"
-          :index="idx"
-          @edit-request="handleKeywordEdit"
-        />
-        <template #footer>
-          <VButton
-            v-if="onHoldCount > LIMITS.ON_HOLD && !isOnHoldFullView"
-            variant="ghost"
-            size="xs"
-            @click="isOnHoldFullView = true"
-            class="self-start"
-          >
-            View All ({{ onHoldCount - LIMITS.ON_HOLD }} more)
-          </VButton>
-        </template>
-      </VNavGroup>
+        <VNavGroup title="To Review / Draft" variant="amber" collapsible ref="reviewGroupRefEl">
+          <VStack gap="xs">
+            <VTagListItem
+              v-for="(kw, idx) in getGroupData('REVIEW')"
+              :key="kw.id"
+              :keyword="kw"
+              :index="idx"
+              @edit-request="handleKeywordEdit"
+            />
+          </VStack>
+        </VNavGroup>
 
+        <VNavGroup
+          title="On Hold"
+          :count="onHoldCount"
+          variant="gray"
+          collapsible
+          default-closed
+        >
+          <VStack gap="xs">
+            <VTagListItem
+              v-for="(kw, idx) in getGroupData('ON_HOLD')"
+              :key="kw.id"
+              :keyword="kw"
+              :index="idx"
+              @edit-request="handleKeywordEdit"
+            />
+          </VStack>
+
+          <template #footer>
+            <VBox v-if="onHoldCount > LIMITS.ON_HOLD && !isOnHoldFullView" class="pt-1">
+              <VButton
+                variant="ghost"
+                size="xs"
+                @click="isOnHoldFullView = true"
+              >
+                View All ({{ onHoldCount - LIMITS.ON_HOLD }} more)
+              </VButton>
+            </VBox>
+          </template>
+        </VNavGroup>
+
+      </VStack>
     </template>
   </BaseSectionLayout>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
+import { computed, ref, nextTick } from 'vue';
+// Layout Atoms
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+// Indicators & Buttons
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
+// Nav Molecules
 import VNavGroup from '@/components/molecules/navs/VNavGroup.vue';
 import VTagListItem from '@/components/molecules/navs/VTagListItem.vue';
+// Organisms
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
+
+import type { ProcessedKeyword } from '@/interfaces/initiation';
 
 const props = defineProps<{
   keywords: ProcessedKeyword[];
@@ -114,6 +143,7 @@ const emit = defineEmits<{
 }>();
 
 // --- Configuration ---
+/** Spacing and view limit constants */
 const LIMITS = { LOCKED: 5, ON_HOLD: 3 };
 
 // --- UI State ---
@@ -126,8 +156,10 @@ const lockedCount = computed(() => props.keywords.filter(k => k.entityStatus ===
 const unreviewedCount = computed(() => props.keywords.filter(k => ['AI_EXTRACTED', 'USER_DRAFT'].includes(k.entityStatus)).length);
 const onHoldCount = computed(() => props.keywords.filter(k => k.entityStatus === 'ON_HOLD').length);
 
+const reviewGroupRefEl = ref<InstanceType<typeof VNavGroup> | null>(null);
+
 /**
- * Orchestrates data display logic: filtering by status and applying view limits.
+ * Filter and slice keyword data based on status and expansion state.
  */
 const getGroupData = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
   const filtered = props.keywords.filter(k => {
@@ -144,4 +176,17 @@ const getGroupData = (group: 'LOCKED' | 'REVIEW' | 'ON_HOLD') => {
 const handleKeywordEdit = (payload: { index: number, keyword: ProcessedKeyword }) => {
   emit('edit-request', payload);
 };
+
+const openReviewGroup = async () => {
+  isReviewGroupOpen.value = true;
+
+  // Wait for the next DOM update cycle to ensure the element is rendered
+  await nextTick();
+
+  // Access the DOM element via the ref's .value property and call scrollIntoView
+  reviewGroupRefEl.value?.$el?.scrollIntoView({
+    behavior: 'smooth', // Optional: for smooth scrolling animation
+    block: 'start'      // Optional: align the top of the element to the top of the viewport
+  });
+}
 </script>

@@ -16,7 +16,7 @@
             tag="h4"
             size="sm"
             weight="bold"
-            color="gray-900"
+            color="slate-900"
             truncate
             :title="resource.label"
           >
@@ -39,8 +39,8 @@
         />
       </VCluster>
 
-      <VTypography tag="p" size="xs" color="gray-600" class="line-clamp-2 leading-relaxed">
-        <VTypography tag="span" weight="bold" color="gray-900">Summary: </VTypography>
+      <VTypography tag="p" size="xs" color="slate-600" class="line-clamp-2 leading-relaxed">
+        <VTypography tag="span" weight="bold" color="slate-900">Summary: </VTypography>
         {{ resource.summary || 'No distillation available.' }}
       </VTypography>
 
@@ -54,7 +54,7 @@
           >
             #{{ keyword }}
           </VBadge>
-          <VTypography v-if="resource.keywords.length > 2" tag="span" size="xs" color="gray-400">
+          <VTypography v-if="resource.keywords.length > 2" tag="span" size="xs" color="slate-400">
             +{{ resource.keywords.length - 2 }}
           </VTypography>
         </VCluster>

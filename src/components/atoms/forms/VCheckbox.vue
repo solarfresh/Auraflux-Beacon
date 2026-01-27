@@ -29,7 +29,7 @@ const checkboxClasses = computed(() => {
     'h-4',
     'w-4',
     'text-indigo-600', // Primary color for the checked state
-    'border-gray-300', // Border color when unchecked
+    'border-slate-300', // Border color when unchecked
     'rounded',
     'focus:ring-indigo-500', // Focus ring color
     'focus:ring-2',

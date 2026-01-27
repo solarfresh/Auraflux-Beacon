@@ -1,4 +1,4 @@
-import { ID } from './core';
+import { ID, Point2D } from './core';
 
 /**
  * NodeType Definition
@@ -37,6 +37,8 @@ interface BaseNode {
    * DIMMED: Inbox / Placeholder
    */
   solidity: 'SOLID' | 'PULSING' | 'DIMMED';
+
+  position?: Point2D;
 
   /** * Persistence: Multi-Canvas Presence
    * Tracks which Canvas IDs this node is currently placed on.
