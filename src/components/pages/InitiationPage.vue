@@ -4,14 +4,14 @@
     <DualPaneWorkspaceTemplate>
 
       <!-- Slot: status-tracker (Shows ISP steps) -->
-
+<!--
       <template #status-tracker>
         <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
       </template>
-
+ -->
       <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
         <InitiationSidebar
