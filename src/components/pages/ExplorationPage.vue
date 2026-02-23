@@ -1,14 +1,14 @@
 <template>
   <div class="h-screen w-screen bg-slate-950 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30">
     <ThreePaneWorkspaceTemplate>
-
+<!--
       <template #header>
         <VStepProgress
           :current-stage="currentStep"
           :completion-percentage="currentStepCompletionPercentage"
         />
       </template>
-
+ -->
       <template #left-sidebar>
         <DiscoverySidebar
           @select-node="handleNodeSelect"
@@ -28,7 +28,7 @@
             @edge-update="handleEdgeUpdate"
             @drop-resource="handleDropResource"
           />
-
+<!--
           <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-1 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-full shadow-2xl z-10">
             <VButton
               v-for="mode in ['Matrix', 'Causal', 'Radial']"
@@ -42,6 +42,7 @@
               </VTypography>
             </VButton>
           </div>
+ -->
         </main>
       </template>
 
