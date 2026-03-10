@@ -20,7 +20,7 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="[]"
+            :nodes="Array.from(explorationStore.conceptualNodes.values())"
             :edges="explorationStore.conceptualEdges"
             :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasId"

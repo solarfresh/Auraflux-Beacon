@@ -158,7 +158,6 @@ import VModal from '@/components/molecules/indicators/VModal.vue';
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
-import type { ResourceItem } from '@/interfaces/knowledge';
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 
@@ -184,7 +183,7 @@ const vueFlowEdges = computed(() => props.edges.map(e => ({
   id: e.id,
   source: e.source,
   target: e.target,
-  label: e.label,
+  // label: e.label,
   animated: true,
   style: { stroke: '#94a3b8', strokeWidth: 2 },
 })));
@@ -220,7 +219,7 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
 }
 
 function handleEdgeCreate(connection: any) {
-  emit('edge-update', { id: uuidv4(), source: connection.source, target: connection.target, label: 'connects' }, 'create');
+  emit('edge-update', { id: uuidv4(), source: connection.source, target: connection.target, weight: connection.weight }, 'create');
 }
 
 function handleEdgeUpdate({ edge, connection }: EdgeUpdateEvent) {

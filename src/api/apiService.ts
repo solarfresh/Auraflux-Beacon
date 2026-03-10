@@ -1,12 +1,13 @@
 import { CanvasesEndpoints, KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
+import type { ConceptualGraph } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
+import { ID } from '@/interfaces/core';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
-import { ID } from '@/interfaces/core';
 
 const apiClient = axios.create({
   // **Crucial for JWT Cookie Auth**
@@ -99,7 +100,7 @@ apiClient.interceptors.response.use(
 export const apiService = {
   canvases: {
     graphs: {
-      get: (canvasId: ID): Promise<AxiosResponse<any>> => {
+      get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
         return apiClient.get(CanvasesEndpoints.graphs.get(canvasId));
       }
     }
@@ -158,7 +159,7 @@ export const apiService = {
       getSidebarRegistryInfo: (): Promise<AxiosResponse<SidebarRegistryInfo>> => {
         return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
       },
-      recommendConceptualNodes: (canvasId: ID): Promise<AxiosResponse<any>> => {
+      recommendConceptualNodes: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
         return apiClient.post(WorkflowsEndpoints.exploration.recommendConceptualNodes(canvasId))
       }
     },

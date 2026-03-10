@@ -61,6 +61,8 @@ export function useCanvasDrop() {
       data: { ...node },
     }
 
+    console.log(newNode);
+
     /**
      * Align node position after drop, so it's centered to the mouse
      *
