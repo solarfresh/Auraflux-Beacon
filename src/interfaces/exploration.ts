@@ -29,7 +29,7 @@ export interface ExplorationState {
 
   // --- Conceptual Map Management (Supports Multi-Canvas) ---
   canvasViews: CanvasView[]; // List of all defined canvas views
-  activeCanvasViewId: ID; // The currently visible canvas view
+  activeCanvasId: ID; // The currently visible canvas view
   selectedNodeId: ID | null;
   conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
   conceptualEdges: ConceptualEdge[]; // Edges for the active view
@@ -48,6 +48,7 @@ export interface ExplorationState {
 export interface SidebarRegistryInfo {
   stabilityScore: number;
   finalQuestion: string;
+  activeCanvasId: ID;
   nodes: ConceptualNode[];
 };
 

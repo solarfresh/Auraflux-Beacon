@@ -20,7 +20,7 @@ export const useExplorationStore = defineStore('exploration', {
 
 		resources: [],
 		canvasViews: [],
-		activeCanvasViewId: '',
+		activeCanvasId: '',
 		selectedNodeId: '',
 		conceptualNodes: new Map(),
 		conceptualEdges: [],
@@ -63,6 +63,20 @@ export const useExplorationStore = defineStore('exploration', {
 			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
 			try {
 				await this.loadSidebarRegistryInfo();
+				await this.loadCanvasView();
+			} catch (error) {
+				console.error('Failed to load exploration data:', error);
+			}
+		},
+
+		async loadCanvasView() {
+			try {
+				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
+				if (response.data) {
+					console.log(response.data);
+				} else {
+					console.log(response.data);
+				}
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}
@@ -82,6 +96,8 @@ export const useExplorationStore = defineStore('exploration', {
 						solidity: 'SOLID',
 						type: 'FOCUS',
 					})
+
+					this.activeCanvasId = response.data.activeCanvasId;
 
 					response.data.nodes.map((node: ConceptualNode) => {
 						this.conceptualNodes.set(node.id, node);
@@ -179,12 +195,12 @@ export const useExplorationStore = defineStore('exploration', {
 
 		/** Switches the active canvas view and loads its data */
 		async setActiveCanvasView(viewId: string) {
-			if (this.activeCanvasViewId === viewId) return;
+			if (this.activeCanvasId === viewId) return;
 
 			// 1. Save current view's nodes/edges (critical step)
 			// SaveNodesAndEdges(this.activeCanvasViewId, this.conceptualNodes, this.conceptualEdges);
 
-			this.activeCanvasViewId = viewId;
+			this.activeCanvasId = viewId;
 			// 2. Load new view's data
 			// this.conceptualNodes = await api.fetchData(`/exploration/canvas/${viewId}/nodes`);
 			// this.conceptualEdges = await api.fetchData(`/exploration/canvas/${viewId}/edges`);

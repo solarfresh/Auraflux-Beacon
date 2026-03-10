@@ -1,28 +1,25 @@
 import config from '@/config';
+import { ID } from '@/interfaces/core';
 
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;
 
-export const KnowledgeEndpoints = {
-  keywords: {
-    update: (keywordId: string) =>
-      `${AURAFLUX_NEXUS_URL}/knowledge/keywords/${keywordId}/`,
-  },
-  scopes: {
-    update: (scopeId: string) =>
-      `${AURAFLUX_NEXUS_URL}/knowledge/scopes/${scopeId}/`,
+export const CanvasesEndpoints = {
+  graphs: {
+    get: (canvasId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/`,
   }
 }
 
-export const SearchEndpoints = {
-  results: {
-    create: () =>
-      `${AURAFLUX_NEXUS_URL}/search/results/`,
+export const KnowledgeEndpoints = {
+  keywords: {
+    update: (keywordId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/keywords/${keywordId}/`,
   },
-  assistant: {
-    create: () =>
-      `${AURAFLUX_NEXUS_URL}/search/assistant/`,
-  },
-};
+  scopes: {
+    update: (scopeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/knowledge/scopes/${scopeId}/`,
+  }
+}
 
 export const UsersEndpoints = {
   check: {
@@ -45,7 +42,7 @@ export const WorkflowsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     getReflectionLog: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
-    updateReflectionLogById: (logId: string) =>
+    updateReflectionLogById: (logId: ID) =>
       `${AURAFLUX_NEXUS_URL}/workflows/reflection/${logId}/`,
   },
   initiation: {
@@ -61,6 +58,8 @@ export const WorkflowsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/session/`,
     getSidebarRegistryInfo: () =>
       `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/sidebar/`,
+    recommendConceptualNodes: (canvasId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/${canvasId}/nodes/`,
   },
   keywords: {
     create: () =>
