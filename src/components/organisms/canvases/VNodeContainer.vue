@@ -60,7 +60,7 @@ const handleAccept = () => {
   let node = nodeData.value;
   if (node !== undefined) {
     node.status = 'LOCKED';
-    store.updateConceptualMapNode(node, 'edit');
+    store.updateConeptualNode(node);
   }
 }
 

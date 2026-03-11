@@ -7,6 +7,12 @@ export const CanvasesEndpoints = {
   graphs: {
     get: (canvasId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/`,
+  },
+  nodes: {
+    delete: (canvasId: ID, nodeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/nodes/${nodeId}/`,
+    update: (canvasId: ID, nodeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/nodes/${nodeId}/`,
   }
 }
 

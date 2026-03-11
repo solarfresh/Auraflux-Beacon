@@ -114,6 +114,23 @@ export const useExplorationStore = defineStore('exploration', {
 			}
 		},
 
+		async updateConeptualNode(node: ConceptualNode) {
+			try {
+				if (node.position) {
+					node.position.x /= POSITION_SCALE;
+					node.position.y /= POSITION_SCALE;
+				}
+
+				let response = await apiService.canvases.nodes.update(this.activeCanvasId, node.id, node);
+				if (response.data) {
+					let node = response.data;
+					this.conceptualNodes.set(node.id, node);
+				}
+			} catch (error) {
+				console.error('Failed to update node:', error);
+			}
+		},
+
 		/** Handles updates for existing nodes, including moving, grouping, and editing */
 		updateConceptualMapNode(node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') {
 			if (action === 'delete') {
@@ -122,7 +139,7 @@ export const useExplorationStore = defineStore('exploration', {
 				this.conceptualEdges = this.conceptualEdges.filter(e => e.source !== node.id && e.target !== node.id);
 			} else if (action === 'group') {
 				// Logic to create or update a Group Node (U.S. 7)
- 			} else {
+			} else {
 				this.conceptualNodes.set(node.id, node);
 			}
 		},
