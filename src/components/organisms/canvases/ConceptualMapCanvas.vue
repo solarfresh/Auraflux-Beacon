@@ -111,7 +111,9 @@ const vueFlowNodes = computed(() => props.nodes.map(n => ({
 const vueFlowEdges = computed(() => props.edges.map(e => ({
   id: e.id,
   source: e.source,
+  sourceHandle: e?.sourceHandle,
   target: e.target,
+  targetHandle: e?.targetHandle,
   animated: true,
   style: { stroke: '#94a3b8', strokeWidth: 2 },
 })));

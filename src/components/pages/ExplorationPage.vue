@@ -1,14 +1,6 @@
 <template>
   <div class="h-screen w-screen bg-slate-950 text-slate-200 overflow-hidden font-sans selection:bg-indigo-500/30">
     <ThreePaneWorkspaceTemplate>
-<!--
-      <template #header>
-        <VStepProgress
-          :current-stage="currentStep"
-          :completion-percentage="currentStepCompletionPercentage"
-        />
-      </template>
- -->
       <template #left-sidebar>
         <DiscoverySidebar
           @select-node="handleNodeSelect"
@@ -28,21 +20,6 @@
             @edge-update="handleEdgeUpdate"
             @drop-resource="handleDropResource"
           />
-<!--
-          <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 p-1 bg-slate-900/90 backdrop-blur border border-slate-700 rounded-full shadow-2xl z-10">
-            <VButton
-              v-for="mode in ['Matrix', 'Causal', 'Radial']"
-              :key="mode"
-              variant="tertiary"
-              size="sm"
-              class="rounded-full !px-4 hover:bg-slate-800 group"
-            >
-              <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="group-hover:text-slate-200">
-                {{ mode }}
-              </VTypography>
-            </VButton>
-          </div>
- -->
         </main>
       </template>
 
@@ -84,21 +61,6 @@
           <VTypography tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</VTypography>
         </div>
       </template>
-      <template #content>
-<!--
-        <FocusAligner
-          v-if="isFocusType(managementModalType)"
-          :type="managementModalType"
-          :initial-data="getFocusData(managementModalType)"
-          @update-focus="handleUpdateFocus"
-          @close="isManagementModalOpen = false"
-        />
-        <div v-else class="flex flex-col h-80 items-center justify-center gap-4">
-          <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-          <VTypography tag="span" color="slate-600" weight="light" class="italic font-sm">Synthesizing metadata...</VTypography>
-        </div>
- -->
-      </template>
     </FullScreenModalTemplate>
   </div>
 </template>
@@ -121,16 +83,13 @@ import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspac
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 
 // Organisms
-import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
-import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
-import { apiService } from '@/api/apiService';
 
 // Stores
 const explorationStore = useExplorationStore();

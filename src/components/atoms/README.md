@@ -38,7 +38,7 @@ The structural "bones" and "skin" that hold other atoms.
 
 Low-level components for node-link diagrams and spatial data.
 
-* **Core:** `VNodeHandle`
+* **Core:** `VNodeHandle`, `VNodeShape`, `VNodeShield`
 * **Focus:** Coordinate anchoring, connection port logic, and graph-specific semantic markers.
 
 ---

@@ -79,7 +79,9 @@ export interface ConceptualNode {
 export interface ConceptualEdge {
   id: ID;
   source: ID; // ConceptualNode ID
+  sourceHandle?: string;
   target: ID; // ConceptualNode ID
+  targetHandle?: string;
   // label: string; // e.g., "results in", "opposes", "defines"
   weight: number;
 }

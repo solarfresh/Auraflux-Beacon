@@ -1,6 +1,6 @@
 import { CanvasesEndpoints, KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ConceptualGraph } from '@/interfaces/conceptual-map';
+import type { ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
@@ -103,6 +103,14 @@ export const apiService = {
       get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
         return apiClient.get(CanvasesEndpoints.graphs.get(canvasId));
       }
+    },
+    nodes: {
+      delete: (canvasId: ID, nodeId: ID) => {
+        apiClient.delete(CanvasesEndpoints.nodes.delete(canvasId, nodeId));
+      },
+      update: (canvasId: ID, nodeId: ID, data: any): Promise<AxiosResponse<ConceptualNode>> => {
+        return apiClient.put(CanvasesEndpoints.nodes.delete(canvasId, nodeId), data);
+      },
     }
   },
   knowledge:{
