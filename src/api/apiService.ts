@@ -1,8 +1,10 @@
-import { KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { CanvasesEndpoints, KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
+import type { ConceptualGraph } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
+import { ID } from '@/interfaces/core';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { User } from '@/interfaces/user';
 import type { ReflectionLogEntry } from '@/interfaces/workflow';
 import axios, { AxiosResponse } from 'axios';
@@ -96,14 +98,21 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
+  canvases: {
+    graphs: {
+      get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
+        return apiClient.get(CanvasesEndpoints.graphs.get(canvasId));
+      }
+    }
+  },
   knowledge:{
     keywords: {
-      update: (keywordId: string, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
+      update: (keywordId: ID, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
         return apiClient.put(KnowledgeEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
       }
     },
     scopes: {
-      update: (scopeId: string, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
+      update: (scopeId: ID, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
         return apiClient.put(KnowledgeEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       }
     }
@@ -128,7 +137,7 @@ export const apiService = {
       getReflectionLog: (): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.get(WorkflowsEndpoints.base.getReflectionLog())
       },
-      updateReflectionLogById: (logId: string, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
+      updateReflectionLogById: (logId: ID, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.put(WorkflowsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
       }
     },
@@ -147,8 +156,11 @@ export const apiService = {
       createSession: (stabilityScore: number, finalQuestion: string): Promise<AxiosResponse<any>> => {
         return apiClient.post(WorkflowsEndpoints.exploration.createSession(), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
       },
-      getSidebarRegistryInfo:(): Promise<AxiosResponse<SidebarRegistryInfo>> => {
+      getSidebarRegistryInfo: (): Promise<AxiosResponse<SidebarRegistryInfo>> => {
         return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
+      },
+      recommendConceptualNodes: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
+        return apiClient.post(WorkflowsEndpoints.exploration.recommendConceptualNodes(canvasId))
       }
     },
     keywords: {

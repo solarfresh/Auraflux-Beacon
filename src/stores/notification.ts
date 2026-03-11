@@ -65,6 +65,9 @@ export const useNotificationStore = defineStore('notification', () => {
             case 'initiation_refined_topic':
                 _handleInitiationRefinedTopic(message.payload)
                 break;
+            case 'conceptual_nodes_recommendation':
+                console.log(message.payload)
+                break;
             default:
                 break;
         }

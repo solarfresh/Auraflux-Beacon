@@ -20,10 +20,10 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="[]"
+            :nodes="Array.from(explorationStore.conceptualNodes.values())"
             :edges="explorationStore.conceptualEdges"
             :health-scores="explorationStore.stabilityScore"
-            :active-view-id="explorationStore.activeCanvasViewId"
+            :active-view-id="explorationStore.activeCanvasId"
             @node-update="handleNodeUpdate"
             @edge-update="handleEdgeUpdate"
             @drop-resource="handleDropResource"
@@ -130,6 +130,7 @@ import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
+import { apiService } from '@/api/apiService';
 
 // Stores
 const explorationStore = useExplorationStore();
@@ -150,6 +151,7 @@ const currentStepCompletionPercentage = computed(() => workflowStore.currentStep
 // Initial Data Fetching
 onMounted(async () => {
   await explorationStore.loadExplorationData();
+  // await apiService.workflows.exploration.recommendConceptualNodes('560d9b9e-9d14-494b-abf9-47a7cd3cff7a');
 });
 
 /**
@@ -176,8 +178,8 @@ const handleTeleport = async (data: { nodeId: string; canvasId: string }) => {
   const { nodeId, canvasId } = data;
 
   // Step 1: Switch the active canvas view if it's different
-  if (explorationStore.activeCanvasViewId !== canvasId) {
-    explorationStore.activeCanvasViewId = canvasId;
+  if (explorationStore.activeCanvasId !== canvasId) {
+    explorationStore.activeCanvasId = canvasId;
   }
 
   // Step 2: Set the node as selected for visual consistency

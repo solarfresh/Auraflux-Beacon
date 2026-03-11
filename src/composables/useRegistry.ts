@@ -17,7 +17,7 @@ export function useRegistry() {
    * Ensures the Sidebar has access to the full manifest of nodes.
    */
   const registryNodes = computed(() => {
-    return Array.from(store.conceptualNodes.entries()).map(([id, node]) => {
+    return Array.from(store.sidebarNodes.entries()).map(([id, node]) => {
       return node
     })
   });
@@ -27,7 +27,7 @@ export function useRegistry() {
    * Nodes that are not yet placed on any canvas (DIMMED state).
    */
   const inboxNodes = computed(() => {
-    return Array.from(store.conceptualNodes.entries()).map(([id, node]) => {
+    return Array.from(store.sidebarNodes.entries()).map(([id, node]) => {
       return node
     })
   });
@@ -111,7 +111,7 @@ export function useRegistry() {
     inboxNodes,
     activeCanvasNodes,
     selectedNodeId: computed(() => store.selectedNodeId),
-    activeCanvasId: computed(() => store.activeCanvasViewId),
+    activeCanvasId: computed(() => store.activeCanvasId),
     mountToCanvas,
     unmountFromCanvas,
     updateGroundedness,

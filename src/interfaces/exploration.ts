@@ -1,21 +1,8 @@
-import { ID, DateTimeString, ChatMessage } from './core';
-import { ConceptualNode, ConceptualEdge } from './conceptual-map';
-import { ResourceItem, ResearchFocus } from './knowledge';
-import { ReflectionLogEntry } from './workflow';
+import { ID, ChatMessage } from './core';
+import { ConceptualNode, ConceptualEdge, ConceptualGraph } from './conceptual-map';
+import { ResourceItem } from './knowledge';
 
 export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
-
-interface AdversaryData {
-  critique: string;
-  conflicts: string[];
-}
-
-export interface CanvasView {
-  id: string;
-  name: string;
-  createdAt: DateTimeString;
-  updatedAt: DateTimeString;
-}
 
 export interface ExplorationState {
   stabilityScore: number;
@@ -27,10 +14,10 @@ export interface ExplorationState {
   // --- Resource Management ---
   resources: ResourceItem[];
 
-  // --- Conceptual Map Management (Supports Multi-Canvas) ---
-  canvasViews: CanvasView[]; // List of all defined canvas views
-  activeCanvasViewId: ID; // The currently visible canvas view
+  canvasView: ConceptualGraph;
+  activeCanvasId: ID; // The currently visible canvas view
   selectedNodeId: ID | null;
+  sidebarNodes: Map<string, ConceptualNode>;
   conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
   conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
@@ -48,6 +35,7 @@ export interface ExplorationState {
 export interface SidebarRegistryInfo {
   stabilityScore: number;
   finalQuestion: string;
+  activeCanvasId: ID;
   nodes: ConceptualNode[];
 };
 

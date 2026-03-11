@@ -1,12 +1,9 @@
 import { apiService } from '@/api/apiService';
-import { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import { ConceptualEdge, ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import {
 	ExplorationState,
-	ManualResourceData,
 	NodeSummary
 } from '@/interfaces/exploration';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
-import { ResourceItem } from '@/interfaces/knowledge';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,9 +16,10 @@ export const useExplorationStore = defineStore('exploration', {
 	  draggedNode: null,
 
 		resources: [],
-		canvasViews: [],
-		activeCanvasViewId: '',
+		canvasView: {nodes: new Map(), edges: []},
+		activeCanvasId: '',
 		selectedNodeId: '',
+		sidebarNodes: new Map(),
 		conceptualNodes: new Map(),
 		conceptualEdges: [],
 
@@ -63,6 +61,23 @@ export const useExplorationStore = defineStore('exploration', {
 			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
 			try {
 				await this.loadSidebarRegistryInfo();
+				await this.loadCanvasView();
+			} catch (error) {
+				console.error('Failed to load exploration data:', error);
+			}
+		},
+
+		async loadCanvasView() {
+			try {
+				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
+				if (response.data) {
+					Object.entries(response.data.nodes).map(([key, value]) => {
+						this.conceptualNodes.set(key, value);
+					});
+					this.conceptualEdges = response.data.edges;
+				} else {
+					console.log(response.data);
+				}
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}
@@ -75,16 +90,18 @@ export const useExplorationStore = defineStore('exploration', {
 					this.stabilityScore = response.data.stabilityScore;
 
 					// TODO: The data model of final question must be defined
-					this.conceptualNodes.set('focusQuestion', {
+					this.sidebarNodes.set('focusQuestion', {
 						id: 'focusQuestion',
 						label: response.data.finalQuestion,
 						groundedness: 10,
 						solidity: 'SOLID',
-						type: 'FOCUS',
+						type: 'FOCUS' as NodeType,
 					})
 
+					this.activeCanvasId = response.data.activeCanvasId;
+
 					response.data.nodes.map((node: ConceptualNode) => {
-						this.conceptualNodes.set(node.id, node);
+						this.sidebarNodes.set(node.id, node);
 					});
 				} else {
 					console.log(response.data);
@@ -92,60 +109,6 @@ export const useExplorationStore = defineStore('exploration', {
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}
-		},
-
-		// --- Resource Management (U.S. 4, 5) ---
-		async searchResources(term: string) {
-			this.isTyping = true;
-			try {
-				// Simulate aggregated search (internal + external)
-				// const results = await api.search(term);
-
-				// Example: Only add to repository if they are not already present
-				// this.resources.push(...results);
-			} catch (error) {
-				console.error("Resource search failed:", error);
-			} finally {
-				this.isTyping = false;
-			}
-		},
-
-		addManualResource(data: ManualResourceData) {
-			// Logic to process ManualResourceData and convert it into a full ResourceItem
-			const newResource: ResourceItem = {
-				id: uuidv4(),
-				label: data.title || (data.url ? `Manual Link: ${data.url}` : 'Manual Note'),
-				url: data.url as string,
-				format: 'SNIPPET',
-				summary: '',
-				sourceType: 'MANUAL',
-				createdAt: new Date().toISOString(),
-				updatedAt: new Date().toISOString(),
-				keywords: [],
-				userNotes: '',
-				rawContent: data.content || '',
-				relevanceScore: 1.0, // Manual resources are considered highly relevant
-			};
-			this.resources.push(newResource);
-		},
-
-		// --- Conceptual Map Management (U.S. 6, 7, 8) ---
-
-		/** Adds a ResourceItem to the active canvas as a Resource Node */
-		addResourceToCanvas(item: ResourceItem, position: { x: number, y: number }) {
-			const newNode: ConceptualNode = {
-				id: uuidv4(),
-				groundedness: 10,
-				solidity: 'DIMMED',
-				// canvases: [],
-				type: 'RESOURCE',
-				label: item.label,
-				// resourceId: item.id, // Link back to the full resource data
-				// data: item,
-				// position: position,
-				// ... other Resource Node properties
-			};
-			this.conceptualNodes.set(newNode.id, newNode);
 		},
 
 		/** Handles updates for existing nodes, including moving, grouping, and editing */
@@ -179,12 +142,12 @@ export const useExplorationStore = defineStore('exploration', {
 
 		/** Switches the active canvas view and loads its data */
 		async setActiveCanvasView(viewId: string) {
-			if (this.activeCanvasViewId === viewId) return;
+			if (this.activeCanvasId === viewId) return;
 
 			// 1. Save current view's nodes/edges (critical step)
 			// SaveNodesAndEdges(this.activeCanvasViewId, this.conceptualNodes, this.conceptualEdges);
 
-			this.activeCanvasViewId = viewId;
+			this.activeCanvasId = viewId;
 			// 2. Load new view's data
 			// this.conceptualNodes = await api.fetchData(`/exploration/canvas/${viewId}/nodes`);
 			// this.conceptualEdges = await api.fetchData(`/exploration/canvas/${viewId}/edges`);
