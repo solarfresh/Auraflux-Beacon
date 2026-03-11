@@ -1,25 +1,15 @@
 <template>
-  <div
-    class="v-node-container relative transition-all duration-300 min-w-[200px] border-2 shadow-sm"
-    :class="[
-      // Rule: Semantic Signaling (Dashed for Suggested, Solid for Verified)
-      props.status === 'AI_EXTRACTED' ? 'border-dashed' : 'border-solid',
-
-      // Interaction states
-      props.selected ? 'ring-2 ring-offset-2 ring-indigo-500 shadow-lg' : 'hover:shadow-md hover:-translate-y-0.5',
-
-      // Injected theme and padding
-      props.themeClass,
-      paddingMap[props.padding],
-
-      // Standardized rounding from Atoms Layer (Level 1 Container)
-      'rounded-xl'
-    ]"
+  <VNodeShield
+    :theme-class="props.themeClass"
+    :selected="props.selected"
+    :padding="props.padding"
   >
     <slot />
 
+    <VNodeShape :status="props.status" :border-radius="12" />
+
     <slot name="overlay" />
-  </div>
+  </VNodeShield>
 </template>
 
 <script setup lang="ts">
@@ -28,6 +18,8 @@
  * The physical shell for all canvas nodes.
  * Implements semantic border logic (Solid/Dashed) and hover/selection states.
  */
+import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
+import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 
 const props = withDefaults(defineProps<{
   // Entity status from backend (e.g., 'AI_EXTRACTED', 'LOCKED')
@@ -55,10 +47,4 @@ const paddingMap = {
 </script>
 
 <style scoped>
-.v-node-container {
-  /* Prevent text selection during node dragging */
-  user-select: none;
-  /* Maintain consistent box-sizing for layout engines */
-  box-sizing: border-box;
-}
 </style>
