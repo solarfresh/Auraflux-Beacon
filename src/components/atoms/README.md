@@ -34,6 +34,13 @@ The structural "bones" and "skin" that hold other atoms.
 * **Core:** `VBox`, `VStack`, `VCluster`, `VSpacer`
 * **Focus:** Spacing tokens (8px grid), alignment, and containment.
 
+### 5. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)
+
+Low-level components for node-link diagrams and spatial data.
+
+* **Core:** `VNodeHandle`
+* **Focus:** Coordinate anchoring, connection port logic, and graph-specific semantic markers.
+
 ---
 
 ## 🧭 Global Atom Principles
@@ -75,6 +82,7 @@ We utilize a standardized elevation system for depth.
 | **Typography** | Semantic | `text-sm` (Caption) to `text-4xl` (Display) |
 | **Rounding** | Standardized | `rounded-md` (Default), `rounded-xl` (Container) |
 | **Colors** | Bootstrap Semantic | `primary`, `success`, `danger`, `warning`, `info` |
+| **Graph** | Reliability | `border-solid` (Verified), `border-dashed` (Suggested) |
 
 ---
 
@@ -83,9 +91,9 @@ We utilize a standardized elevation system for depth.
 ```text
 src/components/atoms/
 ├── buttons/        # Action triggers (VButton)
+├── canvases/       # Graph units (VNodeHandle)
 ├── forms/          # User inputs (VInput, VCheckbox)
 ├── indicators/     # Data display (VTypography, VBadge, VIcon)
 ├── layout/         # Structure (VBox, VStack, VCluster)
 └── README.md       # You are here
-
 ```
