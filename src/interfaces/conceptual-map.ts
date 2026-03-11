@@ -1,4 +1,4 @@
-import { ID, Point2D } from './core';
+import { EntityStatus, ID, Point2D } from './core';
 
 /**
  * NodeType Definition
@@ -59,6 +59,10 @@ export interface ConceptualNode {
    * DIMMED: Inbox / Placeholder
    */
   solidity: 'SOLID' | 'PULSING' | 'DIMMED';
+
+  user_notes?: string;
+
+  status?: EntityStatus;
 
   position?: Point2D;
 
