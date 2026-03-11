@@ -1,4 +1,5 @@
 import { apiService } from '@/api/apiService';
+import { POSITION_SCALE } from '@/constants/canvases';
 import { ConceptualEdge, ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import {
 	ExplorationState,
@@ -72,6 +73,8 @@ export const useExplorationStore = defineStore('exploration', {
 				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
 				if (response.data) {
 					Object.entries(response.data.nodes).map(([key, value]) => {
+						value.position.x *= POSITION_SCALE;
+						value.position.y *= POSITION_SCALE;
 						this.conceptualNodes.set(key, value);
 					});
 					this.conceptualEdges = response.data.edges;

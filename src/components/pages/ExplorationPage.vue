@@ -124,7 +124,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
-import ConceptualMapCanvas from '@/components/organisms/canvas/ConceptualMapCanvas.vue';
+import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import FocusAligner from '@/components/organisms/forms/FocusAligner.vue';
 
