@@ -36,6 +36,13 @@ Orchestrators that manage the relationship between different spatial zones and i
 * **Key Components:** `VFloatControl`, `VResizableSplitter`, `VLayoutDivider`, `VPanelHeader`.
 * **Focus:** Z-index hierarchy, coordinate synchronization, and reactive structural transitions.
 
+### 5. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)
+
+Composite components that define the physical boundaries and interactive regions of a graph node.
+
+* **Key Components:** `VNodeContainer`.
+* **Focus:** Semantic border logic (Solid/Dashed), physical specification (min-width/padding), and state-driven visual feedback (Selection/Hover).
+
 ---
 
 ## 🧭 Global Molecule Principles
@@ -62,6 +69,13 @@ The molecule is responsible for synchronized state. If an input is `disabled`, t
 
 Always use `inheritAttrs: false` in the component script and bind `$attrs` to the root layout atom. This ensures that parent-injected spacing is applied correctly to the outer container.
 
+### 5. State-to-Visual Mapping (Canvases Only)
+
+Canvas molecules must map backend state (e.g., `status`) to physical border tokens.
+* **Verified/Manual:** Use `border-solid`.
+* **Suggested/AI:** Use `border-dashed`.
+This ensures the user can immediately distinguish between human-curated and machine-generated data across the entire canvas.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -70,6 +84,7 @@ Always use `inheritAttrs: false` in the component script and bind `$attrs` to th
 > **Rule 1: Atomic Integrity.** A molecule must be composed of 2 or more Atoms.
 > **Rule 2: Semantic Prefix.** All molecules must use the `V` prefix (e.g., `VStatusCard`).
 > **Rule 3: Bootstrap Alignment.** Naming should reflect Bootstrap semantics (e.g., `NavTabs` for navigation, `Alert` for feedback).
+> **Rule 4: Graph Physicality.** Canvas molecules must enforce a minimum physical area (`min-w` / `min-h`) to prevent layout "jitter" when the Graphviz engine recalculates node positions.
 
 ### Correct Composition Pattern (Indicator Example)
 
@@ -90,10 +105,10 @@ Always use `inheritAttrs: false` in the component script and bind `$attrs` to th
 
 ```text
 src/components/molecules/
+├── canvases/       # VNodeContainer
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal
 ├── layout/         # VFloatControl
 ├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem
 └── README.md       # You are here
-
 ```
