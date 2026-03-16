@@ -1,8 +1,8 @@
 # Use a Node.js runtime as the base image
-FROM node:22-alpine
+FROM node:24-alpine
 
 # Install the specific version of npm
-RUN npm install -g npm@11.3.0
+RUN npm install -g npm@11.9.0
 
 # Set the working directory in the container
 WORKDIR /app
