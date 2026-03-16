@@ -110,7 +110,6 @@ const currentStepCompletionPercentage = computed(() => workflowStore.currentStep
 // Initial Data Fetching
 onMounted(async () => {
   await explorationStore.loadExplorationData();
-  // await apiService.workflows.exploration.recommendConceptualNodes('560d9b9e-9d14-494b-abf9-47a7cd3cff7a');
 });
 
 /**

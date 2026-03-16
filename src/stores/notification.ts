@@ -1,11 +1,13 @@
 import { useWebSocket } from '@/composables/useWebSocket';
 import config from '@/config';
+import { ConceptualGraph } from '@/interfaces/conceptual-map';
 import type {
     ChatMessage
 } from '@/interfaces/core';
 import type { WebSocketMessage } from '@/interfaces/notification';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { useExplorationStore } from './exploration';
 import { useInitiativeStore } from './initiation';
 
 // Define your WebSocket URL
@@ -14,7 +16,9 @@ const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
 export const useNotificationStore = defineStore('notification', () => {
 
     // --- State from Composable ---
+    const explorationStore = useExplorationStore();
     const initiativeStore = useInitiativeStore();
+
     // Extract the reactive properties from the composable
     const {
         isConnected,
@@ -25,6 +29,10 @@ export const useNotificationStore = defineStore('notification', () => {
 
     // --- Local State ---
     const notifications = ref<{[key: string]: any;}>({});
+
+    async function _handleConceptualNodesRecommendation(payload: ConceptualGraph) {
+        explorationStore.loadConceptualGraph(payload);
+    }
 
     async function _handleInitiationEAStream(payload: any) {
         let responseText = payload['full_response_text']
@@ -58,15 +66,17 @@ export const useNotificationStore = defineStore('notification', () => {
             return;
         }
 
+        let payload = JSON.parse(JSON.stringify(message.payload));
         switch (message.event_type) {
             case 'initiation_ea_stream':
-                _handleInitiationEAStream(message.payload)
+                _handleInitiationEAStream(payload);
                 break;
             case 'initiation_refined_topic':
-                _handleInitiationRefinedTopic(message.payload)
+                _handleInitiationRefinedTopic(payload);
                 break;
             case 'conceptual_nodes_recommendation':
-                console.log(message.payload)
+                console.log('message.payload')
+                _handleConceptualNodesRecommendation(payload);
                 break;
             default:
                 break;
