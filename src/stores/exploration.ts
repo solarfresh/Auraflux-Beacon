@@ -1,6 +1,6 @@
 import { apiService } from '@/api/apiService';
 import { POSITION_SCALE } from '@/constants/canvases';
-import { ConceptualEdge, ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
+import { ConceptualEdge, ConceptualGraph, ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import {
 	ExplorationState,
 	NodeSummary
@@ -72,18 +72,22 @@ export const useExplorationStore = defineStore('exploration', {
 			try {
 				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
 				if (response.data) {
-					Object.entries(response.data.nodes).map(([key, value]) => {
-						value.position.x *= POSITION_SCALE;
-						value.position.y *= POSITION_SCALE;
-						this.conceptualNodes.set(key, value);
-					});
-					this.conceptualEdges = response.data.edges;
+					this.loadConceptualGraph(response.data)
 				} else {
 					console.log(response.data);
 				}
 			} catch (error) {
 				console.error('Failed to load exploration data:', error);
 			}
+		},
+
+		async loadConceptualGraph(graph: ConceptualGraph) {
+					Object.entries(graph.nodes).map(([key, value]) => {
+						value.position.x *= POSITION_SCALE;
+						value.position.y *= POSITION_SCALE;
+						this.conceptualNodes.set(key, value);
+					});
+					this.conceptualEdges = graph.edges;
 		},
 
 		async loadSidebarRegistryInfo() {
@@ -114,17 +118,31 @@ export const useExplorationStore = defineStore('exploration', {
 			}
 		},
 
+		async recommendConceptualNodes() {
+			let aiSuggestedNodes = [...this.conceptualNodes.values()].filter(node => node.status === 'AI_EXTRACTED');
+			if (aiSuggestedNodes.length < 1 && this.conceptualNodes.size < this.sidebarNodes.size) {
+				apiService.workflows.exploration.recommendConceptualNodes(this.activeCanvasId);
+			}
+		},
+
 		async updateConeptualNode(node: ConceptualNode) {
 			try {
-				if (node.position) {
-					node.position.x /= POSITION_SCALE;
-					node.position.y /= POSITION_SCALE;
+				let nodeData = JSON.parse(JSON.stringify(node));
+				if (nodeData.position) {
+					nodeData.position.x /= POSITION_SCALE;
+					nodeData.position.y /= POSITION_SCALE;
 				}
 
-				let response = await apiService.canvases.nodes.update(this.activeCanvasId, node.id, node);
+				let response = await apiService.canvases.nodes.update(this.activeCanvasId, nodeData.id, nodeData);
 				if (response.data) {
-					let node = response.data;
-					this.conceptualNodes.set(node.id, node);
+					let newNode = response.data;
+					if (newNode.position) {
+						newNode.position.x *= POSITION_SCALE;
+						newNode.position.y *= POSITION_SCALE;
+					}
+
+					this.conceptualNodes.set(newNode.id, newNode);
+					this.recommendConceptualNodes();
 				}
 			} catch (error) {
 				console.error('Failed to update node:', error);
