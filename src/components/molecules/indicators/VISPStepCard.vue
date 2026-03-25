@@ -1,60 +1,66 @@
 <template>
   <VBox
-    :background="isActive ? 'white' : 'transparent'"
-    :border="isActive ? 'all' : 'none'"
-    padding="md"
+    :background="'white'"
+    :border="'none'"
+    :padding="size === 'lg' ? 'lg' : 'md'"
     rounded="xl"
-    class="transition-all duration-300 group"
-    :class="!isActive && !isCompleted ? 'opacity-50' : 'opacity-100'"
+    :class="[
+      'transition-all duration-300 group w-full',
+      'shadow-lg border-indigo-200 translate-x-2',
+    ]"
   >
-    <VStack gap="sm" align="center">
+    <VCluster gap="md" align="center">
       <VBox
-        :background="isActive ? 'indigo-50' : 'slate-50'"
-        padding="sm"
-        rounded="full"
+        :background="'white'"
+        :padding="size === 'lg' ? 'md' : 'sm'"
+        rounded="lg"
+        class="shadow-sm transition-colors duration-300"
       >
         <VIcon
           :name="icon"
-          :type="isActive ? 'solid' : 'outline'"
-          :color="isActive ? 'indigo-600' : 'slate-400'"
-          size="lg"
+          :type="'solid'"
+          :size="size === 'lg' ? 'xl' : 'lg'"
         />
       </VBox>
 
-      <VStack gap="none" align="center" class="text-center">
+      <VStack gap="none" align="start">
         <VTypography
           tag="strong"
-          size="base"
-          :weight="isActive ? 'bold' : 'medium'"
-          :color="isActive ? 'slate-900' : 'slate-500'"
+          :size="size === 'lg' ? 'lg' : 'md'"
+          :weight="'bold'"
+          :color="'slate-900'"
+          class="tracking-tight uppercase"
         >
           {{ label }}
         </VTypography>
 
         <VTypography
-          tag="span"
-          size="xs"
+          tag="p"
+          :size="'sm'"
+          :weight="'normal'"
           color="slate-400"
-          class="italic"
+          class="leading-relaxed max-w-prose"
         >
-          {{ subLabel }}
+          {{ description }}
         </VTypography>
       </VStack>
-    </VStack>
+    </VCluster>
   </VBox>
 </template>
 
 <script setup lang="ts">
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VTypography from '@/components/atoms/VTypography.vue';
-import VIcon from '@/components/atoms/VIcon.vue';
 
-defineProps<{
-  label: string;       // e.g., "Define"
-  subLabel: string;    // e.g., "Clarify Anxiety"
-  icon: string;        // e.g., "magnifying-glass"
-  isActive?: boolean;
-  isCompleted?: boolean;
-}>();
+withDefaults(defineProps<{
+  label: string;
+  description: string;
+  icon: string;
+  size?: 'md' | 'lg'; // Added for Landing Page scaling
+}>(), {
+  size: 'md'
+});
 </script>
