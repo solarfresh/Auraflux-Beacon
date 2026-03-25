@@ -46,6 +46,10 @@
       </VCluster>
     </VBox>
   </VBox>
+  <LoginModal
+    :isOpen="loginStore.isOpen"
+    @close="loginStore.closeModal"
+  />
 </template>
 
 <script setup lang="ts">
@@ -56,8 +60,12 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VISPStepCard from '@/components/molecules/indicators/VISPStepCard.vue';
 import VStaticGraph from '@/components/molecules/layout/VStaticGraph.vue';
 import VWelcomeGateway from '@/components/molecules/navs/VWelcomeGateway.vue';
+import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import type { IntentOption } from '@/interfaces/user';
+import { useLoginStore } from '@/stores/login';
 import { onMounted, ref } from 'vue';
+
+const loginStore = useLoginStore();
 
 const greeting = ref<string>("Ready to map hidden relations?");
 const intents = ref<IntentOption[]>([
@@ -91,7 +99,7 @@ onMounted(() => {
 });
 
 const handleLaunch = (intentId: string | null) => {
-  if (!intentId) return;
+  loginStore.openModal();
   console.log(`Transitioning to workspace with intent: ${intentId}`);
 };
 </script>

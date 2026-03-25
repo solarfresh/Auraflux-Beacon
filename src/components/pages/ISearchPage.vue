@@ -1,11 +1,11 @@
 <template>
-  <AppTemplate>
+  <ISearchTemplate>
     <RouterView />
-  </AppTemplate>
+  </ISearchTemplate>
 </template>
 
 <script setup lang="ts">
-import AppTemplate from '@/components/templates/AppTemplate.vue';
+import ISearchTemplate from '@/components/templates/ISearchTemplate.vue';
 import { useAuthStore } from '@/stores/auth';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
