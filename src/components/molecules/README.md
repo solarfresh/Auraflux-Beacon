@@ -107,8 +107,8 @@ This ensures the user can immediately distinguish between human-curated and mach
 src/components/molecules/
 ├── canvases/       # VNodeContainer
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
-├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal
-├── layout/         # VFloatControl
+├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal, VOverlayLoader, VStatusScore, VStepProgress, VReflectionStatus, VEmptyState, VEntityChip, VISPStepCard
+├── layout/         # VFloatControl, VStatucGraph
 ├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem
 └── README.md       # You are here
 ```
