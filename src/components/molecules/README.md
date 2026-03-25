@@ -109,6 +109,6 @@ src/components/molecules/
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal, VOverlayLoader, VStatusScore, VStepProgress, VReflectionStatus, VEmptyState, VEntityChip, VISPStepCard
 ├── layout/         # VFloatControl, VStatucGraph
-├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem
+├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VTreeItem, VWelcomeGateway
 └── README.md       # You are here
 ```

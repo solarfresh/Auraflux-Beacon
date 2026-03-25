@@ -46,6 +46,17 @@ The base unit for navigation links, optimized for high-density lists.
 
 * **Variants**: `Tag`, `Meta`, `Timeline`, `Tree`.
 
+### 6. VWelcomeGateway
+
+The **Psychological Airbridge**. A specialized entry portal designed to transition users from the landing page to the active workspace by capturing their initial cognitive intent.
+
+* **Composition**: `VBox` > `VStack` > [`VTypography` (Greeting), `VCluster` > `VButton` (Intent Tags), `VButton` (Launch)].
+* **Responsibility**: High-signal orientation. It ensures the user pauses to define their focus (Exploratory, Structural, Decision-focused) before session initialization.
+* **Key Features**:
+    * **Dynamic Greeting**: Supports system-rotated or personalized welcome messages.
+    * **Intent Signaling**: Uses `VButton` as radio-style tags to capture session metadata.
+    * **Action Locking**: The "Start Session" trigger is logically disabled until an intent is selected, enforcing "High-Quality Friction."
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -54,6 +65,9 @@ The base unit for navigation links, optimized for high-density lists.
 > **Rule 1: No Bare Layouts.** Always use `VStack` for vertical lists and `VCluster` for horizontal tabs or headers.
 > **Rule 2: Responsive Safeguards.** Navigation items must handle long text via `truncate` and ensure parents have `min-w-0` to prevent layout overflow.
 > **Rule 3: ARIA Standards.** `VNavTabs` must manage `aria-selected` and `role="tab"` to maintain accessibility.
+> **Rule 4: Intent-First Navigation.** For `VWelcomeGateway`, the "Launch" action must be functionally dependent on an intent selection. Never allow a "blind launch" without metadata.
+> **Rule 5: Atomic Purity.** All text within navigation molecules—including sub-labels and button text—must be wrapped in `VTypography` to ensure global design token synchronization. Raw `<span>` or `<p>` tags are prohibited.
+> **Rule 6: Focus Minimalis.** When `VWelcomeGateway` is active, it must maintain the highest signal-to-noise ratio in the viewport. Avoid placing it near high-density list molecules like `VNavGroup`.
 
 ### Standard Composition Pattern
 
@@ -80,6 +94,10 @@ The base unit for navigation links, optimized for high-density lists.
 | **Hover State** | Feedback | `hover:bg-slate-50` |
 | **Internal Gap** | Tight grouping | `gap="xs"` (8px) |
 | **External Gap** | Block separation | `gap="md"` (16px) |
+| **Intent Selected** | High Focus / Active | `variant="primary"` (Solid Fill) |
+| **Intent Pending** | Secondary Choice | `variant="outline"` (Ghost Border) |
+| **Gateway Padding** | Hero Centering | `padding="xl"` (32px+) |
+| **Gateway Width** | Readability | `max-w-3xl` (Approx. 768px) |
 
 ---
 
@@ -96,6 +114,7 @@ src/components/molecules/navs/
 ├── VMetaListItem.vue    # Complex metadata items
 ├── VTimelineItem.vue    # Chronological items
 ├── VTreeItem.vue        # Hierarchical nodes
+├── VWelcomeGateway.vue  # Intent-based entry portal
 └── README.md            # You are here
 
 ```
