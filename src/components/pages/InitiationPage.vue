@@ -3,16 +3,6 @@
     <!-- Main Workspace Template: Utilizes the DualPane layout -->
     <DualPaneWorkspaceTemplate>
 
-      <!-- Slot: status-tracker (Shows ISP steps) -->
-<!--
-      <template #status-tracker>
-        <VStepProgress
-          :current-stage="currentStep"
-          :completion-percentage="currentStepCompletionPercentage"
-        />
-      </template>
- -->
-      <!-- Slot: sidebar (Displays structured output and progress) -->
       <template #sidebar>
         <InitiationSidebar
           :feasibility-status="feasibilityStatus"
@@ -96,7 +86,6 @@ import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
-import VStepProgress from '@/components/molecules/indicators/VStepProgress.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
 import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
 import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEditor.vue';
@@ -125,8 +114,6 @@ const editingInitialScope = ref<ProcessedScope | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
 const chatMessages = computed(() => initiativeStore.chatMessages);
-const currentStep = computed(() => workflowStore.currentStepName);
-const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
 const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
 const finalQuestion = computed(() => initiativeStore.finalQuestion);
 const isTyping = computed(() => initiativeStore.isTyping);
