@@ -105,7 +105,7 @@ const handleLogin = async () => {
       username.value = '';
       password.value = '';
       emit('close');
-      router.go(0);
+      router.push('/isearch/initiation')
     } else {
       error.value = 'Invalid username or password.';
     }
