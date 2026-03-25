@@ -109,6 +109,19 @@ A **Business Molecule** designed for metadata visualization. It transforms a sta
 * `iconClass`: Tailwind classes for semantic coloring (e.g., `text-amber-500`).
 * `removable`: (Boolean) Enables the hover-to-reveal delete button.
 
+#### 12. VISPStepCard
+
+The **Cognitive Navigator**. A specialized molecule designed to orient users within the three core stages of the Information Search Process (Define, Connect, Act).
+
+* **Physical Layer**: `VBox` > `VStack` > [`VBox` > `VIcon`, `VStack` > `VTypography` (Label + Sub-label)].
+* **Responsibility**: Translates the abstract ISP methodology into a "mental map" for the user.
+* **Key Props**:
+    * `label`: The primary stage name (e.g., "Define").
+    * `subLabel`: The cognitive goal (e.g., "Clarify Anxiety").
+    * `icon`: Heroicon name mapping to the stage.
+    * `isActive`: (Boolean) Triggers elevation (`shadow-sm`) and border (`all`).
+    * `isCompleted`: (Boolean) Mutes visual weight but maintains legibility.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -117,6 +130,9 @@ A **Business Molecule** designed for metadata visualization. It transforms a sta
 > **Rule 1: Composition over Duplication.** Never write raw Tailwind classes for status colors. Always wrap your content in `VAlert` or `VStatusCard`.
 > **Rule 2: Icon Consistency.** Use **Solid** Heroicons for status indicators to ensure visual weight is consistent with the bold typography.
 > **Rule 3: Business Logic Boundary.** Domain-specific logic (e.g., mapping `LOCKED` to `indigo`) belongs in `VEntityWorkflowStatus`, not in the base `VStatusCard`.
+> **Rule 4: State-Driven Elevation.** For `VISPStepCard`, strictly use the `isActive` prop to toggle the `VBox` border to `all`. Non-active stages must remain `border="none"` to reduce visual noise.
+> **Rule 5: Dual-Channel Stage Signaling.** Use **Solid** `VIcon` types for the active stage and **Outline** types for future stages. This provides a structural distinction beyond simple color shifts.
+> **Rule 6: Recursive Layout.** `VISPStepCard` should be designed to function inside a `VCluster` (Horizontal) for landing pages and a `VStack` (Vertical) for workspace sidebars without internal padding adjustments.
 
 ### Standard Implementation Pattern
 
@@ -143,6 +159,7 @@ src/components/molecules/indicators/
 ├── VAlert.vue                # Base semantic container (Atoms-plus)
 ├── VStatusCard.vue           # Standardized layout (Icon + Title + Body)
 ├── VFeasibilityStatus.vue    # Business: Data quality (was ResearchValidation)
+├── VISPStepCard.vue          # ISP Stage Orientation (Navigator)
 ├── VEntityWorkflowStatus.vue # Business: Lifecycle (Locked/Draft)
 ├── VReflectionStatus.vue     # Business: Log persistence mapping
 ├── VEntityChip.vue           # Business: Metadata/Keyword tag
