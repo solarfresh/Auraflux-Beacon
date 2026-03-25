@@ -2,10 +2,12 @@ import type { User } from '@/interfaces/user';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { apiService } from '@/api/apiService';
+import { useRouter } from 'vue-router';
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---
 
+  const router = useRouter();
   // Use 'ref' to create reactive state properties
   const user = ref<User | null>(null);
   const loading = ref(false); // Tracks if the initial auth check is running
@@ -36,10 +38,12 @@ export const useAuthStore = defineStore('auth', () => {
       } else {
         // 401 Unauthorized or other error means the user is not logged in or the token expired
         user.value = null;
+        router.push('/');
       }
     } catch (error) {
       console.error('Error during initial authentication check:', error);
       user.value = null;
+      router.push('/');
     } finally {
       loading.value = false;
     }
