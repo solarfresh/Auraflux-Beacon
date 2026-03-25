@@ -3,7 +3,7 @@
     <VBox tag="header" background="slate-50" padding="lg" border="bottom" class="text-center">
       <VStack align="center" gap="md">
         <VBox background="white" padding="sm" rounded="2xl" border="all" class="shadow-sm inline-flex">
-          <VIcon name="LockClosed" size="6" class="text-indigo-600" />
+          <VIcon name="LockClosed" size="xs" class="text-indigo-600" />
         </VBox>
 
         <VStack gap="xs">
@@ -105,7 +105,7 @@ const handleLogin = async () => {
       username.value = '';
       password.value = '';
       emit('close');
-      router.go(0);
+      router.push('/isearch/initiation')
     } else {
       error.value = 'Invalid username or password.';
     }
