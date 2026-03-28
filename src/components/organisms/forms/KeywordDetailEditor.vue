@@ -130,8 +130,8 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VEntityWorkflowStatus from '@/components/molecules/indicators/VEntityWorkflowStatus.vue';
-import VFeasibilityStatus from '@/components/molecules/indicators/VFeasibilityStatus.vue';
+import VEntityWorkflowStatus from '@/components/molecules/domain/VEntityWorkflowStatus.vue';
+import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
 const props = defineProps<{
   keywordIndex: number;

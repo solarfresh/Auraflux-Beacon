@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VModal from '@/components/molecules/indicators/VModal.vue';
+import VModal from '@/components/molecules/feedback/VModal.vue';
 import VCloseButton from '@/components/atoms/buttons/VCloseButton.vue';
 
 // Define the component's props and events

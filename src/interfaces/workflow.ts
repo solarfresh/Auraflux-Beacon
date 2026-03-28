@@ -15,33 +15,15 @@ export type ReflectionEntryType =
 export type ReflectionLogStatus = 'draft' | 'committed';
 export type StabilityStatus = 'Finalizing' | 'Refining' | 'Defining';
 
-export const ISP_STEP_TEXT_MAP: Record<ISPStep, { name: string; description: string; percentage: number; }> = {
-    INITIATION: {
-        name: 'Topic Definition & Lock-in',
-        description: 'Defining the research question and locking scope',
-        percentage: 10,
-    },
-    EXPLORATION: {
-        name: 'Knowledge Retrieval',
-        description: 'Sifting large amounts of information and managing conflicts',
-        percentage: 30,
-    },
-    FORMULATION: {
-        name: 'Argument Structuring',
-        description: 'Building the core thesis and evidence framework',
-        percentage: 50,
-    },
-    COLLECTION: {
-        name: 'Precision Evidence Collection',
-        description: 'Targeted gathering of specific supporting data',
-        percentage: 70,
-    },
-    PRESENTATION: {
-        name: 'Final Output & Delivery',
-        description: 'Reviewing, formatting, and exporting the final report',
-        percentage: 90,
-    },
-};
+export interface Project {
+  id: ID;
+  name: string;
+  description?: string;
+  status: EntityStatus;
+  tags: string[];
+  createdAt: DateTimeString;
+  updatedAt: DateTimeString;
+}
 
 export interface ReflectionLogEntry {
   id: ID;

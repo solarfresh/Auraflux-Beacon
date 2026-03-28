@@ -89,7 +89,7 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 // Molecule Imports
 import VTreeItem from '@/components/molecules/navs/VTreeItem.vue';
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';

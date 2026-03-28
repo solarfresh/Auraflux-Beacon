@@ -123,7 +123,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
+import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
 
 const props = defineProps<{
   initialValue: string;

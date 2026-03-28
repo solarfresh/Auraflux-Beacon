@@ -22,7 +22,7 @@
  * Maps backend workflow states to UI themes.
  */
 import { computed } from 'vue';
-import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
+import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';
 

@@ -125,8 +125,8 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VReflectionStatus from '@/components/molecules/indicators/VReflectionStatus.vue';
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VReflectionStatus from '@/components/molecules/domain/VReflectionStatus.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 const props = defineProps<{
   currentDraft: ReflectionLogEntry | null;

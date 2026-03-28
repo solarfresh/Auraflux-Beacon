@@ -19,7 +19,7 @@
  * Maps reflection log statuses (DRAFT/COMMITTED) to the indicator system.
  */
 import { computed } from 'vue';
-import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
+import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
 
 // Define the available statuses for the reflection system
 type ReflectionStatus = 'draft' | 'committed';

@@ -78,7 +78,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
 // import VIntentTag from '@/components/molecules/indicators/VIntentTag.vue';
-import VUserAvatar from '@/components/molecules/indicators/VUserAvatar.vue';
+import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 import { useAuthStore } from '@/stores/auth';
 import { computed, ref } from 'vue';
 

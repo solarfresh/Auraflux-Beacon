@@ -57,7 +57,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VISPStepCard from '@/components/molecules/indicators/VISPStepCard.vue';
+import VISPStepCard from '@/components/molecules/domain/VISPStepCard.vue';
 import VStaticGraph from '@/components/molecules/layout/VStaticGraph.vue';
 import VWelcomeGateway from '@/components/molecules/navs/VWelcomeGateway.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';

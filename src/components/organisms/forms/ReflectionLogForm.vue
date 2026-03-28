@@ -55,7 +55,7 @@ import type { ReflectionLogEntry } from '@/interfaces/workflow';
 
 // Molecules
 import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 // Organisms & Templates
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';

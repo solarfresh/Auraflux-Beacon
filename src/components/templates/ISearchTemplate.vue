@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import VOverlayLoader from '@/components/molecules/indicators/VOverlayLoader.vue';
+import VOverlayLoader from '@/components/molecules/feedback/VOverlayLoader.vue';
 import HeaderToolbar from '@/components/organisms/navigation/HeaderToolbar.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
