@@ -46,7 +46,7 @@
         <div class="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block"></div>
 
         <VAuthAction
-          :isLoggedIn="isLoggedIn"
+          :isLoggedIn="true"
           @login="$emit('login')"
           @logout="$emit('logout')"
         />
@@ -72,7 +72,7 @@ interface Props {
   /** The current stage of the research workflow. */
   currentStep: ISPStep;
   /** User's authentication status. */
-  isLoggedIn: boolean;
+  // isLoggedIn: boolean;
 }
 
 const props = defineProps<Props>();

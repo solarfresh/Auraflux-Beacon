@@ -1,13 +1,9 @@
 <template>
   <div class="min-h-screen flex flex-col">
 
-    <HeaderToolbar
-      :currentStep="workflowStore.currentStep"
-      :isLoggedIn="authStore.isLoggedIn"
-      @login="handleLoginClick"
-      @logout="authStore.logoutUser"
-      @exportShortcut="() => console.log('Export requested')"
-    />
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-slate-100 shadow-sm">
+      <slot name="header"></slot>
+    </header>
 
     <main class="flex-grow">
       <slot></slot>
