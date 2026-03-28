@@ -10,6 +10,7 @@ Resource molecules are **"Data-to-UI Converters"**. They represent the persisted
 * **Semantic Border Logic**:
     * **Solid**: Verified, human-curated, or stable data.
     * **Dashed**: System-suggested, AI-generated drafts, or functional placeholders.
+* **Layout Sovereignty**: Molecules with complex internal controls (like Toolbars) must not use custom CSS for spacing. Use nested `VCluster` for alignment and constrained `VBox` atoms (e.g., `width="px"`) for visual dividers to maintain **Atomic Physicality**.
 
 ---
 
@@ -37,6 +38,12 @@ A dense, interactive representation of keywords, research scopes, or identified 
 A generic resource card used for simple data displays that don't yet have a specialized business molecule.
 * **Composition**: `VAlert` > `VStack` > `VCluster`.
 
+#### 5. VProjectToolbar (The Dimension Controller)
+A specialized orchestrator that manages the visibility and sequence of a resource collection.
+* **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group), `VCluster` (Sort + Action)].
+* **Responsibility**: Mapping the **Resource Lifecycle** (All/Active/Archived) and **Temporal Hierarchy** (Recently Edited/Created) to the active view.
+* **Key Props**: `modelValue` (Object with `filter` & `sort`), `v-model`.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -47,10 +54,18 @@ A generic resource card used for simple data displays that don't yet have a spec
 > **Rule 3: State-Driven Identity.** If a resource is AI-generated (e.g., `project.status === 'AI_SUGGESTED'`), the root `VBox` **must** use `border="dashed"` and `background="amber-50"`.
 > **Rule 4: Metadata Threshold.** Resource cards should never display more than 3 tags/chips simultaneously. Use a "+N" counter for overflow to maintain visual balance.
 > **Rule 5: Actionable Consistency.** All resource cards must pass `:clickable="true"` to their root `VBox` to inherit the system-wide interaction behaviors.
+> **Rule 6: Physical Segment Control.** Segmented controls must be wrapped in a `VBox` with `background="slate-50"` and `rounded="lg"`. The active state should use `bg-white` and `shadow-sm` to create a tactile, physical "raised" effect.
+> **Rule 7: Standardized Dividers.** Do not use `VLayoutDivider`. To create vertical separation within a toolbar, use a constrained `VBox`: `<VBox width="px" height="4" class="bg-slate-200" />`.
+> **Rule 8: Direct Slot Usage.** Avoid deep prop drilling for button labels in the toolbar. Use `v-for` with a local `filterOptions` array to keep the template clean and maintainable.
 
 ### Standard Implementation Pattern
 
 ```vue
+<VProjectToolbar
+  v-model="toolbarState"
+  @create="handleNewProject"
+/>
+
 <VProjectCard :project="activeProject" />
 
 <VInteractivePlaceholder
@@ -67,6 +82,7 @@ A generic resource card used for simple data displays that don't yet have a spec
 ```text
 src/components/molecules/resources/
 ├── VProjectCard.vue            # Business: Project entity tile
+├── VProjectToolbar.vue         # Business: Filter & Sort orchestrator
 ├── VEntityChip.vue             # Business: Metadata/Keyword tag
 ├── VInteractivePlaceholder.vue # Navigation: Actionable creation prompt
 ├── VStatusCard.vue             # Generic: Data-driven status shell
