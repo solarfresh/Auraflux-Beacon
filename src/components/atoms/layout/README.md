@@ -19,7 +19,7 @@ Layout atoms are the **architectural primitives** of the application. They enfor
 
 The universal "Physical Shell." It implements **Bootstrap's Container** logic with **Material's Elevation**.
 
-* **Props**: `padding`, `rounded`, `background`, `border`, `tag`, `width`, `height`.
+* **Props**: `padding`, `rounded`, `background`, `border`, `tag`, `width`, `height`, `hoverBackground`, `clickable`.
 * **Constraint**: Must only use predefined `BackgroundToken` values.
 
 ### 2. VStack (Vertical)
@@ -57,6 +57,13 @@ The **SVG Logical Container**. Acts as a structural "wrapper" for related graph 
 * **Design Intent**: Replaces raw `<g>` tags. It allows the **Molecule** to apply thematic colors or opacities to a cluster of edges or points without repeating classes on every child.
 * **Key Props**: `colorClass` (Tailwind text-color or opacity utilities).
 
+### 7. VGrid (The Matrix)
+
+The 2D coordinate engine. Manages complex responsive layouts using CSS Grid.
+
+* **Props**: `cols`, `gap`, `align`, `justify`.
+* **Reference**: Handles responsive column switching (e.g., `cols="1 md:3"`) without media query clutter.
+
 ---
 
 ## 📐 Design Tokens
@@ -88,6 +95,14 @@ To maintain semantic integrity, only the following tokens are permitted:
 | `emerald-50` | Success feedback, Verified data areas |
 | `transparent` | Nested containers with no visual skin |
 
+### Border & Style (`BorderToken`)
+
+| Token | Effect | Use| Case |
+| --- | --- | ---| --- |
+| `all` | Solid | 1px | border,Verified/Persisted | data
+| `dashed` | Dashed | 2px | border | Interactive Placeholders / AI Suggestions
+| `none` | No border | Visual | nesting
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -100,6 +115,9 @@ To maintain semantic integrity, only the following tokens are permitted:
 > **Rule 5: SVG Namespace Purity.** Never include `xmlns="http://www.w3.org/2000/svg"` in `VGraphCanvas`. Browser inference is preferred for component-level rendering.
 > **Rule 6: Structural Grouping.** Use `VGraphGroup` whenever two or more `VGraphEdge` or `VGraphPoint` atoms share the same reliability status (e.g., all Suggested edges).
 > **Rule 7: Background Recess.** Background graphs should always use `VGraphCanvas` with `pointer-events-none` to ensure they do not intercept clicks meant for the Hero section or Login buttons.
+> **Rule 8: Grid over Flex.** For repeating card patterns (e.g., Dashboard, Project Lists), must use `<VGrid>` instead of multiple `<VCluster>` or wrapping `<VStack>`.
+> **Rule 9: Responsive Intent.** Always specify responsive column behavior for `VGrid` (e.g., `cols="1 md:2 lg:3"`) to ensure mobile-first integrity.
+> **Rule 10: State-to-Skin.** When an element is a "placeholder" (like `VInteractivePlaceholder`), always use `border="dashed"` and `clickable="true"` on the root `VBox`.
 
 ### Correct Implementation Pattern
 
@@ -130,6 +148,17 @@ To maintain semantic integrity, only the following tokens are permitted:
     <VGraphEdge x1="300" y1="200" x2="500" y2="400" status="AI_EXTRACTED" />
   </VGraphGroup>
 </VGraphCanvas>
+
+<VGrid cols="1 md:2 lg:3" gap="lg">
+  <VInteractivePlaceholder label="New Project" iconName="Plus" />
+
+  <VBox v-for="p in projects" :key="p.id" background="white" padding="md" rounded="xl" border="all" clickable>
+    <VStack gap="sm">
+       <VTypography weight="bold">{{ p.name }}</VTypography>
+       <VTypography size="xs" color="slate-500">{{ p.description }}</VTypography>
+    </VStack>
+  </VBox>
+</VGrid>
 ```
 
 ---
@@ -140,6 +169,7 @@ To maintain semantic integrity, only the following tokens are permitted:
 src/components/atoms/layout/
 ├── VBox.vue             # The Physical Shell (Skin)
 ├── VCluster.vue         # Horizontal Flex (Bones)
+├── VGrid.vue            # 2D Grid Matrix (Bones)
 ├── VGraphCanvas.vue     # SVG Viewport Anchor
 ├── VGraphGroup.vue      # SVG Semantic Group
 ├── VSpacer.vue          # Flex Push (Utility)
