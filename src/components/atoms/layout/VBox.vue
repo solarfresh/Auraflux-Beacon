@@ -2,18 +2,22 @@
   <component
     :is="tag"
     :class="[
-      // 1. Spacing
+      // Spacing
       padding && paddingMap[padding],
 
-      // 2. Shape & Border
+      // Shape & Border
       roundedClass,
       border && borderMap[border],
 
-      // 3. Color & Interaction
+      // Color & Interaction
       background && backgroundMap[background],
+      hoverBackground && `hover:${backgroundMap[hoverBackground]}`,
       { 'cursor-pointer select-none active:opacity-80 transition-opacity': clickable },
 
-      // 4. Custom overrides from parent
+      // Interaction logic
+      interactionClasses,
+
+      // Custom overrides from parent
       $attrs.class
     ]"
     v-bind="filteredAttrs"
@@ -31,7 +35,7 @@
 import { computed, useAttrs } from 'vue';
 import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@/interfaces/layout';
 
-interface Props {
+const props = withDefaults(defineProps<{
   /** HTML tag to render */
   tag?: string;
   /** Internal spacing token */
@@ -42,11 +46,11 @@ interface Props {
   border?: BorderToken;
   /** Semantic background token */
   background?: BackgroundToken;
+  /** Background color on hover */
+  hoverBackground?: BackgroundToken;
   /** Adds pointer cursor and active state */
   clickable?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
   tag: 'div',
   padding: 'none',
   rounded: false,
@@ -72,6 +76,7 @@ const borderMap: Record<BorderToken, string> = {
   bottom: 'border-b border-slate-100',
   left: 'border-l border-slate-100',
   right: 'border-r border-slate-100',
+  dashed: 'border-2 border-dashed border-slate-200',
   none: 'border-none'
 };
 
@@ -86,6 +91,13 @@ const backgroundMap: Record<BackgroundToken, string> = {
 };
 
 // --- Computed Logic ---
+/**
+ * Generates the interaction classes for clickable elements.
+ */
+const interactionClasses = computed(() => {
+  if (!props.clickable) return '';
+  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-500 outline-none';
+});
 
 /**
  * Resolves the rounding class based on boolean or token input.

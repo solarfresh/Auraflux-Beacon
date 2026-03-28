@@ -12,8 +12,9 @@ Indicator molecules are functional clusters designed to provide feedback, displa
 * **Danger**: `red` (Errors/Critical risks).
 * **Info**: `indigo` (System status/Locked states).
 * **Secondary**: `gray` (Drafts/Neutral states).
-
-
+* **Structural Semantics (Border Logic)**:
+    * **Solid**: Represents verified, human-curated, or persisted data (e.g., `VProjectCard`).
+    * **Dashed**: Represents a system suggestion, an AI-generated draft, or a functional placeholder (e.g., `VInteractivePlaceholder`).
 
 ---
 
@@ -122,6 +123,15 @@ The **Cognitive Navigator**. A specialized molecule designed to orient users wit
     * `isActive`: (Boolean) Triggers elevation (`shadow-sm`) and border (`all`).
     * `isCompleted`: (Boolean) Mutes visual weight but maintains legibility.
 
+### 13. VInteractivePlaceholder
+
+A **Navigational & Actionable Molecule**. It acts as a structural invitation for user input within grids or lists, using a distinct visual language to signal "available capacity."
+
+* **Composition**: `VBox` (Dashed) > `VStack` > [`VIcon`, `VTypography` (Label)].
+* **Responsibility**: Managing the "Add New" interaction pattern across different domains (Projects, Agents, Nodes).
+* **Key Props**: `iconName`, `label`, `clickable`.
+* **Design Intent**: Uses `border="dashed"` to contrast with the `border="solid"` of established data entities.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -133,7 +143,7 @@ The **Cognitive Navigator**. A specialized molecule designed to orient users wit
 > **Rule 4: State-Driven Elevation.** For `VISPStepCard`, strictly use the `isActive` prop to toggle the `VBox` border to `all`. Non-active stages must remain `border="none"` to reduce visual noise.
 > **Rule 5: Dual-Channel Stage Signaling.** Use **Solid** `VIcon` types for the active stage and **Outline** types for future stages. This provides a structural distinction beyond simple color shifts.
 > **Rule 6: Recursive Layout.** `VISPStepCard` should be designed to function inside a `VCluster` (Horizontal) for landing pages and a `VStack` (Vertical) for workspace sidebars without internal padding adjustments.
-
+> **Rule 7: Actionable Transparency.** For `VInteractivePlaceholder`, always pass `clickable="true"` to the underlying `VBox`. This ensures the molecule inherits global focus-visible rings and tactile scaling without manual CSS overrides.
 ### Standard Implementation Pattern
 
 ```vue
@@ -164,6 +174,7 @@ src/components/molecules/indicators/
 ├── VReflectionStatus.vue     # Business: Log persistence mapping
 ├── VEntityChip.vue           # Business: Metadata/Keyword tag
 ├── VEmptyState.vue           # Navigation: Zero-data guidance
+├── VInteractivePlaceholder.vue # Navigation: Actionable creation prompt
 ├── VModal.vue                # High-focus dialog (Overlay)
 ├── VOverlayLoader.vue        # Blocking state feedback
 ├── VStatusScore.vue          # Text + Progress bar (was TopicStatusIndicator)
