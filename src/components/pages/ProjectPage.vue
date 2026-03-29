@@ -16,20 +16,22 @@
           />
         </VBox>
 
-        <VGrid v-if="hasProjects || isFiltering" cols="1 sm:2 lg:3 xl:4" gap="lg">
-          <VInteractivePlaceholder
-            label="Start New Research"
-            icon-name="Plus"
-            class="h-48"
-            @click="isCreateModalOpen = true"
-          />
-          <VProjectCard
-            v-for="project in filteredProjects"
-            :key="project.id"
-            :project="project"
-            @click="navigateToProject(project.id)"
-          />
-        </VGrid>
+        <VBox v-if="hasProjects || isFiltering" class="max-w-7xl mx-auto w-full px-6">
+          <VGrid cols="1 sm:2 lg:3 xl:4" gap="lg">
+            <VInteractivePlaceholder
+              label="Start New Research"
+              icon-name="Plus"
+              class="h-48"
+              @click="isCreateModalOpen = true"
+            />
+            <VProjectCard
+              v-for="project in filteredProjects"
+              :key="project.id"
+              :project="project"
+              @click="navigateToProject(project.id)"
+            />
+          </VGrid>
+        </VBox>
 
         <VEmptyState
           v-else
