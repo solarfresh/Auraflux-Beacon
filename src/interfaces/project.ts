@@ -18,6 +18,7 @@ export interface Project {
   name: string;
   description?: string;
   status: EntityStatus;
+  currentStage: ISPStage;
   tags: string[];
   createdAt: DateTimeString;
   updatedAt: DateTimeString;
