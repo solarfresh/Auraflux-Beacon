@@ -1,7 +1,7 @@
 <template>
   <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
 
-    <VBox padding="lg" border="bottom" class="flex-shrink-0">
+    <VBox padding="lg" border="bottom" class="shrink-0">
       <VCluster justify="between" align="center">
         <VCluster gap="md" align="center">
           <VBox
@@ -67,7 +67,7 @@
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="handleCancel">
           Cancel
