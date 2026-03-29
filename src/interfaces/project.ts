@@ -59,11 +59,11 @@ export interface GroundednessMetric {
 }
 
 /**
- * Workflow State Decorator
+ * Project State Decorator
  * A wrapper to add "Process Status" to any Knowledge or Canvas entity
  * without polluting the original Knowledge Interface.
  */
-export interface WorkflowMetadata {
+export interface ProjectMetadata {
   state: EntityStatus;
   lastModifiedBy: ParticipantRole;
   version: number;

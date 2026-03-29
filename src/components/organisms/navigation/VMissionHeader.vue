@@ -69,7 +69,7 @@ import type { ISPStep } from '@/interfaces/project';
 
 // --- Props ---
 interface Props {
-  /** The current stage of the research workflow. */
+  /** The current stage of the research project. */
   currentStep: ISPStep;
   /** User's authentication status. */
   // isLoggedIn: boolean;

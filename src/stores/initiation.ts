@@ -61,15 +61,15 @@ export const useInitiativeStore = defineStore('intiation', () => {
           timestamp: new Date().toISOString(),
           sequenceNumber: chatMessages.value.length + 2,
         } as ChatMessage);
-        apiService.workflows.initiation.chat(messageContent, agentName);
+        apiService.projects.initiation.chat(messageContent, agentName);
     }
 
     async function createOrUpdateReflection(logId: string, title: string, content: string, status: string) {
       let response = null;
       if (logId.includes('new')) {
-        response = await apiService.workflows.base.createReflectionLog(title, content, status);
+        response = await apiService.projects.base.createReflectionLog(title, content, status);
       } else {
-        response = await apiService.workflows.base.updateReflectionLogById(logId, title, content, status);
+        response = await apiService.projects.base.updateReflectionLogById(logId, title, content, status);
       }
 
       if (response.data) {
@@ -82,7 +82,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
       if (keywordId) {
         response = await apiService.knowledge.keywords.update(keywordId, text, status);
       } else {
-        response = await apiService.workflows.keywords.create(text, status);
+        response = await apiService.projects.keywords.create(text, status);
       }
 
       if (response.data) {
@@ -95,7 +95,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
       if (scopeElementId) {
         response = await apiService.knowledge.scopes.update(scopeElementId, label, value, status);
       } else {
-        response = await apiService.workflows.scopes.create(label, value, status);
+        response = await apiService.projects.scopes.create(label, value, status);
       }
 
       if (response.data) {
@@ -104,14 +104,14 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getMessages() {
-      let response = await apiService.workflows.initiation.getChatHistory();
+      let response = await apiService.projects.initiation.getChatHistory();
       if (response.data) {
         chatMessages.value = response.data;
       }
     }
 
     async function getRefinedTopic() {
-      let response = await apiService.workflows.initiation.getRefinedTopic();
+      let response = await apiService.projects.initiation.getRefinedTopic();
       if (response.data) {
         feasibilityStatus.value = response.data.feasibilityStatus;
         finalQuestion.value = response.data.finalQuestion;
@@ -123,7 +123,7 @@ export const useInitiativeStore = defineStore('intiation', () => {
     }
 
     async function getReflection() {
-      let response = await apiService.workflows.base.getReflectionLog();
+      let response = await apiService.projects.base.getReflectionLog();
       if (response.data) {
         reflectionLogs.value = response.data;
       }

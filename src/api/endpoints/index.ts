@@ -42,37 +42,37 @@ export const UsersEndpoints = {
   },
 }
 
-export const WorkflowsEndpoints = {
+export const ProjectsEndpoints = {
   base: {
     createReflectionLog: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     getReflectionLog: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/reflection/`,
     updateReflectionLogById: (logId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/workflows/reflection/${logId}/`,
+      `${AURAFLUX_NEXUS_URL}/projects/reflection/${logId}/`,
   },
   initiation: {
     chat: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/`,
     getChatHistory: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/history/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/chat/history/`,
     getRefinedTopic: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/topic/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/initiation/topic/`,
   },
   exploration: {
     createSession: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/session/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/session/`,
     getSidebarRegistryInfo: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/sidebar/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/sidebar/`,
     recommendConceptualNodes: (canvasId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/${canvasId}/nodes/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/exploration/${canvasId}/nodes/`,
   },
   keywords: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/keywords/`,
   },
   scopes: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/workflows/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes/`,
+      `${AURAFLUX_NEXUS_URL}/projects/b0cdd497-05aa-4355-a7d8-370eef58d4b9/scopes/`,
   }
 }

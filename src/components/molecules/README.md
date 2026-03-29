@@ -31,7 +31,7 @@ Data-driven tiles or chips that represent persisted resources like Projects or A
 
 Method-heavy components that encapsulate specific research frameworks (ISP) or AI decision logic.
 
-  * **Key Components:** `VISPStepCard`, `VFeasibilityStatus`, `VEntityWorkflowStatus`, `VReflectionStatus`.
+  * **Key Components:** `VISPStepCard`, `VFeasibilityStatus`, `VEntityProjectStatus`, `VReflectionStatus`.
   * **Focus:** Cognitive orientation, AI attribution signaling, and methodological integrity.
 
 ### 5. 🧭 [Navs](navs/README.md) (Navigation & Lists)

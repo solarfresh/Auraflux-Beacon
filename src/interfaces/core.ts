@@ -40,7 +40,7 @@ export interface RectSize {
 export interface BoundingBox extends Point2D, RectSize {}
 
 /**
- * Universal Workflow Constants
+ * Universal Project Constants
  */
 
 /** Feasibility assessment for research topics (U.S. 1). */

@@ -47,13 +47,13 @@
         </VFormField>
 
         <VStack gap="sm">
-          <VEntityWorkflowStatus :status="initialKeyword.entityStatus">
+          <VEntityProjectStatus :status="initialKeyword.entityStatus">
             <template v-if="isTextModified" #default>
               <VTypography size="xs" color="amber-600" italic class="mt-1">
                 Note: Saving will update content and persist the choice below.
               </VTypography>
             </template>
-          </VEntityWorkflowStatus>
+          </VEntityProjectStatus>
         </VStack>
 
       </VStack>
@@ -130,7 +130,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VEntityWorkflowStatus from '@/components/molecules/domain/VEntityWorkflowStatus.vue';
+import VEntityProjectStatus from '@/components/molecules/domain/VEntityProjectStatus.vue';
 import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
 const props = defineProps<{

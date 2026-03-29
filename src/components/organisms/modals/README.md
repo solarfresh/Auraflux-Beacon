@@ -1,6 +1,6 @@
 # Organisms: Modals
 
-Organism-level modals are autonomous functional units. They bridge the gap between our **Design System** and **Business Logic**, transforming generic containers into interactive workflows like Authentication, Data Refinement, or Resource Management.
+Organism-level modals are autonomous functional units. They bridge the gap between our **Design System** and **Business Logic**, transforming generic containers into interactive projects like Authentication, Data Refinement, or Resource Management.
 
 ## 🧭 Design Principles
 

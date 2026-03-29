@@ -211,7 +211,7 @@ function handleManageCanvas(action: 'create' | 'rename' | 'delete', viewId?: str
 }
 
 /**
- * E. Handles the core workflow transition request to the next phase (Formulation).
+ * E. Handles the core project transition request to the next phase (Formulation).
  */
 async function handlePhaseTransitionRequest() {
   // Logic to transition phase and navigate

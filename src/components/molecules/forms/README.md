@@ -29,7 +29,7 @@ A composite field for side-by-side interactions (e.g., search bars with buttons)
 
 ### 3. VButtonToolbar
 
-A persistent container for workflow actions, typically found in footers or headers.
+A persistent container for project actions, typically found in footers or headers.
 
 * **Composition**: `VBox` > `VCluster` > [`VButton` (Cancel), `VButton` (Primary)].
 * **Bootstrap Ref**: Equivalent to `.btn-toolbar`.

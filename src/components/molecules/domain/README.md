@@ -24,7 +24,7 @@ Bridges the gap between AI-driven research results and visual confidence feedbac
 * **Responsibility**: Automatically converts `HIGH` / `MEDIUM` / `LOW` enums into appropriate semantic colors (`emerald`, `amber`, `red`) and icons.
 * **Usage**: Research result summaries and topic stability reports.
 
-### 3. VEntityWorkflowStatus (Lifecycle)
+### 3. VEntityProjectStatus (Lifecycle)
 Communicates the "Administrative" and "Operational" state of a system resource.
 * **Physical Layer**: `VStatusCard`.
 * **Responsibility**: Manages visual representations for lifecycle states such as `LOCKED`, `AI_EXTRACTED`, and `ON_HOLD`.
@@ -70,7 +70,7 @@ Specialized feedback for the **Reflection Log** system, tracking the transition 
 src/components/molecules/domain/
 ├── VISPStepCard.vue          # ISP Methodology Navigator
 ├── VFeasibilityStatus.vue    # AI Result confidence mapping
-├── VEntityWorkflowStatus.vue # Lifecycle state (Locked/Extracted)
+├── VEntityProjectStatus.vue # Lifecycle state (Locked/Extracted)
 ├── VReflectionStatus.vue     # Reflection Log persistence states
 └── README.md                 # You are here
 ```

@@ -135,7 +135,7 @@ onMounted(() => {
 // --- Action Handlers (Orchestrating the Store) ---
 
 /**
- * Handles user message input and sends it to the workflow store.
+ * Handles user message input and sends it to the project store.
  */
 function handleSendMessage(content: string) {
     if (isTyping.value || !content.trim()) return;
@@ -231,12 +231,12 @@ function getModalTitle(type: ManagementType | null): string {
 }
 
 /**
- * E. Handles the core workflow transition request from the ActionBar.
+ * E. Handles the core project transition request from the ActionBar.
  * This combines the "Lock Data" and "Change Phase" actions.
  */
 async function handlePhaseTransitionRequest() {
   try {
-    const response = await apiService.workflows.exploration.createSession(initiativeStore.stabilityScore, initiativeStore.finalQuestion);
+    const response = await apiService.projects.exploration.createSession(initiativeStore.stabilityScore, initiativeStore.finalQuestion);
     if (response.data) {
       router.push('/exploration');
     } else {

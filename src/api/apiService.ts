@@ -1,4 +1,4 @@
-import { CanvasesEndpoints, KnowledgeEndpoints, UsersEndpoints, WorkflowsEndpoints } from '@/api/endpoints';
+import { CanvasesEndpoints, KnowledgeEndpoints, UsersEndpoints, ProjectsEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
@@ -137,48 +137,48 @@ export const apiService = {
       },
     },
   },
-  workflows: {
+  projects: {
     base: {
       createReflectionLog: (logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.post(WorkflowsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
+        return apiClient.post(ProjectsEndpoints.base.createReflectionLog(), {title: logTitle, content: logContent, status: logStatus})
       },
       getReflectionLog: (): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.get(WorkflowsEndpoints.base.getReflectionLog())
+        return apiClient.get(ProjectsEndpoints.base.getReflectionLog())
       },
       updateReflectionLogById: (logId: ID, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.put(WorkflowsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
+        return apiClient.put(ProjectsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
       }
     },
     initiation: {
       chat: (messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(WorkflowsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
+        return apiClient.post(ProjectsEndpoints.initiation.chat(), {user_message: messageContent, ea_agent_role_name: agentName})
       },
       getChatHistory: (): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(WorkflowsEndpoints.initiation.getChatHistory())
+        return apiClient.get(ProjectsEndpoints.initiation.getChatHistory())
       },
       getRefinedTopic: (): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(WorkflowsEndpoints.initiation.getRefinedTopic())
+        return apiClient.get(ProjectsEndpoints.initiation.getRefinedTopic())
       },
     },
     exploration: {
       createSession: (stabilityScore: number, finalQuestion: string): Promise<AxiosResponse<any>> => {
-        return apiClient.post(WorkflowsEndpoints.exploration.createSession(), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
+        return apiClient.post(ProjectsEndpoints.exploration.createSession(), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
       },
       getSidebarRegistryInfo: (): Promise<AxiosResponse<SidebarRegistryInfo>> => {
-        return apiClient.get(WorkflowsEndpoints.exploration.getSidebarRegistryInfo())
+        return apiClient.get(ProjectsEndpoints.exploration.getSidebarRegistryInfo())
       },
       recommendConceptualNodes: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
-        return apiClient.post(WorkflowsEndpoints.exploration.recommendConceptualNodes(canvasId))
+        return apiClient.post(ProjectsEndpoints.exploration.recommendConceptualNodes(canvasId))
       }
     },
     keywords: {
       create: (keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
-        return apiClient.post(WorkflowsEndpoints.keywords.create(), {text: keywordText, status: keywordStatus})
+        return apiClient.post(ProjectsEndpoints.keywords.create(), {text: keywordText, status: keywordStatus})
       },
     },
     scopes: {
       create: (scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
-        return apiClient.post(WorkflowsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
+        return apiClient.post(ProjectsEndpoints.scopes.create(), {label: scopeLabel, value: scopeValue, status: scopeStatus})
       },
     }
   },

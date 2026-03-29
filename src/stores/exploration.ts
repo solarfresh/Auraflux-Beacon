@@ -92,7 +92,7 @@ export const useExplorationStore = defineStore('exploration', {
 
 		async loadSidebarRegistryInfo() {
 			try {
-				let response = await apiService.workflows.exploration.getSidebarRegistryInfo();
+				let response = await apiService.projects.exploration.getSidebarRegistryInfo();
 				if (response.data) {
 					this.stabilityScore = response.data.stabilityScore;
 
@@ -121,7 +121,7 @@ export const useExplorationStore = defineStore('exploration', {
 		async recommendConceptualNodes() {
 			let aiSuggestedNodes = [...this.conceptualNodes.values()].filter(node => node.status === 'AI_EXTRACTED');
 			if (aiSuggestedNodes.length < 1 && this.conceptualNodes.size < this.sidebarNodes.size) {
-				apiService.workflows.exploration.recommendConceptualNodes(this.activeCanvasId);
+				apiService.projects.exploration.recommendConceptualNodes(this.activeCanvasId);
 			}
 		},
 
