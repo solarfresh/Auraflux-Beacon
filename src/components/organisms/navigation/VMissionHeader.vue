@@ -1,6 +1,6 @@
 <template>
   <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-slate-100 shadow-sm">
-    <div class="max-w-[1600px] mx-auto px-6 h-16 flex justify-between items-center">
+    <div class="max-w-400 mx-auto px-6 h-16 flex justify-between items-center">
 
       <div class="flex items-center gap-3 group cursor-pointer">
         <div class="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
@@ -19,7 +19,7 @@
       <nav class="hidden lg:flex items-center bg-slate-50 px-4 py-1.5 rounded-full border border-slate-100">
         <div class="flex items-center gap-2">
           <VBadge
-            :variant="currentStep === 'INITIATION' ? 'indigo' : 'gray'"
+            :variant="currentStage === 'INITIATION' ? 'indigo' : 'gray'"
             size="xs"
             class="transition-all"
           >
@@ -27,14 +27,14 @@
           </VBadge>
           <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
           <VBadge
-            :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
+            :variant="currentStage === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
           >
             2. Exploration
           </VBadge>
           <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
           <VBadge
-            :variant="currentStep === 'EXPLORATION' ? 'indigo' : 'gray'"
+            :variant="currentStage === 'EXPLORATION' ? 'indigo' : 'gray'"
             size="xs"
           >
             3. Synthesis
@@ -43,7 +43,7 @@
       </nav>
 
       <div class="flex items-center gap-4">
-        <div class="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block"></div>
+        <div class="h-6 w-px bg-slate-200 mx-2 hidden md:block"></div>
 
         <VAuthAction
           :isLoggedIn="true"
@@ -65,12 +65,12 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VAuthAction from '@/components/molecules/forms/VAuthAction.vue';
-import type { ISPStep } from '@/interfaces/project';
+import type { ISPStage } from '@/interfaces/project';
 
 // --- Props ---
 interface Props {
   /** The current stage of the research project. */
-  currentStep: ISPStep;
+  currentStage: ISPStage;
   /** User's authentication status. */
   // isLoggedIn: boolean;
 }

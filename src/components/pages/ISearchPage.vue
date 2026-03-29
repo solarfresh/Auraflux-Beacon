@@ -4,7 +4,7 @@
       <ProjectHeader v-if="isProjectPage" />
       <VMissionHeader
         v-else
-        :current-step="projctStore.currentStep"
+        :current-stage="projectStore.currentStage"
       />
     </template>
 
@@ -24,7 +24,7 @@ import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const projctStore = useProjectStore();
+const projectStore = useProjectStore();
 const route = useRoute();
 const router = useRouter();
 

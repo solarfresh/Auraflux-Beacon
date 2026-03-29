@@ -31,7 +31,7 @@ import { useLoginStore } from '@/stores/login';
 import { useNotificationStore } from '@/stores/notification';
 import { useProjectStore } from '@/stores/project';
 
-const projctStore = useProjectStore();
+const projectStore = useProjectStore();
 const authStore = useAuthStore();
 const loginStore = useLoginStore();
 const store = useNotificationStore();

@@ -1,11 +1,9 @@
 import { DateTimeString, EntityStatus, ID, ParticipantRole, Percentage } from './core';
 
-export type ISPStep =
+export type ISPStage =
   | 'INITIATION' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
   | 'EXPLORATION'           // Focus: Dealing with information overload (Confusion/Frustration) by sifting and evaluating sources.
-  | 'FORMULATION'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
-  | 'COLLECTION'            // Focus: Purposefully gathering specific evidence to support the finalized argument structure (Confidence).
-  | 'PRESENTATION';         // Focus: Finalizing, reviewing, and exporting the research output (Satisfaction/Relief).
+  | 'SYNTHESIS'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
 export type ReflectionEntryType =
   | 'EMOTIONAL_STATUS'       // User logs their feeling (e.g., frustrated, confused, hopeful)
   | 'COGNITIVE_INSIGHT'      // User records a specific new connection, conflict, or idea
@@ -30,7 +28,7 @@ export interface ReflectionLogEntry {
   title: string;
   content: string;  // Often promoted/synced from ResourceItem.userNotes
   entryType: ReflectionEntryType;
-  step: ISPStep;  // Tracks which phase the user was in
+  step: ISPStage;  // Tracks which phase the user was in
   /** * Semantic Associations
    * Cross-layer links to Knowledge entities.
    */
@@ -46,7 +44,7 @@ export interface ReflectionLogEntry {
  * Used for UI indicators (e.g., Progress Bar).
  */
 export interface PhaseConfig {
-  step: ISPStep;
+  step: ISPStage;
   label: string;
   description: string;
   expectedCompletion: Percentage;

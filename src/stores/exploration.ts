@@ -13,11 +13,11 @@ export const useExplorationStore = defineStore('exploration', {
 		stabilityScore: 10,
 
 		isDragging: false,
-	  isDragOver: false,
-	  draggedNode: null,
+		isDragOver: false,
+		draggedNode: null,
 
 		resources: [],
-		canvasView: {nodes: new Map(), edges: []},
+		canvasView: { nodes: new Map(), edges: [] },
 		activeCanvasId: '',
 		selectedNodeId: '',
 		sidebarNodes: new Map(),
@@ -39,19 +39,19 @@ export const useExplorationStore = defineStore('exploration', {
 		 * used by the CanvasStructureSidebar for the index (U.S. 12).
 		 */
 		currentNodeSummary: (state): NodeSummary => {
-				const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
-				state.conceptualNodes.forEach(node => {
-						if (node.type in summary) {
-								summary[node.type as keyof NodeSummary]++;
-						}
-				});
-				return summary;
+			const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
+			state.conceptualNodes.forEach(node => {
+				if (node.type in summary) {
+					summary[node.type as keyof NodeSummary]++;
+				}
+			});
+			return summary;
 		},
 
 		// Placeholder for calculating exploration completeness
 		isExplorationComplete: (state) => {
-				// Logic should check node count, resource count, and reflection frequency
-				return state.resources.length > 5 && state.conceptualNodes.size > 10;
+			// Logic should check node count, resource count, and reflection frequency
+			return state.resources.length > 5 && state.conceptualNodes.size > 10;
 		},
 	},
 
@@ -82,12 +82,12 @@ export const useExplorationStore = defineStore('exploration', {
 		},
 
 		async loadConceptualGraph(graph: ConceptualGraph) {
-					Object.entries(graph.nodes).map(([key, value]) => {
-						value.position.x *= POSITION_SCALE;
-						value.position.y *= POSITION_SCALE;
-						this.conceptualNodes.set(key, value);
-					});
-					this.conceptualEdges = graph.edges;
+			Object.entries(graph.nodes).map(([key, value]) => {
+				value.position.x *= POSITION_SCALE;
+				value.position.y *= POSITION_SCALE;
+				this.conceptualNodes.set(key, value);
+			});
+			this.conceptualEdges = graph.edges;
 		},
 
 		async loadSidebarRegistryInfo() {
