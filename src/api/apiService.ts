@@ -142,7 +142,7 @@ export const apiService = {
       createReflectionLog: (projectId: ID, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.post(ProjectsEndpoints.base.createReflectionLog(projectId), {title: logTitle, content: logContent, status: logStatus})
       },
-      getProject: (): Promise<AxiosResponse<Project>> => {
+      getProject: (): Promise<AxiosResponse<Project[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getProject())
       },
       getReflectionLog: (projectId: ID): Promise<AxiosResponse<ReflectionLogEntry[]>> => {

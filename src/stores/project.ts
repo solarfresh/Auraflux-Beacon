@@ -32,8 +32,8 @@ export const useProjectStore = defineStore('project', () => {
     try {
       let response = await apiService.projects.base.getProject();
       if (response.data) {
-        Object.entries(response.data).map(([key, value]) => {
-          projects.value.set(key, value);
+        response.data.map(project => {
+          projects.value.set(project.id, project);
         });
       } else {
         console.log(response.data);
@@ -45,6 +45,7 @@ export const useProjectStore = defineStore('project', () => {
 
   // --- Return public API ---
   return {
+    projects,
     currentProjectId,
     currentStage,
     // Getters
