@@ -23,16 +23,13 @@
         @error="handleImageError"
       />
 
-      <VTypography
+      <VIcon
         v-else
-        tag="span"
-        :size="size === 'xs' ? 'xs' : 'sm'"
-        weight="semibold"
-        color="indigo-700"
-        class="tracking-tight uppercase"
-      >
-        {{ userInitials }}
-      </VTypography>
+        name="User"
+        type="solid"
+        :size="size"
+        color="slate-400"
+      />
     </VBox>
 
     <VBox
@@ -52,7 +49,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import type { BackgroundToken } from '@/interfaces/layout';
 
 const props = withDefaults(defineProps<{

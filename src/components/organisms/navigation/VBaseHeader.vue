@@ -7,23 +7,23 @@
       hasShadow ? 'shadow-sm' : '',
       hasBorder ? 'border-b border-slate-200' : ''
     ]"
-    height="16"
+    class="min-h-16 flex items-center"
   >
     <VCluster
       justify="between"
       align="center"
-      class="h-full px-6 max-w-480 mx-auto"
+      class="w-full px-6 max-w-7xl mx-auto h-full"
     >
 
-      <VCluster gap="md" align="center" class="flex-1 shrink-0">
+      <VCluster gap="md" align="center" class="flex-none min-w-40">
         <slot name="left" />
       </VCluster>
 
-      <VBox class="hidden md:flex flex-1 justify-center">
+      <VBox class="hidden md:flex grow justify-center px-8 max-w-2xl">
         <slot name="center" />
       </VBox>
 
-      <VCluster gap="md" align="center" justify="end" class="flex-1 shrink-0">
+      <VCluster gap="md" align="center" justify="end" class="flex-none min-w-40">
         <slot name="right" />
       </VCluster>
 

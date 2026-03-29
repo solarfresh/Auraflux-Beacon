@@ -1,27 +1,26 @@
 <template>
-  <VBox tag="main" background="slate-50" class="min-h-screen">
-    <VBox background="white" padding-x="lg" padding-y="lg" border="bottom" class="shadow-sm">
-      <VStack gap="xs">
-        <VTypography tag="h1" size="xl" weight="bold" color="slate-900">
-          Research Workspaces
-        </VTypography>
-        <VTypography size="sm" color="slate-500">
-          Manage your AI-assisted research projects and multi-agent workflows.
-        </VTypography>
-      </VStack>
-    </VBox>
+  <VBox tag="main" class="w-full min-h-screen bg-slate-50">
 
-    <VBox padding="lg">
+    <VBox padding-x="lg" padding-top="lg" padding-bottom="xl" class="max-w-7xl mx-auto w-full">
       <VStack gap="lg">
-        <VProjectToolbar
-          v-model="toolbarState"
-          @create="isCreateModalOpen = true"
-        />
 
-        <VGrid v-if="hasProjects || isFiltering" cols="1 sm:2 xl:3" gap="lg">
+        <VBox
+          background="white"
+          padding="md"
+          rounded="lg"
+          class="border border-slate-200/60 shadow-sm"
+        >
+          <VProjectToolbar
+            v-model="toolbarState"
+            @create="isCreateModalOpen = true"
+          />
+        </VBox>
+
+        <VGrid v-if="hasProjects || isFiltering" cols="1 sm:2 lg:3 xl:4" gap="lg">
           <VInteractivePlaceholder
             label="Start New Research"
             icon-name="Plus"
+            class="h-48"
             @click="isCreateModalOpen = true"
           />
 
@@ -35,25 +34,13 @@
 
         <VEmptyState
           v-else
-          title="No projects found"
-          description="Create your first research workspace to get started with Auraflux agents."
+          title="No research projects yet"
+          description="Use the toolbar above to create your first workspace."
           icon="FolderPlus"
-        >
-          <template #actions>
-            <VButton variant="primary" icon-name="Plus" @click="isCreateModalOpen = true">
-              Create First Project
-            </VButton>
-          </template>
-        </VEmptyState>
+        />
       </VStack>
     </VBox>
-<!--
-    <VModal v-model:open="isCreateModalOpen" title="Create New Project">
-       <VStack gap="md" padding="md">
-         <VTypography>Configure your new research agent workspace...</VTypography>
-         </VStack>
-    </VModal>
- -->
+
   </VBox>
 </template>
 

@@ -1,20 +1,15 @@
 <template>
   <VBox
-    position="relative"
-    class="group w-full transition-all duration-300"
+    class="relative group transition-all duration-300 ease-in-out w-full"
     :class="[isFocused ? 'max-w-2xl' : 'max-w-md']"
   >
     <VBox
-      position="absolute"
-      inset-y="0"
-      left="3"
-      class="flex items-center pointer-events-none z-10"
+      class="absolute inset-y-0 left-0 flex items-center pl-3.5 z-10 pointer-events-none"
     >
       <VIcon
         name="MagnifyingGlass"
         size="sm"
         :color="isFocused ? 'indigo-600' : 'slate-400'"
-        class="transition-colors"
       />
     </VBox>
 
@@ -24,33 +19,25 @@
       variant="search"
       size="md"
       :placeholder="placeholder"
-      class="pl-10 pr-16 bg-slate-100! focus:bg-white! border-none!"
+      class="w-full pl-10 pr-16 bg-slate-100! focus:bg-white! border-none!"
       @focus="isFocused = true"
       @blur="isFocused = false"
-      @keyup.enter="handleSearch"
     />
 
     <VBox
-      v-if="!isFocused && !query"
-      position="absolute"
-      inset-y="0"
-      right="4"
-      class="hidden md:flex items-center z-10"
+      class="absolute inset-y-0 right-0 flex items-center pr-2 z-10"
     >
-      <VCluster gap="xs" class="bg-white border border-slate-200 px-1.5 py-0.5 rounded-md shadow-sm">
+      <VCluster
+        v-if="!isFocused && !query"
+        gap="xs"
+        class="hidden md:flex bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-sm"
+      >
         <VTypography tag="span" size="xs" weight="bold" color="slate-400">⌘</VTypography>
         <VTypography tag="span" size="xs" weight="bold" color="slate-400">K</VTypography>
       </VCluster>
-    </VBox>
 
-    <VBox
-      v-if="query"
-      position="absolute"
-      inset-y="0"
-      right="2"
-      class="flex items-center z-10"
-    >
       <VButton
+        v-if="query"
         variant="ghost"
         size="xs"
         icon-name="XMark"
