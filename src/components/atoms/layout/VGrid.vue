@@ -3,11 +3,11 @@
     :is="tag"
     :class="[
       'grid',
-      // 1. Grid Columns Logic
+      // Grid Columns Logic
       resolveGridCols(cols),
-      // 2. Spacing (Gap)
+      // Spacing (Gap)
       gap && gapClasses[gap],
-      // 3. Alignment
+      // Alignment
       alignClasses[align],
       justifyClasses[justify]
     ]"
@@ -49,25 +49,18 @@ const props = withDefaults(defineProps<{
 });
 // --- Helper Logic ---
 
-/**
- * Parses the cols prop into Tailwind grid-cols classes.
- * Handles both simple numbers and responsive breakpoint strings.
- * Example: "1 md:2 lg:4" -> "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
- */
-const resolveGridCols = (cols: number | string) => {
-  if (typeof cols === 'number') {
-    return `grid-cols-${cols}`;
-  }
+const gridColsMap: Record<string, string> = {
+  '1': 'grid-cols-1',
+  '2': 'grid-cols-2',
+  '3': 'grid-cols-3',
+  '4': 'grid-cols-4',
+  'md:2': 'md:grid-cols-2',
+  'lg:3': 'lg:grid-cols-3',
+  'xl:4': 'xl:grid-cols-4',
+};
 
-  return cols
-    .split(' ')
-    .map((part) => {
-      if (part.includes(':')) {
-        const [bp, val] = part.split(':');
-        return `${bp}:grid-cols-${val}`;
-      }
-      return `grid-cols-${part}`;
-    })
-    .join(' ');
+const resolveGridCols = (cols: number | string) => {
+  const colsStr = String(cols);
+  return colsStr.split(' ').map(part => gridColsMap[part] || '').join(' ');
 };
 </script>

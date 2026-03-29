@@ -17,14 +17,12 @@
         </VBox>
 
         <VGrid v-if="hasProjects || isFiltering" cols="1 sm:2 lg:3 xl:4" gap="lg">
-<!--
           <VInteractivePlaceholder
             label="Start New Research"
             icon-name="Plus"
             class="h-48"
             @click="isCreateModalOpen = true"
           />
- -->
           <VProjectCard
             v-for="project in filteredProjects"
             :key="project.id"
