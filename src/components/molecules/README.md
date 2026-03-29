@@ -13,30 +13,42 @@ Complex input patterns that combine labels, inputs, and actions.
 * **Key Components:** `VForm`, `VFormField`, `VInputGroup`, `VButtonToolbar`.
 * **Focus:** Accessibility (A11y), validation feedback, and input synchronization.
 
-### 2. 📢 [Indicators](indicators/README.md) (Feedback & Overlays)
+#### 2\. 📢 [Feedback](https://www.google.com/search?q=feedback/README.md) (System Response)
 
-Composite components that communicate status or manage contextual focus. **This family uses the `VAlert` base for all semantic feedback.**
+Stateless observers that communicate system status or manage contextual focus.
 
-* **Key Components:** `VAlert`, `VStatusCard`, `VFeasibilityStatus`, `VEntityWorkflowStatus`, `VReflectionStatus`, `VEmptyState`, `VModal`, `VOverlayLoader`, `VEntityChip`.
-* **Focus:** Material elevation, backdrop management, and semantic signaling.
+  * **Key Components:** `VAlert`, `VModal`, `VOverlayLoader`, `VStatusScore`, `VUserAvatar`.
+  * **Focus:** Immediate reaction, backdrop management, and presence feedback.
 
-### 3. 🧭 [Navs](navs/README.md) (Navigation & Lists)
+#### 3\. 📦 [Resources](https://www.google.com/search?q=resources/README.md) (Data Entities)
+
+Data-driven tiles or chips that represent persisted resources like Projects or Agents.
+
+  * **Key Components:** `VProjectCard`, `VEntityChip`, `VStatusCard`, `VInteractivePlaceholder`.
+  * **Focus:** "Flat Skin" architecture (VBox), entity lifecycle mapping, and grid compatibility.
+
+#### 4\. 🧠 [Domain](https://www.google.com/search?q=domain/README.md) (Methodology & Logic)
+
+Method-heavy components that encapsulate specific research frameworks (ISP) or AI decision logic.
+
+  * **Key Components:** `VISPStepCard`, `VFeasibilityStatus`, `VEntityWorkflowStatus`, `VReflectionStatus`.
+  * **Focus:** Cognitive orientation, AI attribution signaling, and methodological integrity.
+
+### 5. 🧭 [Navs](navs/README.md) (Navigation & Lists)
 
 Structural clusters used for moving through the application's architecture.
 
 * **Key Components:** `VNavGroup`, `VNavTabs`, `VNavListItem`, `VActionListItem`, `VTagListItem`, `VTimelineItem`.
 * **Focus:** Hierarchical depth, active state management, and responsive truncation.
 
-參考你提供的 `Navs` 格式，以下是針對 `Layout` 分子類別的描述。這段文字適合放在 `molecules/README.md` 的總覽清單中：
-
-### 4. 🧭 [Layout](layout/README.md) (Spatial & Panel Controls)
+### 6. 🧭 [Layout](layout/README.md) (Spatial & Panel Controls)
 
 Orchestrators that manage the relationship between different spatial zones and interactive regions.
 
 * **Key Components:** `VFloatControl`, `VResizableSplitter`, `VLayoutDivider`, `VPanelHeader`.
 * **Focus:** Z-index hierarchy, coordinate synchronization, and reactive structural transitions.
 
-### 5. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)
+### 7. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)
 
 Composite components that define the physical boundaries and interactive regions of a graph node.
 
@@ -53,13 +65,12 @@ Molecules **must** be built using layout atoms (`VBox`, `VStack`, `VCluster`). N
 
 * **Right:** `<VCluster gap="md">...</VCluster>`
 
-### 2. Semantic Hierarchy (Specific to Indicators)
+**2. Semantic Hierarchy (Functional Mapping)**
+Molecules follow a specialized mapping pattern to ensure visual consistency:
 
-Indicators follow a specialized inheritance pattern to ensure visual consistency:
-
-1. **Base:** `VAlert` handles semantic tokens (Success, Warning, Danger).
-2. **Layout:** `VStatusCard` wraps `VAlert` to provide a standard Icon + Title layout.
-3. **Business:** `VFeasibilityStatus` wraps `VStatusCard` to map domain data.
+1.  **Base (Feedback):** `VAlert` handles raw semantic tokens (Success, Warning, Danger).
+2.  **Structural (Resources):** `VStatusCard` (now in Resources) provides a generic shell for simple data entities.
+3.  **Business (Resources/Domain):** `VProjectCard` or `VFeasibilityStatus` map complex domain data to visual tokens.
 
 ### 3. Source of Truth
 
@@ -85,19 +96,11 @@ This ensures the user can immediately distinguish between human-curated and mach
 > **Rule 2: Semantic Prefix.** All molecules must use the `V` prefix (e.g., `VStatusCard`).
 > **Rule 3: Bootstrap Alignment.** Naming should reflect Bootstrap semantics (e.g., `NavTabs` for navigation, `Alert` for feedback).
 > **Rule 4: Graph Physicality.** Canvas molecules must enforce a minimum physical area (`min-w` / `min-h`) to prevent layout "jitter" when the Graphviz engine recalculates node positions.
-
-### Correct Composition Pattern (Indicator Example)
-
-```vue
-<VStatusCard
-  variant="success"
-  icon-name="CheckCircle"
+> **Rule 5: Directory Affinity.** Strictly follow the directory intent:
 >
-  <template #title>Data Verified</template>
-  <VTypography size="xs">Grounding check completed successfully.</VTypography>
-</VStatusCard>
-
-```
+>   * **Feedback:** Stateless system reactions only.
+>   * **Resources:** Direct mapping to database entities (Projects, Agents).
+>   * **Domain:** High-coupling with research methodology (ISP).
 
 ---
 
@@ -106,9 +109,11 @@ This ensures the user can immediately distinguish between human-curated and mach
 ```text
 src/components/molecules/
 ├── canvases/       # VNodeContainer
+├── domain/         # VISPStepCard, VFeasibilityStatus, VReflectionStatus
+├── feedback/       # VAlert, VModal, VOverlayLoader, VStatusScore, VUserAvatar
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
-├── indicators/     # VAlert, VStatusCard, VFeasibilityStatus, VEntityWorkflowStatus, VModal, VOverlayLoader, VStatusScore, VStepProgress, VReflectionStatus, VEmptyState, VEntityChip, VISPStepCard
 ├── layout/         # VFloatControl, VStatucGraph
 ├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VTreeItem, VWelcomeGateway
+├── resources/      # VProjectCard, VEntityChip, VStatusCard, VInteractivePlaceholder
 └── README.md       # You are here
 ```

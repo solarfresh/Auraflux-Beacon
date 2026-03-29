@@ -81,7 +81,7 @@
 
 <script setup lang="ts">
 import { useInitiativeStore } from '@/stores/initiation';
-import { useWorkflowStore } from '@/stores/workflow';
+import { useProjectStore } from '@/stores/project';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -99,7 +99,7 @@ import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfa
 import { apiService } from '@/api/apiService';
 
 // --- Initialization ---
-const workflowStore = useWorkflowStore();
+const projctStore = useProjectStore();
 const initiativeStore = useInitiativeStore();
 const router = useRouter();
 

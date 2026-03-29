@@ -51,11 +51,11 @@
  */
 import { ref, computed, watch } from 'vue';
 import { useInitiativeStore } from '@/stores/initiation';
-import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ReflectionLogEntry } from '@/interfaces/project';
 
 // Molecules
 import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 // Organisms & Templates
 import MasterDetailTemplate from '@/components/templates/MasterDetailTemplate.vue';

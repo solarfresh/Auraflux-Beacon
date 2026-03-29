@@ -1,6 +1,6 @@
 import { apiService } from '@/api/apiService';
 import { FeasibilityStatus } from '@/interfaces/core';
-import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ReflectionLogEntry } from '@/interfaces/project';
 import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';

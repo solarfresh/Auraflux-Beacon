@@ -94,8 +94,8 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
-import VEntityChip from '@/components/molecules/indicators/VEntityChip.vue';
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VEntityChip from '@/components/molecules/resources/VEntityChip.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 const props = defineProps<{
   initialValue: ProcessedKeyword[];

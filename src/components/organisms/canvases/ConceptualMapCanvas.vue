@@ -74,7 +74,7 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VModal from '@/components/molecules/indicators/VModal.vue';
+import VModal from '@/components/molecules/feedback/VModal.vue';
 
 import VConceptNode from '@/components/organisms/canvases/VConceptNode.vue';
 import VInsightNode from '@/components/organisms/canvases/VInsightNode.vue';

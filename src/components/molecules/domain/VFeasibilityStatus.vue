@@ -20,7 +20,7 @@
  */
 import { computed } from 'vue';
 import type { FeasibilityStatus } from '@/interfaces/core';
-import VStatusCard from '@/components/molecules/indicators/VStatusCard.vue';
+import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
 
 interface Props {
   /** The feasibility enum value from the backend (HIGH, MEDIUM, LOW) */

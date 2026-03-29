@@ -19,7 +19,7 @@
 
       <VCluster gap="xl" align="start" justify="between" class="w-full">
 
-        <VStack gap="md" class="flex-[1.6] min-w-[500px]">
+        <VStack gap="md" class="flex-[1.6] min-w-125">
           <VISPStepCard
             label="DEFINE: CLARIFY ANXIETY"
             description="Acknowledge the initial ambiguity of a new challenge. Use this phase to identify known unknowns and set cognitive boundaries, transforming vague uncertainty into a structured problem space for exploration."
@@ -57,7 +57,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VISPStepCard from '@/components/molecules/indicators/VISPStepCard.vue';
+import VISPStepCard from '@/components/molecules/domain/VISPStepCard.vue';
 import VStaticGraph from '@/components/molecules/layout/VStaticGraph.vue';
 import VWelcomeGateway from '@/components/molecules/navs/VWelcomeGateway.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';

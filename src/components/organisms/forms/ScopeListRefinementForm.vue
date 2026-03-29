@@ -156,7 +156,7 @@ import VInput from '@/components/atoms/forms/VInput.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
-import VEmptyState from '@/components/molecules/indicators/VEmptyState.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 
 const props = defineProps<{
   initialValue: ProcessedScope[];

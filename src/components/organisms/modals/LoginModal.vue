@@ -75,8 +75,8 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VForm from '@/components/molecules/forms/VForm.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VAlert from '@/components/molecules/indicators/VAlert.vue';
-import VModal from '@/components/molecules/indicators/VModal.vue';
+import VAlert from '@/components/molecules/feedback/VAlert.vue';
+import VModal from '@/components/molecules/feedback/VModal.vue';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -105,7 +105,7 @@ const handleLogin = async () => {
       username.value = '';
       password.value = '';
       emit('close');
-      router.push('/isearch/initiation')
+      router.push('/isearch/')
     } else {
       error.value = 'Invalid username or password.';
     }

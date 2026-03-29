@@ -4,7 +4,7 @@
       <ProjectHeader v-if="isProjectPage" />
       <VMissionHeader
         v-else
-        :current-step="workflowStore.currentStep"
+        :current-step="projctStore.currentStep"
       />
     </template>
 
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useWorkflowStore } from '@/stores/workflow';
+import { useProjectStore } from '@/stores/project';
 import { useRoute } from 'vue-router';
 import ISearchTemplate from '@/components/templates/ISearchTemplate.vue';
 import ProjectHeader from '@/components/organisms/navigation/ProjectHeader.vue';
@@ -24,7 +24,7 @@ import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
-const workflowStore = useWorkflowStore();
+const projctStore = useProjectStore();
 const route = useRoute();
 const router = useRouter();
 

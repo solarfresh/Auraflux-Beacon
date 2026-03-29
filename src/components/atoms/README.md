@@ -31,7 +31,7 @@ Components that present status or static information.
 
 The structural "bones" and "skin" that hold other atoms.
 
-* **Core:** `VBox`, `VStack`, `VCluster`, `VSpacer`
+* **Core:** `VBox`, `VStack`, `VCluster`, `VSpacer`, `VGrid`
 * **Focus:** Spacing tokens (8px grid), alignment, and containment.
 
 ### 5. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)

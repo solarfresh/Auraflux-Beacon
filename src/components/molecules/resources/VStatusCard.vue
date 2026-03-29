@@ -31,7 +31,7 @@
  * A layout-driven molecule that wraps VAlert to provide a consistent
  * format for entity statuses and feasibility reports.
  */
-import VAlert from '@/components/molecules/indicators/VAlert.vue';
+import VAlert from '@/components/molecules/feedback/VAlert.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
