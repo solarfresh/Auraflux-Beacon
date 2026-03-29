@@ -24,7 +24,7 @@
       variant="search"
       size="md"
       :placeholder="placeholder"
-      class="pl-10 pr-16 !bg-slate-100 focus:!bg-white !border-none"
+      class="pl-10 pr-16 bg-slate-100! focus:bg-white! border-none!"
       @focus="isFocused = true"
       @blur="isFocused = false"
       @keyup.enter="handleSearch"

@@ -78,7 +78,7 @@ import { ref } from 'vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VButton from '@/components/atoms/actions/VButton.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 
 interface ToolbarState {
   filter: 'all' | 'active' | 'archived';

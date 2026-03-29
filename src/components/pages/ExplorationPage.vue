@@ -38,7 +38,7 @@
               variant="primary"
               size="lg"
               :disabled="!explorationStore.isExplorationSufficient"
-              class="!bg-indigo-600 shadow-xl shadow-indigo-900/20 group"
+              class="bg-indigo-600! shadow-xl shadow-indigo-900/20 group"
             >
               <VTypography tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
                 Commit to Formulation
@@ -73,7 +73,7 @@
  */
 import { ref, computed, onMounted } from 'vue';
 import { useExplorationStore } from '@/stores/exploration';
-import { useWorkflowStore } from '@/stores/workflow';
+import { useProjectStore } from '@/stores/project';
 import { useRegistry } from '@/composables/useRegistry';
 
 // Atoms & Layout Components
@@ -93,7 +93,7 @@ import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
 const explorationStore = useExplorationStore();
-const workflowStore = useWorkflowStore();
+const projectStore = useProjectStore();
 
 const {
   registryNodes,
@@ -103,9 +103,6 @@ const {
 // UI State
 const isManagementModalOpen = ref(false);
 const managementModalType = ref<ManagementType>(null);
-
-const currentStep = computed(() => workflowStore.currentStepName);
-const currentStepCompletionPercentage = computed(() => workflowStore.currentStepCompletionPercentage);
 
 // Initial Data Fetching
 onMounted(async () => {
@@ -218,7 +215,7 @@ function handleManageCanvas(action: 'create' | 'rename' | 'delete', viewId?: str
  */
 async function handlePhaseTransitionRequest() {
   // Logic to transition phase and navigate
-  // workflowStore.transitionToNextPhase();
+  // projectStore.transitionToNextPhase();
   // router.push('/formulation');
 }
 

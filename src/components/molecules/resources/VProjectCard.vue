@@ -74,7 +74,7 @@ import VSpacer from '@/components/atoms/layout/VSpacer.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VEntityChip from '@/components/molecules/resources/VEntityChip.vue';
-import type { Project } from '@/interfaces/workflow';
+import type { Project } from '@/interfaces/project';
 
 const props = defineProps<{
   /** The project data object */

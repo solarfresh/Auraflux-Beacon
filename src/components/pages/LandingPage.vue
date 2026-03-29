@@ -19,7 +19,7 @@
 
       <VCluster gap="xl" align="start" justify="between" class="w-full">
 
-        <VStack gap="md" class="flex-[1.6] min-w-[500px]">
+        <VStack gap="md" class="flex-[1.6] min-w-125">
           <VISPStepCard
             label="DEFINE: CLARIFY ANXIETY"
             description="Acknowledge the initial ambiguity of a new challenge. Use this phase to identify known unknowns and set cognitive boundaries, transforming vague uncertainty into a structured problem space for exploration."

@@ -51,7 +51,7 @@
  */
 import { ref, computed, watch } from 'vue';
 import { useInitiativeStore } from '@/stores/initiation';
-import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ReflectionLogEntry } from '@/interfaces/project';
 
 // Molecules
 import VTimelineItem from '@/components/molecules/navs/VTimelineItem.vue';

@@ -2,11 +2,11 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import type {
     ISPStep,
-} from '@/interfaces/workflow';
+} from '@/interfaces/project';
 
 // --- Store Definition ---
 
-export const useWorkflowStore = defineStore('workflow', () => {
+export const useProjectStore = defineStore('project', () => {
 
     // --- State (Refs) ---
 

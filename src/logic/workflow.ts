@@ -1,4 +1,4 @@
-import type { GroundednessMetric } from "@/interfaces/workflow";
+import type { GroundednessMetric } from "@/interfaces/project";
 
 /**
  * getStabilityContext

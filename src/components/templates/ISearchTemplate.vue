@@ -5,7 +5,7 @@
       <slot name="header"></slot>
     </header>
 
-    <main class="flex-grow">
+    <main class="grow">
       <slot></slot>
     </main>
 
@@ -29,9 +29,9 @@ import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
 import { useNotificationStore } from '@/stores/notification';
-import { useWorkflowStore } from '@/stores/workflow';
+import { useProjectStore } from '@/stores/project';
 
-const workflowStore = useWorkflowStore();
+const projctStore = useProjectStore();
 const authStore = useAuthStore();
 const loginStore = useLoginStore();
 const store = useNotificationStore();

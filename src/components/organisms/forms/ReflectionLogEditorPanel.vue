@@ -110,7 +110,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { ReflectionLogEntry } from '@/interfaces/workflow';
+import type { ReflectionLogEntry } from '@/interfaces/project';
 
 // Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';

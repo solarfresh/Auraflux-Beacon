@@ -65,7 +65,7 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 import VAuthAction from '@/components/molecules/forms/VAuthAction.vue';
-import type { ISPStep } from '@/interfaces/workflow';
+import type { ISPStep } from '@/interfaces/project';
 
 // --- Props ---
 interface Props {

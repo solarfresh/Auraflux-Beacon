@@ -12,7 +12,7 @@
     <VCluster
       justify="between"
       align="center"
-      class="h-full px-6 max-w-[1920px] mx-auto"
+      class="h-full px-6 max-w-480 mx-auto"
     >
 
       <VCluster gap="md" align="center" class="flex-1 shrink-0">
