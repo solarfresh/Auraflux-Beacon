@@ -1,41 +1,50 @@
 import { apiService } from '@/api/apiService';
 import { useInitiativeStore } from '@/stores/initiation';
 import { useProjectStore } from '@/stores/project';
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+import { ID } from '@/interfaces/core';
 
 export function useProjectInitiation() {
   const projectStore = useProjectStore();
   const initiativeStore = useInitiativeStore();
+  const route = useRoute();
+
+  const currentProjectId = computed((): ID => {
+    return projectStore.currentProjectId || route.params.id as ID;
+  });
 
   async function addMessage(messageContent: string) {
-    if (projectStore.currentProjectId === null) return;
+    if (currentProjectId.value === null) return;
 
     const agentName = 'ExplorerAgent';
     initiativeStore.addMessage(messageContent, agentName);
-    apiService.projects.initiation.chat(projectStore.currentProjectId, messageContent, agentName);
+    apiService.projects.initiation.chat(currentProjectId.value, messageContent, agentName);
   };
 
   async function getMessages() {
-    if (projectStore.currentProjectId === null) return;
+    if (currentProjectId.value === null) return;
 
-    let response = await apiService.projects.initiation.getChatHistory(projectStore.currentProjectId);
+    let response = await apiService.projects.initiation.getChatHistory(currentProjectId.value);
     if (response.data) {
       initiativeStore.setMessages(response.data);
     }
   }
 
   async function getRefinedTopic() {
-    if (projectStore.currentProjectId === null) return;
+    if (currentProjectId.value === null) return;
 
-    let response = await apiService.projects.initiation.getRefinedTopic(projectStore.currentProjectId);
+    let response = await apiService.projects.initiation.getRefinedTopic(currentProjectId.value);
     if (response.data) {
       initiativeStore.setRefinedTopic(response.data);
     }
   }
 
   async function getReflection() {
-    if (projectStore.currentProjectId === null) return;
+    if (currentProjectId.value === null) return;
 
-    let response = await apiService.projects.base.getReflectionLog(projectStore.currentProjectId);
+    let response = await apiService.projects.base.getReflectionLog(currentProjectId.value);
     if (response.data) {
       initiativeStore.setReflection(response.data);
     }

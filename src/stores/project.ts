@@ -43,6 +43,10 @@ export const useProjectStore = defineStore('project', () => {
     }
   }
 
+  async function setCurrentProjectId(projectId: ID) {
+    currentProjectId.value = projectId;
+  };
+
   // --- Return public API ---
   return {
     projects,
@@ -54,5 +58,6 @@ export const useProjectStore = defineStore('project', () => {
 
     // Actions
     loadProjects,
+    setCurrentProjectId,
   };
 });

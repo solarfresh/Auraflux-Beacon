@@ -23,12 +23,12 @@ export const routes: Array<RouteRecordRaw> = [
         component: ProjectPage
       },
       {
-        path: 'initiation',
+        path: ':id/initiation',
         name: 'InitiationPage',
         component: InitiationPage
       },
       {
-        path: 'exploration',
+        path: ':id/exploration',
         name: 'ExplorationPage',
         component: ExplorationPage
       },

@@ -13,14 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { useProjectStore } from '@/stores/project';
-import { useRoute } from 'vue-router';
-import ISearchTemplate from '@/components/templates/ISearchTemplate.vue';
 import ProjectHeader from '@/components/organisms/navigation/ProjectHeader.vue';
 import VMissionHeader from '@/components/organisms/navigation/VMissionHeader.vue';
+import ISearchTemplate from '@/components/templates/ISearchTemplate.vue';
+import { useProjectStore } from '@/stores/project';
+import { useRoute } from 'vue-router';
 
 import { useAuthStore } from '@/stores/auth';
-import { onMounted, computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();

@@ -28,7 +28,7 @@
               v-for="project in filteredProjects"
               :key="project.id"
               :project="project"
-              @click="navigateToProject(project.id)"
+              @click="navigateToProject(project.id, project.currentStage)"
             />
           </VGrid>
         </VBox>
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useProjectStore } from '@/stores/project';
 
 // Layout Atoms
@@ -65,9 +66,11 @@ import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 
-import type { Project } from '@/interfaces/project';
-import type { SelectorState, FilterState } from '@/interfaces/indicators';
+import type { ID } from '@/interfaces/core';
+import type { ISPStage, Project } from '@/interfaces/project';
+import type { SelectorState } from '@/interfaces/indicators';
 
+const router = useRouter();
 const projectStore = useProjectStore();
 
 // --- State Management ---
@@ -108,7 +111,8 @@ const resetFilters = () => {
   selectorState.value.filter = 'ALL';
 };
 
-const navigateToProject = (id: string) => {
-  // Router logic to /projects/:id
+const navigateToProject = (projectId: ID, currentStage: ISPStage) => {
+  projectStore.setCurrentProjectId(projectId);
+  router.push(`${projectId}/${currentStage.toLowerCase()}/`)
 };
 </script>

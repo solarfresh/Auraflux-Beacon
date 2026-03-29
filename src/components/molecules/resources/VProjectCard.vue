@@ -41,7 +41,7 @@
         <VTypography weight="bold" size="md" class="line-clamp-1 group-hover:text-indigo-700 transition-colors">
           {{ project.name }}
         </VTypography>
-        <VTypography size="sm" color="slate-500" class="line-clamp-2 min-h-[2.5rem]">
+        <VTypography size="sm" color="slate-500" class="line-clamp-2 min-h-10">
           {{ project.description || 'No description provided.' }}
         </VTypography>
       </VStack>
