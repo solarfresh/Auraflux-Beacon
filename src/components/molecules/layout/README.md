@@ -21,7 +21,7 @@ A specialized floating trigger used to toggle the visibility or state of adjacen
 * **Logic**: Anchors to the edge of a parent container and moves in sync with panel transitions.
 * **Physics**: Uses `shadow-md` to signify elevation above the workspace surface.
 
-### 2. VStaticGraph (New)
+### 2. VStaticGraph
 
 The **Foundational Visual Anchor**. Orchestrates static graph primitives to evoke "structural logic" on landing pages or entry gateways.
 
@@ -29,6 +29,15 @@ The **Foundational Visual Anchor**. Orchestrates static graph primitives to evok
 * **Role**: **"Spatial Identity" provider**.
 * **Logic**: Strictly non-interactive. It uses fixed SVG coordinates to provide a consistent professional atmosphere.
 * **Semantics**: Uses the shared `8, 5` dash token via `VGraphEdge` to maintain visual lineage with the interactive workspace.
+
+### 3. VDropdownMenu
+
+A **spatial container** used to orchestrate contextual actions and navigation links. It functions as a floating surface that appears over the workspace without disrupting the document flow.
+
+* **Composition**: `VBox` (Container) > `VDropdownItem` (Atoms).
+* **Role**: **"Contextual Anchor" provider**.
+* **Logic**: Employs `absolute` positioning. It must be paired with a `relative` parent (usually an Organism like `Header`) to ensure correct anchoring.
+* **Physics**: Utilizes `shadow-lg` (Level 3 Elevation) to signify its position at the top of the interaction hierarchy.
 
 ---
 
@@ -41,6 +50,8 @@ The **Foundational Visual Anchor**. Orchestrates static graph primitives to evok
 > **Rule 4: Background Recess.** `VStaticGraph` must always be wrapped in a container with `overflow-hidden` and positioned at the lowest possible z-index (`z-0` or `z-[-1]`).
 > **Rule 5: Pointer Neutrality.** Ensure `VStaticGraph` utilizes the `pointer-events-none` attribute from its underlying `VGraphCanvas` atom to prevent it from intercepting clicks on foreground CTA buttons.
 > **Rule 6: Atomic Orchestration.** Never use raw `<line>` or `<circle>` tags inside `VStaticGraph`. Use the corresponding `VGraphEdge` and `VGraphPoint` atoms to ensure design token synchronization.
+> **Rule 7: Overlay Anchoring.** `VDropdownMenu` should always be placed within a `relative` container. Use `right-0` or `left-0` to align the menu edges with its trigger button to maintain visual balance.
+> **Rule 8: Interactive Continuity.** When implementing hover-based triggers, ensure the offset (`mt-1` or 4px) is small enough to prevent the pointer from leaving the interactive "bridge" between the trigger and the menu.
 
 ### Standard Implementation Pattern
 
@@ -68,6 +79,25 @@ The **Foundational Visual Anchor**. Orchestrates static graph primitives to evok
     </VGraphGroup>
   </VStaticGraph>
 </template>
+
+<template>
+  <VBox tag="div" class="relative group">
+    <VButton
+      variant="tertiary"
+      icon-name="Cog6Tooth"
+      icon-only
+    />
+
+    <VDropdownMenu class="hidden group-hover:block">
+      <VDropdownItem icon-name="User" to="/profile">
+        Profile
+      </VDropdownItem>
+      <VDropdownItem icon-name="ArrowRightOnRectangle" @click="logout">
+        Logout
+      </VDropdownItem>
+    </VDropdownMenu>
+  </VBox>
+</template>
 ```
 
 ---
@@ -78,6 +108,7 @@ The **Foundational Visual Anchor**. Orchestrates static graph primitives to evok
 | --- | --- | --- |
 | **Transitions** | Interaction rhythm | `300ms ease-in-out` |
 | **Floating Depth** | Elevation | `shadow-md` |
+| **Z-Index: Dropdowns** |	Overlay actions |	`z-50` |
 | **Z-Index: Controls** | Floating triggers | `z-40` |
 | **Z-Index: Panels** | Navigation units | `z-20` |
 | **Edge Semantics** | Reliability | Solid (Verified) / Dashed (AI) |
@@ -90,7 +121,8 @@ The **Foundational Visual Anchor**. Orchestrates static graph primitives to evok
 ```text
 src/components/molecules/layout/
 ├── VFloatControl.vue      # Floating panel triggers
-├── VStaticGraph.vue       # [NEW] Foundational visual anchor
+├── VStaticGraph.vue       # Foundational visual anchor
+├── VDropdownMenu.vue      # Spatial container for actions
 └── README.md              # You are here
 
 ```
