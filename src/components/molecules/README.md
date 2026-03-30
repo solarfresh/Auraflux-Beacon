@@ -31,7 +31,7 @@ Data-driven tiles or chips that represent persisted resources like Projects or A
 
 Method-heavy components that encapsulate specific research frameworks (ISP) or AI decision logic.
 
-  * **Key Components:** `VISPStepCard`, `VFeasibilityStatus`, `VEntityWorkflowStatus`, `VReflectionStatus`.
+  * **Key Components:** `VISPStageCard`, `VFeasibilityStatus`, `VEntityProjectStatus`, `VReflectionStatus`.
   * **Focus:** Cognitive orientation, AI attribution signaling, and methodological integrity.
 
 ### 5. 🧭 [Navs](navs/README.md) (Navigation & Lists)
@@ -109,7 +109,7 @@ This ensures the user can immediately distinguish between human-curated and mach
 ```text
 src/components/molecules/
 ├── canvases/       # VNodeContainer
-├── domain/         # VISPStepCard, VFeasibilityStatus, VReflectionStatus
+├── domain/         # VISPStageCard, VFeasibilityStatus, VReflectionStatus
 ├── feedback/       # VAlert, VModal, VOverlayLoader, VStatusScore, VUserAvatar
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── layout/         # VFloatControl, VStatucGraph

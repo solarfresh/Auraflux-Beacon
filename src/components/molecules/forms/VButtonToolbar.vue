@@ -20,7 +20,7 @@
 import { ref } from 'vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import { useWorkflowAuth } from '@/composables/useWorkflowAuth';
+import { useProjectAuth } from '@/composables/useProjectAuth';
 
 /**
  * ActionBar Molecule
@@ -36,7 +36,7 @@ const emit = defineEmits<{
   (e: 'transitionRequest'): void;
 }>();
 
-const { executeAuthAction } = useWorkflowAuth();
+const { executeAuthAction } = useProjectAuth();
 const isTransitioning = ref(false);
 
 const handlePhaseTransition = () => {

@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 /**
- * VEntityWorkflowStatus Component
+ * VEntityProjectStatus Component
  * Manages the lifecycle and permission state of an entity.
- * Maps backend workflow states to UI themes.
+ * Maps backend project states to UI themes.
  */
 import { computed } from 'vue';
 import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
@@ -27,14 +27,14 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';
 
 interface Props {
-  /** The current workflow state of the entity */
+  /** The current project state of the entity */
   status: EntityStatus;
 }
 
 const props = defineProps<Props>();
 
 /**
- * Workflow Mapping
+ * Project Mapping
  * Maps administrative states to semantic variants and Heroicons.
  */
 const config = computed(() => {

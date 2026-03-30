@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
 
-export function useWorkflowAuth() {
+export function useProjectAuth() {
   const authStore = useAuthStore();
   const loginModalStore = useLoginStore();
 

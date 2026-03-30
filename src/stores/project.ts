@@ -1,36 +1,91 @@
-import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { apiService } from '@/api/apiService';
+import type { ID } from '@/interfaces/core';
 import type {
-    ISPStep,
+  ISPStage,
+  Project,
 } from '@/interfaces/project';
+import { defineStore } from 'pinia';
+import { computed, ref } from 'vue';
 
 // --- Store Definition ---
 
 export const useProjectStore = defineStore('project', () => {
 
-    // --- State (Refs) ---
+  // --- State (Refs) ---
+  const projects = ref<Map<string, Project>>(new Map());
+  const currentProjectId = ref<ID | null>(null);
 
-    /** The current stage of the Information Search Process (ISP). */
-    const currentStep = ref<ISPStep>('INITIATION');
+  // --- Getters (Computed) ---
+  /** The current stage of the Information Search Process (ISP). */
+  const currentStage = computed(() => {
+    if (currentProjectId.value === null) return;
 
-    // --- Getters (Computed) ---
+    return projects.value.get(currentProjectId.value)?.currentStage;
+  });
 
-    /** Checks if the current step allows the Export Report feature. */
-    // const isExportAvailable = computed(() => {
-    //     return currentStep.value === 'COLLECTION' || currentStep.value === 'PRESENTATION';
-    // });
+  const projectName = computed(() => {
+    if (currentProjectId.value === null) return;
 
+    return projects.value.get(currentProjectId.value)?.name;
+  });
 
-    // --- Actions (Functions) ---
+  // --- Actions (Functions) ---
+  async function loadProjects() {
+    try {
+      let response = await apiService.projects.base.getProject();
+      if (response.data) {
+        response.data.map(project => {
+          projects.value.set(project.id, project);
+        });
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to load projects:', error);
+    }
+  }
 
+  async function loadProjectDetail(projectId: ID) {
+    try {
+      let response = await apiService.projects.base.getProjectDetail(projectId);
+      if (response.data) {
+        projects.value.set(response.data.id, response.data);
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error(`Failed to load a project: ${projectId}`, error);
+    }
+  }
 
-    // --- Return public API ---
-    return {
-        currentStep,
-        // Getters
-        // isQuestionFinalized,
-        // isExportAvailable,
+  async function setCurrentProjectId(projectId: ID) {
+    currentProjectId.value = projectId;
+  };
 
-        // Actions
-    };
+  async function updateProjectDetail(projectId: ID, data: Partial<Project>) {
+    try {
+      let response = await apiService.projects.base.updateProjectDetail(projectId, data);
+      if (response.data) {
+        projects.value.set(response.data.id, response.data);
+      } else {
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error(`Failed to update a project: ${projectId}`, error);
+    }
+  }
+
+  // --- Return public API ---
+  return {
+    projects,
+    currentProjectId,
+    // Getters
+    currentStage,
+    projectName,
+    // Actions
+    loadProjects,
+    loadProjectDetail,
+    setCurrentProjectId,
+    updateProjectDetail
+  };
 });

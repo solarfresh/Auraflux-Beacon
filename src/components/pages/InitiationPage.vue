@@ -26,13 +26,14 @@
       </template>
 
       <!-- Slot: action-bar (Flow Control) -->
+<!--
       <template #action-bar>
         <VButtonToolbar
           :is-proceed-ready="true"
           @transition-request="handlePhaseTransitionRequest"
         />
       </template>
-
+ -->
     </DualPaneWorkspaceTemplate>
 
     <FullScreenModalTemplate
@@ -97,11 +98,13 @@ import ReflectionLogForm from '@/components/organisms/forms/ReflectionLogForm.vu
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
 import { apiService } from '@/api/apiService';
+import { useProjectInitiation } from '@/composables/useProjectInitiation';
 
 // --- Initialization ---
-const projctStore = useProjectStore();
+const projectStore = useProjectStore();
 const initiativeStore = useInitiativeStore();
 const router = useRouter();
+const { addMessage, loadInitiationData } = useProjectInitiation();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
@@ -127,19 +130,17 @@ const topicScope = computed(() => initiativeStore.topicScope);
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
-    initiativeStore.getMessages();
-    initiativeStore.getRefinedTopic();
-    initiativeStore.getReflection();
+    loadInitiationData();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---
 
 /**
- * Handles user message input and sends it to the workflow store.
+ * Handles user message input and sends it to the project store.
  */
 function handleSendMessage(content: string) {
     if (isTyping.value || !content.trim()) return;
-    initiativeStore.addMessage(content);
+    addMessage(content);
     // Trigger agent response logic here if needed: store.getAgentResponse(content);
 }
 
@@ -231,12 +232,14 @@ function getModalTitle(type: ManagementType | null): string {
 }
 
 /**
- * E. Handles the core workflow transition request from the ActionBar.
+ * E. Handles the core project transition request from the ActionBar.
  * This combines the "Lock Data" and "Change Phase" actions.
  */
 async function handlePhaseTransitionRequest() {
+  if (projectStore.currentProjectId === null) return;
+
   try {
-    const response = await apiService.workflows.exploration.createSession(initiativeStore.stabilityScore, initiativeStore.finalQuestion);
+    const response = await apiService.projects.exploration.createSession(projectStore.currentProjectId, initiativeStore.stabilityScore, initiativeStore.finalQuestion);
     if (response.data) {
       router.push('/exploration');
     } else {

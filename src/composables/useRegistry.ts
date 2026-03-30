@@ -1,6 +1,6 @@
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
-import { getNodeGroundednessContext } from '@/logic/workflow';
+import { getNodeGroundednessContext } from '@/logic/project';
 import { useExplorationStore } from '@/stores/exploration';
 import { computed } from 'vue';
 

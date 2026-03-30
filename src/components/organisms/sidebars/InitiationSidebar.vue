@@ -24,7 +24,7 @@
             label="Topic Refinement"
             color="indigo"
           />
-          <VStatusCard
+          <VFeasibilityStatus
             :status="feasibilityStatus"
             :description="getFeasibilityDescription(feasibilityStatus)"
           />
@@ -108,11 +108,11 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
 // Molecules & Specialized Sections
-import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
 import VStatusScore from '@/components/molecules/feedback/VStatusScore.vue';
 import VNavAlert from '@/components/molecules/navs/VNavAlert.vue';
 import KeywordManagementSection from '@/components/organisms/sections/KeywordManagementSection.vue';
 import ScopeManagementSection from '@/components/organisms/sections/ScopeManagementSection.vue';
+import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 

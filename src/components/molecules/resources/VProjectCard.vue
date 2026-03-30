@@ -11,18 +11,29 @@
   >
     <VStack gap="md" full-height>
       <VCluster justify="between" align="start">
-        <VBox
-          padding="xs"
-          rounded="lg"
-          :background="isAIGenerated ? 'white' : 'indigo-50'"
-          class="shrink-0"
-        >
-          <VIcon
-            :name="isAIGenerated ? 'Sparkles' : 'Folder'"
-            :color="isAIGenerated ? 'amber-600' : 'indigo-600'"
-          />
-        </VBox>
+        <VCluster gap="sm" align="center">
+          <VBox
+            padding="xs"
+            rounded="lg"
+            :background="isAIGenerated ? 'white' : 'indigo-50'"
+            class="shrink-0 shadow-sm border border-slate-100/50"
+          >
+            <VIcon
+              :name="isAIGenerated ? 'Sparkles' : 'Folder'"
+              :color="isAIGenerated ? 'amber-600' : 'indigo-600'"
+              size="sm"
+            />
+          </VBox>
 
+          <VStack gap="none" class="hidden sm:flex">
+            <VTypography tag="span" size="xs" weight="bold" color="slate-400" class="uppercase tracking-tighter scale-90 origin-left">
+              ISP Stage
+            </VTypography>
+            <VTypography tag="span" size="xs" weight="bold" :color="isAIGenerated ? 'amber-700' : 'indigo-700'">
+              {{ project.currentStage || 'Initiation' }}
+            </VTypography>
+          </VStack>
+        </VCluster>
         <slot name="actions" />
       </VCluster>
 
@@ -30,7 +41,7 @@
         <VTypography weight="bold" size="md" class="line-clamp-1 group-hover:text-indigo-700 transition-colors">
           {{ project.name }}
         </VTypography>
-        <VTypography size="sm" color="slate-500" class="line-clamp-2 min-h-[2.5rem]">
+        <VTypography size="sm" color="slate-500" class="line-clamp-2 min-h-10">
           {{ project.description || 'No description provided.' }}
         </VTypography>
       </VStack>

@@ -1,7 +1,7 @@
 <template>
   <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
 
-    <VBox padding="lg" border="bottom" class="flex-shrink-0">
+    <VBox padding="lg" border="bottom" class="shrink-0">
       <VCluster justify="between" align="center">
         <VCluster gap="md" align="center">
           <VBox
@@ -54,7 +54,7 @@
         </VFormField>
 
         <VStack gap="sm">
-          <VEntityWorkflowStatus :status="initialScopeElement.entityStatus" />
+          <VEntityProjectStatus :status="initialScopeElement.entityStatus" />
 
           <VFeasibilityStatus
             :status="feasibilityStatus"
@@ -67,7 +67,7 @@
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="handleCancel">
           Cancel
@@ -139,7 +139,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VEntityWorkflowStatus from '@/components/molecules/domain/VEntityWorkflowStatus.vue';
+import VEntityProjectStatus from '@/components/molecules/domain/VEntityProjectStatus.vue';
 import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
 const props = defineProps<{
@@ -185,7 +185,7 @@ async function handleSubmit(targetStatus: EntityStatus) {
   if (id) {
     await apiService.knowledge.scopes.update(id, label, value, targetStatus);
   } else {
-    await apiService.workflows.scopes.create(label, value, targetStatus);
+    await apiService.projects.scopes.create(label, value, targetStatus);
   }
 
   initiativeStore.createOrUpdateTopicScopes(id, label, value, targetStatus);

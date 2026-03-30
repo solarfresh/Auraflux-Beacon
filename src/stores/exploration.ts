@@ -7,17 +7,18 @@ import {
 } from '@/interfaces/exploration';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
+import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
 		stabilityScore: 10,
 
 		isDragging: false,
-	  isDragOver: false,
-	  draggedNode: null,
+		isDragOver: false,
+		draggedNode: null,
 
 		resources: [],
-		canvasView: {nodes: new Map(), edges: []},
+		canvasView: { nodes: new Map(), edges: [] },
 		activeCanvasId: '',
 		selectedNodeId: '',
 		sidebarNodes: new Map(),
@@ -39,114 +40,49 @@ export const useExplorationStore = defineStore('exploration', {
 		 * used by the CanvasStructureSidebar for the index (U.S. 12).
 		 */
 		currentNodeSummary: (state): NodeSummary => {
-				const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
-				state.conceptualNodes.forEach(node => {
-						if (node.type in summary) {
-								summary[node.type as keyof NodeSummary]++;
-						}
-				});
-				return summary;
+			const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
+			state.conceptualNodes.forEach(node => {
+				if (node.type in summary) {
+					summary[node.type as keyof NodeSummary]++;
+				}
+			});
+			return summary;
 		},
 
 		// Placeholder for calculating exploration completeness
 		isExplorationComplete: (state) => {
-				// Logic should check node count, resource count, and reflection frequency
-				return state.resources.length > 5 && state.conceptualNodes.size > 10;
+			// Logic should check node count, resource count, and reflection frequency
+			return state.resources.length > 5 && state.conceptualNodes.size > 10;
 		},
 	},
 
 	actions: {
-		// --- Initialization & Loading ---
-		async loadExplorationData() {
-			// Simulate loading data for the current active view and resources
-			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
-			try {
-				await this.loadSidebarRegistryInfo();
-				await this.loadCanvasView();
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
+		async setConceptualGraph(graph: ConceptualGraph) {
+			Object.entries(graph.nodes).map(([key, value]) => {
+				value.position.x *= POSITION_SCALE;
+				value.position.y *= POSITION_SCALE;
+				this.conceptualNodes.set(key, value);
+			});
+			this.conceptualEdges = graph.edges;
 		},
 
-		async loadCanvasView() {
-			try {
-				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
-				if (response.data) {
-					this.loadConceptualGraph(response.data)
-				} else {
-					console.log(response.data);
-				}
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
-		},
+		async setSidebarRegistryInfo(info: SidebarRegistryInfo) {
+			this.stabilityScore = info.stabilityScore;
 
-		async loadConceptualGraph(graph: ConceptualGraph) {
-					Object.entries(graph.nodes).map(([key, value]) => {
-						value.position.x *= POSITION_SCALE;
-						value.position.y *= POSITION_SCALE;
-						this.conceptualNodes.set(key, value);
-					});
-					this.conceptualEdges = graph.edges;
-		},
+			// TODO: The data model of final question must be defined
+			this.sidebarNodes.set('focusQuestion', {
+				id: 'focusQuestion',
+				label: info.finalQuestion,
+				groundedness: 10,
+				solidity: 'SOLID',
+				type: 'FOCUS' as NodeType,
+			})
 
-		async loadSidebarRegistryInfo() {
-			try {
-				let response = await apiService.workflows.exploration.getSidebarRegistryInfo();
-				if (response.data) {
-					this.stabilityScore = response.data.stabilityScore;
+			this.activeCanvasId = info.activeCanvasId;
 
-					// TODO: The data model of final question must be defined
-					this.sidebarNodes.set('focusQuestion', {
-						id: 'focusQuestion',
-						label: response.data.finalQuestion,
-						groundedness: 10,
-						solidity: 'SOLID',
-						type: 'FOCUS' as NodeType,
-					})
-
-					this.activeCanvasId = response.data.activeCanvasId;
-
-					response.data.nodes.map((node: ConceptualNode) => {
-						this.sidebarNodes.set(node.id, node);
-					});
-				} else {
-					console.log(response.data);
-				}
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
-		},
-
-		async recommendConceptualNodes() {
-			let aiSuggestedNodes = [...this.conceptualNodes.values()].filter(node => node.status === 'AI_EXTRACTED');
-			if (aiSuggestedNodes.length < 1 && this.conceptualNodes.size < this.sidebarNodes.size) {
-				apiService.workflows.exploration.recommendConceptualNodes(this.activeCanvasId);
-			}
-		},
-
-		async updateConeptualNode(node: ConceptualNode) {
-			try {
-				let nodeData = JSON.parse(JSON.stringify(node));
-				if (nodeData.position) {
-					nodeData.position.x /= POSITION_SCALE;
-					nodeData.position.y /= POSITION_SCALE;
-				}
-
-				let response = await apiService.canvases.nodes.update(this.activeCanvasId, nodeData.id, nodeData);
-				if (response.data) {
-					let newNode = response.data;
-					if (newNode.position) {
-						newNode.position.x *= POSITION_SCALE;
-						newNode.position.y *= POSITION_SCALE;
-					}
-
-					this.conceptualNodes.set(newNode.id, newNode);
-					this.recommendConceptualNodes();
-				}
-			} catch (error) {
-				console.error('Failed to update node:', error);
-			}
+			info.nodes.map((node: ConceptualNode) => {
+				this.sidebarNodes.set(node.id, node);
+			});
 		},
 
 		/** Handles updates for existing nodes, including moving, grouping, and editing */

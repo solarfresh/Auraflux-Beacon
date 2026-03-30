@@ -42,7 +42,7 @@
 import { computed } from 'vue';
 import VProgressSegment from '@/components/atoms/indicators/VProgressSegment.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import { getStabilityContext } from '@/logic/workflow';
+import { getStabilityContext } from '@/logic/project';
 
 /**
  * TopicStatusIndicator Molecule
@@ -78,7 +78,7 @@ const clampedPercentage = computed(() => {
   return Math.max(0, Math.min(100, props.stabilityScore * 10));
 });
 
-/** Fetches qualitative label based on workflow logic (e.g., 'Ready', 'Focusing') */
+/** Fetches qualitative label based on project logic (e.g., 'Ready', 'Focusing') */
 const clarityStatusLabel = computed(() => {
   return getStabilityContext(props.stabilityScore);
 });

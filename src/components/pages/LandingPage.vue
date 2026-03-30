@@ -20,17 +20,17 @@
       <VCluster gap="xl" align="start" justify="between" class="w-full">
 
         <VStack gap="md" class="flex-[1.6] min-w-125">
-          <VISPStepCard
+          <VISPStageCard
             label="DEFINE: CLARIFY ANXIETY"
             description="Acknowledge the initial ambiguity of a new challenge. Use this phase to identify known unknowns and set cognitive boundaries, transforming vague uncertainty into a structured problem space for exploration."
             icon="MagnifyingGlass"
           />
-          <VISPStepCard
+          <VISPStageCard
             label="CONNECT: MAP HIDDEN RELATIONS"
             description="Surface the underlying architecture of your information. By visualizing nodes and their dependencies, you can uncover non-obvious correlations and structural patterns that traditional linear searching often misses."
             icon="Share"
           />
-          <VISPStepCard
+          <VISPStageCard
             label="ACT: TRIGGER DECISION"
             description="Synthesize mapped insights into a logical trajectory. This final stage focuses on reducing cognitive load to trigger a confident, evidence-based decision, moving from raw data to purposeful execution."
             icon="Bolt"
@@ -57,7 +57,7 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VISPStepCard from '@/components/molecules/domain/VISPStepCard.vue';
+import VISPStageCard from '@/components/molecules/domain/VISPStageCard.vue';
 import VStaticGraph from '@/components/molecules/layout/VStaticGraph.vue';
 import VWelcomeGateway from '@/components/molecules/navs/VWelcomeGateway.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';

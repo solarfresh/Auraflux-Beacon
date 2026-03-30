@@ -13,7 +13,7 @@ export interface TopicKeywordStyle {
 
 /**
  * Processed Knowledge Elements.
- * Combines the pure Knowledge structure with Workflow state for the UI.
+ * Combines the pure Knowledge structure with Project state for the UI.
  */
 export interface ProcessedKeyword extends TopicKeyword {
   entityStatus: EntityStatus;

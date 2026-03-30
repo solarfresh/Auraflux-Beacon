@@ -26,7 +26,7 @@
       <template #right-panel>
         <StrategicDiscoveryPanel />
       </template>
-
+<!--
       <template #footer>
         <VButtonToolbar
           :is-proceed-ready="false"
@@ -47,7 +47,7 @@
           </template>
         </VButtonToolbar>
       </template>
-
+ -->
     </ThreePaneWorkspaceTemplate>
 
     <FullScreenModalTemplate
@@ -71,29 +71,29 @@
  * - Root template for the "War Room" phase.
  * - Handles top-level layout coordination and Store-to-Canvas event mapping.
  */
-import { ref, computed, onMounted } from 'vue';
-import { useExplorationStore } from '@/stores/exploration';
-import { useProjectStore } from '@/stores/project';
+import { useProjectExploration } from '@/composables/useProjectExploration';
 import { useRegistry } from '@/composables/useRegistry';
+import { useExplorationStore } from '@/stores/exploration';
+import { onMounted, ref } from 'vue';
 
 // Atoms & Layout Components
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
-import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // Organisms
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
-import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
+import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
 const explorationStore = useExplorationStore();
-const projectStore = useProjectStore();
+const { loadExplorationData } = useProjectExploration();
 
 const {
   registryNodes,
@@ -106,7 +106,7 @@ const managementModalType = ref<ManagementType>(null);
 
 // Initial Data Fetching
 onMounted(async () => {
-  await explorationStore.loadExplorationData();
+  await loadExplorationData();
 });
 
 /**
@@ -211,7 +211,7 @@ function handleManageCanvas(action: 'create' | 'rename' | 'delete', viewId?: str
 }
 
 /**
- * E. Handles the core workflow transition request to the next phase (Formulation).
+ * E. Handles the core project transition request to the next phase (Formulation).
  */
 async function handlePhaseTransitionRequest() {
   // Logic to transition phase and navigate

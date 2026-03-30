@@ -40,9 +40,9 @@
         <VCluster gap="xs" align="center" class="text-slate-500">
           <VIcon name="ArrowsUpDown" size="xs" />
           <select
-            :value="modelValue.sort"
+            :value="modelValue.sorter"
             class="bg-transparent text-sm font-medium focus:outline-none cursor-pointer hover:text-slate-900"
-            @change="updateSort(($event.target as HTMLSelectElement).value)"
+            @change="updateSorter(($event.target as HTMLSelectElement).value as SorterState)"
           >
             <option value="edited">Recently Edited</option>
             <option value="created">Date Created</option>
@@ -79,32 +79,28 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
-
-interface ToolbarState {
-  filter: 'all' | 'active' | 'archived';
-  sort: 'edited' | 'created';
-}
+import type { SelectorState, SorterState, FilterState } from '@/interfaces/indicators';
 
 const props = defineProps<{
-  modelValue: ToolbarState;
+  modelValue: SelectorState;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: ToolbarState): void;
+  (e: 'update:modelValue', value: SelectorState): void;
   (e: 'create'): void;
 }>();
 
 const filterOptions = [
-  { label: 'All', value: 'all' },
-  { label: 'Active', value: 'active' },
-  { label: 'Archived', value: 'archived' },
+  { label: 'All', value: 'ALL' },
+  { label: 'Active', value: 'LOCKED' },
+  { label: 'Archived', value: 'ARCHIVED' },
 ] as const;
 
-const updateFilter = (filter: ToolbarState['filter']) => {
+const updateFilter = (filter: FilterState) => {
   emit('update:modelValue', { ...props.modelValue, filter });
 };
 
-const updateSort = (sort: any) => {
-  emit('update:modelValue', { ...props.modelValue, sort });
+const updateSorter = (sorter: SorterState) => {
+  emit('update:modelValue', { ...props.modelValue, sorter });
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
 
-    <VBox padding="lg" border="bottom" class="flex-shrink-0">
+    <VBox padding="lg" border="bottom" class="shrink-0">
       <VCluster gap="md" align="center">
         <VBox padding="sm" background="indigo-50" rounded="xl" class="text-indigo-600 shadow-sm">
           <VIcon name="PencilSquare" size="md" />
@@ -47,19 +47,19 @@
         </VFormField>
 
         <VStack gap="sm">
-          <VEntityWorkflowStatus :status="initialKeyword.entityStatus">
+          <VEntityProjectStatus :status="initialKeyword.entityStatus">
             <template v-if="isTextModified" #default>
               <VTypography size="xs" color="amber-600" italic class="mt-1">
                 Note: Saving will update content and persist the choice below.
               </VTypography>
             </template>
-          </VEntityWorkflowStatus>
+          </VEntityProjectStatus>
         </VStack>
 
       </VStack>
     </VBox>
 
-    <VBox padding="md" background="slate-50" border="top" class="flex-shrink-0">
+    <VBox padding="md" background="slate-50" border="top" class="shrink-0">
       <VCluster justify="end" gap="md">
         <VButton variant="tertiary" @click="handleCancel">
           Cancel
@@ -130,7 +130,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
 // Molecules
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VEntityWorkflowStatus from '@/components/molecules/domain/VEntityWorkflowStatus.vue';
+import VEntityProjectStatus from '@/components/molecules/domain/VEntityProjectStatus.vue';
 import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
 const props = defineProps<{

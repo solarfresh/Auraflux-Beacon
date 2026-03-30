@@ -31,7 +31,7 @@ Merges qualitative labels with quantitative visual bars to represent AI certaint
 * **Usage**: Confidence scores, search relevance percentages, or task completeness bars.
 
 ### 3. VStepProgress (The Sequential Tracker)
-A multi-stage visual guide that communicates progress through a defined workflow.
+A multi-stage visual guide that communicates progress through a defined project.
 * **Composition**: `VCluster` > `VIcon` (Step Marker) + `VTypography`.
 * **Usage**: Onboarding flows, multi-step research initiations, or wizard-style interfaces.
 
@@ -104,7 +104,7 @@ src/components/molecules/feedback/
 ├── VModal.vue            # High-focus contextual overlay
 ├── VOverlayLoader.vue    # Blocking state/Async feedback
 ├── VStatusScore.vue      # Quantitative indicator (Text + Progress)
-├── VStepProgress.vue     # Sequential workflow tracker
+├── VStepProgress.vue     # Sequential project tracker
 ├── VUserAvatar.vue         # Identity: Profile & Presence feedback
 └── README.md             # You are here
 ```
