@@ -7,6 +7,7 @@ import {
 } from '@/interfaces/exploration';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
+import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
@@ -56,32 +57,7 @@ export const useExplorationStore = defineStore('exploration', {
 	},
 
 	actions: {
-		// --- Initialization & Loading ---
-		async loadExplorationData() {
-			// Simulate loading data for the current active view and resources
-			// This would typically involve API calls to fetch: resources, nodes, edges, chat history
-			try {
-				await this.loadSidebarRegistryInfo();
-				await this.loadCanvasView();
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
-		},
-
-		async loadCanvasView() {
-			try {
-				let response = await apiService.canvases.graphs.get(this.activeCanvasId);
-				if (response.data) {
-					this.loadConceptualGraph(response.data)
-				} else {
-					console.log(response.data);
-				}
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
-		},
-
-		async loadConceptualGraph(graph: ConceptualGraph) {
+		async setConceptualGraph(graph: ConceptualGraph) {
 			Object.entries(graph.nodes).map(([key, value]) => {
 				value.position.x *= POSITION_SCALE;
 				value.position.y *= POSITION_SCALE;
@@ -90,63 +66,23 @@ export const useExplorationStore = defineStore('exploration', {
 			this.conceptualEdges = graph.edges;
 		},
 
-		async loadSidebarRegistryInfo() {
-			try {
-				let response = await apiService.projects.exploration.getSidebarRegistryInfo();
-				if (response.data) {
-					this.stabilityScore = response.data.stabilityScore;
+		async setSidebarRegistryInfo(info: SidebarRegistryInfo) {
+			this.stabilityScore = info.stabilityScore;
 
-					// TODO: The data model of final question must be defined
-					this.sidebarNodes.set('focusQuestion', {
-						id: 'focusQuestion',
-						label: response.data.finalQuestion,
-						groundedness: 10,
-						solidity: 'SOLID',
-						type: 'FOCUS' as NodeType,
-					})
+			// TODO: The data model of final question must be defined
+			this.sidebarNodes.set('focusQuestion', {
+				id: 'focusQuestion',
+				label: info.finalQuestion,
+				groundedness: 10,
+				solidity: 'SOLID',
+				type: 'FOCUS' as NodeType,
+			})
 
-					this.activeCanvasId = response.data.activeCanvasId;
+			this.activeCanvasId = info.activeCanvasId;
 
-					response.data.nodes.map((node: ConceptualNode) => {
-						this.sidebarNodes.set(node.id, node);
-					});
-				} else {
-					console.log(response.data);
-				}
-			} catch (error) {
-				console.error('Failed to load exploration data:', error);
-			}
-		},
-
-		async recommendConceptualNodes() {
-			let aiSuggestedNodes = [...this.conceptualNodes.values()].filter(node => node.status === 'AI_EXTRACTED');
-			if (aiSuggestedNodes.length < 1 && this.conceptualNodes.size < this.sidebarNodes.size) {
-				apiService.projects.exploration.recommendConceptualNodes(this.activeCanvasId);
-			}
-		},
-
-		async updateConeptualNode(node: ConceptualNode) {
-			try {
-				let nodeData = JSON.parse(JSON.stringify(node));
-				if (nodeData.position) {
-					nodeData.position.x /= POSITION_SCALE;
-					nodeData.position.y /= POSITION_SCALE;
-				}
-
-				let response = await apiService.canvases.nodes.update(this.activeCanvasId, nodeData.id, nodeData);
-				if (response.data) {
-					let newNode = response.data;
-					if (newNode.position) {
-						newNode.position.x *= POSITION_SCALE;
-						newNode.position.y *= POSITION_SCALE;
-					}
-
-					this.conceptualNodes.set(newNode.id, newNode);
-					this.recommendConceptualNodes();
-				}
-			} catch (error) {
-				console.error('Failed to update node:', error);
-			}
+			info.nodes.map((node: ConceptualNode) => {
+				this.sidebarNodes.set(node.id, node);
+			});
 		},
 
 		/** Handles updates for existing nodes, including moving, grouping, and editing */
