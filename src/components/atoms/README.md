@@ -10,7 +10,7 @@ Following the **Bootstrap** categorization model, we group our atoms into four f
 
 Components that trigger events or navigate.
 
-* **Core:** `VButton`
+* **Core:** `VButton`, `VCloseButton`, `VDropdownItem`
 * **Focus:** Interaction states, ripple effects, and loading indicators.
 
 ### 2. 📝 [Forms](forms/README.md) (Inputs)

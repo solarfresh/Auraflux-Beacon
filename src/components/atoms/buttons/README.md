@@ -39,6 +39,17 @@ A specialized, high-frequency atom used to dismiss overlays, modals, and alerts.
 * **Standardization**: A circular (`rounded-full`), ghost-variant button containing a centered `XMark` icon.
 * **Logic**: Defaults to an `aria-label="Close"` for accessibility.
 
+### 3. VDropdownItem
+
+A **specialized action atom** designed for menu systems and list-based interactions. It inherits the interaction logic of `VButton` but is styled for high-density vertical layouts.
+
+* **Role**: **"Menu Action" provider**. It combines `VIcon` and `VTypography` to create consistent list entries.
+* **Design Intent**: Used exclusively within `VDropdownMenu` (Molecule) or similar popover containers. It enforces a flat visual style while maintaining Material-level feedback on hover.
+* **Key Props**:
+    * `to`: (String | Object) If provided, renders as a `RouterLink` for navigation.
+    * `iconName`: (String) Heroicon name for visual context.
+    * `disabled`: (Boolean) Standard interaction suppression.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -47,6 +58,7 @@ A specialized, high-frequency atom used to dismiss overlays, modals, and alerts.
 > **Rule 1: No Raw Buttons.** Never use the `<button>` tag directly. Always use `<VButton>` to ensure the `indigo-500` focus ring and `rounded-md` corners are applied globally.
 > **Rule 2: Size Pairing.** When placing a button next to a form input, ensure both use the same `size` prop (e.g., `md`) to maintain vertical alignment.
 > **Rule 3: Icon Alignment.** Icons inside buttons must be wrapped in a `VIcon` atom and maintain a consistent gap (`gap-2`) with the text.
+> **Rule 4: Compound Atom Integrity.** `VDropdownItem` must always utilize the `VTypography` atom for its label to ensure font-scale consistency. Avoid raw text strings or `<span>` tags inside the default slot without typography wrappers.
 
 ### Correct Implementation Pattern
 
@@ -61,6 +73,13 @@ A specialized, high-frequency atom used to dismiss overlays, modals, and alerts.
 
 <VCloseButton @click="closeModal" />
 
+<VDropdownItem iconName="User" to="/profile">
+  User Profile
+</VDropdownItem>
+
+<VDropdownItem iconName="Power" @click="logout" class="text-danger">
+  Sign Out
+</VDropdownItem>
 ```
 
 ---
@@ -83,6 +102,7 @@ A specialized, high-frequency atom used to dismiss overlays, modals, and alerts.
 src/components/atoms/buttons/
 ├── VButton.vue          # Universal action component
 ├── VCloseButton.vue     # Specialized dismiss trigger
+├── VDropdownItem.vue    # Menu-specific action atom
 └── README.md            # You are here
 
 ```
