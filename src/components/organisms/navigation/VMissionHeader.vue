@@ -1,92 +1,130 @@
 <template>
-  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-slate-100 shadow-sm">
-    <div class="max-w-400 mx-auto px-6 h-16 flex justify-between items-center">
-
-      <div class="flex items-center gap-3 group cursor-pointer">
-        <div class="p-2 bg-indigo-600 rounded-xl shadow-lg shadow-indigo-200 group-hover:scale-105 transition-transform">
-          <VIcon name="Target" size="sm" class="text-white" />
-        </div>
-        <div class="flex flex-col">
-          <VTypography tag="h1" size="lg" weight="bold" color="slate-900" class="leading-none tracking-tight">
-            Strategic Research ISP
-          </VTypography>
-          <VTypography tag="span" size="xs" color="slate-400" class="font-bold tracking-widest uppercase mt-0.5">
-            Intelligence Platform
-          </VTypography>
-        </div>
-      </div>
-
-      <nav class="hidden lg:flex items-center bg-slate-50 px-4 py-1.5 rounded-full border border-slate-100">
-        <div class="flex items-center gap-2">
-          <VBadge
-            :variant="currentStage === 'INITIATION' ? 'indigo' : 'gray'"
-            size="xs"
-            class="transition-all"
-          >
-            1. Initiation
-          </VBadge>
-          <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
-          <VBadge
-            :variant="currentStage === 'EXPLORATION' ? 'indigo' : 'gray'"
-            size="xs"
-          >
-            2. Exploration
-          </VBadge>
-          <VIcon name="ChevronRight" size="xs" class="text-slate-300" />
-          <VBadge
-            :variant="currentStage === 'EXPLORATION' ? 'indigo' : 'gray'"
-            size="xs"
-          >
-            3. Synthesis
-          </VBadge>
-        </div>
-      </nav>
-
-      <div class="flex items-center gap-4">
-        <div class="h-6 w-px bg-slate-200 mx-2 hidden md:block"></div>
-
-        <VAuthAction
-          :isLoggedIn="true"
-          @login="$emit('login')"
-          @logout="$emit('logout')"
+  <VBaseHeader
+    variant="glass"
+    :has-border="true"
+    class="bg-white/90"
+  >
+    <template #left>
+      <VCluster gap="sm" align="center">
+        <VButton
+          variant="tertiary"
+          size="sm"
+          icon-name="ArrowLeft"
+          icon-only
+          @click="handleBack"
         />
-      </div>
-    </div>
-  </header>
+        <VBox width="px" height="4" background="slate-50" />
+        <VStack gap="none">
+          <VTypography size="xs" weight="bold" color="indigo-600" class="uppercase">
+            Mission
+          </VTypography>
+          <VTypography size="sm" weight="semibold" color="slate-900">
+            {{ title }}
+          </VTypography>
+        </VStack>
+      </VCluster>
+    </template>
+
+    <template #center>
+      <VBox
+        background="slate-50"
+        padding="xs"
+        rounded="lg"
+        class="border border-slate-200/60 inline-flex items-center"
+      >
+        <VCluster gap="xs">
+          <VButton
+            v-for="label in stageLabels"
+            :variant="currentStage === label.toUpperCase() ? 'primary' : 'tertiary'"
+            size="xs"
+            class="px-4 py-1.5"
+            @click="changeStage(label.toUpperCase() as ISPStage)"
+          >
+            {{ label }}
+          </VButton>
+        </VCluster>
+      </VBox>
+    </template>
+
+    <template #right>
+      <VCluster gap="md" align="center">
+        <VBox position="relative">
+          <VButton
+            variant="tertiary"
+            size="sm"
+            icon-name="Bell"
+            icon-only
+            @click="toggleNotifications"
+          />
+          <VBox
+            position="absolute"
+            top="1"
+            right="1"
+            width="2"
+            height="2"
+            background="rose-50"
+            rounded="full"
+            class="border-2 border-white"
+          />
+        </VBox>
+        <VButton
+          variant="tertiary"
+          size="sm"
+          icon-name="Cog6Tooth"
+          icon-only
+          @click="openSettings"
+        />
+        <VBox width="px" height="4" background="slate-50" />
+        <VUserAvatar
+          :src="user?.avatar"
+          :status="'online'"
+          size="sm"
+        />
+      </VCluster>
+    </template>
+  </VBaseHeader>
 </template>
 
 <script setup lang="ts">
 /**
- * HeaderToolbar.vue
- * The main navigational anchor of the application.
- * Manages branding, global progress visibility, and user session actions.
+ * VMissionHeader (Stage-Switching Edition)
+ * Replaces search with a segmented control to navigate through ISP-inspired phases.
  */
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VBadge from '@/components/atoms/indicators/VBadge.vue';
-import VAuthAction from '@/components/molecules/forms/VAuthAction.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
+import VBaseHeader from '@/components/organisms/navigation/VBaseHeader.vue';
 import type { ISPStage } from '@/interfaces/project';
+import { useAuthStore } from '@/stores/auth';
+import { useProjectStore } from '@/stores/project';
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-// --- Props ---
-interface Props {
-  /** The current stage of the research project. */
-  currentStage: ISPStage;
-  /** User's authentication status. */
-  // isLoggedIn: boolean;
-}
+const router = useRouter();
+const authStore = useAuthStore();
+const projectStore = useProjectStore();
 
-const props = defineProps<Props>();
+const stageLabels = ref<string[]>(['Initiation', 'Exploration', 'Synthesis']);
 
-const emit = defineEmits<{
-  (e: 'login'): void;
-  (e: 'logout'): void;
-}>();
+const currentProjectId = computed(() => projectStore.currentProjectId);
+const currentStage = computed(() => projectStore.currentStage);
+const title = computed(() => projectStore.projectName);
+const user = computed(() => authStore.user);
+
+const changeStage = (stage: ISPStage) => {
+  if (stage === 'SYNTHESIS') return;
+  router.push(`/isearch/${currentProjectId.value}/${stage.toLowerCase()}/`);
+};
+
+const handleBack = () => {
+  // Navigate back to the project list or previous context
+  router.push({ name: 'ProjectPage' });
+};
+const toggleNotifications = () => console.log('Toggle Notifications');
+const openSettings = () => {
+  console.log('Opening Global System Settings');
+};
 </script>
-
-<style scoped>
-/* Ensure smooth backdrop blur on scroll */
-header {
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-</style>

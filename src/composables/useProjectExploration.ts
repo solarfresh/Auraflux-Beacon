@@ -21,11 +21,18 @@ export function useProjectExploration() {
   const sidebarNodes = computed(() => explorationStore.sidebarNodes);
 
   async function loadExplorationData() {
-    // Simulate loading data for the current active view and resources
-    // This would typically involve API calls to fetch: resources, nodes, edges, chat history
+    if (projectStore.currentProjectId === null) {
+      projectStore.setCurrentProjectId(route.params.id as ID);
+    }
+
     try {
       await loadSidebarRegistryInfo();
       await loadCanvasView();
+      if (projectStore.currentStage !== 'EXPLORATION') {
+        await projectStore.updateProjectDetail(projectStore.currentProjectId as ID, {currentStage: 'EXPLORATION'})
+      } else {
+        await projectStore.loadProjectDetail(projectStore.currentProjectId as ID);
+      }
     } catch (error) {
       console.error('Failed to load exploration data:', error);
     }

@@ -26,7 +26,7 @@
       <template #right-panel>
         <StrategicDiscoveryPanel />
       </template>
-
+<!--
       <template #footer>
         <VButtonToolbar
           :is-proceed-ready="false"
@@ -47,7 +47,7 @@
           </template>
         </VButtonToolbar>
       </template>
-
+ -->
     </ThreePaneWorkspaceTemplate>
 
     <FullScreenModalTemplate

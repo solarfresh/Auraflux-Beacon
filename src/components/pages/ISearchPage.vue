@@ -28,7 +28,7 @@ const projectStore = useProjectStore();
 const route = useRoute();
 const router = useRouter();
 
-const isProjectPage = computed(() => route.name === 'ProjectPage' || route.path === '/isearch');
+const isProjectPage = computed(() => route.name === 'ProjectPage');
 
 onMounted(async () => {
   // Check for valid JWT cookie on initial load

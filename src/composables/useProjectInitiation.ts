@@ -15,6 +15,25 @@ export function useProjectInitiation() {
     return projectStore.currentProjectId || route.params.id as ID;
   });
 
+  async function loadInitiationData() {
+    if (projectStore.currentProjectId === null) {
+      projectStore.setCurrentProjectId(route.params.id as ID);
+    }
+
+    try {
+      getMessages();
+      getRefinedTopic();
+      getReflection();
+      if (projectStore.currentStage !== 'INITIATION') {
+        await projectStore.updateProjectDetail(projectStore.currentProjectId as ID, {currentStage: 'INITIATION'})
+      } else {
+        await projectStore.loadProjectDetail(projectStore.currentProjectId as ID);
+      }
+    } catch (error) {
+      console.error('Failed to load exploration data:', error);
+    }
+  }
+
   async function addMessage(messageContent: string) {
     if (currentProjectId.value === null) return;
 
@@ -52,8 +71,6 @@ export function useProjectInitiation() {
 
   return {
     addMessage,
-    getMessages,
-    getRefinedTopic,
-    getReflection
+    loadInitiationData
   };
 };

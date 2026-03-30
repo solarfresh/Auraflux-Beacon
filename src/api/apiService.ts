@@ -145,6 +145,12 @@ export const apiService = {
       getProject: (): Promise<AxiosResponse<Project[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getProject())
       },
+      getProjectDetail: (projectId: ID): Promise<AxiosResponse<Project>> => {
+        return apiClient.get(ProjectsEndpoints.base.getProjectDetail(projectId))
+      },
+      updateProjectDetail: (projectId: ID, data: Partial<Project>): Promise<AxiosResponse<Project>> => {
+        return apiClient.put(ProjectsEndpoints.base.updateProjectDetail(projectId), data);
+      },
       getReflectionLog: (projectId: ID): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getReflectionLog(projectId))
       },

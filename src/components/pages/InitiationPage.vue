@@ -26,13 +26,14 @@
       </template>
 
       <!-- Slot: action-bar (Flow Control) -->
+<!--
       <template #action-bar>
         <VButtonToolbar
           :is-proceed-ready="true"
           @transition-request="handlePhaseTransitionRequest"
         />
       </template>
-
+ -->
     </DualPaneWorkspaceTemplate>
 
     <FullScreenModalTemplate
@@ -103,7 +104,7 @@ import { useProjectInitiation } from '@/composables/useProjectInitiation';
 const projectStore = useProjectStore();
 const initiativeStore = useInitiativeStore();
 const router = useRouter();
-const { addMessage, getMessages, getRefinedTopic, getReflection } = useProjectInitiation();
+const { addMessage, loadInitiationData } = useProjectInitiation();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
@@ -129,9 +130,7 @@ const topicScope = computed(() => initiativeStore.topicScope);
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
-    getMessages();
-    getRefinedTopic();
-    getReflection();
+    loadInitiationData();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---

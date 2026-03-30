@@ -11,7 +11,7 @@
       <VButton
         variant="primary"
         size="xs"
-        class="!bg-emerald-600 hover:!bg-emerald-700"
+        class="bg-emerald-600! hover:bg-emerald-700!"
         @click="emit('accept')"
       >
         ACCEPT
