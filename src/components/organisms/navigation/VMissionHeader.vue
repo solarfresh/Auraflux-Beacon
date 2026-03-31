@@ -45,43 +45,6 @@
         </VCluster>
       </VBox>
     </template>
-
-    <template #right>
-      <VCluster gap="md" align="center">
-        <VBox position="relative">
-          <VButton
-            variant="tertiary"
-            size="sm"
-            icon-name="Bell"
-            icon-only
-            @click="toggleNotifications"
-          />
-          <VBox
-            position="absolute"
-            top="1"
-            right="1"
-            width="2"
-            height="2"
-            background="rose-50"
-            rounded="full"
-            class="border-2 border-white"
-          />
-        </VBox>
-        <VButton
-          variant="tertiary"
-          size="sm"
-          icon-name="Cog6Tooth"
-          icon-only
-          @click="openSettings"
-        />
-        <VBox width="px" height="4" background="slate-50" />
-        <VUserAvatar
-          :src="user?.avatar"
-          :status="'online'"
-          size="sm"
-        />
-      </VCluster>
-    </template>
   </VBaseHeader>
 </template>
 
@@ -95,16 +58,13 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 import VBaseHeader from '@/components/organisms/navigation/VBaseHeader.vue';
 import type { ISPStage } from '@/interfaces/project';
-import { useAuthStore } from '@/stores/auth';
 import { useProjectStore } from '@/stores/project';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const authStore = useAuthStore();
 const projectStore = useProjectStore();
 
 const stageLabels = ref<string[]>(['Initiation', 'Exploration', 'Synthesis']);
@@ -112,7 +72,6 @@ const stageLabels = ref<string[]>(['Initiation', 'Exploration', 'Synthesis']);
 const currentProjectId = computed(() => projectStore.currentProjectId);
 const currentStage = computed(() => projectStore.currentStage);
 const title = computed(() => projectStore.projectName);
-const user = computed(() => authStore.user);
 
 const changeStage = (stage: ISPStage) => {
   if (stage === 'SYNTHESIS') return;
@@ -122,9 +81,5 @@ const changeStage = (stage: ISPStage) => {
 const handleBack = () => {
   // Navigate back to the project list or previous context
   router.push({ name: 'ProjectPage' });
-};
-const toggleNotifications = () => console.log('Toggle Notifications');
-const openSettings = () => {
-  console.log('Opening Global System Settings');
 };
 </script>

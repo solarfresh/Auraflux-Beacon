@@ -45,7 +45,7 @@ Structural clusters used for moving through the application's architecture.
 
 Orchestrators that manage the relationship between different spatial zones and interactive regions.
 
-* **Key Components:** `VFloatControl`, `VResizableSplitter`, `VLayoutDivider`, `VPanelHeader`.
+* **Key Components:** `VFloatControl`, `VStaticGraph`, `VDropdownMenu`.
 * **Focus:** Z-index hierarchy, coordinate synchronization, and reactive structural transitions.
 
 ### 7. 🕸 [Canvases](canvases/README.md) (Graph Infrastructure)
