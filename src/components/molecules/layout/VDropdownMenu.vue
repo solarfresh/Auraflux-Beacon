@@ -2,7 +2,20 @@
   <VBox
     tag="div"
     rounded="md"
-    class="v-dropdown-menu absolute right-0 z-50 min-w-50 py-1 bg-white border border-slate-200 shadow-lg"
+    background="white"
+    :class="[
+      // Positioning & Z-Index (Z-60 to sit above Floating Controls)
+      'absolute! top-full -right-1 z-60',
+
+      // Layout & Sizing
+      'min-w-40 py-1 flex flex-col',
+
+      // Visual Surface (Level 3 Elevation)
+      'border border-slate-200 shadow-lg',
+
+      // Flow Independence: Ensures it doesn't shift adjacent elements
+      'pointer-events-auto'
+    ]"
   >
     <slot />
   </VBox>
@@ -29,5 +42,7 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 .v-dropdown-menu {
   /* Using standard system transitions for 'State-Driven Geometry' if needed */
   transform-origin: top right;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 </style>

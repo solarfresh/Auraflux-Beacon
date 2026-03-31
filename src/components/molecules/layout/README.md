@@ -108,7 +108,7 @@ A **spatial container** used to orchestrate contextual actions and navigation li
 | --- | --- | --- |
 | **Transitions** | Interaction rhythm | `300ms ease-in-out` |
 | **Floating Depth** | Elevation | `shadow-md` |
-| **Z-Index: Dropdowns** |	Overlay actions |	`z-50` |
+| **Z-Index: Dropdowns** |	Overlay actions |	`z-60` |
 | **Z-Index: Controls** | Floating triggers | `z-40` |
 | **Z-Index: Panels** | Navigation units | `z-20` |
 | **Edge Semantics** | Reliability | Solid (Verified) / Dashed (AI) |

@@ -29,43 +29,6 @@
         <!-- <VIntentTag :intent="currentIntent" size="sm" /> -->
       </VCluster>
     </template>
-
-    <template #right>
-      <VCluster gap="md" align="center">
-        <VBox position="relative">
-          <VButton
-            variant="tertiary"
-            size="sm"
-            icon-name="Bell"
-            icon-only
-            @click="toggleNotifications"
-          />
-          <VBox
-            position="absolute"
-            top="1"
-            right="1"
-            width="2"
-            height="2"
-            background="rose-50"
-            rounded="full"
-            class="border-2 border-white"
-          />
-        </VBox>
-        <VButton
-          variant="tertiary"
-          size="sm"
-          icon-name="Cog6Tooth"
-          icon-only
-          @click="openSettings"
-        />
-        <VBox width="px" height="4" background="slate-50" />
-        <VUserAvatar
-          :src="user?.avatar"
-          :status="'online'"
-          size="sm"
-        />
-      </VCluster>
-    </template>
   </VBaseHeader>
 </template>
 
@@ -75,21 +38,5 @@ import VBaseHeader from '@/components/organisms/navigation/VBaseHeader.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
 import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
-// import VIntentTag from '@/components/molecules/indicators/VIntentTag.vue';
-import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
-import { useAuthStore } from '@/stores/auth';
-import { computed, ref } from 'vue';
-
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
-
-// Mocking the intent from your previous session/login state
-const currentIntent = ref('exploratory');
-
-const toggleNotifications = () => console.log('Toggle Notifications');
-const openSettings = () => {
-  console.log('Opening Global System Settings');
-};
 </script>
