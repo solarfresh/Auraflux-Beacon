@@ -53,6 +53,12 @@ A specialized entity tile that visualizes the configuration, operational role, a
 * **Responsibility**: Translating complex LLM configurations (System Prompts, Model Parameters) into a scannable interface for agent orchestration.
 * **Key Props**: `agent` (Agent Object conforming to `Agent` Interface).
 
+#### **7. VAgentToolbar (The Dimension Controller)**
+A specialized orchestrator that manages the visibility and sequence of an Agent collection, focusing on model families and deployment status.
+* **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group: Status), `VCluster` (Model Select + Sort)].
+* **Responsibility**: Mapping the **Agent Lifecycle** (Active/Draft/Archived) and **Model Hierarchy** (Gemini/GPT/Claude) to the active view.
+* **Key Props**: `modelValue` (Object with `filter`, `modelFamily`, & `sorter`), `v-model`.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -85,12 +91,23 @@ A specialized entity tile that visualizes the configuration, operational role, a
   @click="handleCreate"
 />
 
-<VAgentCard :agent="explorerAgent" />
-
-<VAgentCard
-  :agent="suggestedRefiner"
-  status="USER_DRAFT"
+<VAgentToolbar
+  v-model="agentToolbarState"
+  @create="handleDeployNewAgent"
 />
+
+<VGrid cols="3" gap="lg">
+  <VAgentCard
+    v-for="agent in activeAgents"
+    :key="agent.id"
+    :agent="agent"
+  />
+  <VInteractivePlaceholder
+    label="Deploy New Agent"
+    icon-name="CpuChip"
+    @click="handleDeploy"
+  />
+</VGrid>
 ```
 
 ---
@@ -101,6 +118,7 @@ A specialized entity tile that visualizes the configuration, operational role, a
 src/components/molecules/resources/
 ├── VProjectCard.vue            # Business: Project entity tile
 ├── VAgentCard                  # Business: Agent entity tile
+├── VAgentToolbar.vue           # Agent filter & model orchestrator
 ├── VProjectToolbar.vue         # Business: Filter & Sort orchestrator
 ├── VEntityChip.vue             # Business: Metadata/Keyword tag
 ├── VInteractivePlaceholder.vue # Navigation: Actionable creation prompt

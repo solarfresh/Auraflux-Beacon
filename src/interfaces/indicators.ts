@@ -6,4 +6,5 @@ export type SorterState = 'EDITED' | 'CREATED'
 export type SelectorState = {
   filter: FilterState;
   sorter: SorterState;
+  modelFamily?: string;
 };
