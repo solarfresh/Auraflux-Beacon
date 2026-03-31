@@ -1,3 +1,4 @@
+import AgentSettingsPage from '@/components/pages/AgentSettingsPage.vue';
 import ExplorationPage from '@/components/pages/ExplorationPage.vue';
 import InitiationPage from '@/components/pages/InitiationPage.vue';
 import ISearchPage from '@/components/pages/ISearchPage.vue';
@@ -31,6 +32,18 @@ export const routes: Array<RouteRecordRaw> = [
         path: ':id/exploration/',
         name: 'ExplorationPage',
         component: ExplorationPage
+      },
+    ]
+  },
+  {
+    path: '/settings/',
+    name: 'SettingsPage',
+    component: ISearchPage,
+    children: [
+      {
+        path: 'agents',
+        name: 'AgentSettingsPage',
+        component: AgentSettingsPage
       },
     ]
   }

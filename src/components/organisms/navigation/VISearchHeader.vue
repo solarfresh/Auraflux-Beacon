@@ -16,11 +16,16 @@
     >
 
       <VCluster gap="md" align="center" class="flex-none min-w-40">
-        <slot name="left" />
+        <VEntityIdentity
+          :show-back="showBack"
+          :title="title"
+          @back="handleBack"
+        />
       </VCluster>
 
       <VBox class="hidden md:flex grow justify-center px-8 max-w-2xl">
-        <slot name="center" />
+        <VISPStageNavigator v-if="showStage" />
+        <VGlobalSearch v-else />
       </VBox>
 
       <VCluster gap="md" align="center" justify="end" class="flex-none min-w-40">
@@ -53,7 +58,7 @@
           <VDropdownMenu class="hidden group-hover:block">
             <VDropdownItem
               icon-name="AdjustmentsVertical"
-              @click="router.push('/settings/agent')"
+              @click="router.push('/settings/agents')"
             >
               Agent Settings
             </VDropdownItem>
@@ -96,10 +101,17 @@ import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
 import { useAuthStore } from '@/stores/auth';
 import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useRouter } from 'vue-router';
+import { useProjectStore } from '@/stores/project';
+import VEntityIdentity from '@/components/molecules/domain/VEntityIdentity.vue';
+import VISPStageNavigator from '@/components/molecules/navs/VISPStageNavigator.vue';
+import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
 
+const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const projectStore = useProjectStore();
 const user = computed(() => authStore.user);
 
 withDefaults(defineProps<{
@@ -112,6 +124,18 @@ withDefaults(defineProps<{
   hasBorder: true
 });
 
+const showBack = computed(() => route.name !== 'ProjectPage');
+const showStage = computed(() => ['InitiationPage', 'ExplorationPage'].includes(route.name as string));
+const title = computed(() => {
+  if (route.name === 'ProjectPage') return 'MISSION CONTROL';
+  if (route.name === 'AgentSettingsPage') return 'Agent Settings';
+  return projectStore.projectName;
+});
+
+const handleBack = () => {
+  // Navigate back to the project list or previous context
+  router.push({ name: 'ProjectPage' });
+};
 const logout = () => console.log('User logout');
 const toggleNotifications = () => console.log('Toggle Notifications');
 const openProfile = () => console.log('Toggle User Profile');

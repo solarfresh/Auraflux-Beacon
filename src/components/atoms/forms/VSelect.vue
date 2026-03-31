@@ -29,7 +29,6 @@ import { computed } from 'vue';
 const props = defineProps({
   /** Currently selected value (v-model) */
   modelValue: {
-    type: [String, Number],
     default: '',
   },
   /** Accessibility ID to associate with a label */
@@ -46,18 +45,19 @@ const props = defineProps({
   size: {
     type: String,
     default: 'md', // 'sm', 'md', 'lg'
-    validator: (value: string) => ['sm', 'md', 'lg'].includes(value),
+    validator: (value: string) => ['xs', 'sm', 'md', 'lg'].includes(value),
   },
 });
 
 /** Define emits for v-model support with specific types */
 defineEmits<{
-  (e: 'update:modelValue', value: string | number): void;
+  (e: 'update:modelValue', value: any): void;
 }>();
 
 // --- Tailwind Size Mapping ---
 // Matches Input.vue padding and font sizes exactly
 const sizeMap: Record<string, string> = {
+  xs: 'px-1 py-1 text-xs',
   sm: 'px-2 py-1.5 text-sm',
   md: 'px-3 py-2 text-base',
   lg: 'px-4 py-3 text-lg',

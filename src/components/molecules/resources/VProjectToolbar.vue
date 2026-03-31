@@ -39,14 +39,15 @@
 
         <VCluster gap="xs" align="center" class="text-slate-500">
           <VIcon name="ArrowsUpDown" size="xs" />
-          <select
-            :value="modelValue.sorter"
-            class="bg-transparent text-sm font-medium focus:outline-none cursor-pointer hover:text-slate-900"
-            @change="updateSorter(($event.target as HTMLSelectElement).value as SorterState)"
+          <VSelect
+            :model-value="modelValue.sorter"
+            size="xs"
+            class="w-44"
+            @update:model-value="updateSorter"
           >
-            <option value="edited">Recently Edited</option>
-            <option value="created">Date Created</option>
-          </select>
+            <option value="EDITED">Recently Edited</option>
+            <option value="CREATED">Date Created</option>
+          </VSelect>
         </VCluster>
 
         <VBox
@@ -58,7 +59,7 @@
 
         <VButton
           variant="primary"
-          size="sm"
+          size="xs"
           icon-name="Plus"
           @click="$emit('create')"
         >
@@ -74,12 +75,12 @@
  * VProjectToolbar
  * Updated: Replaced non-existent VLayoutDivider with a semantic VBox divider.
  */
-import { ref } from 'vue';
+import VButton from '@/components/atoms/buttons/VButton.vue';
+import VSelect from '@/components/atoms/forms/VSelect.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import type { SelectorState, SorterState, FilterState } from '@/interfaces/indicators';
+import type { FilterState, SelectorState, SorterState } from '@/interfaces/indicators';
 
 const props = defineProps<{
   modelValue: SelectorState;
