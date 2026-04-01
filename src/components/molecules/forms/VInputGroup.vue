@@ -13,7 +13,7 @@
     <VButton
       variant="primary"
       size="lg"
-      class="flex-shrink-0"
+      class="shrink-0"
       :disabled="isDisabled || !inputContent.trim()"
       aria-label="Send message"
       @click="handleSend"
