@@ -13,7 +13,7 @@ export function useProjectExploration() {
   const route = useRoute();
 
   const currentProjectId = computed((): ID => {
-    return projectStore.currentProjectId || route.params.id as ID;
+    return route.params.id as ID || projectStore.currentProjectId || '';
   });
 
   const activeCanvasId = computed(() => explorationStore.activeCanvasId);

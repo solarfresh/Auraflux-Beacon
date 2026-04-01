@@ -20,7 +20,7 @@
                     :id="id"
                     v-model="currentAgent.systemPrompt"
                     placeholder="You are an Explorer Agent..."
-                    :rows="16"
+                    :rows="6"
                     class="font-mono text-sm leading-relaxed"
                   />
                 </template>
@@ -33,9 +33,9 @@
                 <template #default="{ id }">
                   <VTextarea
                     :id="id"
-                    v-model="currentAgent.promptTemplate"
+                    v-model="promptTemplate"
                     placeholder="Context: {{context}}..."
-                    :rows="6"
+                    :rows="16"
                     class="font-mono text-sm"
                   />
                 </template>
@@ -52,7 +52,7 @@
               <template #default="{ id }">
                 <VTextarea
                   :id="id"
-                  v-model="currentAgent.outputSchema"
+                  v-model="outputSchema"
                   placeholder='{ "type": "object", ... }'
                   :rows="10"
                   class="font-mono text-sm bg-slate-50 border-slate-200"
@@ -75,9 +75,11 @@
                   Synced with Cloud
                 </VTypography>
               </VCluster>
+<!--
               <VTypography size="xs" color="slate-300">
                 v{{ currentAgent.version || '1.0.0' }}
               </VTypography>
+ -->
             </VCluster>
           </VBox>
 
@@ -96,7 +98,7 @@
 
               <VFormField label="Temperature">
                 <VInput
-                  v-model.number="currentAgent.llmParameters.temperature"
+                  v-model="currentAgent.llmParameters.temperature"
                   type="number"
                   step="0.1"
                   min="0"
@@ -130,7 +132,7 @@
                     background="slate-50"
                     class="px-2 py-0.5 rounded text-[10px] font-mono text-slate-600 border border-slate-200"
                   >
-                    \{\{ {{ v }} \}\}
+                    {{ v }}
                   </VBox>
                 </VCluster>
               </VBox>
@@ -150,7 +152,10 @@
  * Layout: Asymmetric 2-column (8:4)
  * Architecture: Form-driven with Fieldset/FormField molecules.
  */
-import { computed, reactive } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useAgentStore } from '@/stores/agent';
+import { useRoute } from 'vue-router';
+
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VGrid from '@/components/atoms/layout/VGrid.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
@@ -167,18 +172,51 @@ import VInput from '@/components/atoms/forms/VInput.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
 
-// Mock state representing the agent configuration
-const currentAgent = reactive({
-  name: 'ExplorerAgent',
-  role: 'EXPLORER',
-  systemPrompt: '',
-  promptTemplate: '',
-  outputSchema: '{}',
-  llmParameters: {
-    model: 'gemini-3-flash-preview',
-    temperature: 0.1
-  },
-  version: '1.2.4'
+import type { ID } from '@/interfaces/core';
+import type { Agent } from '@/interfaces/agents';
+
+const route = useRoute();
+const agentStore = useAgentStore();
+
+const currentAgentId = computed(()=> route.params.id as ID);
+const currentAgent = computed((): Agent  => {
+  if (agentStore.currentAgent) return agentStore.currentAgent;
+  return {
+    id: '',
+    name: '',
+    role: '',
+    systemPrompt: '',
+    promptTemplate: '',
+    outputSchema: {},
+    templateVariables: {},
+    llmParameters: {
+      model: 'gemini-3-flash-preview',
+      temperature: 0.1
+    },
+    createdAt: '',
+    updatedAt: ''
+  }
+});
+const promptTemplate = computed({
+  get: () => agentStore.currentAgent?.promptTemplate?.replace(/\\n/g, '\n'),
+  set: (val) => {
+    if (agentStore.currentAgent) {
+      agentStore.currentAgent.promptTemplate = val;
+    }
+  }
+});
+const outputSchema = computed({
+  get: () => JSON.stringify(agentStore.currentAgent?.outputSchema || {}, null, 2),
+  set: (val) => {
+    if (agentStore.currentAgent) {
+      const parsed = JSON.parse(val);
+      agentStore.currentAgent.outputSchema = outputSchema;
+    }
+  }
+})
+
+onMounted(async () => {
+  await agentStore.loadAgentDetail(currentAgentId.value);
 });
 
 /**
@@ -186,7 +224,10 @@ const currentAgent = reactive({
  * This provides immediate feedback on what 'template_variables' will be created.
  */
 const detectedVariables = computed(() => {
-  const combined = currentAgent.systemPrompt + currentAgent.promptTemplate;
+  const systemPrompt = currentAgent.value.systemPrompt || '';
+  const promptTemplate = currentAgent.value.promptTemplate || '';
+
+  const combined = systemPrompt + promptTemplate;
   const matches = combined.matchAll(/\{\{(.*?)\}\}/g);
   return [...new Set(Array.from(matches, m => m[1].trim()))];
 });

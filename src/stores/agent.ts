@@ -1,12 +1,16 @@
+import config from '@/config';
 import { apiService } from '@/api/apiService';
 import type { ID } from '@/interfaces/core';
 import type { Agent } from '@/interfaces/agents';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
+import { debounce } from 'lodash-es';
 
 export const useAgentStore = defineStore('agent', () => {
   // --- State (Refs) ---
   const agents = ref<Map<string, Agent>>(new Map());
+  const currentAgentId = ref<ID | null>(null);
+  const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
 
   async function loadAgents() {
     try {
@@ -24,6 +28,8 @@ export const useAgentStore = defineStore('agent', () => {
   };
 
   async function loadAgentDetail(agentId: ID) {
+    currentAgentId.value = agentId;
+
     try {
       let response = await apiService.agents.getAgentDetail(agentId);
       if (response.data) {
@@ -36,11 +42,30 @@ export const useAgentStore = defineStore('agent', () => {
     }
   }
 
+  async function updateAgent(field: keyof Agent, value: any) {
+    let agent = agents.value.get(currentAgentId.value || '');
+    if (agent === undefined || agent === null) return;
+
+    agent[field] = value;
+
+    debounce(async (field: keyof Agent, value: any) => {
+      console.log(`update: id-${currentAgentId} field-${field} value-${value}`)
+    }, config.DEBOUNCE_TIME || 500);
+  };
+
+  async function setCurrentAgentId(agentId: ID) {
+    currentAgentId.value = agentId;
+  };
+
   return {
     agents,
+    currentAgentId,
     // Getters
+    currentAgent,
     // Actions
     loadAgents,
     loadAgentDetail,
+    updateAgent,
+    setCurrentAgentId,
   }
 });

@@ -97,19 +97,20 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VDropdownItem from '@/components/atoms/buttons/VDropdownItem.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
-import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
-import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
-import { useAuthStore } from '@/stores/auth';
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { useRouter } from 'vue-router';
-import { useProjectStore } from '@/stores/project';
 import VEntityIdentity from '@/components/molecules/domain/VEntityIdentity.vue';
-import VISPStageNavigator from '@/components/molecules/navs/VISPStageNavigator.vue';
+import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
+import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
+import VISPStageNavigator from '@/components/molecules/navs/VISPStageNavigator.vue';
+import { useAgentStore } from '@/stores/agent';
+import { useAuthStore } from '@/stores/auth';
+import { useProjectStore } from '@/stores/project';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
+const agentStore = useAgentStore();
 const authStore = useAuthStore();
 const projectStore = useProjectStore();
 const user = computed(() => authStore.user);
@@ -129,12 +130,17 @@ const showStage = computed(() => ['InitiationPage', 'ExplorationPage'].includes(
 const title = computed(() => {
   if (route.name === 'ProjectPage') return 'MISSION CONTROL';
   if (route.name === 'AgentSettingsPage') return 'Agent Settings';
+  if (route.name === 'AgentEditorPage') return agentStore.currentAgent?.name || '';
   return projectStore.projectName;
 });
 
 const handleBack = () => {
   // Navigate back to the project list or previous context
-  router.push({ name: 'ProjectPage' });
+  if (route.name === 'AgentEditorPage') {
+    router.push({ name: 'AgentSettingsPage' });
+  } else {
+    router.push({ name: 'ProjectPage' });
+  }
 };
 const logout = () => console.log('User logout');
 const toggleNotifications = () => console.log('Toggle Notifications');
