@@ -15,28 +15,46 @@
           border="all"
           rounded="lg"
           padding="none"
-          class="flex overflow-hidden"
+          class="flex overflow-hidden border-slate-200/60"
         >
           <VButton
-            v-for="filter in filterOptions"
-            :key="filter.value"
+            v-for="option in filterOptions"
+            :key="option.value"
             variant="ghost"
             size="xs"
             :class="[
               'px-4 transition-all',
-              modelValue.filter === filter.value
+              modelValue.filter === option.value
                 ? 'bg-white shadow-sm text-indigo-600 font-semibold'
                 : 'text-slate-500 hover:text-slate-700'
             ]"
-            @click="updateFilter(filter.value)"
+            @click="updateFilter(option.value as FilterState)"
           >
-            {{ filter.label }}
+            {{ option.label }}
           </VButton>
         </VBox>
+
+        <VBox width="px" height="4" background="slate-50" class="mx-1 hidden md:block" />
+
+        <VCluster gap="xs" align="center" class="ml-1">
+          <VTypography size="xs" weight="bold" color="slate-400" class="uppercase tracking-widest">
+            Model:
+          </VTypography>
+          <VSelect
+            :model-value="modelValue.modelFamily"
+            size="xs"
+            class="w-40"
+            @update:model-value="updateModelFamily"
+          >
+            <option value="ALL">All Models</option>
+            <option value="GEMINI">Gemini Series</option>
+            <option value="GPT">GPT Series</option>
+            <option value="CLAUDE">Claude Series</option>
+          </VSelect>
+        </VCluster>
       </VCluster>
 
       <VCluster gap="md" align="center">
-
         <VCluster gap="xs" align="center" class="text-slate-500">
           <VIcon name="ArrowsUpDown" size="xs" />
           <VSelect
@@ -45,8 +63,9 @@
             class="w-44"
             @update:model-value="updateSorter"
           >
-            <option value="EDITED">Recently Edited</option>
-            <option value="CREATED">Date Created</option>
+            <option value="NAME">Sort by Name</option>
+            <option value="VERSION">Latest Version</option>
+            <option value="UPDATED">Recently Modified</option>
           </VSelect>
         </VCluster>
 
@@ -54,7 +73,6 @@
           width="px"
           height="4"
           background="slate-50"
-          class="bg-slate-200"
         />
 
         <VButton
@@ -63,21 +81,24 @@
           icon-name="Plus"
           @click="$emit('create')"
         >
-          New Project
+          Deploy Agent
         </VButton>
       </VCluster>
+
     </VCluster>
   </VBox>
 </template>
 
 <script setup lang="ts">
 /**
- * VProjectToolbar
- * Updated: Replaced non-existent VLayoutDivider with a semantic VBox divider.
+ * VAgentToolbar Molecule
+ * Responsibility: Orchestrating the visibility and sequence of Agent blueprints.
+ * Strictly follows Resource Molecule Rule 6 & 7.
  */
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import type { FilterState, SelectorState, SorterState } from '@/interfaces/indicators';
@@ -94,14 +115,16 @@ const emit = defineEmits<{
 const filterOptions = [
   { label: 'All', value: 'ALL' },
   { label: 'Active', value: 'LOCKED' },
+  { label: 'Drafts', value: 'USER_DRAFT' },
   { label: 'Archived', value: 'ARCHIVED' },
-] as const;
+];
 
-const updateFilter = (filter: FilterState) => {
-  emit('update:modelValue', { ...props.modelValue, filter });
+// Helper to emit updates while maintaining immutability
+const updateState = (patch: Partial<SelectorState>) => {
+  emit('update:modelValue', { ...props.modelValue, ...patch });
 };
 
-const updateSorter = (sorter: SorterState) => {
-  emit('update:modelValue', { ...props.modelValue, sorter });
-};
+const updateFilter = (filter: FilterState) => updateState({ filter });
+const updateModelFamily = (modelFamily: string) => updateState({ modelFamily });
+const updateSorter = (sorter: SorterState) => updateState({ sorter });
 </script>

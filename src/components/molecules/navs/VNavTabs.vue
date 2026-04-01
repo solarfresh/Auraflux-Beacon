@@ -6,7 +6,7 @@
       background="white"
       border="bottom"
       padding="none"
-      class="flex-shrink-0"
+      class="shrink-0"
     >
       <VCluster gap="md" align="center" class="px-4">
         <VButton
