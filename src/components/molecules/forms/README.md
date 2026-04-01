@@ -48,6 +48,12 @@ The semantic and behavioral engine for user submissions. It replaces raw `<form>
 * **Responsibility**: Handles `@submit.prevent`, manages global loading/disabled states for nested fields, and enforces standardized spacing via `gap`.
 * **Key Props**: `gap` (defaulting to `md`).
 
+#### **6. VFieldset (The Sectional Wrapper)**
+A physical and semantic grouping of related fields. It establishes a visual "workstation" within a complex form.
+
+* **Composition**: `VBox` (Bordered) > `VStack` > [`VStack` (Legend), `Slot` (Fields)].
+* **Bootstrap Ref**: Equivalent to `<fieldset>` or a bordered `.card` within a form.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -56,6 +62,7 @@ The semantic and behavioral engine for user submissions. It replaces raw `<form>
 > **Rule 1: No Magic Spacing.** Replace all `space-x-*` or `gap-*` Tailwind classes with the `gap` prop on `VStack` or `VCluster`.
 > **Rule 2: Attribute Flattening.** Use `inheritAttrs: false` to ensure layout classes (like `flex-1`) are applied to the root layout atom of the molecule.
 > **Rule 3: Slot Identification.** `VFormField` should provide a scoped ID to its slot to ensure accessibility without manual ID management.
+> **Rule 4: Structural Hierarchy.** `VFieldset` MUST be used to group multiple related `VFormField` components. Never use `VFormField` to create section headers; use the `title` and `description` props of `VFieldset` for visual grouping.
 
 ### Standard Implementation Pattern
 
@@ -83,6 +90,8 @@ The semantic and behavioral engine for user submissions. It replaces raw `<form>
 
 | Relationship | Logic | Token |
 | --- | --- | --- |
+| **Fieldset to Fieldset** | Section separation | **`gap="lg"` (24px)** |
+| **Legend to First Field** | Header proximity | **`gap="md"` (16px)** |
 | **Field to Field** | Vertical flow within `VForm` | `gap="md"` (16px) |
 | **Label to Input** | Immediate association | `gap="xs"` (8px) |
 | **Input to Error** | Feedback proximity | `gap="1"` (4px) |
@@ -96,7 +105,8 @@ The semantic and behavioral engine for user submissions. It replaces raw `<form>
 ```text
 src/components/molecules/forms/
 ├── VButtonToolbar.vue      # Action clusters
-├── VForm.vue               # Semantic form & layout engine (New)
+├── VFieldset.vue           # Logical & physical grouping
+├── VForm.vue               # Semantic form & layout engine
 ├── VFormField.vue          # Label + Input wrapper
 ├── VInputGroup.vue         # Combined input/button (Search)
 ├── VAuthAction.vue         # Identity + Session trigger

@@ -12,13 +12,13 @@
           <slot name="chat-interface"></slot>
         </div>
 
-        <div class="flex-shrink-0 bg-white border-t">
+        <div class="shrink-0 bg-white border-t">
           <slot name="action-bar"></slot>
         </div>
       </div>
 
       <div
-        class="w-full md:w-1/3 xl:w-1/4 flex-shrink-0 bg-white border-r shadow-lg overflow-y-auto p-4 transition-all duration-300 ease-in-out"
+        class="w-full md:w-1/3 xl:w-1/4 shrink-0 bg-white border-r shadow-lg overflow-y-auto p-4 transition-all duration-300 ease-in-out"
       >
         <slot name="sidebar"></slot>
       </div>
