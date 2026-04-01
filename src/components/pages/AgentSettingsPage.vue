@@ -56,6 +56,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { useAgentStore } from '@/stores/agent';
 
 // Layout Atoms
@@ -77,6 +78,7 @@ import type { SelectorState } from '@/interfaces/indicators';
 import type { Agent } from '@/interfaces/agents';
 
 // --- State Management ---
+const router = useRouter();
 const agentStore = useAgentStore();
 const isDeployModalOpen = ref(false);
 
@@ -121,8 +123,7 @@ onMounted(async () => {
 });
 
 const openAgentEditor = (agentId: string) => {
-  console.log('Navigating to agent editor:', agentId);
-  // router.push(`/settings/agents/${agentId}`)
+  router.push(`/settings/agents/${agentId}/`)
 };
 </script>
 

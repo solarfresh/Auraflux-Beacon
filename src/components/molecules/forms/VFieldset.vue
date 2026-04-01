@@ -4,7 +4,7 @@
     background="white"
     border="all"
     rounded="lg"
-    padding="md"
+    :padding="padding"
     class="v-fieldset border-slate-200/60 shadow-sm"
   >
     <VStack gap="md">
@@ -46,22 +46,23 @@
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import type { SpacingToken } from '@/interfaces/layout';
 
-interface Props {
+const props = withDefaults(defineProps<{
   /** The primary heading for this configuration group */
   title?: string;
+  padding?: SpacingToken;
   /** Optional sub-text to guide the user on how to configure these fields */
   description?: string;
-}
-
-defineProps<Props>();
+}>(), {
+  padding: 'md',
+})
 </script>
 
 <style scoped>
 fieldset {
-  min-inline-size: min-content;
-  margin-inline: 0;
-  padding-inline: 0;
+  display: block;
+  min-inline-size: auto;
 }
 
 legend {

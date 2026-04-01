@@ -4,6 +4,7 @@ import InitiationPage from '@/components/pages/InitiationPage.vue';
 import ISearchPage from '@/components/pages/ISearchPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import ProjectPage from '@/components/pages/ProjectPage.vue';
+import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 
@@ -44,6 +45,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: 'agents',
         name: 'AgentSettingsPage',
         component: AgentSettingsPage
+      },
+      {
+        path: 'agents/:id/',
+        name: 'AgentEditorPage',
+        component: AgentEditorPage
       },
     ]
   }
