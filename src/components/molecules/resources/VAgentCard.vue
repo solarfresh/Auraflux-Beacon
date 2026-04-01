@@ -5,39 +5,41 @@
     rounded="lg"
     background="white"
     :clickable="true"
-    :border="agent.status === 'USER_DRAFT' ? 'dashed' : 'all'"
+    border="all"
     :class="[
       'v-agent-card transition-all duration-200 border-slate-200/60 flex flex-col gap-4',
-      agent.status === 'USER_DRAFT' ? 'bg-amber-50/30' : 'hover:border-indigo-300 shadow-sm'
+      'hover:border-indigo-300 shadow-sm'
     ]"
   >
-    <VCluster justify="between" align="start">
-      <VBox
-        padding="xs"
-        rounded="md"
-        :background="agent.status === 'LOCKED' ? 'indigo-50' : 'slate-50'"
-      >
-        <VIcon
-          name="CpuChip"
-          size="sm"
-          :class="agent.status === 'LOCKED' ? 'text-indigo-600' : 'text-slate-400'"
-        />
-      </VBox>
+    <VCluster justify="between" align="center">
+      <VCluster gap="sm" align="center">
+        <VBox
+          padding="xs"
+          rounded="md"
+          background="indigo-50"
+          class="shrink-0"
+        >
+          <VIcon
+            name="CpuChip"
+            size="sm"
+            class="text-indigo-600"
+          />
+        </VBox>
+        <VTypography weight="bold" size="base" color="slate-900">
+          {{ agent.name }}
+        </VTypography>
+      </VCluster>
 
       <VBox
         width="2"
         height="2"
         rounded="full"
-        :background="agent.status === 'LOCKED' ? 'emerald-50' : 'slate-50'"
-        class="mt-1.5"
+        background="emerald-50"
+        class="shrink-0"
       />
     </VCluster>
 
     <VStack gap="xs">
-      <VTypography weight="bold" size="base" color="slate-900">
-        {{ agent.name }}
-      </VTypography>
-
       <VTypography
         size="sm"
         color="slate-400"
@@ -64,10 +66,6 @@
       </VBox>
 
       <VBox class="grow" />
-
-      <VTypography size="xs" color="slate-300" weight="medium">
-        v{{ agent.version }}
-      </VTypography>
     </VCluster>
   </VBox>
 </template>

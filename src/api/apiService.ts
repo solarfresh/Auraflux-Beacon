@@ -1,8 +1,9 @@
-import { CanvasesEndpoints, KnowledgeEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
+import { AgentsEndpoints, CanvasesEndpoints, KnowledgeEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
+import type { Agent } from '@/interfaces/agents';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { Project, ReflectionLogEntry } from '@/interfaces/project';
@@ -98,6 +99,14 @@ apiClient.interceptors.response.use(
 );
 
 export const apiService = {
+  agents: {
+    getAgents: (): Promise<AxiosResponse<Agent[]>> => {
+      return apiClient.get(AgentsEndpoints.getAgents());
+    },
+    getAgentDetail: (agentId: ID): Promise<AxiosResponse<Agent>> => {
+      return apiClient.get(AgentsEndpoints.getAgentDetail(agentId));
+    },
+  },
   canvases: {
     graphs: {
       get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {

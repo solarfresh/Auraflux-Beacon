@@ -1,9 +1,7 @@
 <template>
   <VBox tag="main" class="w-full min-h-screen bg-slate-50">
-
-    <VBox padding-x="lg" padding-top="lg" padding-bottom="xl" class="max-w-7xl mx-auto w-full">
+    <VBox class="max-w-7xl mx-auto w-full">
       <VStack gap="lg">
-
         <VBox
           background="white"
           padding="md"

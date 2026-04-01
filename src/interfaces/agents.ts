@@ -33,7 +33,7 @@ export interface Agent {
 
   /** * JSON Schema string defining the expected tool/response output (CSV: output_schema).
    */
-  outputSchema: string;
+  outputSchema: Record<string, any>;
 
   /** * Model-specific tuning (CSV: llm_parameters).
    */
@@ -47,9 +47,9 @@ export interface Agent {
 
   /** * Current deployment state.
    */
-  status: EntityStatus;
+  // status: EntityStatus;
 
-  version: string;
+  // version: string;
   createdAt: DateTimeString;
   updatedAt: DateTimeString;
 }

@@ -1,11 +1,6 @@
 <template>
   <VBox tag="main" class="w-full min-h-screen bg-slate-50">
-    <VBox
-      padding-x="lg"
-      padding-top="lg"
-      padding-bottom="xl"
-      class="max-w-7xl mx-auto w-full"
-    >
+    <VBox class="max-w-7xl mx-auto w-full">
       <VStack gap="lg">
         <VBox
           background="white"
@@ -19,12 +14,12 @@
           />
         </VBox>
 
-        <VBox v-if="hasAgents || isFiltering" class="w-full">
+        <VBox v-if="hasAgents || isFiltering" class="max-w-7xl mx-auto w-full px-6">
           <VGrid cols="1 sm:2 lg:3 xl:3" gap="lg">
             <VInteractivePlaceholder
               label="Deploy New Agent"
               icon-name="CpuChip"
-              class="h-full min-h-50"
+              class="h-full"
               @click="isDeployModalOpen = true"
             />
 
@@ -100,9 +95,9 @@ const filteredAgents = computed(() => {
   let list = Array.from(agentStore.agents.values());
 
   // Filter by Status
-  if (toolbarState.value.filter !== 'ALL') {
-    list = list.filter(a => a.status === toolbarState.value.filter);
-  }
+  // if (toolbarState.value.filter !== 'ALL') {
+  //   list = list.filter(a => a.status === toolbarState.value.filter);
+  // }
 
   if (toolbarState.value.modelFamily !== 'ALL') {
     list = list.filter(a =>
@@ -113,7 +108,7 @@ const filteredAgents = computed(() => {
   // Sort Logic
   return [...list].sort((a, b) => {
     if (toolbarState.value.sorter === 'NAME') return a.name.localeCompare(b.name);
-    if (toolbarState.value.sorter === 'VERSION') return b.version.localeCompare(a.version);
+    // if (toolbarState.value.sorter === 'VERSION') return b.version.localeCompare(a.version);
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
   });
 });
