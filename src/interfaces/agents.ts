@@ -22,15 +22,15 @@ export interface ModelProvider {
   // Security & Identity
   apiKeyFingerprint: string;   // Masked key (e.g., "••••4n2z")
   baseUrl?: string;            // Custom endpoint for Local/Private LLMs
-  organizationId?: string;     // Specific to OpenAI/Azure
+  // organizationId?: string;     // Specific to OpenAI/Azure
 
   // Performance Metadata
-  latencyMs: number | null;    // Last recorded response time
-  lastVerifiedAt: string;      // ISO Date string
+  // latencyMs: number | null;    // Last recorded response time
+  // lastVerifiedAt: string;      // ISO Date string
 
   // Resource Linking
-  supportedFamilies: string[]; // e.g., ["GEMINI", "GPT-4"]
-  activeAgentCount: number;    // Number of agents currently using this provider
+  // supportedFamilies: string[]; // e.g., ["GEMINI", "GPT-4"]
+  // activeAgentCount: number;    // Number of agents currently using this provider
 
   createdAt: string;
   updatedAt: string;

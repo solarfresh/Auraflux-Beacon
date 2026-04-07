@@ -16,10 +16,7 @@
 
         <VFormField label="Provider Type">
           <VSelect v-model="form.type">
-            <option value="GOOGLE">Google Gemini</option>
-            <option value="OPENAI">OpenAI</option>
-            <option value="ANTHROPIC">Anthropic</option>
-            <option value="LOCAL">Local / Custom (Ollama/vLLM)</option>
+            <option v-for="option in providerOptions" :value="option.value">{{ option.label }}</option>
           </VSelect>
         </VFormField>
       </VGrid>
@@ -119,12 +116,15 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
+import { PROVIDER_OPTIONS } from '@/constants/agents';
 
 const props = defineProps<{
   initialData?: ModelProvider | null;
 }>();
 
 const emit = defineEmits(['close', 'save']);
+
+const providerOptions = ref(PROVIDER_OPTIONS);
 
 const isEdit = computed(() => !!props.initialData);
 const isTesting = ref(false);

@@ -46,6 +46,7 @@
             class="w-40"
             @update:model-value="updateProviderType"
           >
+            <option value="ALL">All Sources</option>
             <option v-for="option in providerOptions" :value="option.value">{{ option.label }}</option>
           </VSelect>
         </VCluster>
@@ -92,8 +93,9 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
+import { PROVIDER_OPTIONS } from '@/constants/agents';
+import { FilterState, ModelProviderSelectorState, SorterState } from '@/interfaces/indicators';
 import { ref } from 'vue';
-import { ModelProviderSelectorState, FilterState, SorterState } from '@/interfaces/indicators';
 
 const props = defineProps<{
   modelValue: ModelProviderSelectorState;
@@ -104,13 +106,7 @@ const emit = defineEmits<{
   (e: 'create'): void;
 }>();
 
-const providerOptions = ref([
-  { label: 'All Sources', value: 'ALL'},
-  { label: 'Google', value: 'GOOGLE'},
-  { label: 'OpenAI', value: 'OPENAI'},
-  { label: 'Anthropic', value: 'ANTHROPIC'},
-  { label: 'Local / Custom', value: 'LOCAL'},
-]);
+const providerOptions = ref(PROVIDER_OPTIONS);
 
 const statusOptions = [
   { label: 'All', value: 'ALL' },
