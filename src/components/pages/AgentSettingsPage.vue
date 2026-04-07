@@ -74,7 +74,7 @@ import VInteractivePlaceholder from '@/components/molecules/resources/VInteracti
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 
-import type { SelectorState } from '@/interfaces/indicators';
+import type { ModelSelectorState } from '@/interfaces/indicators';
 import type { Agent } from '@/interfaces/agents';
 
 // --- State Management ---
@@ -82,7 +82,7 @@ const router = useRouter();
 const agentStore = useAgentStore();
 const isDeployModalOpen = ref(false);
 
-const toolbarState = ref<SelectorState>({
+const toolbarState = ref<ModelSelectorState>({
   filter: 'ALL',
   modelFamily: 'ALL',
   sorter: 'NAME'

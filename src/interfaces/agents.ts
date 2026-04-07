@@ -1,4 +1,7 @@
-import type { DateTimeString, EntityStatus, ID } from './core';
+import type { DateTimeString, ConnectStatus, ID } from './core';
+
+export type ProviderType = 'ALL' | 'GOOGLE' | 'OPENAI' | 'ANTHROPIC' | 'MISTRAL' | 'LOCAL' | 'CUSTOM';
+
 
 /** * Represents the LLM configuration used by the Agent.
  * Maps to the "llm_parameters" column in CSV.
@@ -8,6 +11,29 @@ export interface LLMParameters {
   temperature?: number;     // Observed in typical Agent configs
   maxTokens?: number;
   topP?: number;
+}
+
+export interface ModelProvider {
+  id: string;
+  name: string;                // User-defined label (e.g., "Production Gemini")
+  type: ProviderType;          // Technical category
+  status: ConnectStatus;      // Real-time health state
+
+  // Security & Identity
+  apiKeyFingerprint: string;   // Masked key (e.g., "••••4n2z")
+  baseUrl?: string;            // Custom endpoint for Local/Private LLMs
+  organizationId?: string;     // Specific to OpenAI/Azure
+
+  // Performance Metadata
+  latencyMs: number | null;    // Last recorded response time
+  lastVerifiedAt: string;      // ISO Date string
+
+  // Resource Linking
+  supportedFamilies: string[]; // e.g., ["GEMINI", "GPT-4"]
+  activeAgentCount: number;    // Number of agents currently using this provider
+
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**

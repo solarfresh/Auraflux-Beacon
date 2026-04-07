@@ -5,6 +5,7 @@ import ISearchPage from '@/components/pages/ISearchPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import ProjectPage from '@/components/pages/ProjectPage.vue';
 import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
+import ModelProviderSettingsPage from '@/components/pages/ModelProviderSettingsPage.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 
@@ -51,6 +52,11 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'AgentEditorPage',
         component: AgentEditorPage
       },
+      {
+        path: 'models',
+        name: 'ModelProviderSettingsPage',
+        component: ModelProviderSettingsPage
+      }
     ]
   }
 ]

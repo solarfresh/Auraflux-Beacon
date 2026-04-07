@@ -141,6 +141,11 @@ const settingItems = ref([
     route: '/settings/agents'
   },
   {
+    label: 'Model Providers',
+    iconName: 'CpuChip',
+    route: '/settings/models'
+  },
+  {
     label: 'System Preferences',
     iconName: 'Cog8Tooth',
     route: ''
@@ -151,6 +156,7 @@ const showStage = computed(() => ['InitiationPage', 'ExplorationPage'].includes(
 const title = computed(() => {
   if (route.name === 'ProjectPage') return 'MISSION CONTROL';
   if (route.name === 'AgentSettingsPage') return 'Agent Settings';
+  if (route.name === 'ModelProviderSettingsPage') return 'Model Providers';
   if (route.name === 'AgentEditorPage') return agentStore.currentAgent?.name || '';
   return projectStore.projectName;
 });
@@ -167,7 +173,7 @@ const logout = () => console.log('User logout');
 const toggleNotifications = () => console.log('Toggle Notifications');
 const openProfile = () => console.log('Toggle User Profile');
 const clickSettings = (label: string, route: string) => {
-  if (label === 'Agent Settings') {
+  if (route) {
     router.push(route)
   }
 

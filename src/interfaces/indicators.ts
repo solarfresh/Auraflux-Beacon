@@ -1,10 +1,19 @@
-import { EntityStatus } from "./core";
+import { ConnectStatus, EntityStatus } from "./core";
+import { ProviderType } from "@/interfaces/agents";
 
 export type BadgeColor = 'indigo' | 'amber' | 'emerald' | 'red' | 'gray' | 'purple' | 'blue' | 'slate';
-export type FilterState = 'ALL' | EntityStatus
-export type SorterState = 'EDITED' | 'CREATED' | 'NAME' | 'VERSION'
-export type SelectorState = {
+export type FilterState = 'ALL' | ConnectStatus | EntityStatus | ProviderType
+export type SorterState = 'EDITED' | 'CREATED' | 'HEALTH' | 'LATENCY' | 'NAME' | 'VERSION'
+
+export interface BaseSelectorState {
   filter: FilterState;
   sorter: SorterState;
-  modelFamily?: string;
 };
+
+export interface ModelSelectorState extends BaseSelectorState {
+  modelFamily: FilterState;
+};
+
+export interface ModelProviderSelectorState extends BaseSelectorState {
+  providerType: FilterState;
+}

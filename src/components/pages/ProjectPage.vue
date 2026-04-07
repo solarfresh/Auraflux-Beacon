@@ -66,7 +66,7 @@ import VButton from '@/components/atoms/buttons/VButton.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { ISPStage, Project } from '@/interfaces/project';
-import type { SelectorState } from '@/interfaces/indicators';
+import type { BaseSelectorState } from '@/interfaces/indicators';
 
 const router = useRouter();
 const projectStore = useProjectStore();
@@ -75,7 +75,7 @@ const projectStore = useProjectStore();
 const isFiltering = ref(false);
 const isCreateModalOpen = ref(false);
 
-const selectorState = ref<SelectorState>({
+const selectorState = ref<BaseSelectorState>({
   filter: 'LOCKED',
   sorter: 'EDITED'
 });

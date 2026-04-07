@@ -1,7 +1,7 @@
 import config from '@/config';
 import { apiService } from '@/api/apiService';
 import type { ID } from '@/interfaces/core';
-import type { Agent } from '@/interfaces/agents';
+import type { Agent, ModelProvider } from '@/interfaces/agents';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { debounce } from 'lodash-es';
@@ -9,8 +9,18 @@ import { debounce } from 'lodash-es';
 export const useAgentStore = defineStore('agent', () => {
   // --- State (Refs) ---
   const agents = ref<Map<string, Agent>>(new Map());
+  const providers = ref<Map<string, ModelProvider>>(new Map());
+
   const currentAgentId = ref<ID | null>(null);
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
+
+  async function loadProviders () {
+
+  }
+
+  async function verifyProvider(id: ID) {
+
+  }
 
   async function loadAgents() {
     try {
@@ -59,13 +69,16 @@ export const useAgentStore = defineStore('agent', () => {
 
   return {
     agents,
+    providers,
     currentAgentId,
     // Getters
     currentAgent,
     // Actions
     loadAgents,
     loadAgentDetail,
+    loadProviders,
     updateAgent,
     setCurrentAgentId,
+    verifyProvider,
   }
 });
