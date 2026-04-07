@@ -43,26 +43,40 @@
 
       </VStack>
     </VBox>
+
+    <FullScreenModalTemplate
+      :is-open="isProviderModalOpen"
+      max-width-class="max-w-2xl"
+      @close="closeDrawer"
+    >
+      <template #header>
+        {{ selectedProvider ? 'Edit Model Provider' : 'Connect New Engine' }}
+      </template>
+
+      <template #content>
+        <ModelProviderEditor
+          :initial-data="selectedProvider"
+          @close="closeDrawer"
+          @save="handleSaveProvider"
+        />
+      </template>
+    </FullScreenModalTemplate>
   </VBox>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useAgentStore } from '@/stores/agent';
-import type { ModelProviderSelectorState } from '@/interfaces/indicators';
-
-// Layout & UI Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
 import VGrid from '@/components/atoms/layout/VGrid.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VButton from '@/components/atoms/inputs/VButton.vue';
-
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
+import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
 import VModelProviderCard from '@/components/molecules/resources/VModelProviderCard.vue';
 import VModelProviderToolbar from '@/components/molecules/resources/VModelProviderToolbar.vue';
-import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
-// import VProviderDrawer from '@/components/organisms/drawers/VProviderDrawer.vue';
-import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
+import ModelProviderEditor from '@/components/organisms/forms/ModelProviderEditor.vue';
+import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import type { ModelProviderSelectorState } from '@/interfaces/indicators';
+import { useAgentStore } from '@/stores/agent';
+import { computed, onMounted, ref } from 'vue';
 
 const agentStore = useAgentStore();
 const isProviderModalOpen = ref(false);
@@ -79,6 +93,10 @@ const hasProviders = computed(() => providers.value.length > 0);
 onMounted(() => {
   agentStore.loadProviders();
 });
+
+const handleSaveProvider = () => {
+
+};
 
 const openProviderEditor = (provider: any) => {
   selectedProvider.value = provider;
