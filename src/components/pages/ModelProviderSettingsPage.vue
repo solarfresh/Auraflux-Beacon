@@ -74,6 +74,7 @@ import VModelProviderCard from '@/components/molecules/resources/VModelProviderC
 import VModelProviderToolbar from '@/components/molecules/resources/VModelProviderToolbar.vue';
 import ModelProviderEditor from '@/components/organisms/forms/ModelProviderEditor.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
+import { ModelProvider } from '@/interfaces/agents';
 import type { ModelProviderSelectorState } from '@/interfaces/indicators';
 import { useAgentStore } from '@/stores/agent';
 import { computed, onMounted, ref } from 'vue';
@@ -94,8 +95,9 @@ onMounted(() => {
   agentStore.loadProviders();
 });
 
-const handleSaveProvider = () => {
-
+const handleSaveProvider = async (provider: ModelProvider) => {
+  await agentStore.createModelProvider(provider);
+  isProviderModalOpen.value = false;
 };
 
 const openProviderEditor = (provider: any) => {

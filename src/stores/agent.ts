@@ -14,6 +14,13 @@ export const useAgentStore = defineStore('agent', () => {
   const currentAgentId = ref<ID | null>(null);
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
 
+  async function createModelProvider (provider: ModelProvider) {
+    const response = await apiService.agents.createModelProvider(provider);
+    if (response.data) {
+      providers.value.set(response.data.id, response.data);
+    }
+  }
+
   async function getAvailableModels (providerType: string, apiKey: string) {
     const response = await apiService.agents.getAvailableModels(providerType.toLowerCase(), apiKey);
     if (response.data) {
@@ -22,7 +29,13 @@ export const useAgentStore = defineStore('agent', () => {
   }
 
   async function loadProviders () {
-
+    const response = await apiService.agents.getModelProviders();
+    if (response.data) {
+      response.data.map(provider => {
+        provider.supportedFamilies = [];
+        providers.value.set(provider.id, provider);
+      });
+    }
   }
 
   async function verifyProvider(id: ID) {
@@ -81,6 +94,7 @@ export const useAgentStore = defineStore('agent', () => {
     // Getters
     currentAgent,
     // Actions
+    createModelProvider,
     getAvailableModels,
     loadAgents,
     loadAgentDetail,

@@ -133,7 +133,7 @@ const providerOptions = ref(PROVIDER_OPTIONS);
 const isEdit = computed(() => !!props.initialData);
 const isTesting = ref(false);
 const testResult = reactive({
-  status: 'IDLE' as ConnectStatus,
+  status: 'UNVERIFIED' as ConnectStatus,
   message: ''
 });
 
@@ -162,6 +162,8 @@ async function testConnection() {
 }
 
 function submit() {
-  emit('save', { ...form });
+  let modelProvider: Partial<ModelProvider> = { ...form };
+  modelProvider.status = testResult.status;
+  emit('save', modelProvider);
 }
 </script>

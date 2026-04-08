@@ -3,7 +3,7 @@ import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api'
 import type { ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
-import type { Agent } from '@/interfaces/agents';
+import type { Agent, ModelProvider } from '@/interfaces/agents';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { Project, ReflectionLogEntry } from '@/interfaces/project';
@@ -100,6 +100,9 @@ apiClient.interceptors.response.use(
 
 export const apiService = {
   agents: {
+    createModelProvider: (provider: ModelProvider): Promise<AxiosResponse<ModelProvider>> => {
+      return apiClient.post(AgentsEndpoints.createModelProvider(), provider);
+    },
     getAgents: (): Promise<AxiosResponse<Agent[]>> => {
       return apiClient.get(AgentsEndpoints.getAgents());
     },
@@ -108,6 +111,9 @@ export const apiService = {
     },
     getAvailableModels: (providerType: string, apiKey: string): Promise<AxiosResponse<any>> => {
       return apiClient.post(AgentsEndpoints.getAvailableModels(), {providerType: providerType, apiKey:apiKey})
+    },
+    getModelProviders: (): Promise<AxiosResponse<ModelProvider[]>> => {
+      return apiClient.get(AgentsEndpoints.getModelProviders());
     }
   },
   canvases: {

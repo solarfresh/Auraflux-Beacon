@@ -114,9 +114,10 @@ defineProps<{
 }>();
 
 const statusColorMap: Record<ConnectStatus, string> = {
+  IDLE: '',
   ACTIVE: 'emerald-50',
   ERROR: 'rose-50',
-  PENDING: 'amber-50',
+  UNVERIFIED: 'amber-50',
   RATE_LIMITED: 'orange-50'
 };
 
