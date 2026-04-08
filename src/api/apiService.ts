@@ -106,6 +106,9 @@ export const apiService = {
     getAgentDetail: (agentId: ID): Promise<AxiosResponse<Agent>> => {
       return apiClient.get(AgentsEndpoints.getAgentDetail(agentId));
     },
+    getAvailableModels: (providerType: string, apiKey: string): Promise<AxiosResponse<any>> => {
+      return apiClient.post(AgentsEndpoints.getAvailableModels(), {providerType: providerType, apiKey:apiKey})
+    }
   },
   canvases: {
     graphs: {

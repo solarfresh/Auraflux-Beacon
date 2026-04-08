@@ -55,7 +55,7 @@
     <VBox
       padding="md"
       rounded="lg"
-      :background="testResult.status === 'SUCCESS' ? 'emerald-50' : 'slate-50'"
+      :background="testResult.status === 'ACTIVE' ? 'emerald-50' : 'slate-50'"
       :class="[
         'transition-all border border-dashed',
         testResult.status === 'ERROR' ? 'border-rose-200' : 'border-slate-300'
@@ -69,7 +69,7 @@
             class="animate-ping"
           />
           <VStack gap="none">
-            <VTypography size="sm" weight="bold" :color="testResult.status === 'SUCCESS' ? 'emerald-700' : 'slate-700'">
+            <VTypography size="sm" weight="bold" :color="testResult.status === 'ACTIVE' ? 'emerald-700' : 'slate-700'">
               Connectivity Diagnostic
             </VTypography>
             <VTypography size="xs" color="slate-500">
@@ -105,6 +105,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed } from 'vue';
 import type { ModelProvider } from '@/interfaces/agents';
+import { useAgentStore } from '@/stores/agent';
 
 // UI Atoms & Molecules
 import VStack from '@/components/atoms/layout/VStack.vue';
@@ -117,6 +118,9 @@ import VInput from '@/components/atoms/forms/VInput.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 import { PROVIDER_OPTIONS } from '@/constants/agents';
+import { ConnectStatus } from '@/interfaces/core';
+
+const agentStore = useAgentStore();
 
 const props = defineProps<{
   initialData?: ModelProvider | null;
@@ -129,7 +133,7 @@ const providerOptions = ref(PROVIDER_OPTIONS);
 const isEdit = computed(() => !!props.initialData);
 const isTesting = ref(false);
 const testResult = reactive({
-  status: 'IDLE' as 'IDLE' | 'SUCCESS' | 'ERROR',
+  status: 'IDLE' as ConnectStatus,
   message: ''
 });
 
@@ -150,11 +154,11 @@ async function testConnection() {
   isTesting.value = true;
   testResult.status = 'IDLE';
 
-  setTimeout(() => {
+  const models = await agentStore.getAvailableModels(form.type.toLowerCase(), form.apiKey)
+  if (models) {
     isTesting.value = false;
-    testResult.status = 'SUCCESS';
-    testResult.message = 'Bridge verified. Latency: 128ms. Supported: Gemini 1.5 Pro, Flash.';
-  }, 1200);
+    testResult.status = 'ACTIVE';
+  }
 }
 
 function submit() {

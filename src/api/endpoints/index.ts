@@ -8,6 +8,8 @@ export const AgentsEndpoints = {
     `${AURAFLUX_NEXUS_URL}/agents/`,
   getAgentDetail: (agentId: ID) =>
     `${AURAFLUX_NEXUS_URL}/agents/${agentId}`,
+  getAvailableModels: () =>
+    `${AURAFLUX_NEXUS_URL}/agents/models/available/`,
 }
 
 export const CanvasesEndpoints = {
