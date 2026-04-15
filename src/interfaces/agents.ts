@@ -13,8 +13,17 @@ export interface LLMParameters {
   topP?: number;
 }
 
+interface ModelFamilies {
+  id: ID;
+  name: string;
+  displayName: string;
+  description: string;
+  inputTokenLimit: number;
+  outputTokenLimit: number;
+}
+
 export interface ModelProvider {
-  id: string;
+  id: ID;
   name: string;                // User-defined label (e.g., "Production Gemini")
   type: ProviderType;          // Technical category
   status: ConnectStatus;      // Real-time health state
@@ -29,7 +38,7 @@ export interface ModelProvider {
   lastVerifiedAt: string;      // ISO Date string
 
   // Resource Linking
-  supportedFamilies: string[]; // e.g., ["GEMINI", "GPT-4"]
+  supportedFamilies: ModelFamilies[]; // e.g., ["GEMINI", "GPT-4"]
   activeAgentCount: number;    // Number of agents currently using this provider
 
   createdAt: string;

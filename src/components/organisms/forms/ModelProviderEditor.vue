@@ -134,6 +134,7 @@ const emit = defineEmits<{
 const providerOptions = ref(PROVIDER_OPTIONS);
 
 const isEdit = computed(() => !!props.initialData);
+const providerId = computed(() => props.initialData?.id as string);
 const isTesting = ref(false);
 const testResult = reactive({
   status: 'UNVERIFIED' as ConnectStatus,
@@ -143,6 +144,7 @@ const testResult = reactive({
 });
 
 const form = reactive({
+  id: props.initialData?.id || '',
   name: props.initialData?.name || '',
   type: props.initialData?.type || 'GOOGLE',
   apiKey: '', // Always empty for security on load
@@ -160,7 +162,7 @@ async function testConnection() {
   testResult.status = 'IDLE';
 
   const start = Date.now();
-  const models = await agentStore.getAvailableModels(form.type.toLowerCase(), form.apiKey)
+  const models = await agentStore.getAvailableModels(form.type.toLowerCase(), form.apiKey, providerId.value);
   if (models) {
     isTesting.value = false;
     testResult.status = 'ACTIVE';
@@ -174,6 +176,6 @@ function submit() {
   modelProvider.status = testResult.status;
   modelProvider.lastVerifiedAt = testResult.lastVerifiedAt;
   modelProvider.latencyMs = testResult.latencyMs;
-  emit('save', modelProvider, isTesting.value);
+  emit('save', modelProvider, isEdit.value);
 }
 </script>

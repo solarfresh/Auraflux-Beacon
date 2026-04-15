@@ -74,12 +74,12 @@
 
       <VBox
         v-for="family in provider.supportedFamilies.slice(0, 2)"
-        :key="family"
+        :key="family.id"
         tag="span"
         background="slate-50"
         class="px-2 py-0.5 rounded text-[10px] font-medium text-slate-500 uppercase"
       >
-        {{ family }}
+        {{ family.displayName }}
       </VBox>
 
       <VTypography v-if="provider.supportedFamilies.length > 2" size="xs" color="slate-300">
