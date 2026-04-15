@@ -9,6 +9,8 @@ export type ID = string;
 /** ISO 8601 formatted string (e.g., "2025-12-16T08:00:00Z"). */
 export type DateTimeString = string;
 
+export type ConnectStatus = 'IDLE' | 'ACTIVE' | 'ERROR' | 'UNVERIFIED' | 'RATE_LIMITED';
+
 export type EntityStatus =
   | 'USER_DRAFT'    // Under active editing by the user
   | 'AI_EXTRACTED'  // Proposed by the AI Agent, awaiting user review

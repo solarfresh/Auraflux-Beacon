@@ -59,6 +59,18 @@ A specialized orchestrator that manages the visibility and sequence of an Agent 
 * **Responsibility**: Mapping the **Agent Lifecycle** (Active/Draft/Archived) and **Model Hierarchy** (Gemini/GPT/Claude) to the active view.
 * **Key Props**: `modelValue` (Object with `filter`, `modelFamily`, & `sorter`), `v-model`.
 
+### **8. VModelProviderCard (The Infrastructure Engine)**
+A specialized entity tile that visualizes the health, authentication, and performance of an AI service provider.
+* **Physical Layer**: `VBox` (Root) > `VCluster` (Identity) > `VStack` (Key Snippet) > `VCluster` (Metadata).
+* **Responsibility**: Displaying API connection health, masked key fingerprints, and real-time latency.
+* **Key Props**: `provider` (ModelProvider Object).
+
+### **9. VModelProviderToolbar (The Infrastructure Monitor)**
+An orchestrator that manages the visibility of AI connectors, focusing on connection health and provider types.
+* **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group: Health), `VCluster` (Type Select + Sort)].
+* **Responsibility**: Mapping the **Provider Status** (Active/Error/Pending) and **Service Type** (Google/OpenAI/Local) to the active view.
+* **Key Props**: `modelValue` (Object with `filter`, `providerType`, & `sorter`), `v-model`.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -74,6 +86,10 @@ A specialized orchestrator that manages the visibility and sequence of an Agent 
 > **Rule 8: Direct Slot Usage.** Avoid deep prop drilling for button labels in the toolbar. Use `v-for` with a local `filterOptions` array to keep the template clean and maintainable.
 > **Rule 9: Instruction Preview Integrity.** For `VAgentCard`, the `systemPrompt` preview must be rendered using `VTypography` with `color="slate-400"` to differentiate "Instructional Metadata" from "User Content."
 > **Rule 10: Model Labeling.** Every Agent card must display its `llmParameters.model` within a secondary `VBox` tag to ensure technical accountability in the multi-agent orchestration view.
+> **Rule 11: Secret Masking Integrity.** `VModelProviderCard` must never receive or display the raw API key. It is strictly limited to the `apiKeyFingerprint` to uphold the **Non-Retrieval Principle**.
+> **Rule 12: Pulse Feedback.** For active infrastructure, the status indicator in `VModelProviderCard` **must** include a subtle `animate-pulse` to signal "system power" (Live connection).
+> **Rule 13: Mono-Space Precision.** Technical metadata (Latency, Fingerprints, Model IDs) within resource cards must use `font-mono` to differentiate system-level data from user-generated content.
+> **Rule 14: Connectivity Borders.** If a provider fails verification (`status === 'ERROR'`), the root `VBox` border **must** switch to `dashed` and `rose-200`, signaling that the functional "bridge" to the AI engine is broken.
 
 ### Standard Implementation Pattern
 
@@ -119,6 +135,8 @@ src/components/molecules/resources/
 ├── VProjectCard.vue            # Business: Project entity tile
 ├── VAgentCard                  # Business: Agent entity tile
 ├── VAgentToolbar.vue           # Agent filter & model orchestrator
+├── VModelProviderCard.vue      # Infrastructure entity
+├── VModelProviderToolbar.vue   # Infrastructure orchestrator
 ├── VProjectToolbar.vue         # Business: Filter & Sort orchestrator
 ├── VEntityChip.vue             # Business: Metadata/Keyword tag
 ├── VInteractivePlaceholder.vue # Navigation: Actionable creation prompt

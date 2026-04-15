@@ -48,22 +48,28 @@
           />
         </VBox>
 
-        <VBox tag="div" class="relative group">
+        <VBox
+          tag="div"
+          class="relative group"
+          @mouseenter="openSettingsMenu"
+          @mouseleave="closeSettingsMenu"
+        >
           <VButton
             variant="tertiary"
             size="sm"
             icon-name="Cog6Tooth"
             icon-only
           />
-          <VDropdownMenu class="hidden group-hover:block">
+          <VDropdownMenu
+            class="group-hover:block"
+            v-if="showSettingsMenu"
+          >
             <VDropdownItem
-              icon-name="AdjustmentsVertical"
-              @click="router.push('/settings/agents')"
+              v-for="item in settingItems"
+              icon-name=ite.iconName
+              @click="clickSettings(item.label, item.route)"
             >
-              Agent Settings
-            </VDropdownItem>
-            <VDropdownItem icon-name="Cog8Tooth" @click="openSettings">
-              System Preferences
+              {{ item.label }}
             </VDropdownItem>
           </VDropdownMenu>
         </VBox>
@@ -105,7 +111,7 @@ import VISPStageNavigator from '@/components/molecules/navs/VISPStageNavigator.v
 import { useAgentStore } from '@/stores/agent';
 import { useAuthStore } from '@/stores/auth';
 import { useProjectStore } from '@/stores/project';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
@@ -125,11 +131,32 @@ withDefaults(defineProps<{
   hasBorder: true
 });
 
+let closeTimer: ReturnType<typeof setTimeout> | null = null;
+
+const showSettingsMenu = ref(false);
+const settingItems = ref([
+  {
+    label: 'Agent Settings',
+    iconName: 'AdjustmentsVertical',
+    route: '/settings/agents'
+  },
+  {
+    label: 'Model Providers',
+    iconName: 'CpuChip',
+    route: '/settings/models'
+  },
+  {
+    label: 'System Preferences',
+    iconName: 'Cog8Tooth',
+    route: ''
+  }
+]);
 const showBack = computed(() => route.name !== 'ProjectPage');
 const showStage = computed(() => ['InitiationPage', 'ExplorationPage'].includes(route.name as string));
 const title = computed(() => {
   if (route.name === 'ProjectPage') return 'MISSION CONTROL';
   if (route.name === 'AgentSettingsPage') return 'Agent Settings';
+  if (route.name === 'ModelProviderSettingsPage') return 'Model Providers';
   if (route.name === 'AgentEditorPage') return agentStore.currentAgent?.name || '';
   return projectStore.projectName;
 });
@@ -145,9 +172,23 @@ const handleBack = () => {
 const logout = () => console.log('User logout');
 const toggleNotifications = () => console.log('Toggle Notifications');
 const openProfile = () => console.log('Toggle User Profile');
-const openSettings = () => {
-  console.log('Opening Global System Settings');
+const clickSettings = (label: string, route: string) => {
+  if (route) {
+    router.push(route)
+  }
+
+  showSettingsMenu.value = false;
+  console.log(`Opening Global System Settings: ${label}`);
 };
+const openSettingsMenu = () => {
+  if (closeTimer) clearTimeout(closeTimer);
+  showSettingsMenu.value = true;
+}
+const closeSettingsMenu = () => {
+  closeTimer = setTimeout(() => {
+    showSettingsMenu.value = false;
+  }, 100);
+}
 
 </script>
 

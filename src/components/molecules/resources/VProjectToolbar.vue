@@ -80,14 +80,14 @@ import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
-import type { FilterState, SelectorState, SorterState } from '@/interfaces/indicators';
+import type { FilterState, BaseSelectorState, SorterState } from '@/interfaces/indicators';
 
 const props = defineProps<{
-  modelValue: SelectorState;
+  modelValue: BaseSelectorState;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: SelectorState): void;
+  (e: 'update:modelValue', value: BaseSelectorState): void;
   (e: 'create'): void;
 }>();
 

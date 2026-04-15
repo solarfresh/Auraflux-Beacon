@@ -18,7 +18,7 @@
           class="flex overflow-hidden border-slate-200/60"
         >
           <VButton
-            v-for="option in filterOptions"
+            v-for="option in statusOptions"
             :key="option.value"
             variant="ghost"
             size="xs"
@@ -38,18 +38,16 @@
 
         <VCluster gap="xs" align="center" class="ml-1">
           <VTypography size="xs" weight="bold" color="slate-400" class="uppercase tracking-widest">
-            Model:
+            Type:
           </VTypography>
           <VSelect
-            :model-value="modelValue.modelFamily"
+            :model-value="modelValue.providerType"
             size="xs"
             class="w-40"
-            @update:model-value="updateModelFamily"
+            @update:model-value="updateProviderType"
           >
-            <option value="ALL">All Models</option>
-            <option value="GEMINI">Gemini Series</option>
-            <option value="GPT">GPT Series</option>
-            <option value="CLAUDE">Claude Series</option>
+            <option value="ALL">All Sources</option>
+            <option v-for="option in providerOptions" :value="option.value">{{ option.label }}</option>
           </VSelect>
         </VCluster>
       </VCluster>
@@ -63,17 +61,11 @@
             class="w-44"
             @update:model-value="updateSorter"
           >
-            <option value="NAME">Sort by Name</option>
-            <option value="VERSION">Latest Version</option>
-            <option value="UPDATED">Recently Modified</option>
+            <option v-for="option in sorterOptions" :value="option.value">{{ option.label }}</option>
           </VSelect>
         </VCluster>
 
-        <VBox
-          width="px"
-          height="4"
-          background="slate-50"
-        />
+        <VBox width="px" height="4" background="slate-50" />
 
         <VButton
           variant="primary"
@@ -81,7 +73,7 @@
           icon-name="Plus"
           @click="$emit('create')"
         >
-          Deploy Agent
+          Add Provider
         </VButton>
       </VCluster>
 
@@ -91,9 +83,9 @@
 
 <script setup lang="ts">
 /**
- * VAgentToolbar Molecule
- * Responsibility: Orchestrating the visibility and sequence of Agent blueprints.
- * Strictly follows Resource Molecule Rule 6 & 7.
+ * VModelProviderToolbar Molecule
+ * Responsibility: Orchestrating the visibility of infrastructure-level AI connectors.
+ * Follows Resource Molecule Rule 6 & 7.
  */
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
@@ -101,30 +93,39 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
-import type { FilterState, ModelSelectorState, SorterState } from '@/interfaces/indicators';
+import { PROVIDER_OPTIONS } from '@/constants/agents';
+import { FilterState, ModelProviderSelectorState, SorterState } from '@/interfaces/indicators';
+import { ref } from 'vue';
 
 const props = defineProps<{
-  modelValue: ModelSelectorState;
+  modelValue: ModelProviderSelectorState;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: ModelSelectorState): void;
+  (e: 'update:modelValue', value: ModelProviderSelectorState): void;
   (e: 'create'): void;
 }>();
 
-const filterOptions = [
+const providerOptions = ref(PROVIDER_OPTIONS);
+
+const statusOptions = [
   { label: 'All', value: 'ALL' },
-  { label: 'Active', value: 'LOCKED' },
-  { label: 'Drafts', value: 'USER_DRAFT' },
-  { label: 'Archived', value: 'ARCHIVED' },
+  { label: 'Connected', value: 'ACTIVE' },
+  { label: 'Errors', value: 'ERROR' },
 ];
 
-// Helper to emit updates while maintaining immutability
-const updateState = (patch: Partial<ModelSelectorState>) => {
+const sorterOptions = ref([
+  { label: 'Sort by Name', value: 'NAME'},
+  // { label: 'Connection Health', value: 'HEALTH'},
+  // { label: 'Lowest Latency', value: 'LATENCY'},
+  { label: 'Recently Verified', value: 'EDITED'},
+]);
+
+const updateState = (patch: Partial<ModelProviderSelectorState>) => {
   emit('update:modelValue', { ...props.modelValue, ...patch });
 };
 
 const updateFilter = (filter: FilterState) => updateState({ filter });
-const updateModelFamily = (modelFamily: string) => updateState({ modelFamily });
+const updateProviderType = (providerType: FilterState) => updateState({ providerType });
 const updateSorter = (sorter: SorterState) => updateState({ sorter });
 </script>

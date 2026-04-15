@@ -1,7 +1,7 @@
 import config from '@/config';
 import { apiService } from '@/api/apiService';
 import type { ID } from '@/interfaces/core';
-import type { Agent } from '@/interfaces/agents';
+import type { Agent, ModelProvider } from '@/interfaces/agents';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { debounce } from 'lodash-es';
@@ -9,8 +9,33 @@ import { debounce } from 'lodash-es';
 export const useAgentStore = defineStore('agent', () => {
   // --- State (Refs) ---
   const agents = ref<Map<string, Agent>>(new Map());
+  const providers = ref<Map<string, ModelProvider>>(new Map());
+
   const currentAgentId = ref<ID | null>(null);
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
+
+  async function createModelProvider (provider: Partial<ModelProvider>) {
+    const response = await apiService.agents.createModelProvider(provider);
+    if (response.data) {
+      providers.value.set(response.data.id, response.data);
+    }
+  }
+
+  async function getAvailableModels (providerType: string, apiKey: string, providerId?: ID) {
+    const response = await apiService.agents.getAvailableModels(providerType.toLowerCase(), apiKey, providerId);
+    if (response.data) {
+      return response.data;
+    }
+  }
+
+  async function loadProviders () {
+    const response = await apiService.agents.getModelProviders();
+    if (response.data) {
+      response.data.map(provider => {
+        providers.value.set(provider.id, provider);
+      });
+    }
+  }
 
   async function loadAgents() {
     try {
@@ -53,19 +78,33 @@ export const useAgentStore = defineStore('agent', () => {
     }, config.DEBOUNCE_TIME || 500);
   };
 
+  async function updateModelProvider(provider: Partial<ModelProvider>) {
+    if (provider.id === undefined) return;
+
+    const response = await apiService.agents.updateModelProvider(provider.id, provider);
+    if (response.data) {
+      providers.value.set(response.data.id, response.data);
+    }
+  }
+
   async function setCurrentAgentId(agentId: ID) {
     currentAgentId.value = agentId;
   };
 
   return {
     agents,
+    providers,
     currentAgentId,
     // Getters
     currentAgent,
     // Actions
+    createModelProvider,
+    getAvailableModels,
     loadAgents,
     loadAgentDetail,
+    loadProviders,
     updateAgent,
+    updateModelProvider,
     setCurrentAgentId,
   }
 });
