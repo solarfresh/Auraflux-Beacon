@@ -28,8 +28,7 @@
               v-for="provider in providers"
               :key="provider.id"
               :provider="provider"
-              @edit="openProviderEditor(provider)"
-              @test="testConnection(provider.id)"
+              @click="openProviderEditor(provider)"
             />
           </VGrid>
         </VBox>
@@ -95,8 +94,13 @@ onMounted(() => {
   agentStore.loadProviders();
 });
 
-const handleSaveProvider = async (provider: ModelProvider) => {
-  await agentStore.createModelProvider(provider);
+const handleSaveProvider = async (provider: Partial<ModelProvider>, isEdit: boolean) => {
+  if (isEdit) {
+    await agentStore.updateModelProvider(provider);
+  } else {
+    await agentStore.createModelProvider(provider);
+  }
+
   isProviderModalOpen.value = false;
 };
 
@@ -108,9 +112,5 @@ const openProviderEditor = (provider: any) => {
 const closeDrawer = () => {
   isProviderModalOpen.value = false;
   selectedProvider.value = null;
-};
-
-const testConnection = async (id: string) => {
-  await agentStore.verifyProvider(id);
 };
 </script>

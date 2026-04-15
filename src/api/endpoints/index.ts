@@ -9,11 +9,13 @@ export const AgentsEndpoints = {
   getAgents: () =>
     `${AURAFLUX_NEXUS_URL}/agents/`,
   getAgentDetail: (agentId: ID) =>
-    `${AURAFLUX_NEXUS_URL}/agents/${agentId}`,
+    `${AURAFLUX_NEXUS_URL}/agents/${agentId}/`,
   getAvailableModels: () =>
     `${AURAFLUX_NEXUS_URL}/agents/models/available/`,
   getModelProviders: () =>
     `${AURAFLUX_NEXUS_URL}/agents/models/`,
+  updateModelProvider: (providerId: ID) =>
+    `${AURAFLUX_NEXUS_URL}/agents/models/${providerId}/`,
 }
 
 export const CanvasesEndpoints = {

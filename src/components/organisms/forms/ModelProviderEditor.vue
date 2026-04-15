@@ -126,7 +126,10 @@ const props = defineProps<{
   initialData?: ModelProvider | null;
 }>();
 
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits<{
+  (e: 'close'): void;
+  (e: 'save', provider: Partial<ModelProvider>, isEdit: boolean): void;
+}>();
 
 const providerOptions = ref(PROVIDER_OPTIONS);
 
@@ -134,6 +137,8 @@ const isEdit = computed(() => !!props.initialData);
 const isTesting = ref(false);
 const testResult = reactive({
   status: 'UNVERIFIED' as ConnectStatus,
+  latencyMs: 9999,
+  lastVerifiedAt: '',
   message: ''
 });
 
@@ -154,16 +159,21 @@ async function testConnection() {
   isTesting.value = true;
   testResult.status = 'IDLE';
 
+  const start = Date.now();
   const models = await agentStore.getAvailableModels(form.type.toLowerCase(), form.apiKey)
   if (models) {
     isTesting.value = false;
     testResult.status = 'ACTIVE';
+    testResult.lastVerifiedAt = new Date().toISOString();
+    testResult.latencyMs = Date.now() - start;
   }
 }
 
 function submit() {
   let modelProvider: Partial<ModelProvider> = { ...form };
   modelProvider.status = testResult.status;
-  emit('save', modelProvider);
+  modelProvider.lastVerifiedAt = testResult.lastVerifiedAt;
+  modelProvider.latencyMs = testResult.latencyMs;
+  emit('save', modelProvider, isTesting.value);
 }
 </script>

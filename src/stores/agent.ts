@@ -14,15 +14,15 @@ export const useAgentStore = defineStore('agent', () => {
   const currentAgentId = ref<ID | null>(null);
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
 
-  async function createModelProvider (provider: ModelProvider) {
+  async function createModelProvider (provider: Partial<ModelProvider>) {
     const response = await apiService.agents.createModelProvider(provider);
     if (response.data) {
       providers.value.set(response.data.id, response.data);
     }
   }
 
-  async function getAvailableModels (providerType: string, apiKey: string) {
-    const response = await apiService.agents.getAvailableModels(providerType.toLowerCase(), apiKey);
+  async function getAvailableModels (providerType: string, apiKey: string, providerId?: ID) {
+    const response = await apiService.agents.getAvailableModels(providerType.toLowerCase(), apiKey, providerId);
     if (response.data) {
       return response.data;
     }
@@ -32,14 +32,9 @@ export const useAgentStore = defineStore('agent', () => {
     const response = await apiService.agents.getModelProviders();
     if (response.data) {
       response.data.map(provider => {
-        provider.supportedFamilies = [];
         providers.value.set(provider.id, provider);
       });
     }
-  }
-
-  async function verifyProvider(id: ID) {
-
   }
 
   async function loadAgents() {
@@ -83,6 +78,15 @@ export const useAgentStore = defineStore('agent', () => {
     }, config.DEBOUNCE_TIME || 500);
   };
 
+  async function updateModelProvider(provider: Partial<ModelProvider>) {
+    if (provider.id === undefined) return;
+
+    const response = await apiService.agents.updateModelProvider(provider.id, provider);
+    if (response.data) {
+      providers.value.set(response.data.id, response.data);
+    }
+  }
+
   async function setCurrentAgentId(agentId: ID) {
     currentAgentId.value = agentId;
   };
@@ -100,7 +104,7 @@ export const useAgentStore = defineStore('agent', () => {
     loadAgentDetail,
     loadProviders,
     updateAgent,
+    updateModelProvider,
     setCurrentAgentId,
-    verifyProvider,
   }
 });

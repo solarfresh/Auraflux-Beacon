@@ -100,7 +100,7 @@ apiClient.interceptors.response.use(
 
 export const apiService = {
   agents: {
-    createModelProvider: (provider: ModelProvider): Promise<AxiosResponse<ModelProvider>> => {
+    createModelProvider: (provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
       return apiClient.post(AgentsEndpoints.createModelProvider(), provider);
     },
     getAgents: (): Promise<AxiosResponse<Agent[]>> => {
@@ -109,11 +109,14 @@ export const apiService = {
     getAgentDetail: (agentId: ID): Promise<AxiosResponse<Agent>> => {
       return apiClient.get(AgentsEndpoints.getAgentDetail(agentId));
     },
-    getAvailableModels: (providerType: string, apiKey: string): Promise<AxiosResponse<any>> => {
-      return apiClient.post(AgentsEndpoints.getAvailableModels(), {providerType: providerType, apiKey:apiKey})
+    getAvailableModels: (providerType: string, apiKey: string, providerId?: ID): Promise<AxiosResponse<any>> => {
+      return apiClient.post(AgentsEndpoints.getAvailableModels(), {providerType: providerType, apiKey:apiKey, providerId: providerId})
     },
     getModelProviders: (): Promise<AxiosResponse<ModelProvider[]>> => {
       return apiClient.get(AgentsEndpoints.getModelProviders());
+    },
+    updateModelProvider: (providerId: ID, provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
+      return apiClient.put(AgentsEndpoints.updateModelProvider(providerId), provider)
     }
   },
   canvases: {
