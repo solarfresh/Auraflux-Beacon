@@ -85,14 +85,42 @@
 
           <VFieldset title="Intelligence Engine" padding="sm">
             <VStack gap="md">
-              <VFormField label="LLM Model">
+              <VFormField
+                label="Provider"
+                description="Choose the infrastructure engine for this agent."
+              >
+                <VSelect
+                  v-model="currentProviderId as string"
+                  size="sm"
+                >
+                  <option disabled value="">Select a provider...</option>
+                  <option
+                    v-for="p in providers"
+                    :key="p.id"
+                    :value="p.id"
+                  >
+                    {{ p.name }} ({{ p.type }})
+                  </option>
+                </VSelect>
+              </VFormField>
+
+              <VFormField
+                label="Model Family"
+                :description="!currentProviderId ? 'Please select a provider first' : ''"
+              >
                 <VSelect
                   v-model="currentAgent.llmParameters.model"
                   size="sm"
+                  :disabled="!currentProviderId"
                 >
-                  <option value="gemini-3-flash-preview">Gemini 1.5 Flash</option>
-                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                  <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                  <option disabled value="">Select a model family...</option>
+                  <option
+                    v-for="f in currentProvider?.supportedFamilies"
+                    :key="f.id"
+                    :value="f.name"
+                  >
+                    {{ f.displayName }}
+                  </option>
                 </VSelect>
               </VFormField>
 
@@ -173,7 +201,7 @@ import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VSelect from '@/components/atoms/forms/VSelect.vue';
 
 import type { ID } from '@/interfaces/core';
-import type { Agent } from '@/interfaces/agents';
+import type { Agent, ModelProvider } from '@/interfaces/agents';
 
 const route = useRoute();
 const agentStore = useAgentStore();
@@ -197,6 +225,10 @@ const currentAgent = computed((): Agent  => {
     updatedAt: ''
   }
 });
+const providers = computed((): ModelProvider[] => [...agentStore.providers.values()]);
+const currentProviderId = computed(() => agentStore.currentProviderId);
+const currentProvider = computed(() => agentStore.currentModelProvider);
+
 const promptTemplate = computed({
   get: () => agentStore.currentAgent?.promptTemplate?.replace(/\\n/g, '\n'),
   set: (val) => {

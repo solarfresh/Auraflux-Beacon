@@ -12,7 +12,10 @@ export const useAgentStore = defineStore('agent', () => {
   const providers = ref<Map<string, ModelProvider>>(new Map());
 
   const currentAgentId = ref<ID | null>(null);
+  const currentProviderId = ref<ID | null>(null);
+
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
+  const currentModelProvider = computed(() => providers.value.get(currentProviderId.value || ''));
 
   async function createModelProvider (provider: Partial<ModelProvider>) {
     const response = await apiService.agents.createModelProvider(provider);
@@ -95,8 +98,10 @@ export const useAgentStore = defineStore('agent', () => {
     agents,
     providers,
     currentAgentId,
+    currentProviderId,
     // Getters
     currentAgent,
+    currentModelProvider,
     // Actions
     createModelProvider,
     getAvailableModels,
