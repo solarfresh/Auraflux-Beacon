@@ -320,7 +320,11 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  agentStore.debouncedUpdateAgent.flush();
+  if (typeof agentStore.debouncedUpdateAgent?.flush === 'function') {
+    agentStore.debouncedUpdateAgent.flush();
+  } else {
+    console.warn('debouncedUpdateAgent.flush is not available');
+  }
 });
 
 /**
