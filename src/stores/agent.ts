@@ -14,9 +14,17 @@ export const useAgentStore = defineStore('agent', () => {
   const connectStatus = ref<ConnectStatus>('IDLE');
 
   const currentAgentId = ref<ID | null>(null);
-  const currentProviderId = ref<ID | null>(null);
 
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
+  const currentProviderId = computed({
+    get: () => currentAgent.value?.llmParameters.providerId || '',
+    set: (val) => {
+      let agent = agents.value.get(currentAgentId.value || '');
+      if (agent) {
+        agent.llmParameters.providerId = val;
+      }
+    }
+  });
   const currentModelProvider = computed(() => providers.value.get(currentProviderId.value || ''));
 
   async function createModelProvider (provider: Partial<ModelProvider>) {
@@ -101,7 +109,7 @@ export const useAgentStore = defineStore('agent', () => {
   };
 
   async function setCurrentProviderId(providerId: ID | null) {
-    if (providerId) {
+    if (providerId && currentAgentId.value) {
       currentProviderId.value = providerId;
     }
   };
