@@ -118,8 +118,9 @@ const filteredAgents = computed(() => {
 const hasAgents = computed(() => agentStore.agents.size > 0);
 
 // --- Lifecycle & Actions ---
-onMounted(async () => {
-  await agentStore.loadAgents();
+onMounted(() => {
+  agentStore.loadProviders();
+  agentStore.loadAgents();
 });
 
 const openAgentEditor = (agentId: string) => {

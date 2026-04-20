@@ -14,6 +14,8 @@ export const AgentsEndpoints = {
     `${AURAFLUX_NEXUS_URL}/agents/models/available/`,
   getModelProviders: () =>
     `${AURAFLUX_NEXUS_URL}/agents/models/`,
+  updateAgentDetail: (agentId: ID) =>
+    `${AURAFLUX_NEXUS_URL}/agents/${agentId}/`,
   updateModelProvider: (providerId: ID) =>
     `${AURAFLUX_NEXUS_URL}/agents/models/${providerId}/`,
 }
