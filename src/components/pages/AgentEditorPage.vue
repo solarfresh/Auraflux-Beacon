@@ -100,7 +100,7 @@
                 description="Choose the infrastructure engine for this agent."
               >
                 <VSelect
-                  v-model="currentAgent.llmParameters.providerId"
+                  v-model="currentAgent.llmParameters.provider"
                   size="sm"
                 >
                   <option disabled value="">Select a provider...</option>
@@ -229,7 +229,7 @@ const currentAgent = computed((): Agent  => {
     outputSchema: {},
     templateVariables: {},
     llmParameters: {
-      providerId: '',
+      provider: '',
       model: 'gemini-3-flash-preview',
       temperature: 0.1
     },

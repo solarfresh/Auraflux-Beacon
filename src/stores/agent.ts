@@ -17,11 +17,11 @@ export const useAgentStore = defineStore('agent', () => {
 
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
   const currentProviderId = computed({
-    get: () => currentAgent.value?.llmParameters.providerId || '',
+    get: () => currentAgent.value?.llmParameters.provider || '',
     set: (val) => {
       let agent = agents.value.get(currentAgentId.value || '');
       if (agent) {
-        agent.llmParameters.providerId = val;
+        agent.llmParameters.provider = val;
       }
     }
   });
