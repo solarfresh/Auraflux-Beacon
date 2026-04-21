@@ -7,6 +7,7 @@ export type ProviderType = 'ALL' | 'GOOGLE' | 'OPENAI' | 'ANTHROPIC' | 'MISTRAL'
  * Maps to the "llm_parameters" column in CSV.
  */
 export interface LLMParameters {
+  provider: ID;
   model: string;            // e.g., "gemini-3-flash-preview"
   temperature?: number;     // Observed in typical Agent configs
   maxTokens?: number;

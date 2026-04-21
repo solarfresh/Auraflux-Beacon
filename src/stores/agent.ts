@@ -5,14 +5,27 @@ import type { Agent, ModelProvider } from '@/interfaces/agents';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { debounce } from 'lodash-es';
+import { ConnectStatus } from '@/interfaces/core';
 
 export const useAgentStore = defineStore('agent', () => {
   // --- State (Refs) ---
   const agents = ref<Map<string, Agent>>(new Map());
   const providers = ref<Map<string, ModelProvider>>(new Map());
+  const connectStatus = ref<ConnectStatus>('IDLE');
 
   const currentAgentId = ref<ID | null>(null);
+
   const currentAgent = computed(() => agents.value.get(currentAgentId.value || ''));
+  const currentProviderId = computed({
+    get: () => currentAgent.value?.llmParameters.provider || '',
+    set: (val) => {
+      let agent = agents.value.get(currentAgentId.value || '');
+      if (agent) {
+        agent.llmParameters.provider = val;
+      }
+    }
+  });
+  const currentModelProvider = computed(() => providers.value.get(currentProviderId.value || ''));
 
   async function createModelProvider (provider: Partial<ModelProvider>) {
     const response = await apiService.agents.createModelProvider(provider);
@@ -67,16 +80,20 @@ export const useAgentStore = defineStore('agent', () => {
     }
   }
 
-  async function updateAgent(field: keyof Agent, value: any) {
-    let agent = agents.value.get(currentAgentId.value || '');
-    if (agent === undefined || agent === null) return;
+  const updateAgent = async () => {
+    if (!currentAgent.value) return;
+    if (connectStatus.value === 'ACTIVE') return;
 
-    agent[field] = value;
-
-    debounce(async (field: keyof Agent, value: any) => {
-      console.log(`update: id-${currentAgentId} field-${field} value-${value}`)
-    }, config.DEBOUNCE_TIME || 500);
+    connectStatus.value = 'ACTIVE';
+    try {
+      await apiService.agents.updateAgentDetail(currentAgent.value.id, currentAgent.value);
+      connectStatus.value = 'IDLE';
+    } catch (error) {
+      connectStatus.value = 'ERROR';
+    }
   };
+
+  const debouncedUpdateAgent = debounce(updateAgent, config.DEBOUNCE_TIME || 500);
 
   async function updateModelProvider(provider: Partial<ModelProvider>) {
     if (provider.id === undefined) return;
@@ -91,20 +108,30 @@ export const useAgentStore = defineStore('agent', () => {
     currentAgentId.value = agentId;
   };
 
+  async function setCurrentProviderId(providerId: ID | null) {
+    if (providerId && currentAgentId.value) {
+      currentProviderId.value = providerId;
+    }
+  };
+
   return {
     agents,
     providers,
+    connectStatus,
     currentAgentId,
+    currentProviderId,
     // Getters
     currentAgent,
+    currentModelProvider,
     // Actions
     createModelProvider,
+    debouncedUpdateAgent,
     getAvailableModels,
     loadAgents,
     loadAgentDetail,
     loadProviders,
-    updateAgent,
     updateModelProvider,
     setCurrentAgentId,
+    setCurrentProviderId
   }
 });

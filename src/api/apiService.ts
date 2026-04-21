@@ -115,8 +115,11 @@ export const apiService = {
     getModelProviders: (): Promise<AxiosResponse<ModelProvider[]>> => {
       return apiClient.get(AgentsEndpoints.getModelProviders());
     },
+    updateAgentDetail: (agentId: ID, agent: Partial<Agent>): Promise<AxiosResponse<ModelProvider>> => {
+      return apiClient.put(AgentsEndpoints.updateAgentDetail(agentId), agent);
+    },
     updateModelProvider: (providerId: ID, provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
-      return apiClient.put(AgentsEndpoints.updateModelProvider(providerId), provider)
+      return apiClient.put(AgentsEndpoints.updateModelProvider(providerId), provider);
     }
   },
   canvases: {
