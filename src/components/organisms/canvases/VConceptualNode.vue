@@ -43,25 +43,25 @@
 
     <template #overlay>
       <VNodeHandle
-        id="n"
+        id="top"
         type="target"
         :position="Position.Top"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="s"
+        id="bottom"
         type="source"
         :position="Position.Bottom"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="e"
+        id="right"
         type="source"
         :position="Position.Right"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="w"
+        id="left"
         type="target"
         :position="Position.Left"
         :color-class="theme.handle"

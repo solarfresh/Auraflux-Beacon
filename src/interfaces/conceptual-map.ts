@@ -96,8 +96,8 @@ export interface ConceptualEdge {
   metadata?: Record<string, any>;
 
   // --- Spatial Information (Layout Layer) ---
-  sourceHandle?: string; // e.g., 'n', 's', 'e', 'w'
-  targetHandle?: string; // e.g., 'n', 's', 'e', 'w'
+  sourceHandle?: string;
+  targetHandle?: string;
 }
 
 export interface ConceptualGraph {

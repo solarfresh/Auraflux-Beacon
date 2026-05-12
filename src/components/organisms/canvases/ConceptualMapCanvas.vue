@@ -4,12 +4,13 @@
       :nodes="vueFlowNodes"
       :edges="vueFlowEdges"
       :node-types="nodeTypes"
+      :edge-types="edgeTypes"
       :fit-view-on-init="true"
       :default-zoom="1.2"
       :max-zoom="4"
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
-      @connect="handleEdgeCreate"
+      @connect="handleConnect"
       @edge-update="handleEdgeUpdate"
       @node-double-click="handleNodeDoubleClick"
       @drop="onDrop"
@@ -76,9 +77,11 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue';
 import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
+import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{
@@ -92,6 +95,11 @@ const emit = defineEmits<{
 }>();
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
+const { startInterception } = useEdgeInterceptor();
+
+const edgeTypes = {
+  conceptual: markRaw(VConceptualEdge),
+};
 
 const nodeTypes = {
   FOCUS: markRaw(VConceptualNode),
@@ -118,11 +126,17 @@ const vueFlowNodes = computed(() => props.nodes.map(n => ({
 const vueFlowEdges = computed(() => props.edges.map(e => ({
   id: e.id,
   source: e.source,
-  sourceHandle: e?.sourceHandle,
+  sourceHandle: e.sourceHandle,
   target: e.target,
-  targetHandle: e?.targetHandle,
-  animated: true,
-  style: { stroke: '#94a3b8', strokeWidth: 2 },
+  targetHandle: e.targetHandle,
+  type: 'conceptual',
+  label: e.label,
+  animated: e.type === 'TRIGGERS',
+  data: {
+    type: e.type,
+    evidence: e.evidence,
+    weight: e.weight
+  },
 })));
 
 const isEditModalOpen = ref(false);
@@ -130,16 +144,16 @@ const editingNode = ref<ConceptualNode | null>(null);
 const localLabel = ref('');
 const localNotes = ref('');
 
+function handleConnect(connection: any) {
+  startInterception(connection);
+}
+
 function handleNodeDragStop({ node }: NodeDragEvent) {
   const updatedNode: ConceptualNode = {
     ...node.data,
     position: { x: node.position.x, y: node.position.y }
   };
   emit('node-update', updatedNode, 'move');
-}
-
-function handleEdgeCreate(connection: any) {
-  emit('edge-update', { id: uuidv4(), source: connection.source, target: connection.target, weight: connection.weight }, 'create');
 }
 
 function handleEdgeUpdate({ edge, connection }: EdgeUpdateEvent) {

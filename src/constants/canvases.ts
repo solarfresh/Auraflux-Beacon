@@ -1,4 +1,5 @@
 import type { NodeType } from '@/interfaces/conceptual-map';
+import { Position } from '@vue-flow/core'
 
 export const POSITION_SCALE = 50.
 
@@ -70,6 +71,13 @@ export const NODE_THEMES: Record<NodeType, {
     badge: 'gray',
   },
 };
+
+export const HANDLE_MAP: Record<string, Position> = {
+  top: Position.Top,
+  bottom: Position.Bottom,
+  right: Position.Right,
+  left: Position.Left,
+}
 
 /**
  * Default connection line style for Vue Flow
