@@ -15,6 +15,7 @@
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
+      @edit="startEdit"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
@@ -59,11 +60,11 @@
 </template>
 
 <script setup lang="ts">
-import { markRaw, computed, ref } from 'vue';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { VueFlow, type EdgeUpdateEvent, type NodeDragEvent } from '@vue-flow/core';
 import { v4 as uuidv4 } from 'uuid';
+import { computed, markRaw, ref } from 'vue';
 
 // Atoms & Molecules
 import VButton from '@/components/atoms/buttons/VButton.vue';
@@ -72,12 +73,10 @@ import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
+import VModal from '@/components/molecules/feedback/VModal.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-
-import VConceptNode from '@/components/organisms/canvases/VConceptNode.vue';
-import VInsightNode from '@/components/organisms/canvases/VInsightNode.vue';
+import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
@@ -95,10 +94,17 @@ const emit = defineEmits<{
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 
 const nodeTypes = {
-  CONCEPT: markRaw(VConceptNode),
-  INSIGHT: markRaw(VInsightNode),
-  // RESOURCE: markRaw(VConceptNode),
-  // QUESTION: markRaw(VConceptNode),
+  FOCUS: markRaw(VConceptualNode),
+  EVENT: markRaw(VConceptualNode),
+  OUTCOME: markRaw(VConceptualNode),
+  BOUNDARY: markRaw(VConceptualNode),
+  ENTITY: markRaw(VConceptualNode),
+  CONCEPT: markRaw(VConceptualNode),
+  INSIGHT: markRaw(VConceptualNode),
+  RESOURCE: markRaw(VConceptualNode),
+  QUERY: markRaw(VConceptualNode),
+  NAVIGATION: markRaw(VConceptualNode),
+  GROUP: markRaw(VConceptualNode),
 };
 
 const vueFlowNodes = computed(() => props.nodes.map(n => ({
@@ -106,6 +112,7 @@ const vueFlowNodes = computed(() => props.nodes.map(n => ({
   position: { x: n.position?.x ?? 0, y: n.position?.y ?? 0 },
   data: { ...n },
   type: n.type,
+  dragHandle: '.v-node-container',
 })));
 
 const vueFlowEdges = computed(() => props.edges.map(e => ({
@@ -124,7 +131,11 @@ const localLabel = ref('');
 const localNotes = ref('');
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
-  emit('node-update', { ...node.data, x: node.position.x, y: node.position.y }, 'move');
+  const updatedNode: ConceptualNode = {
+    ...node.data,
+    position: { x: node.position.x, y: node.position.y }
+  };
+  emit('node-update', updatedNode, 'move');
 }
 
 function handleEdgeCreate(connection: any) {
@@ -144,14 +155,20 @@ function startEdit(nodeId: string) {
   if (node) {
     editingNode.value = node;
     localLabel.value = node.label;
-    localNotes.value = node.user_notes ?? '';
+    localNotes.value = node.userNotes ?? '';
     isEditModalOpen.value = true;
   }
 }
 
 function saveEdit() {
   if (editingNode.value) {
-    emit('node-update', { ...editingNode.value, label: localLabel.value }, 'edit');
+    const updatedNode: ConceptualNode = {
+      ...editingNode.value,
+      label: localLabel.value,
+      userNotes: localNotes.value
+    };
+
+    emit('node-update', updatedNode, 'edit');
     isEditModalOpen.value = false;
   }
 }

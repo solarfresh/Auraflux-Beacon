@@ -52,7 +52,7 @@ export interface PhaseConfig {
 }
 
 export interface GroundednessMetric {
-  solidity: 'SOLID' | 'PULSING';
+  solidity: 'SOLID' | 'PULSING' | 'DIMMED';
   jitterLevel: 'NONE' | 'LOW' | 'HIGH';
   description: string;
 }
