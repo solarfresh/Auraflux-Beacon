@@ -16,9 +16,6 @@
             :edges="canvasStore.conceptualEdges"
             :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasId"
-            @node-update="handleNodeUpdate"
-            @edge-update="handleEdgeUpdate"
-            @drop-resource="handleDropResource"
           />
         </main>
       </template>
@@ -87,7 +84,6 @@ import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCa
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 
-import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map.ts';
 import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
@@ -148,82 +144,6 @@ const handleTeleport = async (data: { nodeId: string; canvasId: string }) => {
   // This ensures the user is "teleported" directly to the node's spatial coordinates.
   // eventBus.emit('canvas:focus-node', { nodeId });
 };
-
-/**
- * Open Modal for Focus Alignment or Reflection Logs
- */
-function handleOpenAligner(type: ManagementType) {
-  managementModalType.value = type;
-  isManagementModalOpen.value = true;
-}
-
-/**
- * Handle resource drop from Right Panel to Canvas
- */
-function handleDropResource(item: any, position: { x: number, y: number }) {
-  // explorationStore.addResourceToCanvas(item, position);
-}
-
-/**
- * Handles the 'viewDetails' event emitted by the sidebar (U.S. 1, 9, 12).
- * Triggers modals for Focus refinement or Reflection Log.
- */
-function handleViewDetails(type: ManagementType, index?: number, value?: any) {
-  managementModalType.value = type;
-  isManagementModalOpen.value = true;
-}
-
-/**
- * Switch Active Multi-Canvas View
- */
-function handleCanvasSwitch(viewId: string) {
-  explorationStore.setActiveCanvasView(viewId);
-}
-
-/**
- * Handles updates/interactions on the Conceptual Map Canvas (Node/Group actions). (U.S. 7, 9)
- */
-function handleNodeUpdate(node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') {
-  canvasStore.updateConceptualMapNode(node, action);
-}
-
-/**
- * Handles updates/interactions on Conceptual Map Edges (Create, Delete, Label Edit). (U.S. 8)
- */
-function handleEdgeUpdate(edge: ConceptualEdge, action: 'create' | 'delete' | 'update' | 'label-edit') {
-  canvasStore.updateConceptualMapEdge(edge, action);
-}
-
-/**
- * Handles the request to update the Focus data (U.S. 1).
- */
-function handleUpdateFocus(type: ManagementType, value: any) {
-    // initiativeStore.updateFocusData(type, value);
-    isManagementModalOpen.value = false;
-}
-
-/**
- * Handles the request to manage canvases (e.g., create new, rename)
- */
-function handleManageCanvas(action: 'create' | 'rename' | 'delete', viewId?: string) {
-    // Logic to open a dedicated canvas management modal or trigger store actions
-    console.log(`Canvas management requested: ${action} on ${viewId}`);
-}
-
-/**
- * E. Handles the core project transition request to the next phase (Formulation).
- */
-async function handlePhaseTransitionRequest() {
-  // Logic to transition phase and navigate
-  // projectStore.transitionToNextPhase();
-  // router.push('/formulation');
-}
-
-// --- Utility functions for Modals ---
-
-function isFocusType(type: ManagementType): boolean {
-  return type === 'final-question' || type === 'keyword' || type === 'scope';
-}
 
 function getModalWidthClass(type: ManagementType): string {
   switch (type) {

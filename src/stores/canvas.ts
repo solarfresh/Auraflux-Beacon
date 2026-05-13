@@ -12,6 +12,7 @@ export const useCanvasStore = defineStore('canvas', {
 
     // --- Edge Interceptor State ---
     isInterceptionActive: false,
+    interceptorAction: 'create',
     interceptorPosition: { x: 0, y: 0 },
     pendingConnection: null as Connection | null,
 
@@ -45,23 +46,32 @@ export const useCanvasStore = defineStore('canvas', {
       this.conceptualEdges = graph.edges;
     },
 
-    openInterceptor(connection: Connection, position: { x: number; y: number }) {
+    openInterceptor(connection: Connection | null, position: { x: number; y: number }, existingEdge?: ConceptualEdge) {
       this.isInterceptionActive = true;
       this.pendingConnection = connection;
       this.interceptorPosition = position;
 
-      // Reset form
-      this.localEdgeData = {
-        id: uuidv4(),
-        label: '',
-        type: 'REF',
-        evidence: '',
-        weight: 1.0,
-        source: connection.source,
-        sourceHandle: connection.sourceHandle,
-        target: connection.target,
-        targetHandle: connection.targetHandle,
-      };
+      if (existingEdge) {
+        this.interceptorAction = 'edit';
+        this.localEdgeData = { ...existingEdge };
+      } else if (connection) {
+        this.interceptorAction = 'create';
+        // Reset form
+        this.localEdgeData = {
+          id: uuidv4(),
+          label: '',
+          type: 'REF',
+          evidence: '',
+          weight: 1.0,
+          source: connection.source,
+          sourceHandle: connection.sourceHandle,
+          target: connection.target,
+          targetHandle: connection.targetHandle,
+        };
+      } else {
+        // TODO: Handle case where connection is null (e.g., manual open for editing)
+        this.closeInterceptor();
+      }
     },
 
     closeInterceptor() {

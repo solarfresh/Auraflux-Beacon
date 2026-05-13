@@ -11,7 +11,7 @@
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
       @connect="handleConnect"
-      @edge-update="handleEdgeUpdate"
+      @edge-double-click="handleEdgeDoubleClick"
       @node-double-click="handleNodeDoubleClick"
       @drop="onDrop"
       @dragover="onDragOver"
@@ -64,7 +64,7 @@
 <script setup lang="ts">
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, type EdgeUpdateEvent, type NodeDragEvent } from '@vue-flow/core';
+import { VueFlow, type Edge, type EdgeUpdateEvent, type NodeDragEvent, type EdgeMouseEvent } from '@vue-flow/core';
 import { computed, markRaw, ref } from 'vue';
 
 // Atoms & Molecules
@@ -89,11 +89,6 @@ import { useCanvasStore } from '@/stores/canvas';
 const props = defineProps<{
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
-}>();
-
-const emit = defineEmits<{
-  (e: 'node-update', node: ConceptualNode, action: 'move' | 'edit' | 'delete' | 'link'): void;
-  (e: 'edge-update', edge: ConceptualEdge, action: 'create' | 'delete' | 'update'): void;
 }>();
 
 const canvasStore = useCanvasStore();
@@ -160,11 +155,22 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     ...node.data,
     position: { x: node.position.x, y: node.position.y }
   };
-  emit('node-update', updatedNode, 'move');
+  canvasStore.updateConceptualMapNode(updatedNode, 'move');
 }
 
-function handleEdgeUpdate({ edge, connection }: EdgeUpdateEvent) {
-  emit('edge-update', { ...edge.data, source: connection.source, target: connection.target }, 'update');
+function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
+  event.stopPropagation();
+
+  const midpoint = {
+    x: (edge.sourceX + edge.targetX) / 2,
+    y: (edge.sourceY + edge.targetY) / 2,
+  };
+
+  const rawEdgeData = props.edges.find((e) => e.id === edge.id);
+
+  if (rawEdgeData) {
+    canvasStore.openInterceptor(null, midpoint, rawEdgeData);
+  }
 }
 
 function handleNodeDoubleClick(event: any) {
@@ -189,7 +195,7 @@ function saveEdit() {
       userNotes: localNotes.value
     };
 
-    emit('node-update', updatedNode, 'edit');
+    canvasStore.updateConceptualMapNode(updatedNode, 'edit');
     isEditModalOpen.value = false;
   }
 }

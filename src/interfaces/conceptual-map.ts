@@ -115,6 +115,7 @@ export interface CanvasState {
   draggedNode: any | null;
 
   isInterceptionActive: boolean;
+  interceptorAction: string;
   interceptorPosition: Point2D;
   pendingConnection: Connection | null;
 

@@ -70,7 +70,7 @@
             Cancel
           </VButton>
           <VButton variant="primary" size="sm" @click="confirmCreation">
-            Create Link
+            {{ interceptorAction == 'create' ? 'Create' : 'Edit' }} Link
           </VButton>
         </VCluster>
       </VStack>
@@ -120,9 +120,10 @@ const edgeTypeOptions = [
 ];
 
 const isInterceptionActive = computed(() => canvasStore.isInterceptionActive);
+const interceptorAction = computed(() => canvasStore.interceptorAction);
 const interceptorPosition = computed(() => canvasStore.interceptorPosition);
 const localType = computed({
-  get: () => canvasStore.localEdgeData.type,
+  get: () => canvasStore.localEdgeData.type ?? 'REF',
   set: (val) => canvasStore.updateLocalEdgeData({type: val})
 });
 const localLabel= computed({
