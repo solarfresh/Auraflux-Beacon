@@ -20,7 +20,7 @@
       <VButton
         variant="ghost"
         size="xs"
-        class="hover:!bg-rose-50 hover:!text-rose-600"
+        class="hover:bg-rose-50! hover:text-rose-600!"
         @click="emit('reject')"
       >
         REJECT

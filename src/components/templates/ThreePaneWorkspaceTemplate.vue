@@ -6,7 +6,7 @@
       background="white"
       padding="sm"
       border="bottom"
-      class="flex-shrink-0 z-30"
+      class="shrink-0 z-30"
     >
       <VBox padding="none" class="px-6">
         <slot name="header" />
@@ -21,7 +21,7 @@
         background="white"
         border="right"
         aria-label="Sidebar Navigation"
-        class="flex-shrink-0 w-80 h-full overflow-hidden z-20"
+        class="shrink-0 w-80 h-full overflow-hidden z-20"
       >
         <slot name="left-sidebar" />
       </VBox>
@@ -40,7 +40,7 @@
         tag="section"
         background="slate-50"
         border="left"
-        class="flex-shrink-0 overflow-hidden z-20"
+        class="shrink-0 overflow-hidden z-20"
         :class="[
           'transition-all duration-300 ease-in-out',
           isRightOpen ? 'w-96 border-l border-slate-100' : 'w-0 border-none overflow-hidden'
@@ -62,7 +62,7 @@
       background="white"
       padding="sm"
       border="top"
-      class="flex-shrink-0 z-30"
+      class="shrink-0 z-30"
     >
       <VBox padding="none" class="px-6">
         <slot name="footer" />

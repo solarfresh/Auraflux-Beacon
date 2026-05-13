@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-indigo-700 text-white shadow-md flex-shrink-0">
+  <div class="bg-indigo-700 text-white shadow-md shrink-0">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
       <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
 
@@ -15,7 +15,7 @@
           <VTypography
             tag="span"
             size="sm"
-            class="flex-shrink-0 whitespace-nowrap hidden sm:block opacity-90"
+            class="shrink-0 whitespace-nowrap hidden sm:block opacity-90"
             color="text=white"
           >
             {{ stageMessage }}
@@ -28,7 +28,7 @@
             />
           </div>
 
-          <VTypography tag="span" size="sm" weight="semibold" color="text=white" class="flex-shrink-0 w-10 text-right">
+          <VTypography tag="span" size="sm" weight="semibold" color="text=white" class="shrink-0 w-10 text-right">
             {{ completionPercentage }}%
           </VTypography>
         </div>

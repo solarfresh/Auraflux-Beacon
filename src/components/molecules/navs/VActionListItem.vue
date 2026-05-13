@@ -23,7 +23,7 @@
           type="outline"
           size="xs"
           :color="uiStyles.accentColor"
-          class="flex-shrink-0"
+          class="shrink-0"
         />
 
         <VCluster gap="xs" align="center" class="min-w-0 flex-1">
@@ -32,7 +32,7 @@
             size="sm"
             weight="bold"
             :color="uiStyles.labelColor"
-            class="flex-shrink-0"
+            class="shrink-0"
           >
             {{ scopeElement.label }}:
           </VTypography>
@@ -52,7 +52,7 @@
         name="ChevronRight"
         size="sm"
         :color="uiStyles.accentColor"
-        class="flex-shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
+        class="shrink-0 opacity-50 group-hover:opacity-100 transition-opacity"
       />
     </VCluster>
   </VBox>

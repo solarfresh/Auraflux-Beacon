@@ -2,7 +2,7 @@
   <VBox tag="section" background="white" class="flex-1 h-full min-w-0 overflow-hidden flex flex-col">
 
     <template v-if="currentDraft">
-      <VBox padding="lg" border="bottom" class="flex-shrink-0">
+      <VBox padding="lg" border="bottom" class="shrink-0">
         <VStack gap="xs">
           <VCluster justify="between" align="center">
             <VTypography tag="h2" size="2xl" weight="bold" color="slate-900">

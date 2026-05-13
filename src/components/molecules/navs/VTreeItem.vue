@@ -19,7 +19,7 @@
   >
     <VCluster align="start" gap="md" full-width>
 
-      <VBox padding="none" class="relative mt-1.5 flex-shrink-0">
+      <VBox padding="none" class="relative mt-1.5 shrink-0">
         <div
           :class="[
             'w-3 h-3 rounded-full transition-all duration-500',

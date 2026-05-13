@@ -117,6 +117,10 @@ const edgeTypeOptions = [
 ];
 
 const isInterceptionActive = computed(() => canvasStore.isInterceptionActive);
+
+function close() {
+  canvasStore.setInterceptionActivity(false);
+}
 </script>
 
 <style scoped>

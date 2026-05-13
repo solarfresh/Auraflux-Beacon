@@ -1,7 +1,7 @@
 <template>
   <VBox tag="section" background="white" class="flex flex-col h-full w-full overflow-hidden">
 
-    <VBox v-if="$slots.header" border="bottom" padding="sm" background="white" class="flex-shrink-0 z-10">
+    <VBox v-if="$slots.header" border="bottom" padding="sm" background="white" class="shrink-0 z-10">
       <slot name="header" />
     </VBox>
 
@@ -29,7 +29,7 @@
                 width="8"
                 height="8"
                 rounded="full"
-                class="flex-shrink-0 flex items-center justify-center shadow-sm"
+                class="shrink-0 flex items-center justify-center shadow-sm"
                 :background="message.role === 'user' ? 'indigo-50' : 'white'"
                 :class="message.role === 'user' ? 'text-indigo-600' : 'text-amber-500 border border-slate-100'"
               >
