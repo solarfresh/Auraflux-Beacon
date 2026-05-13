@@ -27,8 +27,8 @@
 import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 import VNodeActionGroup from '@/components/molecules/canvases/VNodeActionGroup.vue';
-import { useCanvasStore } from '@/stores/canvas';
 import { useProjectExploration } from '@/composables/useProjectExploration';
+import { useCanvasStore } from '@/stores/canvas';
 import { computed } from 'vue';
 
 const canvasStore = useCanvasStore();
@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<{
   padding: 'md'
 })
 
-const nodeData = computed(() => store.conceptualNodes.get(props.id));
+const nodeData = computed(() => canvasStore.conceptualNodes.get(props.id));
 
 /**
  * Technical Logic: Operation Handlers

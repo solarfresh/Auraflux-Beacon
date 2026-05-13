@@ -83,9 +83,8 @@ import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
-import { useCanvasStore } from '@/stores/canvas';
-import { useExplorationStore } from '@/stores/exploration';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import { useCanvasStore } from '@/stores/canvas';
 
 const props = defineProps<{
   nodes: ConceptualNode[];
@@ -98,7 +97,6 @@ const emit = defineEmits<{
 }>();
 
 const canvasStore = useCanvasStore();
-const explorationStore = useExplorationStore();
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 const { startInterception } = useEdgeInterceptor();
 
@@ -150,7 +148,7 @@ const localLabel = ref('');
 const localNotes = ref('');
 
 function handleConnect(connection: any) {
-  startInterception(connection, store.conceptualNodes);
+  startInterception(connection, canvasStore.conceptualNodes);
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {

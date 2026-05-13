@@ -12,8 +12,8 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="Array.from(explorationStore.conceptualNodes.values())"
-            :edges="explorationStore.conceptualEdges"
+            :nodes="Array.from(canvasStore.conceptualNodes.values())"
+            :edges="canvasStore.conceptualEdges"
             :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasId"
             @node-update="handleNodeUpdate"
@@ -71,20 +71,18 @@
  * - Root template for the "War Room" phase.
  * - Handles top-level layout coordination and Store-to-Canvas event mapping.
  */
-import { useCanvasStore } from '@/stores/canvas';
 import { useProjectExploration } from '@/composables/useProjectExploration';
 import { useRegistry } from '@/composables/useRegistry';
+import { useCanvasStore } from '@/stores/canvas';
 import { useExplorationStore } from '@/stores/exploration';
 import { onMounted, ref } from 'vue';
 
 // Atoms & Layout Components
-import VButton from '@/components/atoms/buttons/VButton.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // Organisms
-import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
