@@ -30,7 +30,7 @@
           v-if="props.label"
           size="xs"
           weight="bold"
-          class="max-w-[120px] truncate"
+          class="max-w-30 truncate"
         >
           {{ props.label }}
         </VTypography>
@@ -82,7 +82,7 @@ const pathData = computed(() => {
   const sourcePos = props.sourceHandle ? HANDLE_MAP[props.sourcePosition] : Position.Right
   const targetPos = props.targetHandle ? HANDLE_MAP[props.targetPosition] : Position.Left
 
-  return   getBezierPath({
+  return getBezierPath({
     sourceX: props.sourceX,
     sourceY: props.sourceY,
     sourcePosition: sourcePos,

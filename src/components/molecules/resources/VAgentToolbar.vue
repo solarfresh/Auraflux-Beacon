@@ -125,6 +125,6 @@ const updateState = (patch: Partial<ModelSelectorState>) => {
 };
 
 const updateFilter = (filter: FilterState) => updateState({ filter });
-const updateModelFamily = (modelFamily: string) => updateState({ modelFamily });
+const updateModelFamily = (modelFamily: FilterState) => updateState({ modelFamily });
 const updateSorter = (sorter: SorterState) => updateState({ sorter });
 </script>

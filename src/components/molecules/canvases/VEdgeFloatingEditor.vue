@@ -36,9 +36,16 @@
         <VFormField id="edge-type" label="Relationship Type">
           <VSelect
             v-model="localType"
-            :options="edgeTypeOptions"
             size="sm"
-          />
+          >
+            <option
+              v-for="edgeType in edgeTypeOptions"
+              :key="edgeType.label"
+              :value="edgeType.value"
+            >
+              {{ edgeType.label }}
+            </option>
+          </VSelect>
         </VFormField>
 
         <VFormField id="edge-label" label="Logical Label (Optional)">
@@ -97,10 +104,6 @@ const canvasStore = useCanvasStore();
  * Integrated with useEdgeInterceptor for state management.
  */
 const {
-  interceptorPosition,
-  localLabel,
-  localType,
-  localEvidence,
   confirmCreation,
 } = useEdgeInterceptor();
 
@@ -117,6 +120,19 @@ const edgeTypeOptions = [
 ];
 
 const isInterceptionActive = computed(() => canvasStore.isInterceptionActive);
+const interceptorPosition = computed(() => canvasStore.interceptorPosition);
+const localType = computed({
+  get: () => canvasStore.localEdgeData.type,
+  set: (val) => canvasStore.updateLocalEdgeData({type: val})
+});
+const localLabel= computed({
+  get: () => canvasStore.localEdgeData.label,
+  set: (val) => canvasStore.updateLocalEdgeData({label: val})
+});
+const localEvidence = computed({
+  get: () => canvasStore.localEdgeData.evidence,
+  set: (val) => canvasStore.updateLocalEdgeData({evidence: val})
+});
 
 function close() {
   canvasStore.setInterceptionActivity(false);

@@ -101,7 +101,11 @@ const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 const { startInterception } = useEdgeInterceptor();
 
 const edgeTypes = {
-  conceptual: markRaw(VConceptualEdge),
+  REF: markRaw(VConceptualEdge),
+  VALIDATES: markRaw(VConceptualEdge),
+  CONSTRAINS: markRaw(VConceptualEdge),
+  TRIGGERS: markRaw(VConceptualEdge),
+  LINK: markRaw(VConceptualEdge),
 };
 
 const nodeTypes = {
@@ -132,7 +136,7 @@ const vueFlowEdges = computed(() => props.edges.map(e => ({
   sourceHandle: e.sourceHandle,
   target: e.target,
   targetHandle: e.targetHandle,
-  type: 'conceptual',
+  type: e.type ?? 'REF',
   label: e.label,
   animated: e.type === 'TRIGGERS',
   data: {

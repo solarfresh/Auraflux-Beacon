@@ -5,21 +5,9 @@
 import type { ConceptualNode, ConceptualEdge, EdgeType } from '@/interfaces/conceptual-map';
 import { useCanvasStore } from '@/stores/canvas';
 import type { Connection } from '@vue-flow/core';
-import { v4 as uuidv4 } from 'uuid';
-import { ref } from 'vue';
 
 export function useEdgeInterceptor() {
   const store = useCanvasStore();
-
-  // --- Reactive State ---
-  const pendingConnection = ref<Connection | null>(null);
-  const interceptorPosition = ref({ x: 0, y: 0 });
-
-  // Local state for the interceptor UI
-  const localLabel = ref('');
-  const localType = ref<EdgeType>('REF');
-  const localEvidence = ref('');
-  const localWeight = ref(1.0);
 
   /**
    * Internal Utility: getEdgeMidpoint
@@ -51,14 +39,7 @@ export function useEdgeInterceptor() {
 
     // Prevent immediate creation
     store.setInterceptionActivity(true);
-    pendingConnection.value = connection;
-    interceptorPosition.value = midpoint;
-
-    // Reset local form to defaults
-    localLabel.value = '';
-    localType.value = 'REF';
-    localEvidence.value = '';
-    localWeight.value = 1.0;
+    store.openInterceptor(connection, midpoint);
   };
 
   /**
@@ -66,42 +47,20 @@ export function useEdgeInterceptor() {
    * Finalizes the data structure and sends it to the store.
    */
   const confirmCreation = () => {
-    if (!pendingConnection.value) return;
-
-    const { source, target, sourceHandle, targetHandle } = pendingConnection.value;
+    if (!store.pendingConnection) return;
 
     const newEdge: ConceptualEdge = {
-      id: uuidv4(),
-      source,
-      target,
-      sourceHandle: sourceHandle ?? undefined,
-      targetHandle: targetHandle ?? undefined,
-      type: localType.value,
-      label: localLabel.value || undefined,
-      evidence: localEvidence.value || undefined,
-      weight: localWeight.value,
-      // Metadata for tracking
-      metadata: {
-        createdAt: new Date().toISOString(),
-        isManual: true,
-      },
+      ...store.localEdgeData,
     };
 
     // Dispatch to store action
     store.updateConceptualMapEdge(newEdge, 'create');
 
     // Clean up
-    close();
+    store.closeInterceptor();
   };
 
   return {
-    // State
-    interceptorPosition,
-    localLabel,
-    localType,
-    localEvidence,
-    localWeight,
-
     // Actions
     startInterception,
     confirmCreation,

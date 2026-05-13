@@ -44,6 +44,7 @@ export const useCanvasStore = defineStore('canvas', {
       });
       this.conceptualEdges = graph.edges;
     },
+
     openInterceptor(connection: Connection, position: { x: number; y: number }) {
       this.isInterceptionActive = true;
       this.pendingConnection = connection;
@@ -59,7 +60,7 @@ export const useCanvasStore = defineStore('canvas', {
         source: connection.source,
         sourceHandle: connection.sourceHandle,
         target: connection.target,
-        targetHandle: connection.targetHandle
+        targetHandle: connection.targetHandle,
       };
     },
 
@@ -102,6 +103,10 @@ export const useCanvasStore = defineStore('canvas', {
       } else if (action === 'delete') {
         this.conceptualEdges = this.conceptualEdges.filter(e => e.id !== edge.id);
       }
+    },
+
+    updateLocalEdgeData(patch: any) {
+      this.localEdgeData = { ...this.localEdgeData, ...patch };
     },
   }
 });
