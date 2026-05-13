@@ -46,15 +46,19 @@ export function useEdgeInterceptor() {
    * Phase 2: ASSEMBLE_PAYLOAD & COMMIT_TO_STORE
    * Finalizes the data structure and sends it to the store.
    */
-  const confirmCreation = () => {
-    if (!store.pendingConnection) return;
+  const confirmRelation = () => {
+    if (!store.pendingConnection && store.interceptorAction == 'create') return;
 
     const newEdge: ConceptualEdge = {
       ...store.localEdgeData,
     };
 
     // Dispatch to store action
-    store.updateConceptualMapEdge(newEdge, 'create');
+    if (store.interceptorAction == 'create') {
+      store.updateConceptualMapEdge(newEdge, 'create');
+    } else if (store.interceptorAction == 'update') {
+      store.updateConceptualMapEdge(newEdge, 'update');
+    }
 
     // Clean up
     store.closeInterceptor();
@@ -63,6 +67,6 @@ export function useEdgeInterceptor() {
   return {
     // Actions
     startInterception,
-    confirmCreation,
+    confirmRelation,
   };
 }

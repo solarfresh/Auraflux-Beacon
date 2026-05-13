@@ -66,12 +66,25 @@
         </VFormField>
 
         <VCluster justify="end" gap="sm" class="pt-2">
+
+          <VButton
+            v-if="interceptorAction === 'update'"
+            variant="danger"
+            size="sm"
+            @click="handleDelete"
+          >
+            Delete
+          </VButton>
+<!--
           <VButton variant="ghost" size="sm" @click="close">
             Cancel
           </VButton>
-          <VButton variant="primary" size="sm" @click="confirmCreation">
-            {{ interceptorAction == 'create' ? 'Create' : 'Edit' }} Link
+ -->
+          <VButton variant="primary" size="sm" @click="confirmRelation">
+            {{ interceptorAction == 'create' ? 'Create' : 'Update' }} Link
           </VButton>
+
+
         </VCluster>
       </VStack>
     </VBox>
@@ -104,7 +117,7 @@ const canvasStore = useCanvasStore();
  * Integrated with useEdgeInterceptor for state management.
  */
 const {
-  confirmCreation,
+  confirmRelation,
 } = useEdgeInterceptor();
 
 /**
@@ -137,7 +150,15 @@ const localEvidence = computed({
 
 function close() {
   canvasStore.setInterceptionActivity(false);
-}
+};
+
+function handleDelete() {
+  if (confirm('Delete this relationship?')) {
+    canvasStore.updateConceptualMapEdge(canvasStore.localEdgeData, 'delete');
+    canvasStore.closeInterceptor();
+  };
+};
+
 </script>
 
 <style scoped>

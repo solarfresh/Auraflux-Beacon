@@ -160,6 +160,7 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
 
 function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
   event.stopPropagation();
+  event.preventDefault();
 
   const midpoint = {
     x: (edge.sourceX + edge.targetX) / 2,

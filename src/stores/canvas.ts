@@ -52,7 +52,7 @@ export const useCanvasStore = defineStore('canvas', {
       this.interceptorPosition = position;
 
       if (existingEdge) {
-        this.interceptorAction = 'edit';
+        this.interceptorAction = 'update';
         this.localEdgeData = { ...existingEdge };
       } else if (connection) {
         this.interceptorAction = 'create';
@@ -102,8 +102,8 @@ export const useCanvasStore = defineStore('canvas', {
     },
 
     /** Handles edge creation, deletion, and label editing (U.S. 8) */
-    updateConceptualMapEdge(edge: ConceptualEdge, action: 'create' | 'delete' | 'update' | 'label-edit') {
-      if (action === 'create' || action === 'update' || action === 'label-edit') {
+    updateConceptualMapEdge(edge: ConceptualEdge, action: 'create' | 'delete' | 'update') {
+      if (action === 'create' || action === 'update') {
         const existingIndex = this.conceptualEdges.findIndex(e => e.id === edge.id);
         if (existingIndex !== -1) {
           this.conceptualEdges[existingIndex] = edge;
