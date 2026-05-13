@@ -4,11 +4,10 @@
  */
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
-import { ref } from 'vue';
-import { useExplorationStore } from '@/stores/exploration';
+import { useCanvasStore } from '@/stores/canvas';
 
 export function useCanvasDrop() {
-  const store = useExplorationStore();
+  const store = useCanvasStore();
 
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
 

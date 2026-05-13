@@ -2,14 +2,16 @@ import { apiService } from '@/api/apiService';
 import { POSITION_SCALE } from '@/constants/canvases';
 import { ConceptualNode } from '@/interfaces/conceptual-map';
 import { ID } from '@/interfaces/core';
+import { useCanvasStore } from '@/stores/canvas';
 import { useExplorationStore } from '@/stores/exploration';
 import { useProjectStore } from '@/stores/project';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
 export function useProjectExploration() {
-  const projectStore = useProjectStore();
+  const canvasStore = useCanvasStore();
   const explorationStore = useExplorationStore();
+  const projectStore = useProjectStore();
   const route = useRoute();
 
   const currentProjectId = computed((): ID => {
@@ -17,7 +19,7 @@ export function useProjectExploration() {
   });
 
   const activeCanvasId = computed(() => explorationStore.activeCanvasId);
-  const conceptualNodes = computed(() => explorationStore.conceptualNodes);
+  const conceptualNodes = computed(() => canvasStore.conceptualNodes);
   const sidebarNodes = computed(() => explorationStore.sidebarNodes);
 
   async function loadExplorationData() {
@@ -55,7 +57,7 @@ export function useProjectExploration() {
     try {
       let response = await apiService.canvases.graphs.get(activeCanvasId.value);
       if (response.data) {
-        explorationStore.setConceptualGraph(response.data)
+        canvasStore.setConceptualGraph(response.data)
       } else {
         console.log(response.data);
       }
@@ -87,7 +89,7 @@ export function useProjectExploration() {
           newNode.position.y *= POSITION_SCALE;
         }
 
-        explorationStore.conceptualNodes.set(newNode.id, newNode);
+        canvasStore.conceptualNodes.set(newNode.id, newNode);
         recommendConceptualNodes();
       }
     } catch (error) {

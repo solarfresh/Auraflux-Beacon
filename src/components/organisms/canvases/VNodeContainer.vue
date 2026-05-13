@@ -27,11 +27,11 @@
 import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 import VNodeActionGroup from '@/components/molecules/canvases/VNodeActionGroup.vue';
-import { useExplorationStore } from '@/stores/exploration';
+import { useCanvasStore } from '@/stores/canvas';
 import { useProjectExploration } from '@/composables/useProjectExploration';
 import { computed } from 'vue';
 
-const store = useExplorationStore();
+const canvasStore = useCanvasStore();
 const { updateConeptualNode } = useProjectExploration();
 
 const props = withDefaults(defineProps<{
@@ -69,7 +69,7 @@ const handleAccept = () => {
 const handleReject = () => {
   let node = nodeData.value;
   if (node !== undefined) {
-    store.updateConceptualMapNode(node, 'delete');
+    canvasStore.updateConceptualMapNode(node, 'delete');
   }
 }
 </script>

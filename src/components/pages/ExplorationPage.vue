@@ -71,6 +71,7 @@
  * - Root template for the "War Room" phase.
  * - Handles top-level layout coordination and Store-to-Canvas event mapping.
  */
+import { useCanvasStore } from '@/stores/canvas';
 import { useProjectExploration } from '@/composables/useProjectExploration';
 import { useRegistry } from '@/composables/useRegistry';
 import { useExplorationStore } from '@/stores/exploration';
@@ -92,6 +93,7 @@ import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map
 import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
+const canvasStore = useCanvasStore();
 const explorationStore = useExplorationStore();
 const { loadExplorationData } = useProjectExploration();
 
@@ -184,14 +186,14 @@ function handleCanvasSwitch(viewId: string) {
  * Handles updates/interactions on the Conceptual Map Canvas (Node/Group actions). (U.S. 7, 9)
  */
 function handleNodeUpdate(node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') {
-  explorationStore.updateConceptualMapNode(node, action);
+  canvasStore.updateConceptualMapNode(node, action);
 }
 
 /**
  * Handles updates/interactions on Conceptual Map Edges (Create, Delete, Label Edit). (U.S. 8)
  */
 function handleEdgeUpdate(edge: ConceptualEdge, action: 'create' | 'delete' | 'update' | 'label-edit') {
-  explorationStore.updateConceptualMapEdge(edge, action);
+  canvasStore.updateConceptualMapEdge(edge, action);
 }
 
 /**

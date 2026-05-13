@@ -20,8 +20,9 @@
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
+      <VEdgeFloatingEditor />
 
-      </VueFlow>
+    </VueFlow>
 
     <VModal
       :is-open="isEditModalOpen"
@@ -64,7 +65,6 @@
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
 import { VueFlow, type EdgeUpdateEvent, type NodeDragEvent } from '@vue-flow/core';
-import { v4 as uuidv4 } from 'uuid';
 import { computed, markRaw, ref } from 'vue';
 
 // Atoms & Molecules
@@ -74,6 +74,7 @@ import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
+import VEdgeFloatingEditor from '@/components/molecules/canvases/VEdgeFloatingEditor.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
@@ -82,6 +83,8 @@ import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
+import { useCanvasStore } from '@/stores/canvas';
+import { useExplorationStore } from '@/stores/exploration';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{
@@ -94,6 +97,8 @@ const emit = defineEmits<{
   (e: 'edge-update', edge: ConceptualEdge, action: 'create' | 'delete' | 'update'): void;
 }>();
 
+const canvasStore = useCanvasStore();
+const explorationStore = useExplorationStore();
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
 const { startInterception } = useEdgeInterceptor();
 
@@ -145,7 +150,7 @@ const localLabel = ref('');
 const localNotes = ref('');
 
 function handleConnect(connection: any) {
-  startInterception(connection);
+  startInterception(connection, store.conceptualNodes);
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {

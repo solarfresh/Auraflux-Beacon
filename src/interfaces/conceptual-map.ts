@@ -1,4 +1,5 @@
-import { EntityStatus, ID, Point2D } from './core';
+import type { EntityStatus, ID, Point2D } from './core';
+import type { Connection } from '@vue-flow/core';
 
 /**
  * Unified Node Type for Auraflux.
@@ -96,11 +97,26 @@ export interface ConceptualEdge {
   metadata?: Record<string, any>;
 
   // --- Spatial Information (Layout Layer) ---
-  sourceHandle?: string;
-  targetHandle?: string;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
 }
 
 export interface ConceptualGraph {
   nodes: Map<string, ConceptualNode>;
   edges: ConceptualEdge[];
+}
+
+export interface CanvasState {
+  conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
+  conceptualEdges: ConceptualEdge[]; // Edges for the active view
+
+  isDragging: boolean;
+  isDragOver: boolean;
+  draggedNode: any | null;
+
+  isInterceptionActive: boolean;
+  interceptorPosition: Point2D;
+  pendingConnection: Connection | null;
+
+  localEdgeData: ConceptualEdge;
 }

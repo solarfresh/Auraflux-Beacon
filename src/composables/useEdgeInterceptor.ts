@@ -2,17 +2,16 @@
  * useEdgeInterceptor.ts
  * Controller Module: Intercepts raw connection events to collect semantic metadata.
  */
-import { ref } from 'vue';
+import type { ConceptualNode, ConceptualEdge, EdgeType } from '@/interfaces/conceptual-map';
+import { useCanvasStore } from '@/stores/canvas';
+import type { Connection } from '@vue-flow/core';
 import { v4 as uuidv4 } from 'uuid';
-import type { Connection, Edge } from '@vue-flow/core';
-import type { ConceptualEdge, EdgeType } from '@/interfaces/conceptual-map';
-import { useExplorationStore } from '@/stores/exploration';
+import { ref } from 'vue';
 
 export function useEdgeInterceptor() {
-  const store = useExplorationStore();
+  const store = useCanvasStore();
 
   // --- Reactive State ---
-  const isInterceptionActive = ref(false);
   const pendingConnection = ref<Connection | null>(null);
   const interceptorPosition = ref({ x: 0, y: 0 });
 
@@ -27,11 +26,11 @@ export function useEdgeInterceptor() {
    * Calculates the center point between two nodes to place the interceptor UI.
    * Directly used within startInterception.
    */
-  const calculateMidpoint = (connection: Connection) => {
+  const calculateMidpoint = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
     // In Vue Flow, connection object provides source and target node info
     // But we need to access the actual node positions from the store or VueFlow instance
-    const sourceNode = store.conceptualNodes.get(connection.source);
-    const targetNode = store.conceptualNodes.get(connection.target);
+    const sourceNode = nodes.get(connection.source);
+    const targetNode = nodes.get(connection.target);
 
     if (!sourceNode?.position || !targetNode?.position) {
       return { x: 0, y: 0 };
@@ -47,11 +46,11 @@ export function useEdgeInterceptor() {
    * Phase 1: INITIATE_CONNECTION
    * Called by @connect event in the canvas.
    */
-  const startInterception = (connection: Connection) => {
-    const midpoint = calculateMidpoint(connection);
+  const startInterception = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
+    const midpoint = calculateMidpoint(connection, nodes);
 
     // Prevent immediate creation
-    isInterceptionActive.value = true;
+    store.setInterceptionActivity(true);
     pendingConnection.value = connection;
     interceptorPosition.value = midpoint;
 
@@ -95,17 +94,8 @@ export function useEdgeInterceptor() {
     close();
   };
 
-  /**
-   * Phase 3: CANCEL_CONNECTION
-   */
-  const close = () => {
-    isInterceptionActive.value = false;
-    pendingConnection.value = null;
-  };
-
   return {
     // State
-    isInterceptionActive,
     interceptorPosition,
     localLabel,
     localType,
@@ -115,6 +105,5 @@ export function useEdgeInterceptor() {
     // Actions
     startInterception,
     confirmCreation,
-    close,
   };
 }
