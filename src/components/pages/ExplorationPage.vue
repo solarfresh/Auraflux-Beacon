@@ -12,8 +12,8 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="Array.from(canvasStore.conceptualNodes.values())"
-            :edges="canvasStore.conceptualEdges"
+            :nodes="canvasStore.current ? Array.from(canvasStore.current.conceptualNodes.values()) : []"
+            :edges="canvasStore.current ? canvasStore.current.conceptualEdges: []"
             :health-scores="explorationStore.stabilityScore"
             :active-view-id="explorationStore.activeCanvasId"
           />

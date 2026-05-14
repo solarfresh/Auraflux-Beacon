@@ -147,7 +147,7 @@ const localLabel = ref('');
 const localNotes = ref('');
 
 function handleConnect(connection: any) {
-  startInterception(connection, canvasStore.conceptualNodes);
+  startInterception(connection, canvasStore.current?.conceptualNodes ?? new Map());
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {

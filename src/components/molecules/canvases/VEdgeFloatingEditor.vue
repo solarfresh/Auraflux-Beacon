@@ -132,19 +132,19 @@ const edgeTypeOptions = [
   { label: 'Structural Link', value: 'LINK' },
 ];
 
-const isInterceptionActive = computed(() => canvasStore.isInterceptionActive);
-const interceptorAction = computed(() => canvasStore.interceptorAction);
-const interceptorPosition = computed(() => canvasStore.interceptorPosition);
+const isInterceptionActive = computed(() => canvasStore.current?.isInterceptionActive);
+const interceptorAction = computed(() => canvasStore.current?.interceptorAction);
+const interceptorPosition = computed(() => canvasStore.current?.interceptorPosition!);
 const localType = computed({
-  get: () => canvasStore.localEdgeData.type ?? 'REF',
+  get: () => canvasStore.current?.localEdgeData.type ?? 'REF',
   set: (val) => canvasStore.updateLocalEdgeData({type: val})
 });
 const localLabel= computed({
-  get: () => canvasStore.localEdgeData.label,
+  get: () => canvasStore.current?.localEdgeData.label,
   set: (val) => canvasStore.updateLocalEdgeData({label: val})
 });
 const localEvidence = computed({
-  get: () => canvasStore.localEdgeData.evidence,
+  get: () => canvasStore.current?.localEdgeData.evidence,
   set: (val) => canvasStore.updateLocalEdgeData({evidence: val})
 });
 
@@ -154,7 +154,7 @@ function close() {
 
 function handleDelete() {
   if (confirm('Delete this relationship?')) {
-    canvasStore.updateConceptualMapEdge(canvasStore.localEdgeData, 'delete');
+    canvasStore.updateConceptualMapEdge(canvasStore.current?.localEdgeData!, 'delete');
     canvasStore.closeInterceptor();
   };
 };

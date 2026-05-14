@@ -19,7 +19,7 @@ export function useProjectExploration() {
   });
 
   const activeCanvasId = computed(() => explorationStore.activeCanvasId);
-  const conceptualNodes = computed(() => canvasStore.conceptualNodes);
+  const conceptualNodes = computed(() => canvasStore.current?.conceptualNodes ?? new Map());
   const sidebarNodes = computed(() => explorationStore.sidebarNodes);
 
   async function loadExplorationData() {
@@ -57,6 +57,7 @@ export function useProjectExploration() {
     try {
       let response = await apiService.canvases.graphs.get(activeCanvasId.value);
       if (response.data) {
+        await canvasStore.mountCanvas(activeCanvasId.value);
         canvasStore.setConceptualGraph(response.data)
       } else {
         console.log(response.data);
@@ -89,7 +90,7 @@ export function useProjectExploration() {
           newNode.position.y *= POSITION_SCALE;
         }
 
-        canvasStore.conceptualNodes.set(newNode.id, newNode);
+        canvasStore.current?.conceptualNodes.set(newNode.id, newNode);
         recommendConceptualNodes();
       }
     } catch (error) {

@@ -106,7 +106,13 @@ export interface ConceptualGraph {
   edges: ConceptualEdge[];
 }
 
-export interface CanvasState {
+export interface ViewPort {
+  x: number;
+  y: number;
+  zoom: number;
+}
+
+export interface CanvasViewInstance {
   conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
   conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
@@ -120,4 +126,5 @@ export interface CanvasState {
   pendingConnection: Connection | null;
 
   localEdgeData: ConceptualEdge;
+  viewport: ViewPort;
 }

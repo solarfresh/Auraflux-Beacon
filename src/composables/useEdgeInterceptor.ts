@@ -47,16 +47,16 @@ export function useEdgeInterceptor() {
    * Finalizes the data structure and sends it to the store.
    */
   const confirmRelation = () => {
-    if (!store.pendingConnection && store.interceptorAction == 'create') return;
+    if (!store.current?.pendingConnection && store.current?.interceptorAction == 'create') return;
 
     const newEdge: ConceptualEdge = {
-      ...store.localEdgeData,
+      ...store.current?.localEdgeData!,
     };
 
     // Dispatch to store action
-    if (store.interceptorAction == 'create') {
+    if (store.current?.interceptorAction == 'create') {
       store.updateConceptualMapEdge(newEdge, 'create');
-    } else if (store.interceptorAction == 'update') {
+    } else if (store.current?.interceptorAction == 'update') {
       store.updateConceptualMapEdge(newEdge, 'update');
     }
 

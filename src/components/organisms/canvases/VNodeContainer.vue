@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<{
   padding: 'md'
 })
 
-const nodeData = computed(() => canvasStore.conceptualNodes.get(props.id));
+const nodeData = computed(() => canvasStore.current?.conceptualNodes.get(props.id));
 
 /**
  * Technical Logic: Operation Handlers
