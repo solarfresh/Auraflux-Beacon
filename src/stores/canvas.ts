@@ -1,3 +1,4 @@
+import { apiService } from '@/api/apiService';
 import { POSITION_SCALE } from '@/constants/canvases';
 import type { CanvasViewInstance, ConceptualEdge, ConceptualGraph, ConceptualNode, EdgeType } from '@/interfaces/conceptual-map';
 import type { Connection } from '@vue-flow/core';
@@ -127,19 +128,31 @@ export const useCanvasStore = defineStore('canvas', {
       }
     },
 
-    /** Handles edge creation, deletion, and label editing (U.S. 8) */
-    updateConceptualMapEdge(edge: ConceptualEdge, action: 'create' | 'delete' | 'update') {
+    /** Handles edge creation, deletion, and label editing */
+    async updateConceptualMapEdge(edge: ConceptualEdge, action: 'create' | 'delete' | 'update') {
       if (!this.current) return;
 
       if (action === 'create' || action === 'update') {
         const existingIndex = this.current.conceptualEdges.findIndex(e => e.id === edge.id);
         if (existingIndex !== -1) {
+          let response = await apiService.canvases.edges.update(this.activeCanvasId, edge.id, edge);
+          if (response.data) {
+            this.current.conceptualEdges.push(response.data);
+          }
           this.current.conceptualEdges[existingIndex] = edge;
         } else if (action === 'create') {
-          this.current.conceptualEdges.push(edge);
+          let response = await apiService.canvases.edges.create(this.activeCanvasId, edge);
+          if (response.data) {
+            this.current.conceptualEdges.push(response.data);
+          }
         }
       } else if (action === 'delete') {
-        this.current.conceptualEdges = this.current.conceptualEdges.filter(e => e.id !== edge.id);
+        try {
+          await apiService.canvases.edges.delete(this.activeCanvasId, edge.id);
+          this.current.conceptualEdges = this.current.conceptualEdges.filter(e => e.id !== edge.id);
+        } catch (error) {
+          console.error('Failed!', error);
+        }
       }
     },
 

@@ -25,6 +25,14 @@ export const CanvasesEndpoints = {
     get: (canvasId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/`,
   },
+  edges: {
+    create: (canvasId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/`,
+    delete: (canvasId: ID, edgeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/${edgeId}/`,
+    update: (canvasId: ID, edgeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/${edgeId}/`,
+  },
   nodes: {
     delete: (canvasId: ID, nodeId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/nodes/${nodeId}/`,

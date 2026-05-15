@@ -1,9 +1,9 @@
 import { AgentsEndpoints, CanvasesEndpoints, KnowledgeEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
+import type { Agent, ModelProvider } from '@/interfaces/agents';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
+import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
-import type { Agent, ModelProvider } from '@/interfaces/agents';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
 import type { Project, ReflectionLogEntry } from '@/interfaces/project';
@@ -127,6 +127,17 @@ export const apiService = {
       get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
         return apiClient.get(CanvasesEndpoints.graphs.get(canvasId));
       }
+    },
+    edges: {
+      create: (canvasId: ID, data: ConceptualEdge): Promise<AxiosResponse<ConceptualEdge>> => {
+        return apiClient.post(CanvasesEndpoints.edges.create(canvasId), data);
+      },
+      delete: (canvasId: ID, edgeId: ID) => {
+        apiClient.delete(CanvasesEndpoints.edges.delete(canvasId, edgeId));
+      },
+      update: (canvasId: ID, edgeId: ID, data: Partial<ConceptualEdge>): Promise<AxiosResponse<ConceptualEdge>> => {
+        return apiClient.put(CanvasesEndpoints.edges.delete(canvasId, edgeId), data);
+      },
     },
     nodes: {
       delete: (canvasId: ID, nodeId: ID) => {
