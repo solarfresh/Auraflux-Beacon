@@ -4,11 +4,10 @@
  */
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
-import { ref } from 'vue';
-import { useExplorationStore } from '@/stores/exploration';
+import { useCanvasStore } from '@/stores/canvas';
 
 export function useCanvasDrop() {
-  const store = useExplorationStore();
+  const store = useCanvasStore();
 
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
 
@@ -55,13 +54,13 @@ export function useCanvasDrop() {
 
     const newNode = {
       id: node?.id,
-      // type: node?.type,
-      type: 'default',
+      type: node?.type || 'default',
       position,
-      data: { ...node },
+      data: {
+        ...node,
+        position // Sync the position back into the internal data
+      },
     }
-
-    console.log(newNode);
 
     /**
      * Align node position after drop, so it's centered to the mouse
@@ -70,7 +69,10 @@ export function useCanvasDrop() {
      */
     const { off } = onNodesInitialized(() => {
       updateNode(node.id, (node) => ({
-        position: { x: node.position.x - node.dimensions.width / 2, y: node.position.y - node.dimensions.height / 2 },
+        position: {
+          x: node.position.x - node.dimensions.width / 2,
+          y: node.position.y - node.dimensions.height / 2
+        },
       }))
 
       off()

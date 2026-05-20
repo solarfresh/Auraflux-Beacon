@@ -8,7 +8,7 @@
         <VBox background="slate-50" padding="xs" rounded="lg" class="flex gap-1">
           <VButton
             size="sm"
-            class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
+            class="flex-1 py-1! text-[10px]! uppercase tracking-wider"
             :variant="viewMode === 'all' ? 'primary' : 'ghost'"
             @click="viewMode = 'all'"
           >
@@ -16,7 +16,7 @@
           </VButton>
           <VButton
             size="sm"
-            class="flex-1 !py-1 !text-[10px] uppercase tracking-wider"
+            class="flex-1 py-1! text-[10px]! uppercase tracking-wider"
             :variant="viewMode === 'inbox' ? 'primary' : 'ghost'"
             @click="viewMode = 'inbox'"
           >

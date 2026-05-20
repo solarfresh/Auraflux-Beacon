@@ -22,7 +22,7 @@
           name="ViewColumns"
           size="sm"
           :color="isActive ? 'indigo-600' : 'slate-400'"
-          class="flex-shrink-0"
+          class="shrink-0"
         />
 
         <VTypography

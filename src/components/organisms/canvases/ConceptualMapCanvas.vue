@@ -4,22 +4,25 @@
       :nodes="vueFlowNodes"
       :edges="vueFlowEdges"
       :node-types="nodeTypes"
+      :edge-types="edgeTypes"
       :fit-view-on-init="true"
       :default-zoom="1.2"
       :max-zoom="4"
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
-      @connect="handleEdgeCreate"
-      @edge-update="handleEdgeUpdate"
+      @connect="handleConnect"
+      @edge-double-click="handleEdgeDoubleClick"
       @node-double-click="handleNodeDoubleClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
+      @edit="startEdit"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
+      <VEdgeFloatingEditor />
 
-      </VueFlow>
+    </VueFlow>
 
     <VModal
       :is-open="isEditModalOpen"
@@ -59,11 +62,10 @@
 </template>
 
 <script setup lang="ts">
-import { markRaw, computed, ref } from 'vue';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, type EdgeUpdateEvent, type NodeDragEvent } from '@vue-flow/core';
-import { v4 as uuidv4 } from 'uuid';
+import { VueFlow, type Edge, type EdgeUpdateEvent, type NodeDragEvent, type EdgeMouseEvent } from '@vue-flow/core';
+import { computed, markRaw, ref } from 'vue';
 
 // Atoms & Molecules
 import VButton from '@/components/atoms/buttons/VButton.vue';
@@ -72,33 +74,47 @@ import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
+import VEdgeFloatingEditor from '@/components/molecules/canvases/VEdgeFloatingEditor.vue';
+import VModal from '@/components/molecules/feedback/VModal.vue';
 import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-
-import VConceptNode from '@/components/organisms/canvases/VConceptNode.vue';
-import VInsightNode from '@/components/organisms/canvases/VInsightNode.vue';
+import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue';
+import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
+import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import { useCanvasStore } from '@/stores/canvas';
 
 const props = defineProps<{
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
 }>();
 
-const emit = defineEmits<{
-  (e: 'node-update', node: ConceptualNode, action: 'move' | 'edit' | 'delete' | 'link'): void;
-  (e: 'edge-update', edge: ConceptualEdge, action: 'create' | 'delete' | 'update'): void;
-}>();
-
+const canvasStore = useCanvasStore();
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
+const { startInterception } = useEdgeInterceptor();
+
+const edgeTypes = {
+  REF: markRaw(VConceptualEdge),
+  VALIDATES: markRaw(VConceptualEdge),
+  CONSTRAINS: markRaw(VConceptualEdge),
+  TRIGGERS: markRaw(VConceptualEdge),
+  LINK: markRaw(VConceptualEdge),
+};
 
 const nodeTypes = {
-  CONCEPT: markRaw(VConceptNode),
-  INSIGHT: markRaw(VInsightNode),
-  // RESOURCE: markRaw(VConceptNode),
-  // QUESTION: markRaw(VConceptNode),
+  FOCUS: markRaw(VConceptualNode),
+  EVENT: markRaw(VConceptualNode),
+  OUTCOME: markRaw(VConceptualNode),
+  BOUNDARY: markRaw(VConceptualNode),
+  ENTITY: markRaw(VConceptualNode),
+  CONCEPT: markRaw(VConceptualNode),
+  INSIGHT: markRaw(VConceptualNode),
+  RESOURCE: markRaw(VConceptualNode),
+  QUERY: markRaw(VConceptualNode),
+  NAVIGATION: markRaw(VConceptualNode),
+  GROUP: markRaw(VConceptualNode),
 };
 
 const vueFlowNodes = computed(() => props.nodes.map(n => ({
@@ -106,16 +122,23 @@ const vueFlowNodes = computed(() => props.nodes.map(n => ({
   position: { x: n.position?.x ?? 0, y: n.position?.y ?? 0 },
   data: { ...n },
   type: n.type,
+  dragHandle: '.v-node-container',
 })));
 
 const vueFlowEdges = computed(() => props.edges.map(e => ({
   id: e.id,
   source: e.source,
-  sourceHandle: e?.sourceHandle,
+  sourceHandle: e.sourceHandle,
   target: e.target,
-  targetHandle: e?.targetHandle,
-  animated: true,
-  style: { stroke: '#94a3b8', strokeWidth: 2 },
+  targetHandle: e.targetHandle,
+  type: e.type ?? 'REF',
+  label: e.label,
+  animated: e.type === 'TRIGGERS',
+  data: {
+    type: e.type,
+    evidence: e.evidence,
+    weight: e.weight
+  },
 })));
 
 const isEditModalOpen = ref(false);
@@ -123,16 +146,32 @@ const editingNode = ref<ConceptualNode | null>(null);
 const localLabel = ref('');
 const localNotes = ref('');
 
+function handleConnect(connection: any) {
+  startInterception(connection, canvasStore.current?.conceptualNodes ?? new Map());
+}
+
 function handleNodeDragStop({ node }: NodeDragEvent) {
-  emit('node-update', { ...node.data, x: node.position.x, y: node.position.y }, 'move');
+  const updatedNode: ConceptualNode = {
+    ...node.data,
+    position: { x: node.position.x, y: node.position.y }
+  };
+  canvasStore.updateConceptualMapNode(updatedNode, 'move');
 }
 
-function handleEdgeCreate(connection: any) {
-  emit('edge-update', { id: uuidv4(), source: connection.source, target: connection.target, weight: connection.weight }, 'create');
-}
+function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
+  event.stopPropagation();
+  event.preventDefault();
 
-function handleEdgeUpdate({ edge, connection }: EdgeUpdateEvent) {
-  emit('edge-update', { ...edge.data, source: connection.source, target: connection.target }, 'update');
+  const midpoint = {
+    x: (edge.sourceX + edge.targetX) / 2,
+    y: (edge.sourceY + edge.targetY) / 2,
+  };
+
+  const rawEdgeData = props.edges.find((e) => e.id === edge.id);
+
+  if (rawEdgeData) {
+    canvasStore.openInterceptor(null, midpoint, rawEdgeData);
+  }
 }
 
 function handleNodeDoubleClick(event: any) {
@@ -144,14 +183,20 @@ function startEdit(nodeId: string) {
   if (node) {
     editingNode.value = node;
     localLabel.value = node.label;
-    localNotes.value = node.user_notes ?? '';
+    localNotes.value = node.userNotes ?? '';
     isEditModalOpen.value = true;
   }
 }
 
 function saveEdit() {
   if (editingNode.value) {
-    emit('node-update', { ...editingNode.value, label: localLabel.value }, 'edit');
+    const updatedNode: ConceptualNode = {
+      ...editingNode.value,
+      label: localLabel.value,
+      userNotes: localNotes.value
+    };
+
+    canvasStore.updateConceptualMapNode(updatedNode, 'edit');
     isEditModalOpen.value = false;
   }
 }

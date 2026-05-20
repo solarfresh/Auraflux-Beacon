@@ -7,10 +7,6 @@ export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 
 export interface ExplorationState {
   stabilityScore: number;
 
-	isDragging: boolean;
-	isDragOver: boolean;
-	draggedNode: ConceptualNode | null;
-
   // --- Resource Management ---
   resources: ResourceItem[];
 
@@ -18,8 +14,6 @@ export interface ExplorationState {
   activeCanvasId: ID; // The currently visible canvas view
   selectedNodeId: ID | null;
   sidebarNodes: Map<string, ConceptualNode>;
-  conceptualNodes: Map<string, ConceptualNode>; // Nodes for the active view
-  conceptualEdges: ConceptualEdge[]; // Edges for the active view
 
   // --- AI Interaction & State ---
   chatMessages: AIChatMessage[];

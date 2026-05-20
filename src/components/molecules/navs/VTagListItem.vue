@@ -20,7 +20,7 @@
           type="outline"
           size="sm"
           :color="styles.iconColor"
-          class="mt-1 flex-shrink-0"
+          class="mt-1 shrink-0"
         />
 
         <VStack gap="none">
@@ -39,7 +39,7 @@
         :icon-name="styles.actionIcon"
         size="sm"
         :aria-label="`Edit keyword ${keyword.label}`"
-        class="flex-shrink-0"
+        class="shrink-0"
       />
     </VCluster>
   </VBox>

@@ -10,7 +10,7 @@
       tag="header"
       padding="md"
       border="bottom"
-      class="flex-shrink-0 z-10 sticky top-0 bg-white/80 backdrop-blur-md"
+      class="shrink-0 z-10 sticky top-0 bg-white/80 backdrop-blur-md"
     >
       <slot name="header">
         <VCluster justify="between" align="center" full-width>
@@ -55,7 +55,7 @@
       padding="md"
       background="slate-50"
       border="top"
-      class="flex-shrink-0 mt-auto"
+      class="shrink-0 mt-auto"
     >
       <slot name="footer" />
     </VBox>
