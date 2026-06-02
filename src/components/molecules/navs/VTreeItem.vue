@@ -150,7 +150,7 @@ const solidityStyles = computed(() => {
 
 const handleDragStart = (event: DragEvent) => {
   if (event.dataTransfer) {
-    event.dataTransfer.setData('application/vueflow-node-id', props.node.id);
+    event.dataTransfer.setData('application/vueflow', JSON.stringify(props.node))
     event.dataTransfer.effectAllowed = 'move';
   }
 }
