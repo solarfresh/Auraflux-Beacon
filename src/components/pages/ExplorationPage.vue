@@ -12,10 +12,9 @@
         <main class="relative h-full w-full">
           <ConceptualMapCanvas
             ref="canvas"
-            :nodes="canvasStore.current ? Array.from(canvasStore.current.conceptualNodes.values()) : []"
-            :edges="canvasStore.current ? canvasStore.current.conceptualEdges: []"
-            :health-scores="explorationStore.stabilityScore"
-            :active-view-id="explorationStore.activeCanvasId"
+            :project-id="currentProjectId"
+            :canvas-id="explorationStore.activeCanvasId"
+            :registry-count="explorationStore.sidebarNodes.size"
           />
         </main>
       </template>
@@ -70,7 +69,6 @@
  */
 import { useProjectExploration } from '@/composables/useProjectExploration';
 import { useRegistry } from '@/composables/useRegistry';
-import { useCanvasStore } from '@/stores/canvas';
 import { useExplorationStore } from '@/stores/exploration';
 import { onMounted, ref } from 'vue';
 
@@ -87,9 +85,8 @@ import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.v
 import type { ManagementType } from '@/interfaces/exploration.ts';
 
 // Stores
-const canvasStore = useCanvasStore();
 const explorationStore = useExplorationStore();
-const { loadExplorationData } = useProjectExploration();
+const { currentProjectId, loadExplorationData } = useProjectExploration();
 
 const {
   registryNodes,

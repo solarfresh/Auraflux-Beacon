@@ -2,12 +2,18 @@
  * useCanvasDrop.ts
  * Manages the orchestration of external items being dragged onto the workspace.
  */
+import { inject } from 'vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
-import { useCanvasStore } from '@/stores/canvas';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
 export function useCanvasDrop() {
-  const store = useCanvasStore();
+  const context = inject(ConceptualMapContextKey);
+  if (!context) {
+    throw new Error(
+      '[Architectural Violation] useCanvasDrop must be invoked within the subtree of a <ConceptualMapCanvas>.'
+    );
+  }
 
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
 
@@ -17,40 +23,40 @@ export function useCanvasDrop() {
       event.dataTransfer.effectAllowed = 'move'
     }
 
-    store.isDragging = true;
-    store.draggedNode = node;
+    context.isDragging.value = true;
+    context.draggedNode.value = node;
     document.addEventListener('drop', onDragEnd)
   };
 
   const onDragOver = (event: DragEvent) => {
     event.preventDefault(); // Required to allow drop
-    if (!store.isDragOver) store.isDragOver = true;
+    if (!context.isDragOver.value) context.isDragOver.value = true;
 
-    if (event.dataTransfer) {
+    if (event.dataTransfer && event.dataTransfer.dropEffect !== 'move') {
       event.dataTransfer.dropEffect = 'move';
     }
   };
 
   const onDragLeave = (event: DragEvent) => {
-    store.isDragOver = false;
+    context.isDragOver.value = false;
   };
 
   const onDragEnd = () => {
-    store.isDragging = false;
-    store.isDragOver = false;
-    store.draggedNode = null;
+    context.isDragging.value = false;
+    context.isDragOver.value = false;
+    context.draggedNode.value = null;
     document.removeEventListener('drop', onDragEnd)
   };
 
   const onDrop = (event: DragEvent) => {
-    if (store.draggedNode === null) return;
+    if (context.draggedNode.value === null) return;
 
     const position = screenToFlowCoordinate({
       x: event.clientX,
       y: event.clientY,
     })
 
-    const node = store.draggedNode;
+    const node = context.draggedNode.value;
 
     const newNode = {
       id: node?.id,

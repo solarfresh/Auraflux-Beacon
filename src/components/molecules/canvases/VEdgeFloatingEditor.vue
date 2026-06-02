@@ -1,7 +1,7 @@
 <template>
   <EdgeLabelRenderer>
     <VBox
-      v-if="isInterceptionActive"
+      v-if="context.isInterceptionActive.value"
       tag="div"
       background="white"
       padding="md"
@@ -10,8 +10,8 @@
       class="w-72 shadow-xl animate-in fade-in zoom-in duration-200 nodrag nopan"
       :style="{
         position: 'absolute',
-        left: `${interceptorPosition.x}px`,
-        top: `${interceptorPosition.y}px`,
+        left: `${context.interceptorPosition.x}px`,
+        top: `${context.interceptorPosition.y}px`,
         transform: 'translate(-50%, -50%)',
         pointerEvents: 'all',
         zIndex: 1000,
@@ -35,7 +35,7 @@
 
         <VFormField id="edge-type" label="Relationship Type">
           <VSelect
-            v-model="localType"
+            v-model="context.localEdgeData.value.type"
             size="sm"
           >
             <option
@@ -50,7 +50,7 @@
 
         <VFormField id="edge-label" label="Logical Label (Optional)">
           <VInput
-            v-model="localLabel"
+            v-model="context.localEdgeData.value.label"
             placeholder="e.g., influences, triggers..."
             size="sm"
           />
@@ -58,7 +58,7 @@
 
         <VFormField id="edge-evidence" label="Evidence / Rationale">
           <VTextarea
-            v-model="localEvidence"
+            v-model="context.localEdgeData.value.evidence"
             placeholder="Cite evidence or reasoning..."
             :rows="2"
             size="sm"
@@ -68,7 +68,7 @@
         <VCluster justify="end" gap="sm" class="pt-2">
 
           <VButton
-            v-if="interceptorAction === 'update'"
+            v-if="context.interceptorAction.value === 'update'"
             variant="danger"
             size="sm"
             @click="handleDelete"
@@ -81,7 +81,7 @@
           </VButton>
  -->
           <VButton variant="primary" size="sm" @click="confirmRelation">
-            {{ interceptorAction == 'create' ? 'Create' : 'Update' }} Link
+            {{ context.interceptorAction.value == 'create' ? 'Create' : 'Update' }} Link
           </VButton>
 
 
@@ -92,9 +92,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { inject } from 'vue';
 import { EdgeLabelRenderer } from '@vue-flow/core';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
 // Atoms & Molecules (Assuming standard naming from your stack)
 import VBox from '@/components/atoms/layout/VBox.vue';
@@ -107,9 +108,13 @@ import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 
-import { useCanvasStore } from '@/stores/canvas';
+const context = inject(ConceptualMapContextKey);
 
-const canvasStore = useCanvasStore();
+if (!context) {
+  throw new Error(
+    '[Architectural Violation] VEdgeFloatingEditor must be rendered within the tree of a <ConceptualMapCanvas>.'
+  );
+}
 
 /**
  * VEdgeFloatingEditor Molecule
@@ -132,30 +137,14 @@ const edgeTypeOptions = [
   { label: 'Structural Link', value: 'LINK' },
 ];
 
-const isInterceptionActive = computed(() => canvasStore.current?.isInterceptionActive);
-const interceptorAction = computed(() => canvasStore.current?.interceptorAction);
-const interceptorPosition = computed(() => canvasStore.current?.interceptorPosition!);
-const localType = computed({
-  get: () => canvasStore.current?.localEdgeData.type ?? 'REF',
-  set: (val) => canvasStore.updateLocalEdgeData({type: val})
-});
-const localLabel= computed({
-  get: () => canvasStore.current?.localEdgeData.label,
-  set: (val) => canvasStore.updateLocalEdgeData({label: val})
-});
-const localEvidence = computed({
-  get: () => canvasStore.current?.localEdgeData.evidence,
-  set: (val) => canvasStore.updateLocalEdgeData({evidence: val})
-});
-
 function close() {
-  canvasStore.setInterceptionActivity(false);
+  context!.closeInterceptor();
 };
 
 function handleDelete() {
   if (confirm('Delete this relationship?')) {
-    canvasStore.updateConceptualMapEdge(canvasStore.current?.localEdgeData!, 'delete');
-    canvasStore.closeInterceptor();
+    context!.updateConceptualMapEdge(context!.localEdgeData.value, 'delete');
+    context!.closeInterceptor();
   };
 };
 
