@@ -24,15 +24,20 @@
  * The physical shell for all canvas nodes.
  * Implements semantic border logic (Solid/Dashed) and hover/selection states.
  */
+import { inject } from 'vue';
 import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 import VNodeActionGroup from '@/components/molecules/canvases/VNodeActionGroup.vue';
-import { useProjectExploration } from '@/composables/useProjectExploration';
-import { useCanvasStore } from '@/stores/canvas';
 import { computed } from 'vue';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
-const canvasStore = useCanvasStore();
-const { updateConeptualNode } = useProjectExploration();
+const context = inject(ConceptualMapContextKey);
+
+if (!context) {
+  throw new Error(
+    '[Architectural Violation] VNodeContainer must be rendered within the tree of a <ConceptualMapCanvas>.'
+  );
+}
 
 const props = withDefaults(defineProps<{
   id: string
@@ -51,25 +56,26 @@ const props = withDefaults(defineProps<{
   padding: 'md'
 })
 
-const nodeData = computed(() => canvasStore.current?.conceptualNodes.get(props.id));
+const nodeData = computed(() => context.conceptualNodes.get(props.id));
 
 /**
  * Technical Logic: Operation Handlers
  * These functions bubble events up to the Page/Canvas level where
  * the Exploration Store (exploration.ts) resides.
  */
-const handleAccept = () => {
+const handleAccept = async () => {
   let node = nodeData.value;
   if (node !== undefined) {
     node.status = 'LOCKED';
-    updateConeptualNode(node);
+    await context.updateConceptualMapNode(node, 'edit');
+    context.recommendConceptualNodes();
   }
 }
 
 const handleReject = () => {
   let node = nodeData.value;
   if (node !== undefined) {
-    canvasStore.updateConceptualMapNode(node, 'delete');
+    context.updateConceptualMapNode(node, 'delete');
   }
 }
 </script>

@@ -1,13 +1,20 @@
 /**
  * useEdgeInterceptor.ts
  * Controller Module: Intercepts raw connection events to collect semantic metadata.
+ * Refactored to utilize Scoped Component Context to eliminate lifecycle leaks and memory staleness.
  */
+import { inject } from 'vue';
 import type { ConceptualNode, ConceptualEdge, EdgeType } from '@/interfaces/conceptual-map';
-import { useCanvasStore } from '@/stores/canvas';
 import type { Connection } from '@vue-flow/core';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
-export function useEdgeInterceptor() {
-  const store = useCanvasStore();
+export function useEdgeInterceptor(explicitContext?: any) {
+  const context = explicitContext || inject(ConceptualMapContextKey, null);
+  if (!context) {
+    throw new Error(
+      '[Architectural Violation] useEdgeInterceptor must be invoked within the subtree of a <ConceptualMapCanvas>.'
+    );
+  }
 
   /**
    * Internal Utility: getEdgeMidpoint
@@ -37,36 +44,47 @@ export function useEdgeInterceptor() {
   const startInterception = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
     const midpoint = calculateMidpoint(connection, nodes);
 
-    // Prevent immediate creation
-    store.setInterceptionActivity(true);
-    store.openInterceptor(connection, midpoint);
+    // Prevent immediate graph insertion; open the scoped contextual input form instead
+    context.openInterceptor(connection, midpoint);
   };
 
   /**
    * Phase 2: ASSEMBLE_PAYLOAD & COMMIT_TO_STORE
    * Finalizes the data structure and sends it to the store.
    */
-  const confirmRelation = () => {
-    if (!store.current?.pendingConnection && store.current?.interceptorAction == 'create') return;
+  const confirmRelation = async () => {
+    if (!context.pendingConnection.value && context.interceptorAction.value == 'create') return;
 
     const newEdge: ConceptualEdge = {
-      ...store.current?.localEdgeData!,
+      ...context.localEdgeData.value,
     };
 
-    // Dispatch to store action
-    if (store.current?.interceptorAction == 'create') {
-      store.updateConceptualMapEdge(newEdge, 'create');
-    } else if (store.current?.interceptorAction == 'update') {
-      store.updateConceptualMapEdge(newEdge, 'update');
-    }
+    try {
+      // Dispatch to store action
+      await context.updateConceptualMapEdge(newEdge, context.interceptorAction.value);
 
-    // Clean up
-    store.closeInterceptor();
+      // Clean up
+      context.closeInterceptor();
+    } catch(error) {
+      console.error('[Interceptor Flow Error] Aborted edge persistence:', error);
+    }
+  };
+
+  const cancelRelation = () => {
+    context.closeInterceptor();
+  };
+
+  const deleteRelation = () => {
+    context.updateConceptualMapEdge(context!.localEdgeData.value, 'delete');
+    context.closeInterceptor();
   };
 
   return {
+    context,
     // Actions
     startInterception,
     confirmRelation,
+    cancelRelation,
+    deleteRelation,
   };
 }

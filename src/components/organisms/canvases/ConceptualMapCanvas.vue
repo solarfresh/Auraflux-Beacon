@@ -62,10 +62,11 @@
 </template>
 
 <script setup lang="ts">
+import type { ID } from '@/interfaces/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, type Edge, type EdgeUpdateEvent, type NodeDragEvent, type EdgeMouseEvent } from '@vue-flow/core';
-import { computed, markRaw, ref } from 'vue';
+import { VueFlow, type EdgeMouseEvent, type NodeDragEvent } from '@vue-flow/core';
+import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
 import VButton from '@/components/atoms/buttons/VButton.vue';
@@ -82,18 +83,46 @@ import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue
 import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
+import { useConceptualMapContext } from '@/composables/useConceptualMapContext';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
-import { useCanvasStore } from '@/stores/canvas';
 
 const props = defineProps<{
-  nodes: ConceptualNode[];
-  edges: ConceptualEdge[];
+  projectId: ID;
+  canvasId: ID;
+  registryCount: number;
 }>();
 
-const canvasStore = useCanvasStore();
-const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
-const { startInterception } = useEdgeInterceptor();
+const isLoading = ref(false);
+
+const canvasContext = useConceptualMapContext({
+  getCanvasId: () => props.canvasId,
+  getProjectId: () => props.projectId,
+  getRegistryCount: () => props.registryCount
+});
+provide(ConceptualMapContextKey, canvasContext);
+
+watch(
+  () => props.canvasId,
+  async (newId) => {
+    if (!newId) return;
+
+    try {
+      isLoading.value = true;
+      // Context encapsulates its own asynchronous fetching flow
+      await canvasContext.fetchGraphData();
+    } catch (error) {
+      console.error('[Canvas Initialize Error] Fetch failed:', error);
+    } finally {
+      isLoading.value = false;
+    }
+  },
+  { immediate: true }
+);
+
+const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
+const { startInterception } = useEdgeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),
@@ -117,7 +146,7 @@ const nodeTypes = {
   GROUP: markRaw(VConceptualNode),
 };
 
-const vueFlowNodes = computed(() => props.nodes.map(n => ({
+const vueFlowNodes = computed(() => Array.from(canvasContext.conceptualNodes.values()).map(n => ({
   id: n.id,
   position: { x: n.position?.x ?? 0, y: n.position?.y ?? 0 },
   data: { ...n },
@@ -125,7 +154,7 @@ const vueFlowNodes = computed(() => props.nodes.map(n => ({
   dragHandle: '.v-node-container',
 })));
 
-const vueFlowEdges = computed(() => props.edges.map(e => ({
+const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e => ({
   id: e.id,
   source: e.source,
   sourceHandle: e.sourceHandle,
@@ -147,7 +176,7 @@ const localLabel = ref('');
 const localNotes = ref('');
 
 function handleConnect(connection: any) {
-  startInterception(connection, canvasStore.current?.conceptualNodes ?? new Map());
+  startInterception(connection, canvasContext.conceptualNodes);
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
@@ -155,7 +184,7 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     ...node.data,
     position: { x: node.position.x, y: node.position.y }
   };
-  canvasStore.updateConceptualMapNode(updatedNode, 'move');
+  canvasContext.updateConceptualMapNode(updatedNode, 'move');
 }
 
 function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
@@ -167,10 +196,10 @@ function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
     y: (edge.sourceY + edge.targetY) / 2,
   };
 
-  const rawEdgeData = props.edges.find((e) => e.id === edge.id);
+  const rawEdgeData = canvasContext.conceptualEdges.value.find((e: ConceptualEdge) => e.id === edge.id);
 
   if (rawEdgeData) {
-    canvasStore.openInterceptor(null, midpoint, rawEdgeData);
+    canvasContext.openInterceptor(null, midpoint, rawEdgeData);
   }
 }
 
@@ -179,7 +208,8 @@ function handleNodeDoubleClick(event: any) {
 }
 
 function startEdit(nodeId: string) {
-  const node = props.nodes.find(n => n.id === nodeId);
+  const node = canvasContext.conceptualNodes.get(nodeId);
+
   if (node) {
     editingNode.value = node;
     localLabel.value = node.label;
@@ -196,7 +226,7 @@ function saveEdit() {
       userNotes: localNotes.value
     };
 
-    canvasStore.updateConceptualMapNode(updatedNode, 'edit');
+    canvasContext.updateConceptualMapNode(updatedNode, 'edit');
     isEditModalOpen.value = false;
   }
 }
