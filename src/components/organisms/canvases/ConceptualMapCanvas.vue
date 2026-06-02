@@ -96,7 +96,8 @@ const props = defineProps<{
 
 const isLoading = ref(false);
 
-const canvasContext = useConceptualMapContext(props.canvasId, {
+const canvasContext = useConceptualMapContext({
+  getCanvasId: () => props.canvasId,
   getProjectId: () => props.projectId,
   getRegistryCount: () => props.registryCount
 });
@@ -106,6 +107,7 @@ watch(
   () => props.canvasId,
   async (newId) => {
     if (!newId) return;
+
     try {
       isLoading.value = true;
       // Context encapsulates its own asynchronous fetching flow
@@ -119,8 +121,8 @@ watch(
   { immediate: true }
 );
 
-const { onDragOver, onDrop, onDragLeave } = useCanvasDrop();
-const { startInterception } = useEdgeInterceptor();
+const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
+const { startInterception } = useEdgeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),

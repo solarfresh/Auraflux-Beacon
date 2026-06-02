@@ -8,8 +8,8 @@ import type { ConceptualNode, ConceptualEdge, EdgeType } from '@/interfaces/conc
 import type { Connection } from '@vue-flow/core';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
-export function useEdgeInterceptor() {
-  const context = inject(ConceptualMapContextKey);
+export function useEdgeInterceptor(explicitContext?: any) {
+  const context = explicitContext || inject(ConceptualMapContextKey, null);
   if (!context) {
     throw new Error(
       '[Architectural Violation] useEdgeInterceptor must be invoked within the subtree of a <ConceptualMapCanvas>.'
@@ -74,10 +74,17 @@ export function useEdgeInterceptor() {
     context.closeInterceptor();
   };
 
+  const deleteRelation = () => {
+    context.updateConceptualMapEdge(context!.localEdgeData.value, 'delete');
+    context.closeInterceptor();
+  };
+
   return {
+    context,
     // Actions
     startInterception,
     confirmRelation,
-    cancelRelation
+    cancelRelation,
+    deleteRelation,
   };
 }

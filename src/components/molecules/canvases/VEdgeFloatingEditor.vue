@@ -108,21 +108,16 @@ import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 
-const context = inject(ConceptualMapContextKey);
-
-if (!context) {
-  throw new Error(
-    '[Architectural Violation] VEdgeFloatingEditor must be rendered within the tree of a <ConceptualMapCanvas>.'
-  );
-}
-
 /**
  * VEdgeFloatingEditor Molecule
  * Provides a UI overlay to define semantic metadata when a new connection is initiated.
  * Integrated with useEdgeInterceptor for state management.
  */
 const {
+  context,
+  cancelRelation,
   confirmRelation,
+  deleteRelation,
 } = useEdgeInterceptor();
 
 /**
@@ -138,13 +133,12 @@ const edgeTypeOptions = [
 ];
 
 function close() {
-  context!.closeInterceptor();
+  cancelRelation();
 };
 
 function handleDelete() {
   if (confirm('Delete this relationship?')) {
-    context!.updateConceptualMapEdge(context!.localEdgeData.value, 'delete');
-    context!.closeInterceptor();
+    deleteRelation();
   };
 };
 

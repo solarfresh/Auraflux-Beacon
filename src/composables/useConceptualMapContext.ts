@@ -15,11 +15,12 @@ import { POSITION_SCALE } from '@/constants/canvases';
 import { apiService } from '@/api/apiService';
 
 interface ContextConfig {
+  getCanvasId?: () => ID;
   getProjectId?: () => ID;
   getRegistryCount?: () => number;
 }
 
-export function useConceptualMapContext(canvasId: string, config?: ContextConfig) {
+export function useConceptualMapContext(config?: ContextConfig) {
   const canvasStore = useCanvasStore();
 
   // --------------------------------------------------------------------------
@@ -64,6 +65,12 @@ export function useConceptualMapContext(canvasId: string, config?: ContextConfig
    * Primary Entry Point: Load data from Cache or fallback to remote API
    */
   const fetchGraphData = async () => {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
+      return;
+    }
+
     // Step 1: Check global Pinia archive
     let graphData = canvasStore.getGraphCache(canvasId);
 
@@ -102,6 +109,12 @@ export function useConceptualMapContext(canvasId: string, config?: ContextConfig
    * Internal Helper: Commits local scoped mutations back into the cold store backup map
    */
   const syncBackToGlobalCache = () => {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
+      return;
+    }
+
     const rawNodesRecord: Map<string, ConceptualNode> = new Map();
 
     // Scale down back to storage baseline coordinates before backup
@@ -149,6 +162,12 @@ export function useConceptualMapContext(canvasId: string, config?: ContextConfig
    * Cleans up redundant 'push' actions from previous store bugs.
    */
   const updateConceptualMapEdge = async (edge: ConceptualEdge, action: 'create' | 'delete' | 'update') => {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
+      return;
+    }
+
     try {
       if (action === 'update') {
         const existingIndex = conceptualEdges.value.findIndex(e => e.id === edge.id);
@@ -178,9 +197,10 @@ export function useConceptualMapContext(canvasId: string, config?: ContextConfig
 
     const currentSandboxSize = conceptualNodes.size;
     const projectId = config?.getProjectId ? config.getProjectId() : null;
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
     const maxRegistryCount = config?.getRegistryCount ? config.getRegistryCount() : Infinity;
 
-    if (projectId && aiSuggestedNodes.length < 1 && currentSandboxSize < maxRegistryCount) {
+    if (projectId && canvasId && aiSuggestedNodes.length < 1 && currentSandboxSize < maxRegistryCount) {
       try {
         apiService.projects.exploration.recommendConceptualNodes(projectId, canvasId);
       } catch (error) {

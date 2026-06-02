@@ -86,13 +86,10 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { computed } from 'vue';
 
 defineOptions({ inheritAttrs: false });
-
-const { onDragStart } = useCanvasDrop();
 
 const props = defineProps<{
   node: ConceptualNode;
@@ -152,7 +149,10 @@ const solidityStyles = computed(() => {
 });
 
 const handleDragStart = (event: DragEvent) => {
-  onDragStart(event, props.node);
+  if (event.dataTransfer) {
+    event.dataTransfer.setData('application/vueflow-node-id', props.node.id);
+    event.dataTransfer.effectAllowed = 'move';
+  }
 }
 </script>
 

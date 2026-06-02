@@ -1,19 +1,19 @@
 /**
- * useCanvasDrop.ts
- * Manages the orchestration of external items being dragged onto the workspace.
+ * @file useCanvasDrop.ts
+ * @description Statefully managed Drag-and-Drop Bridge for Vue Flow.
+ * Merges cross-boundary streaming tunnels into a zero-side-effect reactive interface,
+ * completely decoupled from DOM listeners and page stores.
  */
-import { inject } from 'vue';
+import { ref, inject } from 'vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
-export function useCanvasDrop() {
-  const context = inject(ConceptualMapContextKey);
-  if (!context) {
-    throw new Error(
-      '[Architectural Violation] useCanvasDrop must be invoked within the subtree of a <ConceptualMapCanvas>.'
-    );
-  }
+const tunnelDraggedNode = ref<ConceptualNode | null>(null);
+const isTunnelDragging = ref(false);
+
+export function useCanvasDrop(explicitContext?: any) {
+  const context = explicitContext || inject(ConceptualMapContextKey, null);
 
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
 
@@ -23,14 +23,23 @@ export function useCanvasDrop() {
       event.dataTransfer.effectAllowed = 'move'
     }
 
-    context.isDragging.value = true;
-    context.draggedNode.value = node;
-    document.addEventListener('drop', onDragEnd)
+    tunnelDraggedNode.value = node;
+    isTunnelDragging.value = true;
+
+    if (context) {
+      context.isDragging.value = true;
+      context.draggedNode.value = node;
+    }
   };
 
   const onDragOver = (event: DragEvent) => {
     event.preventDefault(); // Required to allow drop
+    if (!context) return;
+
     if (!context.isDragOver.value) context.isDragOver.value = true;
+
+    context.isDragging.value = isTunnelDragging.value;
+    context.draggedNode.value = tunnelDraggedNode.value;
 
     if (event.dataTransfer && event.dataTransfer.dropEffect !== 'move') {
       event.dataTransfer.dropEffect = 'move';
@@ -38,25 +47,35 @@ export function useCanvasDrop() {
   };
 
   const onDragLeave = (event: DragEvent) => {
-    context.isDragOver.value = false;
+    if (context) context.isDragOver.value = false;
   };
 
   const onDragEnd = () => {
-    context.isDragging.value = false;
-    context.isDragOver.value = false;
-    context.draggedNode.value = null;
-    document.removeEventListener('drop', onDragEnd)
+    tunnelDraggedNode.value = null;
+    isTunnelDragging.value = false;
+
+    if (context) {
+      context.isDragging.value = false;
+      context.isDragOver.value = false;
+      context.draggedNode.value = null;
+    }
   };
 
   const onDrop = (event: DragEvent) => {
-    if (context.draggedNode.value === null) return;
+    event.preventDefault();
+
+    let node = tunnelDraggedNode.value;
+    if (!node) {
+      const rawData = event.dataTransfer?.getData('application/vueflow');
+      if (rawData) node = JSON.parse(rawData);
+    }
+
+    if (!node || !context) return;
 
     const position = screenToFlowCoordinate({
       x: event.clientX,
       y: event.clientY,
     })
-
-    const node = context.draggedNode.value;
 
     const newNode = {
       id: node?.id,
