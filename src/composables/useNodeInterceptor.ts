@@ -37,10 +37,13 @@ export function useNodeInterceptor(explicitContext?: any) {
 
     if (!nodeId || !originalNode) return;
 
+    const nextStatus = originalNode.status === 'USER_DRAFT' ? 'LOCKED' : originalNode.status;
+
     const updatedNode: ConceptualNode = {
       ...originalNode,
       label: context.localNodeData.value.label,
-      userNotes: context.localNodeData.value.userNotes
+      userNotes: context.localNodeData.value.userNotes,
+      status: nextStatus
     };
 
     try {

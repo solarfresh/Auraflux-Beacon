@@ -45,13 +45,51 @@
           />
         </VFormField>
 
-        <VCluster justify="end" gap="sm" class="w-full pt-2">
-          <VButton variant="ghost" size="sm" @click="cancelNodeEdit">
+        <VCluster justify="end" gap="xs" class="w-full">
+          <VButton variant="ghost" size="xs" @click="cancelNodeEdit">
             Cancel
           </VButton>
-          <VButton variant="primary" size="sm" @click="confirmNodeEdit">
-            Apply Changes
-          </VButton>
+
+          <template v-if="isUnverified">
+            <VButton
+              variant="secondary"
+              size="xs"
+              :disabled="!isValid"
+              @click="handleStateSubmit('USER_DRAFT')"
+            >
+              Save Draft
+            </VButton>
+            <VButton
+              variant="primary"
+              size="xs"
+              class="bg-emerald-600! hover:bg-emerald-700!"
+              icon-name="LockClosed"
+              :disabled="!isValid"
+              @click="handleStateSubmit('LOCKED')"
+            >
+              Lock Node
+            </VButton>
+          </template>
+
+          <template v-else>
+            <VButton
+              variant="secondary"
+              size="xs"
+              icon-name="ArchiveBox"
+              @click="handleStateSubmit('ON_HOLD')"
+            >
+              Put On Hold
+            </VButton>
+            <VButton
+              variant="primary"
+              size="xs"
+              icon-name="DocumentCheck"
+              :disabled="!isValid"
+              @click="handleStateSubmit('LOCKED')"
+            >
+              Save
+            </VButton>
+          </template>
         </VCluster>
       </VStack>
     </VBox>
@@ -59,6 +97,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { NodeToolbar } from '@vue-flow/node-toolbar';
 import { Position } from '@vue-flow/core';
 import { useNodeInterceptor } from '@/composables/useNodeInterceptor';
@@ -79,6 +118,23 @@ const {
   confirmNodeEdit,
   cancelNodeEdit
 } = useNodeInterceptor();
+
+const currentNode = computed(() => {
+  const nodeId = context.editingNodeId.value;
+  return context.conceptualNodes.get(nodeId);
+});
+
+const isValid = computed(() => !!context.localNodeData.value.label?.trim());
+const isUnverified = computed(() => {
+  const status = currentNode.value?.status;
+  return status === 'USER_DRAFT' || status === 'AI_EXTRACTED';
+});
+
+async function handleStateSubmit(targetStatus: string) {
+  if (!isValid.value) return;
+  context.localNodeData.value.status = targetStatus;
+  await confirmNodeEdit();
+}
 </script>
 
 <style scoped>

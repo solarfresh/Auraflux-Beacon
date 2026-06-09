@@ -12,7 +12,6 @@
       @node-drag-stop="handleNodeDragStop"
       @connect="handleConnect"
       @edge-double-click="handleEdgeDoubleClick"
-      @node-double-click="handleNodeDoubleClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
@@ -125,6 +124,7 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
   animated: e.type === 'TRIGGERS',
   data: {
     type: e.type,
+    status: e.status,
     evidence: e.evidence,
     weight: e.weight
   },
@@ -156,9 +156,5 @@ function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
   if (rawEdgeData) {
     canvasContext.openInterceptor(null, midpoint, rawEdgeData);
   }
-}
-
-function handleNodeDoubleClick(event: any) {
-  startNodeEdit(event.node.id);
 }
 </script>

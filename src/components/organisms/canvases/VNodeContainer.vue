@@ -9,9 +9,11 @@
     <VNodeShape :status="props.status" :border-radius="12" />
 
     <VNodeActionGroup
-      v-if="props.status === 'AI_EXTRACTED' && props.selected"
+      v-if="shouldRenderActionGroup"
+      :status="props.status"
       @accept="handleAccept"
       @reject="handleReject"
+      @delete="handleDelete"
     />
 
     <slot name="overlay" />
@@ -28,7 +30,7 @@ import { inject } from 'vue';
 import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 import VNodeActionGroup from '@/components/molecules/canvases/VNodeActionGroup.vue';
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
 const context = inject(ConceptualMapContextKey);
@@ -56,6 +58,12 @@ const props = withDefaults(defineProps<{
   padding: 'md'
 })
 
+const shouldRenderActionGroup = computed(() => {
+  const isValidStatus = ['AI_EXTRACTED', 'USER_DRAFT'].includes(props.status);
+  const isEditorClosed = !context.isNodeEditActive.value;
+
+  return isValidStatus && isEditorClosed && props.selected;
+});
 const nodeData = computed(() => context.conceptualNodes.get(props.id));
 
 /**
@@ -68,7 +76,10 @@ const handleAccept = async () => {
   if (node !== undefined) {
     node.status = 'LOCKED';
     await context.updateConceptualMapNode(node, 'edit');
-    context.recommendConceptualNodes();
+
+    if (props.status === 'AI_EXTRACTED') {
+      context.recommendConceptualNodes();
+    }
   }
 }
 
@@ -76,6 +87,15 @@ const handleReject = () => {
   let node = nodeData.value;
   if (node !== undefined) {
     context.updateConceptualMapNode(node, 'delete');
+  }
+}
+
+const handleDelete = () => {
+  let node = nodeData.value;
+  if (node !== undefined) {
+    if (confirm('Delete this draft node?')) {
+      context.updateConceptualMapNode(node, 'delete');
+    }
   }
 }
 </script>

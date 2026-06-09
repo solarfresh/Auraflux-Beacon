@@ -84,6 +84,7 @@ export interface ConceptualEdge {
   // --- Metadata & Identification ---
   label?: string;
   type: EdgeType; // Default: 'REF'
+  status?: EntityStatus;
 
   // --- Knowledge & Grounding (Empirical Layer) ---
   /** Logical justification for this link (Crucial for Agentic Audit) */
