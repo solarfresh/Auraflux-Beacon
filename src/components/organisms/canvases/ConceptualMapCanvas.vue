@@ -16,48 +16,13 @@
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
-      @edit="startEdit"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
       <VEdgeFloatingEditor />
+      <VNodeFloatingEditor />
 
     </VueFlow>
-
-    <VModal
-      :is-open="isEditModalOpen"
-      title="Refine Research Node"
-      size="md"
-    >
-      <template #header-icon>
-        <VIcon name="DocumentText" class="text-indigo-600" />
-      </template>
-
-      <VStack gap="lg" class="py-4">
-        <VFormField id="concept-label" label="Concept / Label">
-          <VInput
-            v-model="localLabel"
-            placeholder="e.g., Socio-economic Resilience"
-            size="lg"
-          />
-        </VFormField>
-
-        <VFormField id="strategic-reflection" label="Strategic Reflection">
-          <VTextarea
-            v-model="localNotes"
-            :rows="5"
-            placeholder="Record why this concept is critical..."
-          />
-        </VFormField>
-      </VStack>
-
-      <template #footer>
-        <VButtonToolbar :is-proceed-ready="false">
-          <VButton variant="ghost" @click="isEditModalOpen = false">Cancel</VButton>
-          <VButton variant="primary" @click="saveEdit">Apply Changes</VButton>
-        </VButtonToolbar>
-      </template>
-    </VModal>
   </VBox>
 </template>
 
@@ -69,22 +34,16 @@ import { VueFlow, type EdgeMouseEvent, type NodeDragEvent } from '@vue-flow/core
 import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VInput from '@/components/atoms/forms/VInput.vue';
-import VTextarea from '@/components/atoms/forms/VTextarea.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
 import VEdgeFloatingEditor from '@/components/molecules/canvases/VEdgeFloatingEditor.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VNodeFloatingEditor from '@/components/molecules/canvases/VNodeFloatingEditor.vue';
 import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue';
 import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useConceptualMapContext } from '@/composables/useConceptualMapContext';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
+import { useNodeInterceptor } from '@/composables/useNodeInterceptor';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 
@@ -122,7 +81,8 @@ watch(
 );
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
-const { startInterception } = useEdgeInterceptor(canvasContext);
+const { startEdgeEdit } = useEdgeInterceptor(canvasContext);
+const { startNodeEdit } = useNodeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),
@@ -170,13 +130,8 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
   },
 })));
 
-const isEditModalOpen = ref(false);
-const editingNode = ref<ConceptualNode | null>(null);
-const localLabel = ref('');
-const localNotes = ref('');
-
 function handleConnect(connection: any) {
-  startInterception(connection, canvasContext.conceptualNodes);
+  startEdgeEdit(connection, canvasContext.conceptualNodes);
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
@@ -204,30 +159,6 @@ function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
 }
 
 function handleNodeDoubleClick(event: any) {
-  startEdit(event.node.id);
-}
-
-function startEdit(nodeId: string) {
-  const node = canvasContext.conceptualNodes.get(nodeId);
-
-  if (node) {
-    editingNode.value = node;
-    localLabel.value = node.label;
-    localNotes.value = node.userNotes ?? '';
-    isEditModalOpen.value = true;
-  }
-}
-
-function saveEdit() {
-  if (editingNode.value) {
-    const updatedNode: ConceptualNode = {
-      ...editingNode.value,
-      label: localLabel.value,
-      userNotes: localNotes.value
-    };
-
-    canvasContext.updateConceptualMapNode(updatedNode, 'edit');
-    isEditModalOpen.value = false;
-  }
+  startNodeEdit(event.node.id);
 }
 </script>

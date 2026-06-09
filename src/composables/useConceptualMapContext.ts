@@ -58,6 +58,31 @@ export function useConceptualMapContext(config?: ContextConfig) {
   });
 
   // --------------------------------------------------------------------------
+  // Low-Frequency Node Editor Form States
+  // --------------------------------------------------------------------------
+  const isNodeEditActive = ref(false);
+  const editingNodeId = ref<string>('');
+  const localNodeData = ref({
+    label: '',
+    userNotes: ''
+  });
+
+  const openNodeEditor = (nodeId: string, node: ConceptualNode) => {
+    isNodeEditActive.value = true;
+    editingNodeId.value = nodeId;
+    localNodeData.value = {
+      label: node.label || '',
+      userNotes: node.userNotes || ''
+    };
+  };
+
+  const closeNodeEditor = () => {
+    isNodeEditActive.value = false;
+    editingNodeId.value = '';
+    localNodeData.value = { label: '', userNotes: '' };
+  };
+
+  // --------------------------------------------------------------------------
   // B. Cache Orchestration Pipeline
   // --------------------------------------------------------------------------
 
@@ -269,6 +294,9 @@ export function useConceptualMapContext(config?: ContextConfig) {
     interceptorPosition,
     pendingConnection,
     localEdgeData,
+    isNodeEditActive,
+    editingNodeId,
+    localNodeData,
 
     // Actions
     fetchGraphData,
@@ -278,6 +306,8 @@ export function useConceptualMapContext(config?: ContextConfig) {
     openInterceptor,
     closeInterceptor,
     updateLocalEdgeData,
+    openNodeEditor,
+    closeNodeEditor,
     recommendConceptualNodes
   };
 }
