@@ -42,7 +42,6 @@ import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue
 import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useConceptualMapContext } from '@/composables/useConceptualMapContext';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
-import { useNodeInterceptor } from '@/composables/useNodeInterceptor';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
 
@@ -81,7 +80,6 @@ watch(
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
 const { startEdgeEdit } = useEdgeInterceptor(canvasContext);
-const { startNodeEdit } = useNodeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),

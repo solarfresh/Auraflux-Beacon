@@ -7,15 +7,8 @@
       padding="md"
       rounded="lg"
       border="all"
-      class="w-72 shadow-xl animate-in fade-in zoom-in duration-200 nodrag nopan"
-      :style="{
-        position: 'absolute',
-        left: `${context.interceptorPosition.x}px`,
-        top: `${context.interceptorPosition.y}px`,
-        transform: 'translate(-50%, -50%)',
-        pointerEvents: 'all',
-        zIndex: 1000,
-      }"
+      class="w-72 shadow-xl animate-in fade-in zoom-in duration-200 nodrag nopan v-edge-floating-editor"
+      :style="editorStyle"
     >
       <VStack gap="md">
         <VCluster justify="between" align="center">
@@ -37,6 +30,7 @@
           <VSelect
             v-model="context.localEdgeData.value.type"
             size="sm"
+            class="w-full"
           >
             <option
               v-for="edgeType in edgeTypeOptions"
@@ -65,39 +59,32 @@
           />
         </VFormField>
 
-        <VCluster justify="end" gap="sm" class="pt-2">
+        <VEntityStatusActionGroup
+          :is-locked="isLocked"
+          :is-modified="isEdgeModified"
+          :disabled="!isValid"
+          :labels="{
+            unlockedHold: 'Save Draft',
+            unlockedPrimary: 'Lock Link',
+            unlockedPrimaryClass: 'bg-emerald-600! hover:bg-emerald-700!',
+            lockedHold: 'Put On Hold',
+            lockedPrimary: 'Save Changes'
+          }"
+          @cancel="close"
+          @submit="handleStateSubmit"
+        />
 
-          <VButton
-            v-if="context.interceptorAction.value === 'update'"
-            variant="danger"
-            size="sm"
-            @click="handleDelete"
-          >
-            Delete
-          </VButton>
-<!--
-          <VButton variant="ghost" size="sm" @click="close">
-            Cancel
-          </VButton>
- -->
-          <VButton variant="primary" size="sm" @click="confirmRelation">
-            {{ context.interceptorAction.value == 'create' ? 'Create' : 'Update' }} Link
-          </VButton>
-
-
-        </VCluster>
       </VStack>
     </VBox>
   </EdgeLabelRenderer>
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
-import { EdgeLabelRenderer } from '@vue-flow/core';
+import { computed } from 'vue';
+import { EdgeLabelRenderer, useVueFlow } from '@vue-flow/core'; // 🟢 Added useVueFlow
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
-import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
-// Atoms & Molecules (Assuming standard naming from your stack)
+// Atoms & Molecules Layout Imports
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
@@ -108,22 +95,20 @@ import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 
-/**
- * VEdgeFloatingEditor Molecule
- * Provides a UI overlay to define semantic metadata when a new connection is initiated.
- * Integrated with useEdgeInterceptor for state management.
- */
+// Shared State Machine Action Component
+import VEntityStatusActionGroup from '@/components/molecules/domain/VEntityStatusActionGroup.vue';
+
 const {
   context,
   cancelRelation,
   confirmRelation,
-  deleteRelation,
 } = useEdgeInterceptor();
 
 /**
- * Options mapped to EdgeType for the select dropdown.
- * Aligned with Empirical Science standards in conceptual-map.ts.
+ * 🟢 Access the active VueFlow context to read reactive zoom levels
  */
+const { viewport } = useVueFlow();
+
 const edgeTypeOptions = [
   { label: 'Reference (Association)', value: 'REF' },
   { label: 'Validates (Support)', value: 'VALIDATES' },
@@ -132,31 +117,75 @@ const edgeTypeOptions = [
   { label: 'Structural Link', value: 'LINK' },
 ];
 
+// --- 🟢 Dynamic Layout Compensation Logic ---
+
+/**
+ * Computes exact inline styles applying an inverse viewport transform matrix.
+ * This guarantees the editor remains at 100% scale regardless of map coordinates.
+ */
+const editorStyle = computed(() => {
+  const currentZoom = viewport.value.zoom || 1;
+  const inverseScale = 1 / currentZoom;
+
+  return {
+    position: 'absolute' as const,
+    left: `${context.interceptorPosition.x}px`,
+    top: `${context.interceptorPosition.y}px`,
+    /* Combines alignment mapping with reciprocal viewport scale correction.
+      If zoom is 0.5, scale becomes 2.0 (canceling out canvas shrinkage).
+    */
+    transform: `translate(-50%, -50%) scale(${inverseScale})`,
+    transformOrigin: 'center center',
+    pointerEvents: 'all' as const,
+    zIndex: 1000,
+  };
+});
+
+// --- Computed State Layers ---
+const currentEdge = computed(() => {
+  const edgeId = context.intersectingEdgeId?.value;
+  if (!edgeId) return null;
+  return context.conceptualEdges.value.find((e: any) => e.id === edgeId);
+});
+
+const isLocked = computed(() => currentEdge.value?.status === 'LOCKED');
+const isValid = computed(() => true);
+
+const isEdgeModified = computed(() => {
+  if (!currentEdge.value) return false;
+  return (
+    context.localEdgeData.value.type !== currentEdge.value.type ||
+    (context.localEdgeData.value.label || '') !== (currentEdge.value.label || '') ||
+    (context.localEdgeData.value.evidence || '') !== (currentEdge.value.evidence || '')
+  );
+});
+
+// --- Action Delegations ---
 function close() {
   cancelRelation();
-};
+}
 
-function handleDelete() {
-  if (confirm('Delete this relationship?')) {
-    deleteRelation();
-  };
-};
-
+async function handleStateSubmit(targetStatus: 'LOCKED' | 'ON_HOLD' | 'USER_DRAFT') {
+  if (!isValid.value) return;
+  context.localEdgeData.value.status = targetStatus;
+  await confirmRelation();
+}
 </script>
 
 <style scoped>
-/* Ensure the editor doesn't get clipped by the canvas container */
 .v-edge-floating-editor {
   user-select: none;
 }
 
-/* Simple animation for appearance */
+/* Micro-interaction layer animations.
+  Note: Removed hardcoded transform definitions here to avoid fighting the inline script matrices.
+*/
 .animate-in {
   animation: fadeIn 0.15s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -45%) scale(0.95); }
-  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>
