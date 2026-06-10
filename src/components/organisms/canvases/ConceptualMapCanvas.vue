@@ -11,53 +11,16 @@
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
       @connect="handleConnect"
-      @edge-double-click="handleEdgeDoubleClick"
-      @node-double-click="handleNodeDoubleClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
-      @edit="startEdit"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
       <VEdgeFloatingEditor />
+      <VNodeFloatingEditor />
 
     </VueFlow>
-
-    <VModal
-      :is-open="isEditModalOpen"
-      title="Refine Research Node"
-      size="md"
-    >
-      <template #header-icon>
-        <VIcon name="DocumentText" class="text-indigo-600" />
-      </template>
-
-      <VStack gap="lg" class="py-4">
-        <VFormField id="concept-label" label="Concept / Label">
-          <VInput
-            v-model="localLabel"
-            placeholder="e.g., Socio-economic Resilience"
-            size="lg"
-          />
-        </VFormField>
-
-        <VFormField id="strategic-reflection" label="Strategic Reflection">
-          <VTextarea
-            v-model="localNotes"
-            :rows="5"
-            placeholder="Record why this concept is critical..."
-          />
-        </VFormField>
-      </VStack>
-
-      <template #footer>
-        <VButtonToolbar :is-proceed-ready="false">
-          <VButton variant="ghost" @click="isEditModalOpen = false">Cancel</VButton>
-          <VButton variant="primary" @click="saveEdit">Apply Changes</VButton>
-        </VButtonToolbar>
-      </template>
-    </VModal>
   </VBox>
 </template>
 
@@ -69,16 +32,9 @@ import { VueFlow, type EdgeMouseEvent, type NodeDragEvent } from '@vue-flow/core
 import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VInput from '@/components/atoms/forms/VInput.vue';
-import VTextarea from '@/components/atoms/forms/VTextarea.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
 import VEdgeFloatingEditor from '@/components/molecules/canvases/VEdgeFloatingEditor.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VNodeFloatingEditor from '@/components/molecules/canvases/VNodeFloatingEditor.vue';
 import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue';
 import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 
@@ -122,7 +78,7 @@ watch(
 );
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
-const { startInterception } = useEdgeInterceptor(canvasContext);
+const { startEdgeEdit } = useEdgeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),
@@ -165,18 +121,14 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
   animated: e.type === 'TRIGGERS',
   data: {
     type: e.type,
+    status: e.status,
     evidence: e.evidence,
     weight: e.weight
   },
 })));
 
-const isEditModalOpen = ref(false);
-const editingNode = ref<ConceptualNode | null>(null);
-const localLabel = ref('');
-const localNotes = ref('');
-
 function handleConnect(connection: any) {
-  startInterception(connection, canvasContext.conceptualNodes);
+  startEdgeEdit(connection, canvasContext.conceptualNodes);
 }
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
@@ -185,49 +137,5 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     position: { x: node.position.x, y: node.position.y }
   };
   canvasContext.updateConceptualMapNode(updatedNode, 'move');
-}
-
-function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
-  event.stopPropagation();
-  event.preventDefault();
-
-  const midpoint = {
-    x: (edge.sourceX + edge.targetX) / 2,
-    y: (edge.sourceY + edge.targetY) / 2,
-  };
-
-  const rawEdgeData = canvasContext.conceptualEdges.value.find((e: ConceptualEdge) => e.id === edge.id);
-
-  if (rawEdgeData) {
-    canvasContext.openInterceptor(null, midpoint, rawEdgeData);
-  }
-}
-
-function handleNodeDoubleClick(event: any) {
-  startEdit(event.node.id);
-}
-
-function startEdit(nodeId: string) {
-  const node = canvasContext.conceptualNodes.get(nodeId);
-
-  if (node) {
-    editingNode.value = node;
-    localLabel.value = node.label;
-    localNotes.value = node.userNotes ?? '';
-    isEditModalOpen.value = true;
-  }
-}
-
-function saveEdit() {
-  if (editingNode.value) {
-    const updatedNode: ConceptualNode = {
-      ...editingNode.value,
-      label: localLabel.value,
-      userNotes: localNotes.value
-    };
-
-    canvasContext.updateConceptualMapNode(updatedNode, 'edit');
-    isEditModalOpen.value = false;
-  }
 }
 </script>

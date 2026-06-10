@@ -19,7 +19,7 @@ export function useEdgeInterceptor(explicitContext?: any) {
   /**
    * Internal Utility: getEdgeMidpoint
    * Calculates the center point between two nodes to place the interceptor UI.
-   * Directly used within startInterception.
+   * Directly used within startEdgeEdit.
    */
   const calculateMidpoint = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
     // In Vue Flow, connection object provides source and target node info
@@ -41,7 +41,7 @@ export function useEdgeInterceptor(explicitContext?: any) {
    * Phase 1: INITIATE_CONNECTION
    * Called by @connect event in the canvas.
    */
-  const startInterception = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
+  const startEdgeEdit = (connection: Connection, nodes: Map<string, ConceptualNode>) => {
     const midpoint = calculateMidpoint(connection, nodes);
 
     // Prevent immediate graph insertion; open the scoped contextual input form instead
@@ -53,8 +53,6 @@ export function useEdgeInterceptor(explicitContext?: any) {
    * Finalizes the data structure and sends it to the store.
    */
   const confirmRelation = async () => {
-    if (!context.pendingConnection.value && context.interceptorAction.value == 'create') return;
-
     const newEdge: ConceptualEdge = {
       ...context.localEdgeData.value,
     };
@@ -82,7 +80,7 @@ export function useEdgeInterceptor(explicitContext?: any) {
   return {
     context,
     // Actions
-    startInterception,
+    startEdgeEdit,
     confirmRelation,
     cancelRelation,
     deleteRelation,

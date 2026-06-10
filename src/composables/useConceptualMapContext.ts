@@ -58,6 +58,33 @@ export function useConceptualMapContext(config?: ContextConfig) {
   });
 
   // --------------------------------------------------------------------------
+  // Low-Frequency Node Editor Form States
+  // --------------------------------------------------------------------------
+  const isNodeEditActive = ref(false);
+  const editingNodeId = ref<string>('');
+  const localNodeData = ref({
+    label: '',
+    userNotes: '',
+    status: ''
+  });
+
+  const openNodeEditor = (nodeId: string, node: ConceptualNode) => {
+    isNodeEditActive.value = true;
+    editingNodeId.value = nodeId;
+    localNodeData.value = {
+      label: node.label || '',
+      userNotes: node.userNotes || '',
+      status: node.status || 'LOCKED'
+    };
+  };
+
+  const closeNodeEditor = () => {
+    isNodeEditActive.value = false;
+    editingNodeId.value = '';
+    localNodeData.value = { label: '', userNotes: '', status: '' };
+  };
+
+  // --------------------------------------------------------------------------
   // B. Cache Orchestration Pipeline
   // --------------------------------------------------------------------------
 
@@ -143,7 +170,24 @@ export function useConceptualMapContext(config?: ContextConfig) {
    * Dispatches node updates including moving, editing, or structural deletes.
    */
   const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') => {
-    if (action === 'delete') {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
+      return;
+    }
+
+    if (action === 'edit') {
+      let modifiedNodeData = {
+        ...node,
+        position: {
+          x: node.position!.x / POSITION_SCALE,
+          y: node.position!.y / POSITION_SCALE
+        }
+      };
+      await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+      conceptualNodes.set(node.id, node);
+    } else if (action === 'delete') {
+      await apiService.canvases.nodes.delete(canvasId, node.id);
       conceptualNodes.delete(node.id);
       // Cascade delete associated edges to prevent dangling connections
       conceptualEdges.value = conceptualEdges.value.filter(e => e.source !== node.id && e.target !== node.id);
@@ -269,6 +313,9 @@ export function useConceptualMapContext(config?: ContextConfig) {
     interceptorPosition,
     pendingConnection,
     localEdgeData,
+    isNodeEditActive,
+    editingNodeId,
+    localNodeData,
 
     // Actions
     fetchGraphData,
@@ -278,6 +325,8 @@ export function useConceptualMapContext(config?: ContextConfig) {
     openInterceptor,
     closeInterceptor,
     updateLocalEdgeData,
+    openNodeEditor,
+    closeNodeEditor,
     recommendConceptualNodes
   };
 }

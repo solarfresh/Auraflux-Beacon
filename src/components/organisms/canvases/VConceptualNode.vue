@@ -19,7 +19,7 @@
             icon-only
             icon-name="PencilSquare"
             class="opacity-0 group-hover:opacity-100 transition-opacity"
-            @click.stop="emit('edit', props.data.id)"
+            @click.stop="context.openNodeEditor(props.id, props.data)"
           />
         </VCluster>
 
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import { Position, type NodeProps } from '@vue-flow/core'
 import type { ConceptualNode } from '@/interfaces/conceptual-map'
 import { NODE_THEMES } from '@/constants/canvases'
@@ -84,6 +84,16 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue'
 import VCluster from '@/components/atoms/layout/VCluster.vue'
 import VStack from '@/components/atoms/layout/VStack.vue'
 import VNodeContainer from '@/components/organisms/canvases/VNodeContainer.vue'
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
+
+const context = inject(ConceptualMapContextKey);
+
+if (!context) {
+  throw new Error(
+    '[Architectural Violation] VConceptualNode must be rendered within the tree of a <ConceptualMapCanvas>.'
+  );
+}
+
 
 /**
  * VConceptualNode Organism
@@ -92,10 +102,6 @@ import VNodeContainer from '@/components/organisms/canvases/VNodeContainer.vue'
  */
 interface Props extends NodeProps<ConceptualNode> {}
 const props = defineProps<Props>()
-
-const emit = defineEmits<{
-  (e: 'edit', id: string): void
-}>()
 
 // Computed theme based on the NodeType defined in constants/canvases.ts
 const theme = computed(() => {

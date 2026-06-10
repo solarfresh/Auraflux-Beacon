@@ -1,6 +1,5 @@
 <template>
   <VBox tag="section" background="white" class="flex flex-col h-full overflow-hidden">
-
     <VBox padding="lg" border="bottom" class="shrink-0">
       <VCluster gap="md" align="center">
         <VBox padding="sm" background="indigo-50" rounded="xl" class="text-indigo-600 shadow-sm">
@@ -19,7 +18,6 @@
 
     <VBox tag="main" padding="lg" class="flex-1 overflow-y-auto stable-gutter">
       <VStack gap="xl">
-
         <VFormField id="keyword-input" label="Keyword Text">
           <template #hint>
             <VBadge v-if="isTextModified" variant="amber" size="xs" class="animate-pulse">
@@ -47,7 +45,7 @@
         </VFormField>
 
         <VStack gap="sm">
-          <VEntityProjectStatus :status="initialKeyword.entityStatus">
+          <VEntityProjectStatus :status="props.initialKeyword.entityStatus">
             <template v-if="isTextModified" #default>
               <VTypography size="xs" color="amber-600" italic class="mt-1">
                 Note: Saving will update content and persist the choice below.
@@ -55,70 +53,31 @@
             </template>
           </VEntityProjectStatus>
         </VStack>
-
       </VStack>
     </VBox>
 
     <VBox padding="md" background="slate-50" border="top" class="shrink-0">
-      <VCluster justify="end" gap="md">
-        <VButton variant="tertiary" @click="handleCancel">
-          Cancel
-        </VButton>
-
-        <template v-if="!isLocked">
-          <VButton
-            variant="secondary"
-            icon-name="ArchiveBox"
-            :disabled="!isValid"
-            @click="handleSubmit('ON_HOLD')"
-          >
-            Put On Hold
-          </VButton>
-
-          <VButton
-            variant="primary"
-            icon-name="LockClosed"
-            :disabled="!isValid"
-            @click="handleSubmit('LOCKED')"
-          >
-            Lock Keyword
-          </VButton>
-        </template>
-
-        <template v-else>
-          <VButton
-            variant="secondary"
-            icon-name="ArchiveBox"
-            @click="handleSubmit('ON_HOLD')"
-          >
-            Unlock & Hold
-          </VButton>
-
-          <VButton
-            variant="primary"
-            icon-name="DocumentCheck"
-            :disabled="!isTextModified"
-            @click="handleSubmit('LOCKED')"
-          >
-            Save Changes
-          </VButton>
-        </template>
-      </VCluster>
+      <VEntityStatusActionGroup
+        :is-locked="isLocked"
+        :is-modified="isTextModified"
+        :disabled="!isValid"
+        :labels="{
+          unlockedPrimary: 'Lock Keyword'
+        }"
+        @cancel="handleCancel"
+        @submit="handleSubmit"
+      />
     </VBox>
   </VBox>
 </template>
 
 <script setup lang="ts">
-/**
- * KeywordDetailEditor
- * Integrated refactor using specialized status molecules.
- */
 import { computed, ref, watch } from 'vue';
 import type { EntityStatus } from '@/interfaces/core';
 import type { ProcessedKeyword } from '@/interfaces/initiation';
 import { useInitiativeStore } from '@/stores/initiation';
 
-// Atoms
+// Atoms Layer Layout & UI Component Imports
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
@@ -128,11 +87,18 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VBadge from '@/components/atoms/indicators/VBadge.vue';
 
-// Molecules
+// Molecules Layer Component Imports
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 import VEntityProjectStatus from '@/components/molecules/domain/VEntityProjectStatus.vue';
-import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
 
+// Shared State Machine Action Component
+import VEntityStatusActionGroup from '@/components/molecules/domain/VEntityStatusActionGroup.vue';
+
+/**
+ * KeywordDetailEditor Molecule
+ * Provides a dedicated detail panel to refine specific keywords used for domain exploration.
+ * Seamlessly abstracts lifecycle submission variants via unified action groups.
+ */
 const props = defineProps<{
   keywordIndex: number;
   initialKeyword: ProcessedKeyword;
@@ -145,16 +111,35 @@ const emit = defineEmits<{
 const initiativeStore = useInitiativeStore();
 const draftText = ref(props.initialKeyword.label);
 
-// Sync draft with external props
-watch(() => props.initialKeyword.label, (val) => (draftText.value = val));
+/**
+ * Reactively syncs local state whenever the parent scope updates the target keyword attributes.
+ */
+watch(() => props.initialKeyword.label, (val) => {
+  draftText.value = val;
+});
 
-// Computed Logic
-const isValid = computed(() => !!draftText.value.trim());
-const isLocked = computed(() => props.initialKeyword.entityStatus === 'LOCKED');
-const isTextModified = computed(() => draftText.value.trim() !== props.initialKeyword.label);
+// --- Computed Analytical State Layers ---
 
 /**
- * Persist changes to store
+ * Validates whether the keyword form constraints are legally satisfied.
+ */
+const isValid = computed(() => !!draftText.value.trim());
+
+/**
+ * Resolves whether the specific keyword state machine is already finalized or hardened.
+ */
+const isLocked = computed(() => props.initialKeyword.entityStatus === 'LOCKED');
+
+/**
+ * Determines whether user modifications are pending synchronization with the cloud backend streams.
+ */
+const isTextModified = computed(() => draftText.value.trim() !== props.initialKeyword.label);
+
+// --- Action Delegations ---
+
+/**
+ * Dispatches synchronization requests upstream to persistence layers and closes the active modal view.
+ * @param targetStatus Destination lifecycle status assigned via action choices.
  */
 async function handleSubmit(targetStatus: EntityStatus) {
   if (!isValid.value) return;
@@ -167,10 +152,12 @@ async function handleSubmit(targetStatus: EntityStatus) {
 }
 
 /**
- * Safety check for dirty state
+ * Safety interceptor protecting unsaved user data states prior to exiting edit view contexts.
  */
 function handleCancel() {
-  if (isTextModified.value && !window.confirm('Discard unsaved changes?')) return;
+  if (isTextModified.value && !window.confirm('Discard unsaved changes?')) {
+    return;
+  }
   emit('close-modal');
 }
 </script>
