@@ -18,6 +18,8 @@ export type EntityStatus =
   | 'ON_HOLD'       // Temporarily sidelined from the active map or focus
   | 'ARCHIVED';     // Removed from view but preserved in history
 
+export type EntityActionType = 'ACCEPT' | 'REJECT' | 'DELETE' | 'HOLD' | 'LOCK' | 'DRAFT';
+
 /** Hex or CSS color string for UI rendering. */
 export type ColorString = string;
 

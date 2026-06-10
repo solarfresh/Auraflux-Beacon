@@ -170,7 +170,24 @@ export function useConceptualMapContext(config?: ContextConfig) {
    * Dispatches node updates including moving, editing, or structural deletes.
    */
   const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') => {
-    if (action === 'delete') {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
+      return;
+    }
+
+    if (action === 'edit') {
+      let modifiedNodeData = {
+        ...node,
+        position: {
+          x: node.position!.x / POSITION_SCALE,
+          y: node.position!.y / POSITION_SCALE
+        }
+      };
+      await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+      conceptualNodes.set(node.id, node);
+    } else if (action === 'delete') {
+      await apiService.canvases.nodes.delete(canvasId, node.id);
       conceptualNodes.delete(node.id);
       // Cascade delete associated edges to prevent dangling connections
       conceptualEdges.value = conceptualEdges.value.filter(e => e.source !== node.id && e.target !== node.id);

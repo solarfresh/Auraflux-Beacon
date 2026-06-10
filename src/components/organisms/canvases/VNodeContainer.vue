@@ -8,12 +8,11 @@
 
     <VNodeShape :status="props.status" :border-radius="12" />
 
-    <VNodeActionGroup
+    <VEntityCanvasQuickActions
       v-if="shouldRenderActionGroup"
       :status="props.status"
-      @accept="handleAccept"
-      @reject="handleReject"
-      @delete="handleDelete"
+      class="absolute -top-12 left-1/2 -translate-x-1/2 z-50 animate-in fade-in zoom-in duration-150 nodrag nopan"
+      @action="handleQuickAction"
     />
 
     <slot name="overlay" />
@@ -26,12 +25,16 @@
  * The physical shell for all canvas nodes.
  * Implements semantic border logic (Solid/Dashed) and hover/selection states.
  */
-import { inject } from 'vue';
+import { inject, computed } from 'vue';
+import { ConceptualMapContextKey } from '@/constants/injection-keys';
+import type { EntityActionType } from '@/interfaces/core';
+
+// Atoms & Shared Core Imports
 import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
-import VNodeActionGroup from '@/components/molecules/canvases/VNodeActionGroup.vue';
-import { computed, ref, watch } from 'vue';
-import { ConceptualMapContextKey } from '@/constants/injection-keys';
+
+// 🟢 Import the new unified micro-toolbar actions component and type definition
+import VEntityCanvasQuickActions from '@/components/molecules/canvases/VEntityCanvasQuickActions.vue';
 
 const context = inject(ConceptualMapContextKey);
 
@@ -43,7 +46,7 @@ if (!context) {
 
 const props = withDefaults(defineProps<{
   id: string
-  // Entity status from backend (e.g., 'AI_EXTRACTED', 'LOCKED')
+  // Entity status from backend (e.g., 'AI_EXTRACTED', 'LOCKED', 'USER_DRAFT')
   status?: string
   // Selection state provided by Vue Flow
   selected?: boolean
@@ -58,47 +61,72 @@ const props = withDefaults(defineProps<{
   padding: 'md'
 })
 
+// --- Computed Analytical State Layers ---
+
 const shouldRenderActionGroup = computed(() => {
-  const isValidStatus = ['AI_EXTRACTED', 'USER_DRAFT'].includes(props.status);
+  // Enhanced boundary: Allows quick-action toolbars to manage AI Extractions, Drafts, and Hold states.
   const isEditorClosed = !context.isNodeEditActive.value;
 
-  return isValidStatus && isEditorClosed && props.selected;
+  return isEditorClosed && props.selected;
 });
+
 const nodeData = computed(() => context.conceptualNodes.get(props.id));
 
+// --- 🟢 Reengineered Action Routing Stream ---
+
 /**
- * Technical Logic: Operation Handlers
- * These functions bubble events up to the Page/Canvas level where
- * the Exploration Store (exploration.ts) resides.
+ * Technical Responsibility: Orchestrates incoming single-click event requests
+ * dispatched from the micro-toolbar layer and normalizes graph mutation streams.
+ * * @param action Explicit action identifier derived from CanvasActionType
  */
-const handleAccept = async () => {
-  let node = nodeData.value;
-  if (node !== undefined) {
-    node.status = 'LOCKED';
-    await context.updateConceptualMapNode(node, 'edit');
+const handleQuickAction = async (action: EntityActionType) => {
+  const node = nodeData.value;
+  if (!node) return;
 
-    if (props.status === 'AI_EXTRACTED') {
-      context.recommendConceptualNodes();
-    }
-  }
-}
+  switch (action) {
+    case 'ACCEPT':
+    case 'LOCK':
+      node.status = 'LOCKED';
+      await context.updateConceptualMapNode(node, 'edit');
 
-const handleReject = () => {
-  let node = nodeData.value;
-  if (node !== undefined) {
-    context.updateConceptualMapNode(node, 'delete');
-  }
-}
+      // Proactively prompt additional map concepts if accepting raw AI discoveries
+      if (props.status === 'AI_EXTRACTED') {
+        context.recommendConceptualNodes();
+      }
+      break;
 
-const handleDelete = () => {
-  let node = nodeData.value;
-  if (node !== undefined) {
-    if (confirm('Delete this draft node?')) {
-      context.updateConceptualMapNode(node, 'delete');
-    }
+    case 'REJECT':
+      // Map 'REJECT' directly to complete graph node extraction rollback
+      await context.updateConceptualMapNode(node, 'delete');
+      break;
+
+    case 'HOLD':
+      node.status = 'ON_HOLD';
+      await context.updateConceptualMapNode(node, 'edit');
+      break;
+
+    case 'DRAFT':
+      node.status = 'USER_DRAFT';
+      await context.updateConceptualMapNode(node, 'edit');
+      break;
+
+    case 'DELETE':
+      if (confirm('Delete this draft node permanently?')) {
+        await context.updateConceptualMapNode(node, 'delete');
+      }
+      break;
   }
-}
+};
 </script>
 
 <style scoped>
+/* Ensure smooth micro-interaction layouts on selection change */
+.animate-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -35%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -40%) scale(1); }
+}
 </style>
