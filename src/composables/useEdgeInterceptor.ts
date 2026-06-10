@@ -53,8 +53,6 @@ export function useEdgeInterceptor(explicitContext?: any) {
    * Finalizes the data structure and sends it to the store.
    */
   const confirmRelation = async () => {
-    if (!context.pendingConnection.value && context.interceptorAction.value == 'create') return;
-
     const newEdge: ConceptualEdge = {
       ...context.localEdgeData.value,
     };

@@ -62,7 +62,7 @@
         <VEntityStatusActionGroup
           :is-locked="isLocked"
           :is-modified="isEdgeModified"
-          :disabled="!isValid"
+          :disabled="false"
           :labels="{
             unlockedHold: 'Save Draft',
             unlockedPrimary: 'Lock Link',
@@ -149,7 +149,6 @@ const currentEdge = computed(() => {
 });
 
 const isLocked = computed(() => currentEdge.value?.status === 'LOCKED');
-const isValid = computed(() => true);
 
 const isEdgeModified = computed(() => {
   if (!currentEdge.value) return false;
@@ -166,7 +165,6 @@ function close() {
 }
 
 async function handleStateSubmit(targetStatus: 'LOCKED' | 'ON_HOLD' | 'USER_DRAFT') {
-  if (!isValid.value) return;
   context.localEdgeData.value.status = targetStatus;
   await confirmRelation();
 }

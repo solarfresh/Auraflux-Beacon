@@ -9,16 +9,15 @@
   />
 
   <EdgeLabelRenderer>
-    <div
-      :style="{
-        position: 'absolute',
-        transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
-        pointerEvents: 'all',
-      }"
-      class="nodrag nopan"
+    <VBox
+      tag="div"
+      :style="labelContainerStyle"
+      class="nodrag nopan flex flex-col items-center justify-center gap-1.5"
+      title="Double click to edit details"
+      @dblclick.stop="handleLabelDoubleClick"
     >
       <VCluster
-        v-if="props.data?.status === 'AI_EXTRACTED'"
+        v-if="props.data?.status === 'AI_EXTRACTED' && !shouldRenderActionGroup"
         gap="xs"
         align="center"
         class="v-edge-pill px-2.5 py-1 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 shadow-sm cursor-pointer transition-all hover:scale-105 active:scale-95 hover:shadow-indigo-100 hover:shadow-md"
@@ -30,7 +29,7 @@
       </VCluster>
 
       <VCluster
-        v-else
+        v-else-if="!shouldRenderActionGroup"
         gap="xs"
         align="center"
         class="v-edge-pill px-2 py-1 rounded-full border shadow-sm transition-all group hover:shadow-md"
@@ -56,27 +55,41 @@
           class="text-slate-400 group-hover:text-indigo-500"
         />
       </VCluster>
-    </div>
+
+      <VEntityCanvasQuickActions
+        v-if="shouldRenderActionGroup"
+        :status="props.data?.status"
+        class="animate-in fade-in zoom-in duration-150 z-50 shadow-xl"
+        @action="handleQuickAction"
+      />
+    </VBox>
   </EdgeLabelRenderer>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
+  useVueFlow,
   type EdgeProps,
   Position,
 } from '@vue-flow/core'
-import type { ConceptualEdge } from '@/interfaces/conceptual-map';
-import { HANDLE_MAP } from '@/constants/canvases';
+import { ConceptualMapContextKey } from '@/constants/injection-keys'
+import type { ConceptualEdge } from '@/interfaces/conceptual-map'
+import type { EntityActionType } from '@/interfaces/core'
+import { HANDLE_MAP } from '@/constants/canvases'
 
-// Components
+// Atoms & Shared Components Imports
+import VBox from '@/components/atoms/layout/VBox.vue'
 import VBadge from '@/components/atoms/indicators/VBadge.vue'
 import VTypography from '@/components/atoms/indicators/VTypography.vue'
 import VIcon from '@/components/atoms/indicators/VIcon.vue'
 import VCluster from '@/components/atoms/layout/VCluster.vue'
+
+// 🟢 Quick Action Micro-Toolbar Import
+import VEntityCanvasQuickActions from '@/components/molecules/canvases/VEntityCanvasQuickActions.vue'
 
 interface Props extends EdgeProps<ConceptualEdge> {
   sourceHandle?: string
@@ -84,7 +97,16 @@ interface Props extends EdgeProps<ConceptualEdge> {
 }
 const props = defineProps<Props>()
 
-// --- Path Calculation ---
+const context = inject(ConceptualMapContextKey)
+const { viewport } = useVueFlow()
+
+if (!context) {
+  throw new Error(
+    '[Architectural Violation] VConceptualEdge must be rendered within the tree of a <ConceptualMapCanvas>.'
+  );
+}
+
+// --- Path & Label Center Coordinates Calculation ---
 const pathData = computed(() => {
   const sourcePos = props.sourceHandle ? HANDLE_MAP[props.sourcePosition] : Position.Right
   const targetPos = props.targetHandle ? HANDLE_MAP[props.targetPosition] : Position.Left
@@ -102,6 +124,88 @@ const pathData = computed(() => {
 const edgePath = computed(() => pathData.value[0])
 const labelX = computed(() => pathData.value[1])
 const labelY = computed(() => pathData.value[2])
+
+// --- 🟢 Dynamic Layout & Scale Compensation Logic ---
+
+/**
+ * Bounds checker determining whether shortcut action panels are eligible for display.
+ */
+const shouldRenderActionGroup = computed(() => {
+  const isEditorClosed = !context.isNodeEditActive.value
+
+  return isEditorClosed && props.selected
+})
+
+/**
+ * Combines spatial position vectors with inverse scaling to fully resolve zoom distortion.
+ */
+const labelContainerStyle = computed(() => {
+  const currentZoom = viewport.value.zoom || 1
+  const inverseScale = 1 / currentZoom
+
+  return {
+    position: 'absolute' as const,
+    // Base placement mapped precisely on edge midpoint
+    left: '0px',
+    top: '0px',
+    // Compound matrix: handles centering offset AND scale neutralization simultaneously
+    transform: `translate(-50%, -50%) translate(${labelX.value}px, ${labelY.value}px) scale(${inverseScale})`,
+    transformOrigin: 'center center',
+    pointerEvents: 'all' as const,
+  }
+})
+
+/**
+ * Intercepts double-click gestures on the label wrapper, bridging current coordinates
+ * and edge parameters directly to the useEdgeInterceptor store layer.
+ */
+const handleLabelDoubleClick = () => {
+  if (!props.data) return
+
+  const position = {
+    x: labelX.value,
+    y: labelY.value
+  }
+
+  const edge = context.conceptualEdges.value.find((e: any) => e.id === props.id)
+  context.openInterceptor(null, position, edge);
+}
+
+// --- 🟢 Reengineered Edge Quick Mutation Handlers ---
+
+const handleQuickAction = async (action: EntityActionType) => {
+  const edge = context.conceptualEdges.value.find((e: any) => e.id === props.id)
+  if (!edge) return
+
+  switch (action) {
+    case 'ACCEPT':
+    case 'LOCK':
+      edge.status = 'LOCKED'
+      await context.updateConceptualMapEdge(edge, 'update')
+      break
+
+    case 'REJECT':
+      // Drop AI extracted proposals directly from the active viewport map
+      await context.updateConceptualMapEdge(edge, 'delete')
+      break
+
+    case 'HOLD':
+      edge.status = 'ON_HOLD'
+      await context.updateConceptualMapEdge(edge, 'update')
+      break
+
+    case 'DRAFT':
+      edge.status = 'USER_DRAFT'
+      await context.updateConceptualMapEdge(edge, 'update')
+      break
+
+    case 'DELETE':
+      if (confirm('Delete this relationship permanently?')) {
+        await context.updateConceptualMapEdge(edge, 'delete')
+      }
+      break
+  }
+}
 
 // --- Theme & Visual Logic ---
 
@@ -168,6 +272,10 @@ const edgeStyle = computed(() => {
   filter: drop-shadow(0 0 4px rgba(129, 140, 248, 0.6));
 }
 
+.animate-in {
+  animation: fadeIn 0.15s ease-out;
+}
+
 @keyframes edgeFlow {
   from {
     stroke-dashoffset: 500;
@@ -175,5 +283,10 @@ const edgeStyle = computed(() => {
   to {
     stroke-dashoffset: 0;
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
 }
 </style>

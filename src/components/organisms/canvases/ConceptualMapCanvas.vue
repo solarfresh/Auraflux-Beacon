@@ -11,7 +11,6 @@
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
       @connect="handleConnect"
-      @edge-double-click="handleEdgeDoubleClick"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
@@ -138,21 +137,5 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     position: { x: node.position.x, y: node.position.y }
   };
   canvasContext.updateConceptualMapNode(updatedNode, 'move');
-}
-
-function handleEdgeDoubleClick({ event, edge }: EdgeMouseEvent) {
-  event.stopPropagation();
-  event.preventDefault();
-
-  const midpoint = {
-    x: (edge.sourceX + edge.targetX) / 2,
-    y: (edge.sourceY + edge.targetY) / 2,
-  };
-
-  const rawEdgeData = canvasContext.conceptualEdges.value.find((e: ConceptualEdge) => e.id === edge.id);
-
-  if (rawEdgeData) {
-    canvasContext.openInterceptor(null, midpoint, rawEdgeData);
-  }
 }
 </script>
