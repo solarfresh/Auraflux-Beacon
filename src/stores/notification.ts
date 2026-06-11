@@ -7,16 +7,12 @@ import type {
 import type { WebSocketMessage } from '@/interfaces/notification';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { useExplorationStore } from './exploration';
 import { useInitiativeStore } from './initiation';
 
 // Define your WebSocket URL
 const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
 
 export const useNotificationStore = defineStore('notification', () => {
-
-    // --- State from Composable ---
-    const explorationStore = useExplorationStore();
     const initiativeStore = useInitiativeStore();
 
     // Extract the reactive properties from the composable
@@ -27,11 +23,23 @@ export const useNotificationStore = defineStore('notification', () => {
         error
     } = useWebSocket(AURAFLUX_WS_URL);
 
+    const latestCanvasUpdate = ref<{
+        canvasId: string;
+        type: 'NODE_MOVED' | 'EDGE_SYNC' | 'GRAPH_SYNC';
+        data: any;
+        timestamp: number;
+    } | null>(null);
+
     // --- Local State ---
     const notifications = ref<{[key: string]: any;}>({});
 
     async function _handleConceptualNodesRecommendation(payload: ConceptualGraph) {
-        explorationStore.loadConceptualGraph(payload);
+        latestCanvasUpdate.value = {
+            canvasId: payload.canvasId,
+            type: 'GRAPH_SYNC',
+            data: payload,
+            timestamp: Date.now()
+        };
     }
 
     async function _handleInitiationEAStream(payload: any) {
@@ -93,6 +101,7 @@ export const useNotificationStore = defineStore('notification', () => {
         isConnected,
         error,
         notifications,
+        latestCanvasUpdate,
 
         // Actions (if you had any, e.g., mark_as_read)
         // markAsRead: (id: number) => { ... }
