@@ -44,7 +44,7 @@
     <template #overlay>
       <VNodeHandle
         id="top"
-        type="target"
+        type="source"
         :position="Position.Top"
         :color-class="theme.handle"
       />
@@ -57,6 +57,31 @@
       <VNodeHandle
         id="right"
         type="source"
+        :position="Position.Right"
+        :color-class="theme.handle"
+      />
+      <VNodeHandle
+        id="left"
+        type="source"
+        :position="Position.Left"
+        :color-class="theme.handle"
+      />
+
+      <VNodeHandle
+        id="top"
+        type="target"
+        :position="Position.Top"
+        :color-class="theme.handle"
+      />
+      <VNodeHandle
+        id="bottom"
+        type="target"
+        :position="Position.Bottom"
+        :color-class="theme.handle"
+      />
+      <VNodeHandle
+        id="right"
+        type="target"
         :position="Position.Right"
         :color-class="theme.handle"
       />

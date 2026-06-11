@@ -2,7 +2,7 @@
   <BaseEdge
     :id="props.id"
     :path="edgePath"
-    :marker-end="props.data?.status === 'AI_EXTRACTED' ? undefined : props.markerEnd"
+    :marker-end="dynamicMarkerEnd"
     :style="edgeStyle"
     class="v-conceptual-edge"
     :class="{ 'suggested-glow-animation': props.data?.status === 'AI_EXTRACTED' }"
@@ -72,8 +72,10 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
+  getStraightPath,
   useVueFlow,
   type EdgeProps,
+  MarkerType,
   Position,
 } from '@vue-flow/core'
 import { ConceptualMapContextKey } from '@/constants/injection-keys'
@@ -111,14 +113,27 @@ const pathData = computed(() => {
   const sourcePos = props.sourceHandle ? HANDLE_MAP[props.sourcePosition] : Position.Right
   const targetPos = props.targetHandle ? HANDLE_MAP[props.targetPosition] : Position.Left
 
-  return getBezierPath({
-    sourceX: props.sourceX,
-    sourceY: props.sourceY,
-    sourcePosition: sourcePos,
-    targetX: props.targetX,
-    targetY: props.targetY,
-    targetPosition: targetPos,
-  })
+  const dx = Math.abs(props.sourceX - props.targetX)
+  const dy = Math.abs(props.sourceY - props.targetY)
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  const adaptiveCurvature = distance < 300 ? 0.05 : 0.25
+  const pathInfo = {
+      sourceX: props.sourceX,
+      sourceY: props.sourceY,
+      sourcePosition: sourcePos,
+      targetX: props.targetX,
+      targetY: props.targetY,
+      targetPosition: targetPos,
+  }
+
+  if (distance < 150) {
+    return getStraightPath(pathInfo);
+  } else {
+    return getBezierPath({
+      ...pathInfo,
+      curvature: adaptiveCurvature,
+    })
+  }
 })
 
 const edgePath = computed(() => pathData.value[0])
@@ -153,6 +168,25 @@ const labelContainerStyle = computed(() => {
     transformOrigin: 'center center',
     pointerEvents: 'all' as const,
   }
+})
+
+const dynamicMarkerEnd = computed(() => {
+  if (props.markerEnd) {
+    return props.markerEnd
+  }
+
+  const isSuggested = props.data?.status === 'AI_EXTRACTED'
+  const isTrigger = props.data?.type === 'TRIGGERS'
+
+  if (isSuggested || props.selected) {
+    return 'url(#vue-flow__marker-closed-arrow__indigo-400)'
+  }
+
+  if (isTrigger) {
+    return 'url(#vue-flow__marker-closed-arrow__amber-600)'
+  }
+
+  return 'url(#vue-flow__marker-closed-arrow__slate-400)'
 })
 
 /**

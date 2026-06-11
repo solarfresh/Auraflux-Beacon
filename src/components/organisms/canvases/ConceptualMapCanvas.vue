@@ -28,7 +28,7 @@
 import type { ID } from '@/interfaces/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, type EdgeMouseEvent, type NodeDragEvent } from '@vue-flow/core';
+import { MarkerType, type NodeDragEvent, VueFlow } from '@vue-flow/core';
 import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
@@ -42,7 +42,7 @@ import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useConceptualMapContext } from '@/composables/useConceptualMapContext';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
-import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{
   projectId: ID;
@@ -107,7 +107,6 @@ const vueFlowNodes = computed(() => Array.from(canvasContext.conceptualNodes.val
   position: { x: n.position?.x ?? 0, y: n.position?.y ?? 0 },
   data: { ...n },
   type: n.type,
-  dragHandle: '.v-node-container',
 })));
 
 const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e => ({
@@ -124,6 +123,12 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
     status: e.status,
     evidence: e.evidence,
     weight: e.weight
+  },
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    width: 20,
+    height: 20,
+    color: e.type === 'TRIGGERS' ? '#d97706' : '#94a3b8',
   },
 })));
 
