@@ -10,10 +10,12 @@
       :max-zoom="4"
       :min-zoom="0.2"
       @node-drag-stop="handleNodeDragStop"
-      @connect="handleConnect"
+      @connect="startEdgeEdit"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
+      :edge-updater-radius="20"
+      @edge-update="updateRelation"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
@@ -78,7 +80,7 @@ watch(
 );
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
-const { startEdgeEdit } = useEdgeInterceptor(canvasContext);
+const { startEdgeEdit, updateRelation } = useEdgeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),
@@ -111,6 +113,7 @@ const vueFlowNodes = computed(() => Array.from(canvasContext.conceptualNodes.val
 
 const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e => ({
   id: e.id,
+  updatable: true,
   source: e.source,
   sourceHandle: e.sourceHandle,
   target: e.target,
@@ -131,10 +134,6 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
     color: e.type === 'TRIGGERS' ? '#d97706' : '#94a3b8',
   },
 })));
-
-function handleConnect(connection: any) {
-  startEdgeEdit(connection, canvasContext.conceptualNodes);
-}
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
   const updatedNode: ConceptualNode = {
