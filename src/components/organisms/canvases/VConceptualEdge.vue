@@ -73,9 +73,7 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   getStraightPath,
-  useVueFlow,
   type EdgeProps,
-  MarkerType,
   Position,
 } from '@vue-flow/core'
 import { ConceptualMapContextKey } from '@/constants/injection-keys'
@@ -100,7 +98,6 @@ interface Props extends EdgeProps<ConceptualEdge> {
 const props = defineProps<Props>()
 
 const context = inject(ConceptualMapContextKey)
-const { viewport } = useVueFlow()
 
 if (!context) {
   throw new Error(
@@ -155,7 +152,7 @@ const shouldRenderActionGroup = computed(() => {
  * Combines spatial position vectors with inverse scaling to fully resolve zoom distortion.
  */
 const labelContainerStyle = computed(() => {
-  const currentZoom = viewport.value.zoom || 1
+  const currentZoom = context.viewport.zoom || 1
   const inverseScale = 1 / currentZoom
 
   return {

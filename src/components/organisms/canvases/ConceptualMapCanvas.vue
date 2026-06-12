@@ -9,6 +9,7 @@
       :default-zoom="1.2"
       :max-zoom="4"
       :min-zoom="0.2"
+      v-model:viewport="canvasContext.viewport"
       @node-drag-stop="handleNodeDragStop"
       @connect="startEdgeEdit"
       @drop="onDrop"
