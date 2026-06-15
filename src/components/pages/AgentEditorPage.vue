@@ -149,6 +149,14 @@
 
           <VFieldset title="Identity" padding="md">
             <VStack gap="md">
+              <VFormField label="Agent Name" description="The unique name identifying this config.">
+                <VInput
+                  v-model="currentAgent.name"
+                  placeholder="e.g. Explorer Agent v2"
+                  size="sm"
+                />
+              </VFormField>
+
               <VFormField label="Functional Role">
                 <VInput
                   v-model="currentAgent.role"
@@ -247,7 +255,7 @@ const currentProvider = computed(() => agentStore.currentModelProvider);
 const promptTemplate = computed({
   get: () => agentStore.currentAgent?.promptTemplate?.replace(/\\n/g, '\n'),
   set: (val) => {
-    if (agentStore.currentAgent) {
+    if (val && agentStore.currentAgent) {
       agentStore.currentAgent.promptTemplate = val;
     }
   }
@@ -255,9 +263,9 @@ const promptTemplate = computed({
 const outputSchema = computed({
   get: () => JSON.stringify(agentStore.currentAgent?.outputSchema || {}, null, 2),
   set: (val) => {
-    if (agentStore.currentAgent) {
+    if (val && agentStore.currentAgent) {
       const parsed = JSON.parse(val);
-      agentStore.currentAgent.outputSchema = outputSchema;
+      agentStore.currentAgent.outputSchema = parsed;
     }
   }
 })

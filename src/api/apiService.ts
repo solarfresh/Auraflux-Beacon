@@ -100,6 +100,9 @@ apiClient.interceptors.response.use(
 
 export const apiService = {
   agents: {
+    createConfig: (): Promise<AxiosResponse<Agent>> => {
+      return apiClient.post(AgentsEndpoints.createConfig(), {});
+    },
     createModelProvider: (provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
       return apiClient.post(AgentsEndpoints.createModelProvider(), provider);
     },

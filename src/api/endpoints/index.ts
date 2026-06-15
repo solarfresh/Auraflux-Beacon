@@ -4,6 +4,8 @@ import { ID } from '@/interfaces/core';
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;
 
 export const AgentsEndpoints = {
+  createConfig: () =>
+    `${AURAFLUX_NEXUS_URL}/agents/`,
   createModelProvider: () =>
     `${AURAFLUX_NEXUS_URL}/agents/models/`,
   getAgents: () =>
