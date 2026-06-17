@@ -1,6 +1,5 @@
-import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
-import { getNodeGroundednessContext } from '@/logic/project';
+import { useCanvasStore } from '@/stores/canvas';
 import { useExplorationStore } from '@/stores/exploration';
 import { computed } from 'vue';
 
@@ -10,6 +9,7 @@ import { computed } from 'vue';
  * with the Sidebar and Canvas.
  */
 export function useRegistry() {
+  const canvasStore = useCanvasStore();
   const store = useExplorationStore();
 
   /**
@@ -27,9 +27,18 @@ export function useRegistry() {
    * Nodes that are not yet placed on any canvas (DIMMED state).
    */
   const inboxNodes = computed(() => {
-    return Array.from(store.sidebarNodes.entries()).map(([id, node]) => {
-      return node
-    })
+    const currentCanvas = canvasStore.getGraphCache(store.activeCanvasId);
+    const sidebarNodesArray = Array.from(store.sidebarNodes.values());
+
+    if (!currentCanvas?.nodes) {
+      return sidebarNodesArray;
+    }
+
+    if (typeof currentCanvas.nodes.has === 'function') {
+      return sidebarNodesArray.filter(node => !currentCanvas.nodes.has(node.id));
+    }
+
+    return sidebarNodesArray.filter(node => !(node.id in currentCanvas.nodes));
   });
 
   /**
@@ -84,21 +93,6 @@ export function useRegistry() {
   };
 
   /**
-   * STABILITY CONTROLLER (Anti-Hallucination)
-   * Linked to the Jitter animation in the SidebarNodeItem.
-   */
-  const updateGroundedness = (nodeId: ID, delta: number) => {
-    const node = store.conceptualNodes.get(nodeId);
-    if (!node) return;
-
-    // Constrain stability between 0 and 100
-    node.groundedness = Math.max(0, Math.min(10, node.groundedness + delta));
-
-    // 5. Solidity Light Logic: Automated transition based on stability
-    node.solidity = getNodeGroundednessContext(node.groundedness).solidity;
-  };
-
-  /**
    * SELECTION SYNC
    * Centralized ID tracking for Sidebar and Panel highlighting.
    */
@@ -114,7 +108,6 @@ export function useRegistry() {
     activeCanvasId: computed(() => store.activeCanvasId),
     mountToCanvas,
     unmountFromCanvas,
-    updateGroundedness,
     selectNode
   };
 }

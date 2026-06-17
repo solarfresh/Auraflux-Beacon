@@ -30,6 +30,8 @@ export const CanvasesEndpoints = {
   edges: {
     create: (canvasId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/`,
+    recommendConceptualEdges: (canvasId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/recommend/`,
     delete: (canvasId: ID, edgeId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/${edgeId}/`,
     update: (canvasId: ID, edgeId: ID) =>
@@ -98,7 +100,7 @@ export const ProjectsEndpoints = {
     getSidebarRegistryInfo: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/sidebar/`,
     recommendConceptualNodes: (projectId: ID, canvasId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/${canvasId}/nodes/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/${canvasId}/nodes/recommend/`,
   },
   keywords: {
     create: (projectId: ID) =>

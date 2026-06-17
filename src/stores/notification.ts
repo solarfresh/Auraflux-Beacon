@@ -1,6 +1,6 @@
 import { useWebSocket } from '@/composables/useWebSocket';
 import config from '@/config';
-import { ConceptualGraph } from '@/interfaces/conceptual-map';
+import { ConceptualEdge, ConceptualGraph } from '@/interfaces/conceptual-map';
 import type {
     ChatMessage
 } from '@/interfaces/core';
@@ -25,13 +25,22 @@ export const useNotificationStore = defineStore('notification', () => {
 
     const latestCanvasUpdate = ref<{
         canvasId: string;
-        type: 'NODE_MOVED' | 'EDGE_SYNC' | 'GRAPH_SYNC';
+        type: 'NODE_MOVED' | 'EDGE_ADD' | 'GRAPH_SYNC';
         data: any;
         timestamp: number;
     } | null>(null);
 
     // --- Local State ---
     const notifications = ref<{[key: string]: any;}>({});
+
+    async function _handleConceptualEdgesRecommendation(payload: ConceptualGraph) {
+        latestCanvasUpdate.value = {
+            canvasId: payload.canvasId,
+            type: 'EDGE_ADD',
+            data: payload,
+            timestamp: Date.now()
+        };
+    }
 
     async function _handleConceptualNodesRecommendation(payload: ConceptualGraph) {
         latestCanvasUpdate.value = {
@@ -82,8 +91,10 @@ export const useNotificationStore = defineStore('notification', () => {
             case 'initiation_refined_topic':
                 _handleInitiationRefinedTopic(payload);
                 break;
+            case 'conceptual_edges_recommendation':
+                _handleConceptualEdgesRecommendation(payload);
+                break;
             case 'conceptual_nodes_recommendation':
-                console.log('message.payload')
                 _handleConceptualNodesRecommendation(payload);
                 break;
             default:

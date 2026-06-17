@@ -83,6 +83,14 @@ export function useConceptualMapContext(config?: ContextConfig) {
           await initializeSandbox(newUpdate.data);
           syncBackToGlobalCache();
           break;
+        case 'EDGE_ADD':
+          const graph: ConceptualGraph = newUpdate.data;
+          const edges = graph.edges;
+          edges.map((edge) => {
+            conceptualEdges.value.push(edge);
+          });
+          syncBackToGlobalCache();
+          break;
       }
     },
     { deep: true }
@@ -265,6 +273,20 @@ export function useConceptualMapContext(config?: ContextConfig) {
     }
   };
 
+  const recommendConceptualEdges = async (nodes: ConceptualNode[]) => {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge recommendation aborted.');
+      return;
+    }
+
+    try {
+      apiService.canvases.edges.recommendConceptualEdges(canvasId, nodes);
+    }  catch (error) {
+      console.error('[AI Recommendation Error]', error);
+    }
+  }
+
   const recommendConceptualNodes = async () => {
     const aiSuggestedNodes = Array.from(conceptualNodes.values())
       .filter(node => node.status === 'AI_EXTRACTED');
@@ -357,6 +379,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
     updateLocalEdgeData,
     openNodeEditor,
     closeNodeEditor,
+    recommendConceptualEdges,
     recommendConceptualNodes
   };
 }
