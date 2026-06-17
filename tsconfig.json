@@ -12,11 +12,18 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@/tests/*": ["./tests/*"]
     },
     "lib": ["esnext", "dom"],
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*",
+    "**/*.spec.ts"
+  ],
   "exclude": ["node_modules"]
 }
