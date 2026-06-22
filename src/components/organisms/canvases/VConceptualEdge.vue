@@ -73,6 +73,7 @@ import {
   EdgeLabelRenderer,
   getBezierPath,
   getStraightPath,
+  getSmoothStepPath,
   type EdgeProps,
   Position,
 } from '@vue-flow/core'
@@ -107,13 +108,12 @@ if (!context) {
 
 // --- Path & Label Center Coordinates Calculation ---
 const pathData = computed(() => {
-  const sourcePos = props.sourceHandle ? HANDLE_MAP[props.sourcePosition] : Position.Right
-  const targetPos = props.targetHandle ? HANDLE_MAP[props.targetPosition] : Position.Left
+  const sourcePos = props.sourceHandle && HANDLE_MAP[props.sourcePosition] ? HANDLE_MAP[props.sourcePosition] : props.sourcePosition
+  const targetPos = props.targetHandle && HANDLE_MAP[props.targetPosition] ? HANDLE_MAP[props.targetPosition] : props.targetPosition
 
   const dx = Math.abs(props.sourceX - props.targetX)
   const dy = Math.abs(props.sourceY - props.targetY)
   const distance = Math.sqrt(dx * dx + dy * dy)
-  const adaptiveCurvature = distance < 300 ? 0.05 : 0.25
   const pathInfo = {
       sourceX: props.sourceX,
       sourceY: props.sourceY,
@@ -123,9 +123,16 @@ const pathData = computed(() => {
       targetPosition: targetPos,
   }
 
-  if (distance < 150) {
+  if (distance < 120) {
     return getStraightPath(pathInfo);
+  } else if (distance >= 120 && distance < 260) {
+    return getSmoothStepPath({
+      ...pathInfo,
+      borderRadius: 16,
+      offset: 20,
+    });
   } else {
+    const adaptiveCurvature = distance < 450 ? 0.08 : 0.22
     return getBezierPath({
       ...pathInfo,
       curvature: adaptiveCurvature,
@@ -292,6 +299,7 @@ const edgeStyle = computed(() => {
 <style scoped>
 .v-conceptual-edge {
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.05));
+  shape-rendering: geometricPrecision !important;
 }
 
 .v-edge-pill {
@@ -301,6 +309,7 @@ const edgeStyle = computed(() => {
 .suggested-glow-animation {
   animation: edgeFlow 25s linear infinite;
   filter: drop-shadow(0 0 4px rgba(129, 140, 248, 0.6));
+  pointer-events: stroke !important;
 }
 
 .animate-in {
