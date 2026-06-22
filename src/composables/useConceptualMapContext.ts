@@ -5,12 +5,13 @@
  * to prevent global Pinia reactive hijacking and ensure synchronized garbage collection.
  */
 
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import type { ID } from '@/interfaces/core';
 import type { Connection } from '@vue-flow/core';
 import type { ConceptualNode, ConceptualEdge, ConceptualGraph } from '@/interfaces/conceptual-map';
 import { useCanvasStore } from '@/stores/canvas';
+import { useNotificationStore } from '@/stores/notification';
 import { POSITION_SCALE } from '@/constants/canvases';
 import { apiService } from '@/api/apiService';
 
@@ -22,6 +23,7 @@ interface ContextConfig {
 
 export function useConceptualMapContext(config?: ContextConfig) {
   const canvasStore = useCanvasStore();
+  const notifyStore = useNotificationStore();
 
   // --------------------------------------------------------------------------
   // 1. Core Graph Data States (Scoped)
@@ -68,6 +70,32 @@ export function useConceptualMapContext(config?: ContextConfig) {
     status: ''
   });
 
+  watch(
+    () => notifyStore.latestCanvasUpdate,
+    async (newUpdate) => {
+      if (!newUpdate) return;
+
+      const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+      if (!canvasId || newUpdate.canvasId !== canvasId) return;
+
+      switch (newUpdate.type) {
+        case 'GRAPH_SYNC':
+          await initializeSandbox(newUpdate.data);
+          syncBackToGlobalCache();
+          break;
+        case 'EDGE_ADD':
+          const graph: ConceptualGraph = newUpdate.data;
+          const edges = graph.edges;
+          edges.map((edge) => {
+            conceptualEdges.value.push(edge);
+          });
+          syncBackToGlobalCache();
+          break;
+      }
+    },
+    { deep: true }
+  );
+
   const openNodeEditor = (nodeId: string, node: ConceptualNode) => {
     isNodeEditActive.value = true;
     editingNodeId.value = nodeId;
@@ -113,7 +141,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   /**
    * Clones and scales cold storage snapshots into localized reactive variables
    */
-  const initializeSandbox = (graph: ConceptualGraph) => {
+  const initializeSandbox = async (graph: ConceptualGraph) => {
     conceptualNodes.clear();
 
     // Deep copy objects to insulate runtime mutations from contaminating cold storage coordinates
@@ -157,6 +185,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
     });
 
     canvasStore.updateCacheSnapshot(canvasId, {
+      canvasId: canvasId,
       nodes: rawNodesRecord,
       edges: [...conceptualEdges.value]
     });
@@ -176,7 +205,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
       return;
     }
 
-    if (action === 'edit') {
+    if (action === 'edit' || action === 'move') {
       let modifiedNodeData = {
         ...node,
         position: {
@@ -184,8 +213,17 @@ export function useConceptualMapContext(config?: ContextConfig) {
           y: node.position!.y / POSITION_SCALE
         }
       };
-      await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
-      conceptualNodes.set(node.id, node);
+
+      try {
+        await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+        conceptualNodes.set(node.id, node);
+        if (action === 'edit') {
+          recommendConceptualNodes();
+        }
+      } catch (error) {
+        console.error(`[Context API Error] Failed to persist node via ${action}:`, error);
+        throw error;
+      }
     } else if (action === 'delete') {
       await apiService.canvases.nodes.delete(canvasId, node.id);
       conceptualNodes.delete(node.id);
@@ -197,7 +235,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
       conceptualNodes.set(node.id, node);
     }
 
-  // Synchronize local change to global store layer for fast tabs toggling
+    // Synchronize local change to global store layer for fast tabs toggling
     syncBackToGlobalCache();
   };
 
@@ -234,6 +272,20 @@ export function useConceptualMapContext(config?: ContextConfig) {
       throw error; // Propagate to let UI handle error states if necessary
     }
   };
+
+  const recommendConceptualEdges = async (nodes: ConceptualNode[]) => {
+    const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
+    if (!canvasId) {
+      console.log('[Context API Warning] Missing canvas ID in configuration. Edge recommendation aborted.');
+      return;
+    }
+
+    try {
+      apiService.canvases.edges.recommendConceptualEdges(canvasId, nodes);
+    }  catch (error) {
+      console.error('[AI Recommendation Error]', error);
+    }
+  }
 
   const recommendConceptualNodes = async () => {
     const aiSuggestedNodes = Array.from(conceptualNodes.values())
@@ -327,6 +379,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
     updateLocalEdgeData,
     openNodeEditor,
     closeNodeEditor,
+    recommendConceptualEdges,
     recommendConceptualNodes
   };
 }

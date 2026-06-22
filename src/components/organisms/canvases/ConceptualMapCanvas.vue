@@ -9,11 +9,14 @@
       :default-zoom="1.2"
       :max-zoom="4"
       :min-zoom="0.2"
+      v-model:viewport="canvasContext.viewport"
       @node-drag-stop="handleNodeDragStop"
-      @connect="handleConnect"
+      @connect="startEdgeEdit"
       @drop="onDrop"
       @dragover="onDragOver"
       @dragleave="onDragLeave"
+      :edge-updater-radius="20"
+      @edge-update="updateRelation"
     >
       <Background :pattern-gap="20" pattern-color="#e2e8f0" />
       <Controls position="bottom-left" class="mb-4 ml-4" />
@@ -28,7 +31,7 @@
 import type { ID } from '@/interfaces/core';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, type EdgeMouseEvent, type NodeDragEvent } from '@vue-flow/core';
+import { MarkerType, type NodeDragEvent, VueFlow } from '@vue-flow/core';
 import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
@@ -42,7 +45,7 @@ import { useCanvasDrop } from '@/composables/useCanvasDrop';
 import { useConceptualMapContext } from '@/composables/useConceptualMapContext';
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
-import type { ConceptualEdge, ConceptualNode } from '@/interfaces/conceptual-map';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{
   projectId: ID;
@@ -78,7 +81,7 @@ watch(
 );
 
 const { onDragOver, onDrop, onDragLeave } = useCanvasDrop(canvasContext);
-const { startEdgeEdit } = useEdgeInterceptor(canvasContext);
+const { startEdgeEdit, updateRelation } = useEdgeInterceptor(canvasContext);
 
 const edgeTypes = {
   REF: markRaw(VConceptualEdge),
@@ -107,11 +110,11 @@ const vueFlowNodes = computed(() => Array.from(canvasContext.conceptualNodes.val
   position: { x: n.position?.x ?? 0, y: n.position?.y ?? 0 },
   data: { ...n },
   type: n.type,
-  dragHandle: '.v-node-container',
 })));
 
 const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e => ({
   id: e.id,
+  updatable: true,
   source: e.source,
   sourceHandle: e.sourceHandle,
   target: e.target,
@@ -125,11 +128,13 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
     evidence: e.evidence,
     weight: e.weight
   },
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    width: 20,
+    height: 20,
+    color: e.type === 'TRIGGERS' ? '#d97706' : '#94a3b8',
+  },
 })));
-
-function handleConnect(connection: any) {
-  startEdgeEdit(connection, canvasContext.conceptualNodes);
-}
 
 function handleNodeDragStop({ node }: NodeDragEvent) {
   const updatedNode: ConceptualNode = {

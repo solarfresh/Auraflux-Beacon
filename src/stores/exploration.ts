@@ -12,7 +12,7 @@ export const useExplorationStore = defineStore('exploration', {
 		stabilityScore: 10,
 
 		resources: [],
-		canvasView: { nodes: new Map(), edges: [] },
+		canvasView: { canvasId: '', nodes: new Map(), edges: [] },
 		activeCanvasId: '',
 		selectedNodeId: '',
 		sidebarNodes: new Map(),

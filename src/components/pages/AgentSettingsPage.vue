@@ -10,7 +10,7 @@
         >
           <VAgentToolbar
             v-model="toolbarState"
-            @create="isDeployModalOpen = true"
+            @create="openAgentEditor(null)"
           />
         </VBox>
 
@@ -20,7 +20,7 @@
               label="Deploy New Agent"
               icon-name="CpuChip"
               class="h-full"
-              @click="isDeployModalOpen = true"
+              @click="openAgentEditor(null)"
             />
 
             <VAgentCard
@@ -41,46 +41,28 @@
 
       </VStack>
     </VBox>
-<!--
-    <VModal v-if="isDeployModalOpen" @close="isDeployModalOpen = false">
-      <template #title>Deploy Specialized Agent</template>
-      <VBox padding="md">
-        <VTypography color="slate-500">
-          Select a blueprint from the Agent Marketplace to begin.
-        </VTypography>
-      </VBox>
-    </VModal>
-     -->
   </VBox>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAgentStore } from '@/stores/agent';
-
-// Layout Atoms
+import { apiService } from '@/api/apiService';
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
 import VGrid from '@/components/atoms/layout/VGrid.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-
-// Resource Molecules
-import VAgentToolbar from '@/components/molecules/resources/VAgentToolbar.vue';
-import VAgentCard from '@/components/molecules/resources/VAgentCard.vue';
-import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
-
-// Feedback Molecules
+import VStack from '@/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-
+import VAgentCard from '@/components/molecules/resources/VAgentCard.vue';
+import VAgentToolbar from '@/components/molecules/resources/VAgentToolbar.vue';
+import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
 import type { ModelSelectorState } from '@/interfaces/indicators';
-import type { Agent } from '@/interfaces/agents';
+import { useAgentStore } from '@/stores/agent';
+import { useProjectStore } from '@/stores/project';
+import { computed, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // --- State Management ---
 const router = useRouter();
 const agentStore = useAgentStore();
-const isDeployModalOpen = ref(false);
+const projectStore = useProjectStore();
 
 const toolbarState = ref<ModelSelectorState>({
   filter: 'ALL',
@@ -116,6 +98,7 @@ const filteredAgents = computed(() => {
 });
 
 const hasAgents = computed(() => agentStore.agents.size > 0);
+const projectId = computed(() => projectStore.currentProjectId);
 
 // --- Lifecycle & Actions ---
 onMounted(() => {
@@ -123,7 +106,12 @@ onMounted(() => {
   agentStore.loadAgents();
 });
 
-const openAgentEditor = (agentId: string) => {
+const openAgentEditor = async (agentId: string | null) => {
+  if (!agentId) {
+    let response = await apiService.agents.createConfig();
+    agentId = response.data.id;
+  }
+
   router.push(`/settings/agents/${agentId}/`)
 };
 </script>

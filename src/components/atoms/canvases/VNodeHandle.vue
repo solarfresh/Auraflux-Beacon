@@ -8,7 +8,7 @@
     :class="[
       props.colorClass,
       // Shared visual properties
-      '!w-3 !h-3 border-2 border-white rounded-full',
+      'w-3! h-3! border-2 border-white rounded-full',
       'transition-transform duration-200 hover:scale-125',
       'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1'
     ]"

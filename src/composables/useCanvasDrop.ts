@@ -8,6 +8,7 @@ import { ref, inject } from 'vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
+import { POSITION_SCALE } from '@/constants/canvases';
 
 const tunnelDraggedNode = ref<ConceptualNode | null>(null);
 const isTunnelDragging = ref(false);
@@ -70,7 +71,7 @@ export function useCanvasDrop(explicitContext?: any) {
       if (rawData) node = JSON.parse(rawData);
     }
 
-    if (!node || !context) return;
+    if (!node || !context || context.conceptualNodes.get(node.id)) return;
 
     const position = screenToFlowCoordinate({
       x: event.clientX,
@@ -102,6 +103,16 @@ export function useCanvasDrop(explicitContext?: any) {
 
       off()
     })
+
+    if (context) {
+      context.recommendConceptualEdges([{
+        ...node,
+        position: {
+          x: position.x / POSITION_SCALE,
+          y: position.y / POSITION_SCALE,
+        }
+      }]);
+    }
 
     addNodes(newNode)
   }

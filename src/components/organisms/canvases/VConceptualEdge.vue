@@ -2,7 +2,7 @@
   <BaseEdge
     :id="props.id"
     :path="edgePath"
-    :marker-end="props.data?.status === 'AI_EXTRACTED' ? undefined : props.markerEnd"
+    :marker-end="dynamicMarkerEnd"
     :style="edgeStyle"
     class="v-conceptual-edge"
     :class="{ 'suggested-glow-animation': props.data?.status === 'AI_EXTRACTED' }"
@@ -72,7 +72,8 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   getBezierPath,
-  useVueFlow,
+  getStraightPath,
+  getSmoothStepPath,
   type EdgeProps,
   Position,
 } from '@vue-flow/core'
@@ -98,7 +99,6 @@ interface Props extends EdgeProps<ConceptualEdge> {
 const props = defineProps<Props>()
 
 const context = inject(ConceptualMapContextKey)
-const { viewport } = useVueFlow()
 
 if (!context) {
   throw new Error(
@@ -108,17 +108,36 @@ if (!context) {
 
 // --- Path & Label Center Coordinates Calculation ---
 const pathData = computed(() => {
-  const sourcePos = props.sourceHandle ? HANDLE_MAP[props.sourcePosition] : Position.Right
-  const targetPos = props.targetHandle ? HANDLE_MAP[props.targetPosition] : Position.Left
+  const sourcePos = props.sourceHandle && HANDLE_MAP[props.sourcePosition] ? HANDLE_MAP[props.sourcePosition] : props.sourcePosition
+  const targetPos = props.targetHandle && HANDLE_MAP[props.targetPosition] ? HANDLE_MAP[props.targetPosition] : props.targetPosition
 
-  return getBezierPath({
-    sourceX: props.sourceX,
-    sourceY: props.sourceY,
-    sourcePosition: sourcePos,
-    targetX: props.targetX,
-    targetY: props.targetY,
-    targetPosition: targetPos,
-  })
+  const dx = Math.abs(props.sourceX - props.targetX)
+  const dy = Math.abs(props.sourceY - props.targetY)
+  const distance = Math.sqrt(dx * dx + dy * dy)
+  const pathInfo = {
+      sourceX: props.sourceX,
+      sourceY: props.sourceY,
+      sourcePosition: sourcePos,
+      targetX: props.targetX,
+      targetY: props.targetY,
+      targetPosition: targetPos,
+  }
+
+  if (distance < 120) {
+    return getStraightPath(pathInfo);
+  } else if (distance >= 120 && distance < 260) {
+    return getSmoothStepPath({
+      ...pathInfo,
+      borderRadius: 16,
+      offset: 20,
+    });
+  } else {
+    const adaptiveCurvature = distance < 450 ? 0.08 : 0.22
+    return getBezierPath({
+      ...pathInfo,
+      curvature: adaptiveCurvature,
+    })
+  }
 })
 
 const edgePath = computed(() => pathData.value[0])
@@ -140,7 +159,7 @@ const shouldRenderActionGroup = computed(() => {
  * Combines spatial position vectors with inverse scaling to fully resolve zoom distortion.
  */
 const labelContainerStyle = computed(() => {
-  const currentZoom = viewport.value.zoom || 1
+  const currentZoom = context.viewport.zoom || 1
   const inverseScale = 1 / currentZoom
 
   return {
@@ -153,6 +172,25 @@ const labelContainerStyle = computed(() => {
     transformOrigin: 'center center',
     pointerEvents: 'all' as const,
   }
+})
+
+const dynamicMarkerEnd = computed(() => {
+  if (props.markerEnd) {
+    return props.markerEnd
+  }
+
+  const isSuggested = props.data?.status === 'AI_EXTRACTED'
+  const isTrigger = props.data?.type === 'TRIGGERS'
+
+  if (isSuggested || props.selected) {
+    return 'url(#vue-flow__marker-closed-arrow__indigo-400)'
+  }
+
+  if (isTrigger) {
+    return 'url(#vue-flow__marker-closed-arrow__amber-600)'
+  }
+
+  return 'url(#vue-flow__marker-closed-arrow__slate-400)'
 })
 
 /**
@@ -261,6 +299,7 @@ const edgeStyle = computed(() => {
 <style scoped>
 .v-conceptual-edge {
   filter: drop-shadow(0 1px 2px rgb(0 0 0 / 0.05));
+  shape-rendering: geometricPrecision !important;
 }
 
 .v-edge-pill {
@@ -270,6 +309,7 @@ const edgeStyle = computed(() => {
 .suggested-glow-animation {
   animation: edgeFlow 25s linear infinite;
   filter: drop-shadow(0 0 4px rgba(129, 140, 248, 0.6));
+  pointer-events: stroke !important;
 }
 
 .animate-in {

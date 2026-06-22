@@ -100,6 +100,9 @@ apiClient.interceptors.response.use(
 
 export const apiService = {
   agents: {
+    createConfig: (): Promise<AxiosResponse<Agent>> => {
+      return apiClient.post(AgentsEndpoints.createConfig(), {});
+    },
     createModelProvider: (provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
       return apiClient.post(AgentsEndpoints.createModelProvider(), provider);
     },
@@ -131,6 +134,9 @@ export const apiService = {
     edges: {
       create: (canvasId: ID, data: ConceptualEdge): Promise<AxiosResponse<ConceptualEdge>> => {
         return apiClient.post(CanvasesEndpoints.edges.create(canvasId), data);
+      },
+      recommendConceptualEdges: (canvasId: ID, nodes: ConceptualNode[]): Promise<AxiosResponse<any>> => {
+        return apiClient.post(CanvasesEndpoints.edges.recommendConceptualEdges(canvasId), {'newlyOnboardedNodes': nodes})
       },
       delete: (canvasId: ID, edgeId: ID) => {
         apiClient.delete(CanvasesEndpoints.edges.delete(canvasId, edgeId));

@@ -103,6 +103,7 @@ export interface ConceptualEdge {
 }
 
 export interface ConceptualGraph {
+  canvasId: ID;
   nodes: Map<string, ConceptualNode>;
   edges: ConceptualEdge[];
 }
