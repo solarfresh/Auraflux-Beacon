@@ -1,17 +1,16 @@
 <template>
-  <ISearchTemplate>
+  <AppTemplate>
     <template #header>
-      <VISearchHeader />
+      <AppHeader />
     </template>
 
     <RouterView />
-  </ISearchTemplate>
+  </AppTemplate>
 </template>
 
 <script setup lang="ts">
-import VISearchHeader from '@/components/organisms/navigation/VISearchHeader.vue';
-import ISearchTemplate from '@/components/templates/ISearchTemplate.vue';
-import { useRoute } from 'vue-router';
+import AppHeader from '@/components/organisms/navigation/AppHeader.vue';
+import AppTemplate from '@/components/templates/AppTemplate.vue';
 
 import { useAuthStore } from '@/stores/auth';
 import { onMounted } from 'vue';

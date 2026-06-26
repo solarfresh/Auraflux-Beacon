@@ -1,11 +1,11 @@
+import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
 import AgentSettingsPage from '@/components/pages/AgentSettingsPage.vue';
 import ExplorationPage from '@/components/pages/ExplorationPage.vue';
 import InitiationPage from '@/components/pages/InitiationPage.vue';
-import ISearchPage from '@/components/pages/ISearchPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
-import ProjectPage from '@/components/pages/ProjectPage.vue';
-import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
+import MainPage from '@/components/pages/MainPage.vue';
 import ModelProviderSettingsPage from '@/components/pages/ModelProviderSettingsPage.vue';
+import ProjectPage from '@/components/pages/ProjectPage.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 
@@ -17,8 +17,8 @@ export const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/isearch/',
-    name: 'ISearchPage',
-    component: ISearchPage,
+    name: 'MainPage',
+    component: MainPage,
     children: [
       {
         path: '',
@@ -40,7 +40,7 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings/',
     name: 'SettingsPage',
-    component: ISearchPage,
+    component: MainPage,
     children: [
       {
         path: 'agents',
