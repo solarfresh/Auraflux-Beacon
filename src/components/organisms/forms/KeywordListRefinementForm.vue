@@ -82,7 +82,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import type { EntityStatus } from '@/interfaces/core';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/consultation';
 
 // Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';

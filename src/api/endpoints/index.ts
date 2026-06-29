@@ -86,13 +86,13 @@ export const ProjectsEndpoints = {
     updateReflectionLogById: (logId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/reflection/${logId}/`,
   },
-  initiation: {
+  consultation: {
     chat: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/chat/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/consultation/chat/`,
     getChatHistory: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/chat/history/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/consultation/chat/history/`,
     getRefinedTopic: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/topic/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/consultation/topic/`,
   },
   exploration: {
     createSession: (projectId: ID) =>

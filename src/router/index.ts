@@ -1,7 +1,7 @@
 import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
 import AgentSettingsPage from '@/components/pages/AgentSettingsPage.vue';
 import ExplorationPage from '@/components/pages/ExplorationPage.vue';
-import InitiationPage from '@/components/pages/InitiationPage.vue';
+import ConsultationPage from '@/components/pages/ConsultationPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import MainPage from '@/components/pages/MainPage.vue';
 import ModelProviderSettingsPage from '@/components/pages/ModelProviderSettingsPage.vue';
@@ -26,9 +26,9 @@ export const routes: Array<RouteRecordRaw> = [
         component: ProjectPage
       },
       {
-        path: ':id/initiation/',
-        name: 'InitiationPage',
-        component: InitiationPage
+        path: ':id/consultation/',
+        name: 'ConsultationPage',
+        component: ConsultationPage
       },
       {
         path: ':id/exploration/',

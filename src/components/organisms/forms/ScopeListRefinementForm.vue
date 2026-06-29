@@ -28,9 +28,9 @@
                 size="xs"
                 :variant="activeType === type ? 'primary' : 'tertiary'"
                 :class="[
-                  'px-5 py-1.5 !rounded-lg transition-all duration-300',
+                  'px-5 py-1.5 rounded-lg! transition-all duration-300',
                   activeType === type
-                    ? (type === 'INCLUSION' ? '!bg-emerald-600 !shadow-md' : '!bg-rose-600 !shadow-md')
+                    ? (type === 'INCLUSION' ? 'bg-emerald-600! shadow-md!' : 'bg-rose-600! shadow-md!')
                     : 'text-slate-500'
                 ]"
                 @click="activeType = type"
@@ -143,7 +143,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import type { ProcessedScope } from '@/interfaces/initiation';
+import type { ProcessedScope } from '@/interfaces/consultation';
 
 // Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';

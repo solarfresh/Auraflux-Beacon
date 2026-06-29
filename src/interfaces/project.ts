@@ -1,7 +1,7 @@
 import { DateTimeString, EntityStatus, ID, ParticipantRole, Percentage } from './core';
 
 export type ISPStage =
-  | 'INITIATION' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
+  | 'CONSULTATION' // Merges INITIATION and SELECTION phases. Focus: Moving from vague concepts to a locked research question (Score < 8 to Score >= 8).
   | 'EXPLORATION'           // Focus: Dealing with information overload (Confusion/Frustration) by sifting and evaluating sources.
   | 'SYNTHESIS'           // Focus: Structuring arguments and concepts (Clarity/Focus) into a coherent framework.
 export type ReflectionEntryType =

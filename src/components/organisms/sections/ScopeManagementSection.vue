@@ -30,7 +30,7 @@
           variant="secondary"
           size="xs"
           @click="openReviewGroup"
-          class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
+          class="bg-amber-50! border-amber-200! text-amber-700! hover:bg-amber-100!"
         >
           <VCluster gap="xs" align="center">
             <VIcon name="ExclamationCircle" size="xs" class="text-amber-500" />
@@ -128,7 +128,7 @@ import VActionListItem from '@/components/molecules/navs/VActionListItem.vue';
 // Section Organism
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 
-import type { ProcessedScope } from '@/interfaces/initiation';
+import type { ProcessedScope } from '@/interfaces/consultation';
 
 const props = defineProps<{
   scope: ProcessedScope[];

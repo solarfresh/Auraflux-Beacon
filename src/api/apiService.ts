@@ -5,7 +5,7 @@ import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfac
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/initiation';
+import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/consultation';
 import type { Project, ReflectionLogEntry } from '@/interfaces/project';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
@@ -199,15 +199,15 @@ export const apiService = {
         return apiClient.put(ProjectsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
       }
     },
-    initiation: {
+    consultation: {
       chat: (projectId: ID, messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(ProjectsEndpoints.initiation.chat(projectId), {user_message: messageContent, ea_agent_role_name: agentName})
+        return apiClient.post(ProjectsEndpoints.consultation.chat(projectId), {user_message: messageContent, ea_agent_role_name: agentName})
       },
       getChatHistory: (projectId: ID): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(ProjectsEndpoints.initiation.getChatHistory(projectId))
+        return apiClient.get(ProjectsEndpoints.consultation.getChatHistory(projectId))
       },
       getRefinedTopic: (projectId: ID): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(ProjectsEndpoints.initiation.getRefinedTopic(projectId))
+        return apiClient.get(ProjectsEndpoints.consultation.getRefinedTopic(projectId))
       },
     },
     exploration: {

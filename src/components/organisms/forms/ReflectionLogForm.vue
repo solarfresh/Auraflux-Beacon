@@ -50,7 +50,7 @@
  * Orchestrates the Master-Detail flow using standardized molecules.
  */
 import { ref, computed, watch } from 'vue';
-import { useInitiativeStore } from '@/stores/initiation';
+import { useConsultationStore } from '@/stores/consultation';
 import type { ReflectionLogEntry } from '@/interfaces/project';
 
 // Molecules
@@ -70,7 +70,7 @@ const emit = defineEmits<{
   (e: 'close-modal'): void;
 }>();
 
-const initiativeStore = useInitiativeStore();
+const consultationStore = useConsultationStore();
 
 // --- State ---
 const logEntries = ref<ReflectionLogEntry[]>(props.initialEntries || []);
@@ -131,7 +131,7 @@ function handleNewEntry() {
 async function handleSave(targetStatus: 'draft' | 'commit') {
   if (!currentDraft.value || !currentDraft.value.content.trim()) return;
 
-  await initiativeStore.createOrUpdateReflection(
+  await consultationStore.createOrUpdateReflection(
     currentDraft.value.id,
     currentDraft.value.title,
     currentDraft.value.content,

@@ -74,8 +74,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import type { EntityStatus } from '@/interfaces/core';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
-import { useInitiativeStore } from '@/stores/initiation';
+import type { ProcessedKeyword } from '@/interfaces/consultation';
+import { useConsultationStore } from '@/stores/consultation';
 
 // Atoms Layer Layout & UI Component Imports
 import VBox from '@/components/atoms/layout/VBox.vue';
@@ -108,7 +108,7 @@ const emit = defineEmits<{
   (e: 'close-modal'): void;
 }>();
 
-const initiativeStore = useInitiativeStore();
+const consultationStore = useConsultationStore();
 const draftText = ref(props.initialKeyword.label);
 
 /**
@@ -143,7 +143,7 @@ const isTextModified = computed(() => draftText.value.trim() !== props.initialKe
  */
 async function handleSubmit(targetStatus: EntityStatus) {
   if (!isValid.value) return;
-  await initiativeStore.createOrUpdateTopicKeywords(
+  await consultationStore.createOrUpdateTopicKeywords(
     props.initialKeyword.id,
     draftText.value.trim(),
     targetStatus

@@ -1,6 +1,6 @@
 <template>
   <BaseSidebarLayout
-    :title="'Initiation'"
+    :title="'Consultation'"
     :item-count="keywords.length + scope.length"
     class="bg-slate-50 border-r border-slate-200 h-full"
     body-class="p-0"
@@ -117,7 +117,7 @@ import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 
 import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
-import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
 
 const props = defineProps<{
   keywords: ProcessedKeyword[];

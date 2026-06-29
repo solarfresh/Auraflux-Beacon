@@ -30,7 +30,7 @@
 import { computed } from 'vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
 
 const props = defineProps<{
   keywords: ProcessedKeyword[];

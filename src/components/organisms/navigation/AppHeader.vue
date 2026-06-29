@@ -50,7 +50,7 @@ withDefaults(defineProps<{
 
 // Check if we are in a project-specific workspace
 const isWorkingContext = computed(() =>
-  ['InitiationPage', 'ExplorationPage'].includes(route.name as string)
+  ['ConsultationPage', 'ExplorationPage'].includes(route.name as string)
 );
 </script>
 

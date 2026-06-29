@@ -31,7 +31,7 @@
           variant="secondary"
           size="xs"
           @click="openReviewGroup"
-          class="!bg-amber-50 !border-amber-200 !text-amber-700 hover:!bg-amber-100"
+          class="bg-amber-50! border-amber-200! text-amber-700! hover:bg-amber-100!"
         >
           <VCluster gap="xs" align="center">
             <VIcon name="ExclamationCircle" size="xs" class="text-amber-500 mr-1" />
@@ -131,7 +131,7 @@ import VTagListItem from '@/components/molecules/navs/VTagListItem.vue';
 // Organisms
 import BaseSectionLayout from '@/components/organisms/sections/BaseSectionLayout.vue';
 
-import type { ProcessedKeyword } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/consultation';
 
 const props = defineProps<{
   keywords: ProcessedKeyword[];

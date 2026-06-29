@@ -66,7 +66,7 @@ const currentProjectId = computed(() => projectStore.currentProjectId);
 const currentStage = computed(() => projectStore.currentStage);
 
 const tools = [
-  { id: 'chat', label: 'Consultation & Tools', iconName: 'ChatBubbleLeftRight', stage: 'initiation' },
+  { id: 'chat', label: 'Consultation & Tools', iconName: 'ChatBubbleLeftRight', stage: 'consultation' },
   { id: 'map', label: 'Co-Working Map', iconName: 'RectangleGroup', stage: 'exploration' },
 ];
 
@@ -77,7 +77,7 @@ const activeIndex = ref(0);
 const activeTool = computed(() => {
   if (currentStage.value == 'EXPLORATION') {
     activeIndex.value = 1;
-  } else if (currentStage.value == 'INITIATION') {
+  } else if (currentStage.value == 'CONSULTATION') {
     activeIndex.value = 0;
   } else {
     activeIndex.value = 0;

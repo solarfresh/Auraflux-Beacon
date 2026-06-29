@@ -1,8 +1,8 @@
 import { apiService } from '@/api/apiService';
 import { FeasibilityStatus } from '@/interfaces/core';
 import type { ReflectionLogEntry } from '@/interfaces/project';
-import type { RefinedTopic } from '@/interfaces/initiation';
-import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import type { RefinedTopic } from '@/interfaces/consultation';
+import type { ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
@@ -11,7 +11,7 @@ import type {
   ChatMessage
 } from '@/interfaces/core';
 
-export const useInitiativeStore = defineStore('intiation', () => {
+export const useConsultationStore = defineStore('consultation', () => {
   // --- State (Refs) ---
 
   /** The list of all chat messages in the initiation stage. */

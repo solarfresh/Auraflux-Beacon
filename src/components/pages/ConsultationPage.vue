@@ -4,7 +4,7 @@
     <DualPaneWorkspaceTemplate>
 
       <template #sidebar>
-        <InitiationSidebar
+        <ConsultationSidebar
           :feasibility-status="feasibilityStatus"
           :final-question="finalQuestion"
           :keywords="topicKeywords"
@@ -47,9 +47,9 @@
       <template #content>
         <FinalQuestionEditor
           v-if="managementModalType === 'final-question'"
-          :initialValue="initiativeStore.finalQuestion"
-          :feasibility-status="initiativeStore.feasibilityStatus"
-          :stability-score="initiativeStore.stabilityScore"
+          :initialValue="consultationStore.finalQuestion"
+          :feasibility-status="consultationStore.feasibilityStatus"
+          :stability-score="consultationStore.stabilityScore"
           @close-modal="isManagementModalOpen = false"
         />
         <KeywordDetailEditor
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { useInitiativeStore } from '@/stores/initiation';
+import { useConsultationStore } from '@/stores/consultation';
 import { useProjectStore } from '@/stores/project';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -93,18 +93,18 @@ import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEdito
 import ScopeDetailEditor from '@/components/organisms/forms/ScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
 import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import InitiationSidebar from '@/components/organisms/sidebars/InitiationSidebar.vue';
+import ConsultationSidebar from '@/components/organisms/sidebars/ConsultationSidebar.vue';
 import ReflectionLogForm from '@/components/organisms/forms/ReflectionLogForm.vue';
 
-import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/initiation';
+import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
 import { apiService } from '@/api/apiService';
-import { useProjectInitiation } from '@/composables/useProjectInitiation';
+import { useProjectConsultation } from '@/composables/useProjectConsultation';
 
 // --- Initialization ---
 const projectStore = useProjectStore();
-const initiativeStore = useInitiativeStore();
+const consultationStore = useConsultationStore();
 const router = useRouter();
-const { addMessage, loadInitiationData } = useProjectInitiation();
+const { addMessage, loadConsultationData } = useProjectConsultation();
 
 // --- Local UI State ---
 const isReflecting = ref(false); // Controls the visibility of the Reflection Modal
@@ -116,21 +116,21 @@ const editingScopeIndex = ref<number | undefined>(undefined);
 const editingInitialScope = ref<ProcessedScope | null>(null);
 
 // --- Store State Mapping (Computed Properties) ---
-const chatMessages = computed(() => initiativeStore.chatMessages);
-const feasibilityStatus = computed(() => initiativeStore.feasibilityStatus)
-const finalQuestion = computed(() => initiativeStore.finalQuestion);
-const isTyping = computed(() => initiativeStore.isTyping);
-const latestReflection = computed(() => initiativeStore.latestReflection);
-const reflectionLogEntries = computed(() => initiativeStore.reflectionLogs);
-const resourceSuggestion = computed(() => initiativeStore.resourceSuggestion)
-const stabilityScore = computed(() => initiativeStore.stabilityScore);
-const topicKeywords = computed(() => initiativeStore.topicKeywords);
-const topicScope = computed(() => initiativeStore.topicScope);
+const chatMessages = computed(() => consultationStore.chatMessages);
+const feasibilityStatus = computed(() => consultationStore.feasibilityStatus)
+const finalQuestion = computed(() => consultationStore.finalQuestion);
+const isTyping = computed(() => consultationStore.isTyping);
+const latestReflection = computed(() => consultationStore.latestReflection);
+const reflectionLogEntries = computed(() => consultationStore.reflectionLogs);
+const resourceSuggestion = computed(() => consultationStore.resourceSuggestion)
+const stabilityScore = computed(() => consultationStore.stabilityScore);
+const topicKeywords = computed(() => consultationStore.topicKeywords);
+const topicScope = computed(() => consultationStore.topicScope);
 
 // --- Lifecycle ---
 onMounted(() => {
     // Fetch initial state or resume persisted session when the page loads
-    loadInitiationData();
+    loadConsultationData();
 });
 
 // --- Action Handlers (Orchestrating the Store) ---
@@ -194,7 +194,7 @@ function handleViewDetails(type: ManagementType, index?: number, value?: any) {
       break;
 
     default:
-      console.warn(`[INITIATION PAGE] Unknown view detail type: ${type}`);
+      console.warn(`[CONSULTATION PAGE] Unknown view detail type: ${type}`);
   }
 }
 
@@ -239,7 +239,7 @@ async function handlePhaseTransitionRequest() {
   if (projectStore.currentProjectId === null) return;
 
   try {
-    const response = await apiService.projects.exploration.createSession(projectStore.currentProjectId, initiativeStore.stabilityScore, initiativeStore.finalQuestion);
+    const response = await apiService.projects.exploration.createSession(projectStore.currentProjectId, consultationStore.stabilityScore, consultationStore.finalQuestion);
     if (response.data) {
       router.push('/exploration');
     } else {

@@ -83,9 +83,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { apiService } from '@/api/apiService';
-import { useInitiativeStore } from '@/stores/initiation';
+import { useConsultationStore } from '@/stores/consultation';
 import type { EntityStatus, FeasibilityStatus } from '@/interfaces/core';
-import type { ProcessedScope } from '@/interfaces/initiation';
+import type { ProcessedScope } from '@/interfaces/consultation';
 
 // Atoms Layer Layout & UI Component Imports
 import VBox from '@/components/atoms/layout/VBox.vue';
@@ -119,7 +119,7 @@ const emit = defineEmits<{
   (e: 'close-modal'): void;
 }>();
 
-const initiativeStore = useInitiativeStore();
+const consultationStore = useConsultationStore();
 const draftValue = ref(props.initialScopeElement.rationale);
 
 /**
@@ -180,7 +180,7 @@ async function handleSubmit(targetStatus: EntityStatus) {
   }
 
   // Update unified in-memory application store states
-  initiativeStore.createOrUpdateTopicScopes(id, label, value, targetStatus);
+  consultationStore.createOrUpdateTopicScopes(id, label, value, targetStatus);
   emit('close-modal');
 }
 

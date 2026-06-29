@@ -7,13 +7,13 @@ import type {
 import type { WebSocketMessage } from '@/interfaces/notification';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { useInitiativeStore } from './initiation';
+import { useConsultationStore } from './consultation';
 
 // Define your WebSocket URL
 const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
 
 export const useNotificationStore = defineStore('notification', () => {
-    const initiativeStore = useInitiativeStore();
+    const consultationStore = useConsultationStore();
 
     // Extract the reactive properties from the composable
     const {
@@ -51,24 +51,24 @@ export const useNotificationStore = defineStore('notification', () => {
         };
     }
 
-    async function _handleInitiationEAStream(payload: any) {
+    async function _handleConsultationEAStream(payload: any) {
         let responseText = payload['full_response_text']
         let status = payload['status']
 
-        let lastMessage = initiativeStore.chatMessages.at(-1) as ChatMessage;
+        let lastMessage = consultationStore.chatMessages.at(-1) as ChatMessage;
         lastMessage.content = responseText
         if (status === 'COMPLETE') {
-            initiativeStore.isTyping = false
+            consultationStore.isTyping = false
         }
     }
 
-    async function _handleInitiationRefinedTopic(payload: any) {
-        initiativeStore.feasibilityStatus = payload['feasibilityStatus'];
-        initiativeStore.finalQuestion = payload['finalQuestion'];
-        initiativeStore.resourceSuggestion = payload['resourceSuggestion'];
-        initiativeStore.stabilityScore = payload['stabilityScore'];
-        initiativeStore.topicKeywords = payload['keywords'];
-        initiativeStore.topicScope = payload['scope'];
+    async function _handleConsultationRefinedTopic(payload: any) {
+        consultationStore.feasibilityStatus = payload['feasibilityStatus'];
+        consultationStore.finalQuestion = payload['finalQuestion'];
+        consultationStore.resourceSuggestion = payload['resourceSuggestion'];
+        consultationStore.stabilityScore = payload['stabilityScore'];
+        consultationStore.topicKeywords = payload['keywords'];
+        consultationStore.topicScope = payload['scope'];
     }
 
     // --- Actions ---
@@ -85,11 +85,11 @@ export const useNotificationStore = defineStore('notification', () => {
 
         let payload = JSON.parse(JSON.stringify(message.payload));
         switch (message.event_type) {
-            case 'initiation_ea_stream':
-                _handleInitiationEAStream(payload);
+            case 'consultation_ea_stream':
+                _handleConsultationEAStream(payload);
                 break;
-            case 'initiation_refined_topic':
-                _handleInitiationRefinedTopic(payload);
+            case 'consultation_refined_topic':
+                _handleConsultationRefinedTopic(payload);
                 break;
             case 'conceptual_edges_recommendation':
                 _handleConceptualEdgesRecommendation(payload);
