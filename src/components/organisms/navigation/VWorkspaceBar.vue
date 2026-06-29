@@ -30,6 +30,7 @@
         <VDropdownItem
           v-for="tool in tools"
           :key="tool.id"
+          :icon-name="tool.iconName"
           @click="selectTool(tool)"
         >
           {{ tool.label }}
@@ -52,27 +53,45 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
 import VDropdownItem from '@/components/atoms/buttons/VDropdownItem.vue';
 
+import { useRouter } from 'vue-router';
+import { useProjectStore } from '@/stores/project';
+
+const router = useRouter();
+const projectStore = useProjectStore();
+
+const currentProjectId = computed(() => projectStore.currentProjectId);
+const currentStage = computed(() => projectStore.currentStage);
+
 const tools = [
-  { id: 'whitepaper', label: 'Whitepaper' },
-  { id: 'map', label: 'Knowledge Map' },
-  { id: 'gantt', label: 'Timeline' },
-  { id: 'analyser', label: 'Data Analyser' }
+  { id: 'chat', label: 'Consultation & Tools', iconName: 'ChatBubbleLeftRight', stage: 'initiation' },
+  { id: 'map', label: 'Co-Working Map', iconName: 'RectangleGroup', stage: 'exploration' },
 ];
 
 const showMenu = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
+
 const activeIndex = ref(0);
-const activeTool = computed(() => tools[activeIndex.value]);
+const activeTool = computed(() => {
+  if (currentStage.value == 'EXPLORATION') {
+    activeIndex.value = 1;
+  } else if (currentStage.value == 'INITIATION') {
+    activeIndex.value = 0;
+  } else {
+    activeIndex.value = 0;
+  }
+
+  return tools[activeIndex.value]
+});
 
 const selectTool = (tool: typeof tools[0]) => {
   const index = tools.findIndex(t => t.id === tool.id);
   if (index !== -1) {
     activeIndex.value = index;
     showMenu.value = false;
+    router.push(`/projects/${currentProjectId.value}/${tool.stage}`);
   }
 };
 

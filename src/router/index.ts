@@ -16,7 +16,7 @@ export const routes: Array<RouteRecordRaw> = [
     component: LandingPage
   },
   {
-    path: '/isearch/',
+    path: '/projects/',
     name: 'MainPage',
     component: MainPage,
     children: [
