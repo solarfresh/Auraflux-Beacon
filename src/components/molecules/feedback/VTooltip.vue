@@ -12,7 +12,7 @@
     <VTypography
       tag="div"
       size="xs"
-      class="absolute hidden group-hover/tooltip:block z-50 w-56 p-2.5 bg-slate-900 text-white text-[11px] font-normal leading-relaxed rounded-md shadow-lg pointer-events-none opacity-95 whitespace-normal break-words transition-all duration-150"
+      class="absolute hidden group-hover/tooltip:block z-50 w-56 p-2.5 bg-slate-900 text-white text-[11px] font-normal leading-relaxed rounded-md shadow-lg pointer-events-none opacity-95 whitespace-normal wrap-break-words transition-all duration-150"
       :class="positionClasses[position]"
     >
       <VTypography

@@ -1,14 +1,12 @@
 <template>
-  <VStack gap="xs" class="w-full min-w-0">
-
+  <VStack gap="xs" class="w-full min-w-0 transition-all duration-300">
     <VBox padding="none" background="transparent" class="w-full px-0.5">
       <VCluster justify="between" align="center" :full-width="true" gap="xs">
-
         <VCluster gap="xs" align="center" class="min-w-0">
           <VTypography
             tag="span"
             size="xs"
-            class="w-1.5 h-1.5 rounded-full transition-colors duration-300 flex-shrink-0"
+            class="w-1.5 h-1.5 rounded-full transition-colors duration-300 shrink-0"
             :class="isComplete ? 'bg-emerald-500' : 'bg-amber-500'"
           />
           <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="text-[11px] tracking-wide truncate">
@@ -17,7 +15,7 @@
         </VCluster>
 
         <VTypography
-          v-if="primaryInsight?.canSidebarPatch"
+          v-if="primaryInsight?.canSidebarPatch && !isCompact"
           tag="span"
           size="xs"
           weight="semibold"
@@ -27,31 +25,26 @@
         >
           {{ isExpanded ? uiLabels.collapseAction : uiLabels.inspectAction }}
         </VTypography>
-
       </VCluster>
     </VBox>
 
-    <VCard v-if="primaryInsight" padding="sm" gap="sm" class="border-slate-200/60">
-
+    <!-- Content: 當 isCompact 為 true 時，隱藏該區塊，達成動態空間釋放 -->
+    <VCard
+      v-if="primaryInsight && !isCompact"
+      padding="sm"
+      gap="sm"
+      background="white"
+      class="border-slate-200/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] animate-in fade-in duration-500"
+    >
       <VCluster justify="between" align="center" :full-width="true" class="w-full min-w-0">
         <VCluster gap="xs" align="center" class="min-w-0">
-          <VTypography
-            tag="span"
-            class="w-1 h-3 bg-amber-500 rounded-full shrink-0"
-          />
+          <VTypography tag="span" class="w-1 h-3 bg-amber-500 rounded-full shrink-0" />
           <VTypography tag="span" size="xs" weight="bold" color="slate-400" class="tracking-wider uppercase text-[9px]">
             {{ primaryInsight.targetDimension }} Focus
           </VTypography>
         </VCluster>
-
         <VTooltip :content="primaryInsight.description" position="bottom-right">
-          <VIcon
-            name="question-mark-circle"
-            type="outline"
-            size="xs"
-            color="slate-400"
-            class="hover:text-slate-600 transition-colors cursor-help shrink-0"
-          />
+          <VIcon name="question-mark-circle" type="outline" size="xs" color="slate-400" class="hover:text-amber-600 transition-colors cursor-help shrink-0" />
         </VTooltip>
       </VCluster>
 
@@ -59,42 +52,22 @@
         <VTypography tag="h4" size="xs" weight="bold" color="slate-900" class="leading-snug break-words">
           {{ primaryInsight.title }}
         </VTypography>
-
-        <VTypography
-          tag="div"
-          size="xs"
-          color="indigo-950"
-          class="w-full pl-1.5 border-l border-indigo-100/80 mt-0.5 italic font-medium leading-relaxed break-words"
-        >
+        <VTypography tag="div" size="xs" color="indigo-950" class="w-full pl-1.5 border-l-2 border-indigo-200 mt-0.5 italic font-medium leading-relaxed break-words">
           "{{ primaryInsight.question }}"
         </VTypography>
       </VStack>
 
-      <VCluster justify="between" align="center" :full-width="true" class="pt-2.5 border-t border-slate-100 min-w-0">
+      <VCluster justify="between" align="center" :full-width="true" class="pt-2.5 border-t border-slate-50 min-w-0">
         <VTypography tag="span" size="xs" color="slate-400" class="flex-shrink-0 text-[10px]">
           {{ totalInsightsCount }} {{ uiLabels.insightsCountLabel }}
         </VTypography>
-
-        <VCluster
-          gap="xs"
-          align="center"
-          class="cursor-pointer group select-none flex-shrink-0"
-          @click="$emit('open-calibration', primaryInsight.id)"
-        >
-          <VTypography tag="span" size="xs" weight="semibold" color="indigo-500" class="group-hover:text-indigo-600 transition-colors text-[11px]">
+        <VCluster gap="xs" align="center" class="cursor-pointer group select-none flex-shrink-0" @click="$emit('open-calibration', primaryInsight.id)">
+          <VTypography tag="span" size="xs" weight="semibold" color="indigo-600" class="group-hover:text-indigo-700 transition-colors text-[11px]">
             {{ uiLabels.calibrateAction }}
           </VTypography>
-
-          <VIcon
-            name="arrow-right"
-            type="solid"
-            size="xs"
-            color="indigo-500"
-            class="group-hover:translate-x-0.5 transition-transform duration-150"
-          />
+          <VIcon name="arrow-right" type="solid" size="xs" color="indigo-600" class="group-hover:translate-x-0.5 transition-transform duration-150" />
         </VCluster>
       </VCluster>
-
     </VCard>
   </VStack>
 </template>
@@ -134,22 +107,18 @@ interface UILabels {
 
 withDefaults(
   defineProps<{
-    /** Quantitative status summary parsed string (e.g., "5 / 6 Dimensions Settled") */
     alignmentString: string;
-    /** Triggers complete vs warning semantic indicator state updates */
     isComplete: boolean;
-    /** Synchronized active state tracking whether Phase 2 side-drawer is expanded */
     isExpanded: boolean;
-    /** Cumulative metric representing the total density of detected blindspots */
+    isCompact: boolean;
     totalInsightsCount: number;
-    /** Primary focused structural payload object injected by orchestration page */
     primaryInsight: AIInsight | null;
-    /** Internationalized semantic application label dictionary */
     uiLabels: UILabels;
   }>(),
   {
     isComplete: false,
     isExpanded: false,
+    isCompact: false,
     totalInsightsCount: 0,
     primaryInsight: null
   }

@@ -4,6 +4,10 @@
     :item-count="confirmedConsensusCount"
   >
     <template #header-actions>
+      <!-- Sandbox Quick-Action Icon -->
+      <VButton variant="ghost" size="xs" title="Jump to Sandbox" @click="scrollToSandbox">
+        <VIcon name="Zap" size="sm" class="text-indigo-400" />
+      </VButton>
       <VButton variant="secondary" size="xs" @click="emit('open-material-manager')">
         <VCluster gap="xs">
           <VIcon name="FolderOpen" size="sm" />
@@ -13,12 +17,14 @@
     </template>
 
     <template #body>
-      <VStack gap="lg" class="min-w-0">
+      <VStack gap="lg" class="min-w-0 transition-all duration-300">
 
+        <!-- 1. Global Navigator (Dynamic State Controller) -->
         <BlindSpotNavigator
           :alignment-string="macroAlignmentString"
           :is-complete="isGraphFullyAligned"
           :is-expanded="isStageTwoExpanded"
+          :is-compact="false"
           :total-insights-count="insightsList.length"
           :primary-insight="primaryInsight"
           :ui-labels="uiLabels"
@@ -26,35 +32,45 @@
           @open-calibration="navigateToStageThreeCalibration"
         />
 
-        <!-- <ExtractionTagStream @edit-chip="(id) => emit('edit-chip', id)" />
-
-        <VBox border="bottom" />
-
-        <ConsensusProposalList
-          @edit-proposal="(id) => emit('edit-proposal', id)"
-          @approve="approveProposal"
-        />
-
+        <!-- 2. Logic Conflict Alert (Dynamic Intervention - High Priority) -->
         <LogicConflictAlert
           v-if="hasLogicConflict"
+          :conflict-data="activeConflict"
+          class="animate-in fade-in slide-in-from-top-2"
           @resolve="emit('resolve-conflict')"
+          @dismiss="hasLogicConflict = false"
         />
 
         <VBox border="bottom" />
 
+        <!-- 3. Strategic Cornerstone (Fixed Anchor) -->
+<!--
         <StrategicBaselineCard
           :count="confirmedConsensusCount"
           @open-manager="emit('open-consensus-manager')"
         />
+ -->
+        <!-- 4. Consensus Agenda (Active Workflow) -->
+<!--
+        <ConsensusProposalList
+          @edit-proposal="(id) => emit('edit-proposal', id)"
+          @approve="approveProposal"
+        />
+ -->
+        <VBox border="bottom" />
 
-        <ReflectionLogSandbox
-          v-model:active-tab="activeReflectTab"
-          v-model:input-value="reflectionInput"
-          :latest-log="latestCacheLog"
-          @submit="submitReflection"
-          @open-history="emit('open-reflection-manager')"
-        /> -->
-
+        <!-- 5. Reflection Sandbox (Input Slot) -->
+<!--
+        <VBox ref="sandboxContainer" class="w-full">
+          <ReflectionLogSandbox
+            v-model:active-tab="activeReflectTab"
+            v-model:input-value="reflectionInput"
+            :latest-log="latestCacheLog"
+            @submit="submitReflection"
+            @open-history="emit('open-reflection-manager')"
+          />
+        </VBox>
+ -->
       </VStack>
     </template>
   </BaseSidebarLayout>
@@ -65,8 +81,7 @@ import { computed, ref } from 'vue';
 
 import BlindSpotNavigator from '@/components/organisms/doamin/consultation/BlindSpotNavigator.vue';
 // import ConsensusProposalList from './components/ConsensusProposalList.vue';
-// import ExtractionTagStream from './components/ExtractionTagStream.vue';
-// import LogicConflictAlert from './components/LogicConflictAlert.vue';
+import LogicConflictAlert from '@/components/organisms/doamin/consultation/LogicConflictAlert.vue';
 // import ReflectionLogSandbox from './components/ReflectionLogSandbox.vue';
 // import StrategicBaselineCard from './components/StrategicBaselineCard.vue';
 
@@ -104,7 +119,6 @@ const approveProposal = (id: string): void => {
   confirmedConsensusCount.value += 1;
 };
 
-// --- 核心業務資料結構定義 (Type-Safe Interfaces) ---
 interface NodeDimension {
   type: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
   label: string;
@@ -212,5 +226,34 @@ const handleToggleExpand = () => {
 const navigateToStageThreeCalibration = (insightId: string) => {
   console.log(`[Router] Penetrating to Stage 3 Deep Calibration Workspace for ID: ${insightId}`);
   // 在實際專案中此處替換為：router.push(`/workspace/calibrate/${insightId}`);
+};
+
+const sandboxContainer = ref<HTMLElement | null>(null);
+
+const scrollToSandbox = () => {
+  sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' });
+  // 此處可增加邏輯自動聚焦 input
+};
+
+// 定義衝突物件介面
+interface ConflictSummary {
+  title: string;
+  proposedAction: string;
+  baselineReference: string;
+  impactAssessment: string;
+}
+
+// 預設 Mock Data：模擬資源配置衝突
+const activeConflict = ref<ConflictSummary>({
+  title: 'Resource Allocation Violation',
+  proposedAction: 'Increase Q3 Marketing Budget to $500k',
+  baselineReference: 'Strategic Baseline: Operational Efficiency (Cap $200k)',
+  impactAssessment: 'This proposal contradicts the agreed-upon fiscal discipline, risking a 15% deficit in the operational reserve if executed.'
+});
+
+// 當衝突發生時，外部邏輯可以隨時更新此物件
+const triggerConflict = (data: ConflictSummary) => {
+  activeConflict.value = data;
+  hasLogicConflict.value = true;
 };
 </script>
