@@ -32,7 +32,10 @@ const props = defineProps({
 });
 
 const iconComponent = computed(() => {
-  const pascalCaseName = props.name.replace(/(^\w|\s\w)/g, m => m.toUpperCase()).replace(/-/g, '');
+  const pascalCaseName = props.name
+    .replace(/(^\w|[- \s]\w)/g, m => m.toUpperCase())
+    .replace(/[- \s]/g, '');
+
   if (props.type === 'solid') {
     return SolidIcons[pascalCaseName + 'Icon'];
   } else {

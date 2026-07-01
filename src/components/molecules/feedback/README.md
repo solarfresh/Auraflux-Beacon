@@ -58,6 +58,12 @@ A specialized molecule representing a user's presence and system status. It prov
 * **Key Props**: `src`, `name`, `size`, `status`.
 * **Design Intent**: Uses `indigo-50` as a default background for empty states to maintain a soft, professional semantic tone.
 
+### 8. VTooltip (The Instructional Floating Observer)
+A non-intrusive, stateless presenter used to cache systemic metadata or excessive AI descriptions behind an overlay portal, safeguarding screen real estate.
+* **Composition**: Native wrapper with scoping > `Slot` (Anchor) + Absolute Tooltip Box.
+* **Responsibility**: Utilizing `group/tooltip` namespacing to shield internal popups from being triggered by parent node cards. Enforces `break-words` layout safety for dynamic text.
+* **Key Props**: `content`, `position`.
+
 ---
 
 ## 🤖 AI Implementation Rules
@@ -105,6 +111,7 @@ src/components/molecules/feedback/
 ├── VOverlayLoader.vue    # Blocking state/Async feedback
 ├── VStatusScore.vue      # Quantitative indicator (Text + Progress)
 ├── VStepProgress.vue     # Sequential project tracker
+├── VTooltip.vue          # Interactive: Supplementary floating description
 ├── VUserAvatar.vue         # Identity: Profile & Presence feedback
 └── README.md             # You are here
 ```

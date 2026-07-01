@@ -1,94 +1,59 @@
 <template>
   <BaseSidebarLayout
-    :title="'Consultation'"
-    :item-count="keywords.length + scope.length"
-    class="bg-slate-50 border-r border-slate-200 h-full"
-    body-class="p-0"
+    title="Consultation Brain"
+    :item-count="confirmedConsensusCount"
   >
-    <template #header-extension>
-      <VBox padding="md" class="pt-2 pb-2">
-        <VNavAlert
-          :keywords="keywords"
-          :scope="scope"
-          @scroll-to-review="handleScrollToReview"
-        />
-      </VBox>
+    <template #header-actions>
+      <VButton variant="secondary" size="xs" @click="emit('open-material-manager')">
+        <VCluster gap="xs">
+          <VIcon name="FolderOpen" size="sm" />
+          <VTypography tag="span" size="xs" weight="medium">Materials</VTypography>
+        </VCluster>
+      </VButton>
     </template>
 
     <template #body>
-      <VStack gap="lg" padding="md">
+      <VStack gap="lg" class="min-w-0">
 
-        <VStack gap="md">
-          <VStatusScore
-            :stability-score="stabilityScore"
-            label="Topic Refinement"
-            color="indigo"
-          />
-          <VFeasibilityStatus
-            :status="feasibilityStatus"
-            :description="getFeasibilityDescription(feasibilityStatus)"
-          />
-        </VStack>
+        <BlindSpotNavigator
+          :alignment-string="macroAlignmentString"
+          :is-complete="isGraphFullyAligned"
+          :is-expanded="isStageTwoExpanded"
+          :total-insights-count="insightsList.length"
+          :primary-insight="primaryInsight"
+          :ui-labels="uiLabels"
+          @toggle-expand="handleToggleExpand"
+          @open-calibration="navigateToStageThreeCalibration"
+        />
 
-        <hr class="border-slate-200" />
+        <!-- <ExtractionTagStream @edit-chip="(id) => emit('edit-chip', id)" />
 
-        <VStack gap="md">
-          <KeywordManagementSection
-            ref="keywordSectionRef"
-            :keywords="keywords"
-            @add-request="handleKeywordAction('keyword-add')"
-            @edit-request="(payload) => handleKeywordAction('keyword', payload)"
-          />
+        <VBox border="bottom" />
 
-          <ScopeManagementSection
-            ref="scopeSectionRef"
-            :scope="scope"
-            @add-request="handleScopeAction('scope-add')"
-            @edit-request="(payload) => handleScopeAction('scope', payload)"
-          />
-        </VStack>
+        <ConsensusProposalList
+          @edit-proposal="(id) => emit('edit-proposal', id)"
+          @approve="approveProposal"
+        />
 
-        <hr class="border-slate-200" />
+        <LogicConflictAlert
+          v-if="hasLogicConflict"
+          @resolve="emit('resolve-conflict')"
+        />
 
-        <VStack gap="lg" class="pb-6">
-          <VStack gap="xs">
-            <VTypography tag="h3" size="sm" weight="bold" class="px-2 text-slate-900">
-              Final Research Question
-            </VTypography>
-            <VBox
-              background="white"
-              padding="md"
-              rounded="xl"
-              border="all"
-              class="shadow-sm cursor-pointer hover:border-indigo-300 transition-all group mx-2"
-              @click="handleViewDetails('final-question')"
-            >
-              <VTypography tag="p" size="sm" class="text-slate-700 italic leading-relaxed">
-                "{{ finalQuestion || 'Click to define your core inquiry...' }}"
-              </VTypography>
-            </VBox>
-          </VStack>
+        <VBox border="bottom" />
 
-          <VStack gap="xs" class="px-2">
-            <VCluster justify="between" align="center">
-              <VTypography tag="h3" size="sm" weight="bold" class="text-slate-900">
-                Latest Reflection
-              </VTypography>
-              <VButton
-                variant="ghost"
-                size="xs"
-                icon-only
-                icon-name="BookOpen"
-                @click="handleViewDetails('reflection-log')"
-              />
-            </VCluster>
-            <VBox background="transparent" padding="sm" rounded="lg" border="all" class="border-slate-100 border-dashed">
-              <VTypography size="xs" italic class="text-slate-500">
-                {{ latestReflection || "No recent reflections logged." }}
-              </VTypography>
-            </VBox>
-          </VStack>
-        </VStack>
+        <StrategicBaselineCard
+          :count="confirmedConsensusCount"
+          @open-manager="emit('open-consensus-manager')"
+        />
+
+        <ReflectionLogSandbox
+          v-model:active-tab="activeReflectTab"
+          v-model:input-value="reflectionInput"
+          :latest-log="latestCacheLog"
+          @submit="submitReflection"
+          @open-history="emit('open-reflection-manager')"
+        /> -->
 
       </VStack>
     </template>
@@ -96,78 +61,156 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick } from 'vue';
+import { computed, ref } from 'vue';
 
-// Layout Atoms
-import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
+import BlindSpotNavigator from '@/components/organisms/doamin/consultation/BlindSpotNavigator.vue';
+// import ConsensusProposalList from './components/ConsensusProposalList.vue';
+// import ExtractionTagStream from './components/ExtractionTagStream.vue';
+// import LogicConflictAlert from './components/LogicConflictAlert.vue';
+// import ReflectionLogSandbox from './components/ReflectionLogSandbox.vue';
+// import StrategicBaselineCard from './components/StrategicBaselineCard.vue';
 
-// Standard Atoms
 import VButton from '@/components/atoms/buttons/VButton.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
-
-// Molecules & Specialized Sections
-import VStatusScore from '@/components/molecules/feedback/VStatusScore.vue';
-import VNavAlert from '@/components/molecules/navs/VNavAlert.vue';
-import KeywordManagementSection from '@/components/organisms/sections/KeywordManagementSection.vue';
-import ScopeManagementSection from '@/components/organisms/sections/ScopeManagementSection.vue';
-import VFeasibilityStatus from '@/components/molecules/domain/VFeasibilityStatus.vue';
-
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 
-import type { FeasibilityStatus as TFeasibilityStatus } from '@/interfaces/core';
-import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
-
-const props = defineProps<{
-  keywords: ProcessedKeyword[];
-  scope: ProcessedScope[];
-  finalQuestion: string;
-  feasibilityStatus: TFeasibilityStatus;
-  latestReflection: string | null;
-  stabilityScore: number;
-}>();
-
 const emit = defineEmits<{
-  (e: 'viewDetails', type: ManagementType, index?: number, value?: any): void;
+  (e: 'open-material-manager'): void;
+  (e: 'open-consensus-manager'): void;
+  (e: 'open-reflection-manager'): void;
+  (e: 'edit-chip', id: string): void;
+  (e: 'edit-proposal', id: string): void;
+  (e: 'resolve-conflict'): void;
 }>();
 
-const keywordSectionRef = ref<InstanceType<typeof KeywordManagementSection> | null>(null);
-const scopeSectionRef = ref<InstanceType<typeof ScopeManagementSection> | null>(null);
+const confirmedConsensusCount = ref<number>(4);
+const hasLogicConflict = ref<boolean>(true);
+const activeReflectTab = ref<'INSIGHT' | 'GAP'>('INSIGHT');
+const reflectionInput = ref<string>('');
+const latestCacheLog = ref<string>('Client sounded hesitant when overhead thresholds were brought up.');
 
-// --- Domain Logic ---
-const getFeasibilityDescription = (status: TFeasibilityStatus) => {
-  const descriptions: Record<TFeasibilityStatus, string> = {
-    HIGH: "Data and resources are readily available.",
-    MEDIUM: "Requires targeted effort to find sources.",
-    LOW: "Significant resource gaps identified.",
-  };
-  return descriptions[status] || "Status pending.";
+const submitReflection = (): void => {
+  const sanitized = reflectionInput.value.trim();
+  if (!sanitized) return;
+  latestCacheLog.value = sanitized;
+  reflectionInput.value = '';
 };
 
-// --- Handlers ---
-const handleKeywordAction = (type: 'keyword' | 'keyword-add', payload?: any) => {
-  type === 'keyword-add'
-    ? emit('viewDetails', 'keyword')
-    : emit('viewDetails', 'keyword', payload.index, payload.keyword);
+const approveProposal = (id: string): void => {
+  confirmedConsensusCount.value += 1;
 };
 
-const handleScopeAction = (type: 'scope' | 'scope-add', payload?: any) => {
-  type === 'scope-add'
-    ? emit('viewDetails', 'scope')
-    : emit('viewDetails', 'scope', payload.index, payload.scope);
+// --- 核心業務資料結構定義 (Type-Safe Interfaces) ---
+interface NodeDimension {
+  type: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
+  label: string;
+  isActive: boolean;
+  activeCount: number;
+  totalCount: number;
+}
+
+interface AIInsight {
+  id: string;
+  severity: 'CRITICAL' | 'WARNING' | 'INFO';
+  targetDimension: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
+  title: string;
+  description: string;
+  question: string;
+  canSidebarPatch: boolean;
+  patchActionLabel?: string;
+  patchPayload?: Record<string, any>;
+}
+
+// --- ⚙️ 全域狀態維護 (Central State Management) ---
+
+/** 1. 宏觀知識圖譜維度覆蓋陣列 */
+const dimensions = ref<NodeDimension[]>([
+  { type: 'CONCEPT', label: 'Concept', isActive: true, activeCount: 3, totalCount: 4 },
+  { type: 'RESOURCE', label: 'Resource', isActive: false, activeCount: 0, totalCount: 2 }, // 亮黃燈核心
+  { type: 'BOUNDARY', label: 'Boundary', isActive: true, activeCount: 2, totalCount: 2 },
+  { type: 'OUTCOME', label: 'Outcome', isActive: true, activeCount: 1, totalCount: 1 },
+  { type: 'EVENT', label: 'Event', isActive: true, activeCount: 1, totalCount: 1 },
+  { type: 'RISK', label: 'Risk', isActive: true, activeCount: 1, totalCount: 1 },
+]);
+
+/** 2. 全全新重構的盲點 Mock 數據清單 */
+const insightsList = ref<AIInsight[]>([
+  {
+    id: 'insight-resource-01',
+    severity: 'CRITICAL',
+    targetDimension: 'RESOURCE',
+    title: 'RESOURCE Dimension Interrupted',
+    description: 'The current discussion heavily weights on target constraints (BOUNDARY) but severely lacks external evidence items or data pillars. This introduces an optimal-illusion bias risk.',
+    question: 'What existing metrics or structural resources do you currently have to defend this particular logistics trajectory?',
+    canSidebarPatch: false // 複雜斷鏈，強迫穿透跳轉
+  },
+  {
+    id: 'insight-boundary-02',
+    severity: 'WARNING',
+    targetDimension: 'BOUNDARY',
+    title: 'BOUNDARY Drift Warning',
+    description: 'Cross-border Tariff Subsidy context was explicitly discussed in the dialogue provenance but remains unmapped, causing potential constraint evaporation.',
+    question: 'How exactly will this subsidy restriction map back to your quarterly 20% revenue target?',
+    canSidebarPatch: true,
+    patchActionLabel: "＋ Capture 'Tariff Subsidy' as Boundary Entity"
+  }
+]);
+
+/** 3. 控制 Stage 2 手風琴展開的內部開關 */
+const isStageTwoExpanded = ref(false);
+
+/** 4. 標準化語系標籤 */
+const uiLabels = {
+  inspectAction: 'Expand Quick Fix ↓',
+  collapseAction: 'Collapse Fix ↑',
+  calibrateAction: 'Calibrate Now',
+  insightsCountLabel: 'Insights Detected'
 };
 
-const handleViewDetails = (type: ManagementType, index?: number, value?: any) => {
-  emit('viewDetails', type, index, value);
+// --- 🧠 計算屬性調度 (Computed Orchestration) ---
+
+/**
+ * 核心權重演算法：自動撈出當前唯一一條最致命的盲點作為 Primary Focus
+ * （優先挑選 CRITICAL，若無則依序向下）
+ */
+const primaryInsight = computed<AIInsight | null>(() => {
+  if (insightsList.value.length === 0) return null;
+
+  const critical = insightsList.value.find(i => i.severity === 'CRITICAL');
+  if (critical) return critical;
+
+  const warning = insightsList.value.find(i => i.severity === 'WARNING');
+  if (warning) return warning;
+
+  return insightsList.value[0] || null;
+});
+
+/** 計算當前對齊的維度總數 (用於驅動頂部指標，如 "5 / 6 Dimensions Settled") */
+const macroAlignmentString = computed(() => {
+  const settledCount = dimensions.value.filter(d => d.isActive).length;
+  const totalCount = dimensions.value.length;
+  return `${settledCount} / ${totalCount} Dimensions Settled`;
+});
+
+/** 是否全盤對齊（若 100% 對齊，指標亮綠燈，否則常駐琥珀燈提示引力失衡） */
+const isGraphFullyAligned = computed(() => {
+  return dimensions.value.every(d => d.isActive);
+});
+
+// --- ⚡ 互動事件處理 (Event Handling Paths) ---
+
+/** 處理 Stage 2 的展開/折疊 */
+const handleToggleExpand = () => {
+  isStageTwoExpanded.value = !isStageTwoExpanded.value;
 };
 
-const handleScrollToReview = (firstSection: 'keyword' | 'scope') => {
-  nextTick(() => {
-    const target = firstSection === 'keyword'
-      ? keywordSectionRef.value?.$el
-      : scopeSectionRef.value?.$el;
-    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+/** 核心問句穿透：跳轉至 Stage 3 獨立校準中心，並帶入當前邏輯斷裂的節點脈絡 */
+const navigateToStageThreeCalibration = (insightId: string) => {
+  console.log(`[Router] Penetrating to Stage 3 Deep Calibration Workspace for ID: ${insightId}`);
+  // 在實際專案中此處替換為：router.push(`/workspace/calibrate/${insightId}`);
 };
 </script>
