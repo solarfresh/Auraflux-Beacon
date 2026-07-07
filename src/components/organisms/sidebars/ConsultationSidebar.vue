@@ -4,7 +4,6 @@
     :item-count="confirmedConsensusCount"
   >
     <template #header-actions>
-      <!-- Sandbox Quick-Action Icon -->
       <VButton variant="ghost" size="xs" title="Jump to Sandbox" @click="scrollToSandbox">
         <VIcon name="Zap" size="sm" class="text-indigo-400" />
       </VButton>
@@ -17,9 +16,8 @@
     </template>
 
     <template #body>
-      <VStack gap="lg" class="min-w-0 transition-all duration-300">
+      <VStack gap="md" class="min-w-0 transition-all duration-300">
 
-        <!-- 1. Global Navigator (Dynamic State Controller) -->
         <BlindSpotNavigator
           :alignment-string="macroAlignmentString"
           :is-complete="isGraphFullyAligned"
@@ -32,7 +30,6 @@
           @open-calibration="navigateToStageThreeCalibration"
         />
 
-        <!-- 2. Logic Conflict Alert (Dynamic Intervention - High Priority) -->
         <LogicConflictAlert
           v-if="hasLogicConflict"
           :conflict-data="activeConflict"
@@ -43,34 +40,42 @@
 
         <VBox border="bottom" />
 
-        <!-- 3. Strategic Cornerstone (Fixed Anchor) -->
-<!--
-        <StrategicBaselineCard
-          :count="confirmedConsensusCount"
-          @open-manager="emit('open-consensus-manager')"
-        />
- -->
-        <!-- 4. Consensus Agenda (Active Workflow) -->
-<!--
-        <ConsensusProposalList
-          @edit-proposal="(id) => emit('edit-proposal', id)"
-          @approve="approveProposal"
-        />
- -->
-        <VBox border="bottom" />
+        <VStack gap="xs" class="w-full">
 
-        <!-- 5. Reflection Sandbox (Input Slot) -->
-<!--
-        <VBox ref="sandboxContainer" class="w-full">
-          <ReflectionLogSandbox
-            v-model:active-tab="activeReflectTab"
-            v-model:input-value="reflectionInput"
-            :latest-log="latestCacheLog"
-            @submit="submitReflection"
-            @open-history="emit('open-reflection-manager')"
+          <SidebarRegistrySection
+            title="Proposals"
+            section-type="TOP"
+            :nodes="mappedProposals"
+            :selected-node-id="selectedNodeId"
+            :can-add="true"
+            @select="handleNodeSelect"
+            @hover="handleNodeHover"
+            @teleport="handleProposalTeleport"
+            @add="navigateToProposalManager"
           />
-        </VBox>
- -->
+
+          <SidebarRegistrySection
+            title="Reflections"
+            section-type="MIDDLE"
+            :nodes="mappedReflections"
+            :selected-node-id="selectedNodeId"
+            :can-add="false"
+            @select="handleNodeSelect"
+            @hover="handleNodeHover"
+          />
+
+          <SidebarRegistrySection
+            title="Consensus Baselines"
+            section-type="BOTTOM"
+            :nodes="mappedConsensus"
+            :selected-node-id="selectedNodeId"
+            :can-add="false"
+            @select="handleNodeSelect"
+            @hover="handleNodeHover"
+          />
+
+        </VStack>
+
       </VStack>
     </template>
   </BaseSidebarLayout>
@@ -79,48 +84,40 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import BlindSpotNavigator from '@/components/organisms/doamin/consultation/BlindSpotNavigator.vue';
-// import ConsensusProposalList from './components/ConsensusProposalList.vue';
-import LogicConflictAlert from '@/components/organisms/doamin/consultation/LogicConflictAlert.vue';
-// import ReflectionLogSandbox from './components/ReflectionLogSandbox.vue';
-// import StrategicBaselineCard from './components/StrategicBaselineCard.vue';
-
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
+import BlindSpotNavigator from '@/components/organisms/doamin/consultation/BlindSpotNavigator.vue';
+import LogicConflictAlert from '@/components/organisms/doamin/consultation/LogicConflictAlert.vue';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
+import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
+
+import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
+import type { EntityStatus, ID } from '@/interfaces/core';
 
 const emit = defineEmits<{
   (e: 'open-material-manager'): void;
   (e: 'open-consensus-manager'): void;
   (e: 'open-reflection-manager'): void;
-  (e: 'edit-chip', id: string): void;
   (e: 'edit-proposal', id: string): void;
   (e: 'resolve-conflict'): void;
+  (e: 'node-selected', id: ID): void;
+  (e: 'node-hovered', id: ID | null): void;
+  (e: 'teleport-node', id: string): void;
 }>();
 
+// --- ⚙️ Core Telemetry States ---
 const confirmedConsensusCount = ref<number>(4);
 const hasLogicConflict = ref<boolean>(true);
-const activeReflectTab = ref<'INSIGHT' | 'GAP'>('INSIGHT');
-const reflectionInput = ref<string>('');
-const latestCacheLog = ref<string>('Client sounded hesitant when overhead thresholds were brought up.');
+const selectedNodeId = ref<ID | null>(null);
+const isStageTwoExpanded = ref(false);
 
-const submitReflection = (): void => {
-  const sanitized = reflectionInput.value.trim();
-  if (!sanitized) return;
-  latestCacheLog.value = sanitized;
-  reflectionInput.value = '';
-};
-
-const approveProposal = (id: string): void => {
-  confirmedConsensusCount.value += 1;
-};
-
+// --- 📦 Normalized Business Domain Data Models ---
 interface NodeDimension {
-  type: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
+  type: NodeType;
   label: string;
   isActive: boolean;
   activeCount: number;
@@ -130,7 +127,7 @@ interface NodeDimension {
 interface AIInsight {
   id: string;
   severity: 'CRITICAL' | 'WARNING' | 'INFO';
-  targetDimension: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
+  targetDimension: NodeType;
   title: string;
   description: string;
   question: string;
@@ -139,45 +136,100 @@ interface AIInsight {
   patchPayload?: Record<string, any>;
 }
 
-// --- ⚙️ 全域狀態維護 (Central State Management) ---
+interface Proposal {
+  id: string;
+  title: string;
+  description: string;
+  status: EntityStatus; // Replaced legacy ProposalStatus with global EntityStatus schema
+  createdAt: string;
+  dimension: NodeType;
+}
 
-/** 1. 宏觀知識圖譜維度覆蓋陣列 */
 const dimensions = ref<NodeDimension[]>([
   { type: 'CONCEPT', label: 'Concept', isActive: true, activeCount: 3, totalCount: 4 },
-  { type: 'RESOURCE', label: 'Resource', isActive: false, activeCount: 0, totalCount: 2 }, // 亮黃燈核心
+  { type: 'RESOURCE', label: 'Resource', isActive: false, activeCount: 0, totalCount: 2 },
   { type: 'BOUNDARY', label: 'Boundary', isActive: true, activeCount: 2, totalCount: 2 },
   { type: 'OUTCOME', label: 'Outcome', isActive: true, activeCount: 1, totalCount: 1 },
   { type: 'EVENT', label: 'Event', isActive: true, activeCount: 1, totalCount: 1 },
-  { type: 'RISK', label: 'Risk', isActive: true, activeCount: 1, totalCount: 1 },
+  { type: 'FOCUS', label: 'FOCUS', isActive: true, activeCount: 1, totalCount: 1 },
 ]);
 
-/** 2. 全全新重構的盲點 Mock 數據清單 */
 const insightsList = ref<AIInsight[]>([
   {
     id: 'insight-resource-01',
     severity: 'CRITICAL',
     targetDimension: 'RESOURCE',
     title: 'RESOURCE Dimension Interrupted',
-    description: 'The current discussion heavily weights on target constraints (BOUNDARY) but severely lacks external evidence items or data pillars. This introduces an optimal-illusion bias risk.',
-    question: 'What existing metrics or structural resources do you currently have to defend this particular logistics trajectory?',
-    canSidebarPatch: false // 複雜斷鏈，強迫穿透跳轉
-  },
-  {
-    id: 'insight-boundary-02',
-    severity: 'WARNING',
-    targetDimension: 'BOUNDARY',
-    title: 'BOUNDARY Drift Warning',
-    description: 'Cross-border Tariff Subsidy context was explicitly discussed in the dialogue provenance but remains unmapped, causing potential constraint evaporation.',
-    question: 'How exactly will this subsidy restriction map back to your quarterly 20% revenue target?',
-    canSidebarPatch: true,
-    patchActionLabel: "＋ Capture 'Tariff Subsidy' as Boundary Entity"
+    description: 'The current discussion heavily weights on target constraints but lacks external evidence.',
+    question: 'What existing metrics do you currently have to defend this particular logistics trajectory?',
+    canSidebarPatch: false
   }
 ]);
 
-/** 3. 控制 Stage 2 手風琴展開的內部開關 */
-const isStageTwoExpanded = ref(false);
+// Updated mock array values to align fully with core EntityStatus schemas
+const activeProposals = ref<Proposal[]>([
+  {
+    id: 'prop-001',
+    title: 'Q3 Market Penetration',
+    description: 'Focus on social media ad spend for the upcoming product launch.',
+    status: 'AI_EXTRACTED', // Proposed by AI Agent, awaiting user review
+    createdAt: '2026-07-01T10:00:00Z',
+    dimension: 'RESOURCE'
+  },
+  {
+    id: 'prop-002',
+    title: 'ISO-27001 Compliance Audit',
+    description: 'Initiate mandatory data security audit for the European market entry.',
+    status: 'USER_DRAFT', // Under active editing or curation by the user
+    createdAt: '2026-07-01T11:30:00Z',
+    dimension: 'BOUNDARY'
+  }
+]);
 
-/** 4. 標準化語系標籤 */
+// --- 🔄 Structural Adapters with Native Type Inheritance ---
+
+/** * Maps Proposal data models into clean ConceptualNode objects.
+ * Since properties are unified under EntityStatus, this inherits pure native types.
+ */
+const mappedProposals = computed<ConceptualNode[]>(() => {
+  return activeProposals.value.map(prop => ({
+    id: prop.id,
+    type: prop.dimension,
+    label: prop.title,
+    content: prop.description,
+    status: prop.status
+  }));
+});
+
+/** * Maps active consultation reflection summaries into ConceptualNode blueprints.
+ */
+const mappedReflections = computed<ConceptualNode[]>(() => {
+  return [
+    {
+      id: 'reflect-001',
+      type: 'CONCEPT',
+      label: 'Client Overheads Hesitation',
+      content: 'Client sounded hesitant when overhead thresholds were brought up during Q2 analysis.',
+      status: 'USER_DRAFT'
+    }
+  ];
+});
+
+/** * Maps verified system metrics into consensus check items.
+ */
+const mappedConsensus = computed<ConceptualNode[]>(() => {
+  return [
+    {
+      id: 'consensus-001',
+      type: 'OUTCOME',
+      label: 'Verified Fiscal Discipline Baseline',
+      content: `Currently maintaining ${confirmedConsensusCount.value} verified strategic consensus checkpoints.`,
+      status: 'LOCKED'
+    }
+  ];
+});
+
+// --- 🧠 Computed Indicators ---
 const uiLabels = {
   inspectAction: 'Expand Quick Fix ↓',
   collapseAction: 'Collapse Fix ↑',
@@ -185,75 +237,40 @@ const uiLabels = {
   insightsCountLabel: 'Insights Detected'
 };
 
-// --- 🧠 計算屬性調度 (Computed Orchestration) ---
-
-/**
- * 核心權重演算法：自動撈出當前唯一一條最致命的盲點作為 Primary Focus
- * （優先挑選 CRITICAL，若無則依序向下）
- */
 const primaryInsight = computed<AIInsight | null>(() => {
   if (insightsList.value.length === 0) return null;
-
-  const critical = insightsList.value.find(i => i.severity === 'CRITICAL');
-  if (critical) return critical;
-
-  const warning = insightsList.value.find(i => i.severity === 'WARNING');
-  if (warning) return warning;
-
-  return insightsList.value[0] || null;
+  return insightsList.value.find(i => i.severity === 'CRITICAL') || insightsList.value[0] || null;
 });
 
-/** 計算當前對齊的維度總數 (用於驅動頂部指標，如 "5 / 6 Dimensions Settled") */
 const macroAlignmentString = computed(() => {
   const settledCount = dimensions.value.filter(d => d.isActive).length;
-  const totalCount = dimensions.value.length;
-  return `${settledCount} / ${totalCount} Dimensions Settled`;
+  return `${settledCount} / ${dimensions.value.length} Dimensions Settled`;
 });
 
-/** 是否全盤對齊（若 100% 對齊，指標亮綠燈，否則常駐琥珀燈提示引力失衡） */
-const isGraphFullyAligned = computed(() => {
-  return dimensions.value.every(d => d.isActive);
-});
+const isGraphFullyAligned = computed(() => dimensions.value.every(d => d.isActive));
 
-// --- ⚡ 互動事件處理 (Event Handling Paths) ---
-
-/** 處理 Stage 2 的展開/折疊 */
-const handleToggleExpand = () => {
-  isStageTwoExpanded.value = !isStageTwoExpanded.value;
-};
-
-/** 核心問句穿透：跳轉至 Stage 3 獨立校準中心，並帶入當前邏輯斷裂的節點脈絡 */
-const navigateToStageThreeCalibration = (insightId: string) => {
-  console.log(`[Router] Penetrating to Stage 3 Deep Calibration Workspace for ID: ${insightId}`);
-  // 在實際專案中此處替換為：router.push(`/workspace/calibrate/${insightId}`);
-};
-
-const sandboxContainer = ref<HTMLElement | null>(null);
-
-const scrollToSandbox = () => {
-  sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' });
-  // 此處可增加邏輯自動聚焦 input
-};
-
-// 定義衝突物件介面
-interface ConflictSummary {
-  title: string;
-  proposedAction: string;
-  baselineReference: string;
-  impactAssessment: string;
-}
-
-// 預設 Mock Data：模擬資源配置衝突
-const activeConflict = ref<ConflictSummary>({
+const activeConflict = ref({
   title: 'Resource Allocation Violation',
   proposedAction: 'Increase Q3 Marketing Budget to $500k',
   baselineReference: 'Strategic Baseline: Operational Efficiency (Cap $200k)',
-  impactAssessment: 'This proposal contradicts the agreed-upon fiscal discipline, risking a 15% deficit in the operational reserve if executed.'
+  impactAssessment: 'This proposal contradicts the agreed-upon fiscal discipline.'
 });
 
-// 當衝突發生時，外部邏輯可以隨時更新此物件
-const triggerConflict = (data: ConflictSummary) => {
-  activeConflict.value = data;
-  hasLogicConflict.value = true;
+// --- ⚡ Central Unified Event Handlers ---
+const handleToggleExpand = () => { isStageTwoExpanded.value = !isStageTwoExpanded.value; };
+const handleNodeSelect = (id: ID) => { selectedNodeId.value = id; emit('node-selected', id); };
+const handleNodeHover = (id: ID | null) => { emit('node-hovered', id); };
+const handleProposalTeleport = (id: string) => { emit('teleport-node', id); };
+
+const navigateToStageThreeCalibration = (insightId: string) => {
+  console.log(`[Router] Navigating to Calibration Workspace for Insight: ${insightId}`);
 };
+
+const navigateToProposalManager = () => {
+  console.log('[Router] Opening Proposal Creation Hub');
+  emit('open-consensus-manager');
+};
+
+const sandboxContainer = ref<HTMLElement | null>(null);
+const scrollToSandbox = () => { sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' }); };
 </script>

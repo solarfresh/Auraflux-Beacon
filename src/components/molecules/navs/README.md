@@ -113,7 +113,6 @@ src/components/molecules/navs/
 ├── VTagListItem.vue     # Status-colored items
 ├── VMetaListItem.vue    # Complex metadata items
 ├── VTimelineItem.vue    # Chronological items
-├── VTreeItem.vue        # Hierarchical nodes
 ├── VWelcomeGateway.vue  # Intent-based entry portal
 └── README.md            # You are here
 

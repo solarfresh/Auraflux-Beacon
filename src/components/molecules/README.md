@@ -113,7 +113,7 @@ src/components/molecules/
 ├── feedback/       # VAlert, VModal, VOverlayLoader, VStatusScore, VUserAvatar
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── layout/         # VFloatControl, VStatucGraph
-├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VTreeItem, VWelcomeGateway
+├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VWelcomeGateway
 ├── resources/      # VProjectCard, VEntityChip, VStatusCard, VInteractivePlaceholder
 └── README.md       # You are here
 ```

@@ -20,7 +20,7 @@
           size="xs"
           weight="semibold"
           color="indigo-500"
-          class="cursor-pointer hover:text-indigo-600 active:opacity-70 select-none transition-colors flex-shrink-0 text-[11px]"
+          class="cursor-pointer hover:text-indigo-600 active:opacity-70 select-none transition-colors shrink-0 text-[11px]"
           @click="$emit('toggle-expand')"
         >
           {{ isExpanded ? uiLabels.collapseAction : uiLabels.inspectAction }}
@@ -49,19 +49,19 @@
       </VCluster>
 
       <VStack gap="xs" class="w-full min-w-0">
-        <VTypography tag="h4" size="xs" weight="bold" color="slate-900" class="leading-snug break-words">
+        <VTypography tag="h4" size="xs" weight="bold" color="slate-900" class="leading-snug wrap-break-words">
           {{ primaryInsight.title }}
         </VTypography>
-        <VTypography tag="div" size="xs" color="indigo-950" class="w-full pl-1.5 border-l-2 border-indigo-200 mt-0.5 italic font-medium leading-relaxed break-words">
+        <VTypography tag="div" size="xs" color="indigo-950" class="w-full pl-1.5 border-l-2 border-indigo-200 mt-0.5 italic font-medium leading-relaxed wrap-break-words">
           "{{ primaryInsight.question }}"
         </VTypography>
       </VStack>
 
       <VCluster justify="between" align="center" :full-width="true" class="pt-2.5 border-t border-slate-50 min-w-0">
-        <VTypography tag="span" size="xs" color="slate-400" class="flex-shrink-0 text-[10px]">
+        <VTypography tag="span" size="xs" color="slate-400" class="shrink-0 text-[10px]">
           {{ totalInsightsCount }} {{ uiLabels.insightsCountLabel }}
         </VTypography>
-        <VCluster gap="xs" align="center" class="cursor-pointer group select-none flex-shrink-0" @click="$emit('open-calibration', primaryInsight.id)">
+        <VCluster gap="xs" align="center" class="cursor-pointer group select-none shrink-0" @click="$emit('open-calibration', primaryInsight.id)">
           <VTypography tag="span" size="xs" weight="semibold" color="indigo-600" class="group-hover:text-indigo-700 transition-colors text-[11px]">
             {{ uiLabels.calibrateAction }}
           </VTypography>
@@ -86,11 +86,12 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VTooltip from '@/components/molecules/feedback/VTooltip.vue';
 import VCard from '@/components/molecules/resources/VCard.vue';
+import type { NodeType } from '@/interfaces/conceptual-map';
 
 interface AIInsight {
   id: string;
   severity: 'CRITICAL' | 'WARNING' | 'INFO';
-  targetDimension: 'CONCEPT' | 'RESOURCE' | 'BOUNDARY' | 'OUTCOME' | 'EVENT' | 'RISK';
+  targetDimension: NodeType;
   title: string;
   description: string;
   question: string;

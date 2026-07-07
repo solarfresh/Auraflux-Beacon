@@ -45,18 +45,6 @@ export interface ConceptualNode {
   /** Type: Determines the node's role and visual representation. */
   type: NodeType;
 
-  /** * Anti-Hallucination: Health Score (0-10)
-   * Drives the Jitter animation. Values < 4 trigger visual alarm.
-   */
-  groundedness: number;
-
-  /** * Materiality: Grounding state
-   * SOLID: Evidence-backed
-   * PULSING: Hypothesis / Shadow
-   * DIMMED: Inbox / Placeholder
-   */
-  solidity: 'SOLID' | 'PULSING' | 'DIMMED';
-
   // --- Knowledge Content (Empirical Layer) ---
   content?: string;      // Detailed snippet
   sourceRef?: string;   // Grounding reference
