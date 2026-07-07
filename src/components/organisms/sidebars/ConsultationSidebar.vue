@@ -74,8 +74,9 @@
             @hover="handleNodeHover"
           />
 
-        </VStack>
 
+          <VBox class="h-16" aria-hidden="true" />
+        </VStack>
       </VStack>
     </template>
   </BaseSidebarLayout>
