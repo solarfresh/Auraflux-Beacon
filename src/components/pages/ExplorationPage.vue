@@ -78,7 +78,7 @@ import FullScreenModalTemplate from '@/components/templates/FullScreenModalTempl
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // Organisms
-import ConceptualMapCanvas from '@/components/organisms/canvases/ConceptualMapCanvas.vue';
+import ConceptualMapCanvas from '@/components/organisms/domain/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 

@@ -112,7 +112,7 @@ import VBadge from '@/components/atoms/indicators/VBadge.vue'
 import VTypography from '@/components/atoms/indicators/VTypography.vue'
 import VCluster from '@/components/atoms/layout/VCluster.vue'
 import VStack from '@/components/atoms/layout/VStack.vue'
-import VNodeContainer from '@/components/organisms/canvases/VNodeContainer.vue'
+import VNodeContainer from '@/components/organisms/domain/canvases/VNodeContainer.vue'
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
 const context = inject(ConceptualMapContextKey);

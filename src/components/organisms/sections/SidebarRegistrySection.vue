@@ -63,13 +63,25 @@
           </VEmptyState>
 
           <VTreeItem
+            v-if="isDraggable"
             v-for="node in nodes"
             :key="node.id"
             :node="node"
             :is-active="selectedNodeId === node.id"
-            @select="(id: ID) => emit('select', id)"
-            @hover="(id: ID | null) => emit('hover', id)"
+            @select="emit('select', node.id)"
+            @hover="emit('hover', node.id)"
             @teleport="(nodeId: ID) => emit('teleport', nodeId)"
+          />
+          <VEntityCard
+            v-else
+            v-for="node in nodes"
+            :node="node"
+            :is-active="selectedNodeId === node.id"
+            padding="xs"
+            :show-content="false"
+            @click="emit('select', node.id)"
+            @mouseenter="emit('hover', node.id)"
+            @mouseleave="emit('hover', null)"
           />
         </VStack>
       </VBox>
@@ -90,7 +102,7 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
-import VTreeItem from '@/components/organisms/canvases/VTreeItem.vue';
+import VTreeItem from '@/components/organisms/domain/canvases/VTreeItem.vue';
 import { computed, ref } from 'vue';
 
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
@@ -103,9 +115,11 @@ const props = withDefaults(defineProps<{
   nodes: ConceptualNode[];
   selectedNodeId: ID | null;
   isCollapsible?: boolean;
+  isDraggable?: boolean;
   canAdd?: boolean;
 }>(), {
   isCollapsible: true,
+  isDraggable: true,
   canAdd: false
 });
 

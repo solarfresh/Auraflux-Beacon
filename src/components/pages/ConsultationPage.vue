@@ -24,59 +24,7 @@
           @send-message="handleSendMessage"
         />
       </template>
-
-      <!-- Slot: action-bar (Flow Control) -->
-<!--
-      <template #action-bar>
-        <VButtonToolbar
-          :is-proceed-ready="true"
-          @transition-request="handlePhaseTransitionRequest"
-        />
-      </template>
- -->
     </DualPaneWorkspaceTemplate>
-
-    <FullScreenModalTemplate
-      :is-open="isManagementModalOpen"
-      :max-width-class="getModalWidthClass(managementModalType)"
-      @close="isManagementModalOpen = false"
-    >
-      <template #header>
-        Manage {{ getModalTitle(managementModalType) }}
-      </template>
-      <template #content>
-        <FinalQuestionEditor
-          v-if="managementModalType === 'final-question'"
-          :initialValue="consultationStore.finalQuestion"
-          :feasibility-status="consultationStore.feasibilityStatus"
-          :stability-score="consultationStore.stabilityScore"
-          @close-modal="isManagementModalOpen = false"
-        />
-        <KeywordDetailEditor
-          v-else-if="managementModalType === 'keyword'"
-          :initial-keyword="editingInitialKeyword!"
-          :keyword-index="editingKeywordIndex!"
-          @close-modal="isManagementModalOpen = false"
-        />
-        <ScopeDetailEditor
-          v-else-if="managementModalType === 'scope'"
-          :initial-scope-element="editingInitialScope!"
-          :scope-index="editingScopeIndex!"
-          :feasibility-status="feasibilityStatus"
-          @close-modal="isManagementModalOpen = false"
-        />
-
-        <ReflectionLogForm
-          v-else-if="managementModalType === 'reflection-log'"
-          :initial-entries="reflectionLogEntries"
-          @close-modal="isManagementModalOpen = false"
-        />
-
-        <div v-else class="text-center p-8">Select an item to manage.</div>
-        <!-- ReflectionLogForm now emits the thought data -->
-        <!-- <ReflectionLogForm @log-thought="logThought" /> -->
-      </template>
-    </FullScreenModalTemplate>
   </div>
 </template>
 
@@ -86,15 +34,9 @@ import { useProjectStore } from '@/stores/project';
 import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import VButtonToolbar from '@/components/molecules/forms/VButtonToolbar.vue';
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
-import FinalQuestionEditor from '@/components/organisms/forms/FinalQuestionEditor.vue';
-import KeywordDetailEditor from '@/components/organisms/forms/KeywordDetailEditor.vue';
-import ScopeDetailEditor from '@/components/organisms/forms/ScopeDetailEditor.vue';
 import DualPaneWorkspaceTemplate from '@/components/templates/DualPaneWorkspaceTemplate.vue';
-import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
-import ConsultationSidebar from '@/components/organisms/sidebars/ConsultationSidebar.vue';
-import ReflectionLogForm from '@/components/organisms/forms/ReflectionLogForm.vue';
+import ConsultationSidebar from '@/components/organisms/domain/consultation/ConsultationSidebar.vue';
 
 import type { ManagementType, ProcessedKeyword, ProcessedScope } from '@/interfaces/consultation';
 import { apiService } from '@/api/apiService';

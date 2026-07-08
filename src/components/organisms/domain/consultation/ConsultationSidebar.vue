@@ -94,7 +94,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
-import ConsultationAlert from '@/components/organisms/doamin/consultation/ConsultationAlert.vue';
+import ConsultationAlert from '@/components/organisms/domain/consultation/ConsultationAlert.vue';
 import VNodeFormEditor from '@/components/organisms/forms/VNodeFormEditor.vue';
 
 import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
