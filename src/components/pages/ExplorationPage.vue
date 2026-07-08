@@ -22,42 +22,7 @@
       <template #right-panel>
         <StrategicDiscoveryPanel />
       </template>
-<!--
-      <template #footer>
-        <VButtonToolbar
-          :is-proceed-ready="false"
-          :proceed-label="'Proceed to Formulation'"
-          @transition-request="handlePhaseTransitionRequest"
-        >
-          <template #action-button>
-            <VButton
-              variant="primary"
-              size="lg"
-              :disabled="!explorationStore.isExplorationSufficient"
-              class="bg-indigo-600! shadow-xl shadow-indigo-900/20 group"
-            >
-              <VTypography tag="span" weight="bold" color="white" class="group-hover:translate-x-0.5 transition-transform">
-                Commit to Formulation
-              </VTypography>
-            </VButton>
-          </template>
-        </VButtonToolbar>
-      </template>
- -->
     </ThreePaneWorkspaceTemplate>
-
-    <FullScreenModalTemplate
-      :is-open="isManagementModalOpen"
-      :max-width-class="getModalWidthClass(managementModalType)"
-      @close="isManagementModalOpen = false"
-    >
-      <template #header>
-        <div class="flex items-center gap-2 px-2">
-          <VTypography tag="span" color="slate-500" weight="light" class="uppercase tracking-widest text-[10px]">System</VTypography>
-          <VTypography tag="span" weight="bold" color="indigo-400" size="lg">{{ getModalTitle(managementModalType) }}</VTypography>
-        </div>
-      </template>
-    </FullScreenModalTemplate>
   </div>
 </template>
 
@@ -73,8 +38,6 @@ import { useExplorationStore } from '@/stores/exploration';
 import { onMounted, ref } from 'vue';
 
 // Atoms & Layout Components
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import FullScreenModalTemplate from '@/components/templates/FullScreenModalTemplate.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // Organisms
@@ -82,20 +45,13 @@ import ConceptualMapCanvas from '@/components/organisms/domain/canvases/Conceptu
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
 import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
 
-import type { ManagementType } from '@/interfaces/exploration.ts';
-
 // Stores
 const explorationStore = useExplorationStore();
 const { currentProjectId, loadExplorationData } = useProjectExploration();
 
 const {
-  registryNodes,
   selectNode
 } = useRegistry();
-
-// UI State
-const isManagementModalOpen = ref(false);
-const managementModalType = ref<ManagementType>(null);
 
 // Initial Data Fetching
 onMounted(async () => {
@@ -142,32 +98,5 @@ const handleTeleport = async (data: { nodeId: string; canvasId: string }) => {
   // eventBus.emit('canvas:focus-node', { nodeId });
 };
 
-function getModalWidthClass(type: ManagementType): string {
-  switch (type) {
-    case 'reflection-log':
-      return 'max-w-6xl';
-    case 'manual-resource':
-      return 'max-w-xl';
-    default: // For Focus refinement modals
-      return 'max-w-2xl';
-  }
-}
-
-function getModalTitle(type: ManagementType): string {
-  switch (type) {
-    case 'reflection-log':
-      return 'Exploration Reflection Log';
-    case 'manual-resource':
-      return 'Manual Resource Entry';
-    case 'final-question':
-        return 'Refine Research Question';
-    case 'keyword':
-        return 'Manage Topic Keywords';
-    case 'scope':
-        return 'Refine Topic Scope';
-    default:
-      return '';
-  }
-}
 // ... Additional lifecycle logic and data getters
 </script>

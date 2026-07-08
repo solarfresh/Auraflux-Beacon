@@ -62,15 +62,6 @@ export const useNotificationStore = defineStore('notification', () => {
         }
     }
 
-    async function _handleConsultationRefinedTopic(payload: any) {
-        consultationStore.feasibilityStatus = payload['feasibilityStatus'];
-        consultationStore.finalQuestion = payload['finalQuestion'];
-        consultationStore.resourceSuggestion = payload['resourceSuggestion'];
-        consultationStore.stabilityScore = payload['stabilityScore'];
-        consultationStore.topicKeywords = payload['keywords'];
-        consultationStore.topicScope = payload['scope'];
-    }
-
     // --- Actions ---
 
     /**
@@ -87,9 +78,6 @@ export const useNotificationStore = defineStore('notification', () => {
         switch (message.event_type) {
             case 'consultation_ea_stream':
                 _handleConsultationEAStream(payload);
-                break;
-            case 'consultation_refined_topic':
-                _handleConsultationRefinedTopic(payload);
                 break;
             case 'conceptual_edges_recommendation':
                 _handleConceptualEdgesRecommendation(payload);

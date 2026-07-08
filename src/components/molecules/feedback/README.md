@@ -25,11 +25,6 @@ The **Atomic-Logic** foundation. It contains no complex internal layout but owns
 * **Responsibility**: Mapping `variant` (success, info, etc.) to background and text tokens for inline notifications.
 * **Key Props**: `variant`, `border`, `padding`, `rounded`.
 
-### 2. VStatusScore (The Quantitative Indicator)
-Merges qualitative labels with quantitative visual bars to represent AI certainty or progress.
-* **Composition**: `VStack` > `VTypography` + `VProgressSegment`.
-* **Usage**: Confidence scores, search relevance percentages, or task completeness bars.
-
 ### 3. VStepProgress (The Sequential Tracker)
 A multi-stage visual guide that communicates progress through a defined project.
 * **Composition**: `VCluster` > `VIcon` (Step Marker) + `VTypography`.
@@ -109,7 +104,6 @@ src/components/molecules/feedback/
 ├── VEmptyState.vue         # Navigation: Zero-data guidance
 ├── VModal.vue            # High-focus contextual overlay
 ├── VOverlayLoader.vue    # Blocking state/Async feedback
-├── VStatusScore.vue      # Quantitative indicator (Text + Progress)
 ├── VStepProgress.vue     # Sequential project tracker
 ├── VTooltip.vue          # Interactive: Supplementary floating description
 ├── VUserAvatar.vue         # Identity: Profile & Presence feedback

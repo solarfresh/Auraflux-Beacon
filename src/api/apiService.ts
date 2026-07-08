@@ -1,12 +1,11 @@
-import { AgentsEndpoints, CanvasesEndpoints, KnowledgeEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
+import { AgentsEndpoints, CanvasesEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
 import type { Agent, ModelProvider } from '@/interfaces/agents';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
-import type { ProcessedKeyword, ProcessedScope, RefinedTopic } from '@/interfaces/consultation';
-import type { Project, ReflectionLogEntry } from '@/interfaces/project';
+import type { Project } from '@/interfaces/project';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
 
@@ -154,18 +153,6 @@ export const apiService = {
       },
     }
   },
-  knowledge:{
-    keywords: {
-      update: (keywordId: ID, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
-        return apiClient.put(KnowledgeEndpoints.keywords.update(keywordId), {text: keywordText, status: keywordStatus})
-      }
-    },
-    scopes: {
-      update: (scopeId: ID, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
-        return apiClient.put(KnowledgeEndpoints.scopes.update(scopeId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
-      }
-    }
-  },
   users: {
     check: {
       get: (): Promise<AxiosResponse<User>> => {
@@ -180,9 +167,6 @@ export const apiService = {
   },
   projects: {
     base: {
-      createReflectionLog: (projectId: ID, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.post(ProjectsEndpoints.base.createReflectionLog(projectId), {title: logTitle, content: logContent, status: logStatus})
-      },
       getProject: (): Promise<AxiosResponse<Project[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getProject())
       },
@@ -192,12 +176,6 @@ export const apiService = {
       updateProjectDetail: (projectId: ID, data: Partial<Project>): Promise<AxiosResponse<Project>> => {
         return apiClient.put(ProjectsEndpoints.base.updateProjectDetail(projectId), data);
       },
-      getReflectionLog: (projectId: ID): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.get(ProjectsEndpoints.base.getReflectionLog(projectId))
-      },
-      updateReflectionLogById: (logId: ID, logTitle: string, logContent: string, logStatus: string | null = null): Promise<AxiosResponse<ReflectionLogEntry[]>> => {
-        return apiClient.put(ProjectsEndpoints.base.updateReflectionLogById(logId), {title: logTitle, content: logContent, status: logStatus})
-      }
     },
     consultation: {
       chat: (projectId: ID, messageContent: string, agentName: string): Promise<AxiosResponse> => {
@@ -205,9 +183,6 @@ export const apiService = {
       },
       getChatHistory: (projectId: ID): Promise<AxiosResponse<ChatMessage[]>> => {
         return apiClient.get(ProjectsEndpoints.consultation.getChatHistory(projectId))
-      },
-      getRefinedTopic: (projectId: ID): Promise<AxiosResponse<RefinedTopic>> => {
-        return apiClient.get(ProjectsEndpoints.consultation.getRefinedTopic(projectId))
       },
     },
     exploration: {
@@ -221,15 +196,5 @@ export const apiService = {
         return apiClient.post(ProjectsEndpoints.exploration.recommendConceptualNodes(projectId, canvasId))
       }
     },
-    keywords: {
-      create: (projectId: ID, keywordText: string, keywordStatus: string | null = null): Promise<AxiosResponse<ProcessedKeyword[]>> => {
-        return apiClient.post(ProjectsEndpoints.keywords.create(projectId), {text: keywordText, status: keywordStatus})
-      },
-    },
-    scopes: {
-      create: (projectId: ID, scopeLabel: string, scopeValue: string, scopeStatus: string | null = null): Promise<AxiosResponse<ProcessedScope[]>> => {
-        return apiClient.post(ProjectsEndpoints.scopes.create(projectId), {label: scopeLabel, value: scopeValue, status: scopeStatus})
-      },
-    }
   },
 }

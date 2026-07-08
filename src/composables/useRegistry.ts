@@ -53,46 +53,6 @@ export function useRegistry() {
   });
 
   /**
-   * MOUNT TO CANVAS
-   * Transition logic from "Semantic Seed" to "Physical Instance".
-   */
-  const mountToCanvas = (nodeId: ID, canvasId: ID, position?: { x: number, y: number }) => {
-    // const node = store.conceptualNodes.find(n => n.id === nodeId);
-    // if (!node) return;
-
-    // // 1. Update presence array to support Multi-Canvas Badges
-    // if (!node.canvases.includes(canvasId)) {
-    //   node.canvases.push(canvasId);
-    // }
-
-    // // 2. Physical Evolution: Transition from DIMMED to PULSING (Hypothesis)
-    // if (node.solidity === 'DIMMED') {
-    //   node.solidity = 'PULSING';
-    // }
-
-    // // 3. Spatial Localization: Assign physical coordinates
-    // if (position) {
-    //   node.position = position;
-    // }
-  };
-
-  /**
-   * UNMOUNT FROM CANVAS
-   * Handles the removal from a specific space without deleting the semantic identity.
-   */
-  const unmountFromCanvas = (nodeId: ID, canvasId: ID) => {
-    // const node = store.conceptualNodes.find(n => n.id === nodeId);
-    // if (!node) return;
-
-    // node.canvases = node.canvases.filter(id => id !== canvasId);
-
-    // // 4. Persistence Guard: Return to DIMMED if no longer on any canvas
-    // if (node.canvases.length === 0) {
-    //   node.solidity = 'DIMMED';
-    // }
-  };
-
-  /**
    * SELECTION SYNC
    * Centralized ID tracking for Sidebar and Panel highlighting.
    */
@@ -106,8 +66,6 @@ export function useRegistry() {
     activeCanvasNodes,
     selectedNodeId: computed(() => store.selectedNodeId),
     activeCanvasId: computed(() => store.activeCanvasId),
-    mountToCanvas,
-    unmountFromCanvas,
     selectNode
   };
 }

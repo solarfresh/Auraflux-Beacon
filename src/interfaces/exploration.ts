@@ -1,6 +1,5 @@
 import { ID, ChatMessage } from './core';
 import { ConceptualNode, ConceptualEdge, ConceptualGraph } from './conceptual-map';
-import { ResourceItem } from './knowledge';
 
 export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
 
@@ -8,7 +7,6 @@ export interface ExplorationState {
   stabilityScore: number;
 
   // --- Resource Management ---
-  resources: ResourceItem[];
 
   canvasView: ConceptualGraph;
   activeCanvasId: ID; // The currently visible canvas view

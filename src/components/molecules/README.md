@@ -17,7 +17,7 @@ Complex input patterns that combine labels, inputs, and actions.
 
 Stateless observers that communicate system status or manage contextual focus.
 
-  * **Key Components:** `VAlert`, `VModal`, `VOverlayLoader`, `VStatusScore`, `VUserAvatar`.
+  * **Key Components:** `VAlert`, `VModal`, `VOverlayLoader`, `VUserAvatar`.
   * **Focus:** Immediate reaction, backdrop management, and presence feedback.
 
 #### 3\. 📦 [Resources](https://www.google.com/search?q=resources/README.md) (Data Entities)

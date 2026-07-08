@@ -1,9 +1,6 @@
 import { apiService } from '@/api/apiService';
 import type { ID } from '@/interfaces/core';
-import type {
-  ISPStage,
-  Project,
-} from '@/interfaces/project';
+import type { Project } from '@/interfaces/project';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 

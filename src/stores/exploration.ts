@@ -2,7 +2,6 @@ import { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import {
 	ExplorationState,
-	NodeSummary
 } from '@/interfaces/exploration';
 import { defineStore } from 'pinia';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,7 +10,6 @@ export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
 		stabilityScore: 10,
 
-		resources: [],
 		canvasView: { canvasId: '', nodes: new Map(), edges: [] },
 		activeCanvasId: '',
 		selectedNodeId: '',
@@ -37,8 +35,6 @@ export const useExplorationStore = defineStore('exploration', {
 			this.sidebarNodes.set('focusQuestion', {
 				id: 'focusQuestion',
 				label: info.finalQuestion,
-				groundedness: 10,
-				solidity: 'SOLID',
 				type: 'FOCUS' as NodeType,
 			})
 
@@ -103,21 +99,6 @@ export const useExplorationStore = defineStore('exploration', {
 
 			this.isTyping = false;
 		},
-
-		/**
-		 * Returns a summarized count of node types for the active canvas,
-		 * used by the CanvasStructureSidebar for the index (U.S. 12).
-		 */
-		getCurrentNodeSummary: (nodes: Map<string, ConceptualNode>): NodeSummary => {
-			const summary: NodeSummary = { insight: 0, query: 0, resource: 0, group: 0 };
-			nodes.forEach(node => {
-				if (node.type in summary) {
-					summary[node.type as keyof NodeSummary]++;
-				}
-			});
-			return summary;
-		},
-
 
 		// Placeholder for AI logic
 		getSimulatedAIResponse(userMessage: string): string {
