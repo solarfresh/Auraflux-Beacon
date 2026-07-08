@@ -1,9 +1,10 @@
 <template>
   <VCluster justify="end" gap="md" class="w-full">
+<!--
     <VButton variant="tertiary" size="sm" @click="emit('cancel')">
       Cancel
     </VButton>
-
+ -->
     <template v-if="!props.isLocked">
       <VButton
         variant="secondary"

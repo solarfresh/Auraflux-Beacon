@@ -32,6 +32,14 @@ export type EdgeType =
   | 'REF'        // Weak association
   | 'LINK';       // Structural connection
 
+
+export type RefType = 'LINK' | 'DOCUMENT' | 'NODE';
+
+export interface SourceReference {
+  name: string;
+  type: RefType;
+};
+
 /**
  * ConceptualNode: Single Source of Truth for Canvas Nodes
  */
@@ -47,17 +55,15 @@ export interface ConceptualNode {
 
   // --- Knowledge Content (Empirical Layer) ---
   content?: string;      // Detailed snippet
-  sourceRef?: string;   // Grounding reference
+  sourceRef?: ConceptualNode[];   // Grounding reference
 
   // --- AI Reasoning (Logic Layer) ---
   rationale?: string;    // AI's justification
-  anchorId?: ID;        // Parent node for growth tracking
 
   // --- Spatial Information (Layout Layer) ---
   position?: Point2D;
 
   // NOTE: Pre-existing UI states (Optional depending on frontend needs)
-  userNotes?: string;   // Maps to content if needed
   status?: EntityStatus;
 }
 

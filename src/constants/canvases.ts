@@ -79,6 +79,12 @@ export const HANDLE_MAP: Record<string, Position> = {
   left: Position.Left,
 }
 
+export const ICON_MAP: Record<NodeType, string> = {
+    EVENT: 'Calendar', OUTCOME: 'Flag', BOUNDARY: 'Shield', ENTITY: 'User',
+    FOCUS: 'Target', RESOURCE: 'Cube', CONCEPT: 'LightBulb', INSIGHT: 'Sparkles',
+    QUERY: 'QuestionMark', NAVIGATION: 'ArrowRight', GROUP: 'Collection'
+  };
+
 /**
  * Default connection line style for Vue Flow
  */

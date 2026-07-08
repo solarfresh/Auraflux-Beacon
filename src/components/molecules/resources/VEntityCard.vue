@@ -97,6 +97,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VTooltip from '@/components/molecules/feedback/VTooltip.vue';
 import VCard from '@/components/molecules/resources/VCard.vue';
+import { ICON_MAP, NODE_THEMES } from '@/constants/canvases';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { SpacingToken } from '@/interfaces/layout';
 import { computed } from 'vue';
@@ -142,23 +143,11 @@ const solidityStyles = computed(() => {
 });
 
 const typeIcon = computed(() => {
-  const normalizedType = props.node.type?.toLowerCase();
-  const iconMap: Record<string, string> = {
-    event: 'Calendar', outcome: 'Flag', boundary: 'ShieldExclamation', entity: 'Cube',
-    focus: 'MapPin', resource: 'DocumentDuplicate', concept: 'Square3Stack3D',
-    insight: 'LightBulb', query: 'MagnifyingGlassCircle', navigation: 'RocketLaunch',
-    group: 'RectangleGroup', risk: 'ExclamationTriangle'
-  };
-  return iconMap[normalizedType] || 'CircleStack';
+  return ICON_MAP[props.node.type] || 'CircleStack';
 });
 
 const typeColor = computed(() => {
   if (props.isActive) return 'indigo-600';
-  const normalizedType = props.node.type?.toLowerCase();
-  const colorMap: Record<string, string> = {
-    focus: 'indigo-600', resource: 'blue-500', insight: 'emerald-500',
-    query: 'amber-500', group: 'purple-500', navigation: 'rose-500', risk: 'red-500'
-  };
-  return colorMap[normalizedType] || 'slate-500';
+  return `${NODE_THEMES[props.node.type]?.badge}-500` || 'slate-500';
 });
 </script>

@@ -9,6 +9,7 @@ export type ID = string;
 /** ISO 8601 formatted string (e.g., "2025-12-16T08:00:00Z"). */
 export type DateTimeString = string;
 
+export type AlertVariant = 'success' | 'warning' | 'danger' | 'info' | 'secondary';
 export type ConnectStatus = 'IDLE' | 'ACTIVE' | 'ERROR' | 'UNVERIFIED' | 'RATE_LIMITED';
 
 export type EntityStatus =

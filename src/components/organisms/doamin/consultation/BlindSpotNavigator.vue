@@ -1,134 +1,59 @@
 <template>
-  <VStack gap="xs" class="w-full min-w-0 transition-all duration-300">
-    <VBox padding="none" background="transparent" class="w-full px-0.5">
-      <VCluster justify="between" align="center" :full-width="true" gap="xs">
-        <VCluster gap="xs" align="center" class="min-w-0">
-          <VTypography
-            tag="span"
-            size="xs"
-            class="w-1.5 h-1.5 rounded-full transition-colors duration-300 shrink-0"
-            :class="isComplete ? 'bg-emerald-500' : 'bg-amber-500'"
-          />
-          <VTypography tag="span" size="xs" weight="medium" color="slate-400" class="text-[11px] tracking-wide truncate">
-            {{ alignmentString }}
-          </VTypography>
-        </VCluster>
+  <VStack gap="xs" class="w-full px-0.5">
+    <!-- Header: Status Indicator -->
+    <VCluster justify="start" align="center" class="w-full min-h-6">
+      <VTypography
+        tag="span"
+        size="xs"
+        class="w-2 h-2 rounded-full transition-colors duration-300 shadow-sm bg-amber-500"
+      />
+    </VCluster>
+
+    <!-- Consultation Gap: Hierarchical Governance Hub using VAlert -->
+    <VAlert
+      v-if="primaryGap"
+      variant="warning"
+      :border="true"
+      padding="sm"
+      class="w-full"
+    >
+      <VStack gap="xs">
+        <VTypography size="xs" weight="bold" color="slate-800">
+          {{ primaryGap.title }}
+        </VTypography>
+
+        <VTypography size="xs" color="slate-600" class="leading-relaxed">
+          {{ primaryGap.description }}
+        </VTypography>
 
         <VTypography
-          v-if="primaryInsight?.canSidebarPatch && !isCompact"
-          tag="span"
+          v-if="primaryGap.consensus"
           size="xs"
-          weight="semibold"
-          color="indigo-500"
-          class="cursor-pointer hover:text-indigo-600 active:opacity-70 select-none transition-colors shrink-0 text-[11px]"
-          @click="$emit('toggle-expand')"
+          weight="medium"
+          color="indigo-600"
+          class="italic pt-0.5"
         >
-          {{ isExpanded ? uiLabels.collapseAction : uiLabels.inspectAction }}
-        </VTypography>
-      </VCluster>
-    </VBox>
-
-    <!-- Content: 當 isCompact 為 true 時，隱藏該區塊，達成動態空間釋放 -->
-    <VCard
-      v-if="primaryInsight && !isCompact"
-      padding="sm"
-      gap="sm"
-      background="white"
-      class="border-slate-200/60 shadow-[0_1px_2px_rgba(0,0,0,0.03)] animate-in fade-in duration-500"
-    >
-      <VCluster justify="between" align="center" :full-width="true" class="w-full min-w-0">
-        <VCluster gap="xs" align="center" class="min-w-0">
-          <VTypography tag="span" class="w-1 h-3 bg-amber-500 rounded-full shrink-0" />
-          <VTypography tag="span" size="xs" weight="bold" color="slate-400" class="tracking-wider uppercase text-[9px]">
-            {{ primaryInsight.targetDimension }} Focus
-          </VTypography>
-        </VCluster>
-        <VTooltip :content="primaryInsight.description" position="bottom-right">
-          <VIcon name="question-mark-circle" type="outline" size="xs" color="slate-400" class="hover:text-amber-600 transition-colors cursor-help shrink-0" />
-        </VTooltip>
-      </VCluster>
-
-      <VStack gap="xs" class="w-full min-w-0">
-        <VTypography tag="h4" size="xs" weight="bold" color="slate-900" class="leading-snug wrap-break-words">
-          {{ primaryInsight.title }}
-        </VTypography>
-        <VTypography tag="div" size="xs" color="indigo-950" class="w-full pl-1.5 border-l-2 border-indigo-200 mt-0.5 italic font-medium leading-relaxed wrap-break-words">
-          "{{ primaryInsight.question }}"
+          Consensus: {{ primaryGap.consensus }}
         </VTypography>
       </VStack>
-
-      <VCluster justify="between" align="center" :full-width="true" class="pt-2.5 border-t border-slate-50 min-w-0">
-        <VTypography tag="span" size="xs" color="slate-400" class="shrink-0 text-[10px]">
-          {{ totalInsightsCount }} {{ uiLabels.insightsCountLabel }}
-        </VTypography>
-        <VCluster gap="xs" align="center" class="cursor-pointer group select-none shrink-0" @click="$emit('open-calibration', primaryInsight.id)">
-          <VTypography tag="span" size="xs" weight="semibold" color="indigo-600" class="group-hover:text-indigo-700 transition-colors text-[11px]">
-            {{ uiLabels.calibrateAction }}
-          </VTypography>
-          <VIcon name="arrow-right" type="solid" size="xs" color="indigo-600" class="group-hover:translate-x-0.5 transition-transform duration-150" />
-        </VCluster>
-      </VCluster>
-    </VCard>
+    </VAlert>
   </VStack>
 </template>
 
 <script setup lang="ts">
-/**
- * BlindSpotNavigator Component (Refactored Phase 1 Concentrator)
- * Consolidates layout tracking mechanisms natively while entirely stripping down
- * secondary dialectic list variables to alleviate sidebar cognitive weight.
- * Enforces strict synchronization with VIcon, VCard, and VTooltip design tokens.
- */
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VTooltip from '@/components/molecules/feedback/VTooltip.vue';
-import VCard from '@/components/molecules/resources/VCard.vue';
-import type { NodeType } from '@/interfaces/conceptual-map';
 
-interface AIInsight {
+interface ConsultationGap {
   id: string;
-  severity: 'CRITICAL' | 'WARNING' | 'INFO';
-  targetDimension: NodeType;
   title: string;
   description: string;
-  question: string;
-  canSidebarPatch: boolean;
-  patchActionLabel?: string;
+  consensus?: string;
 }
 
-interface UILabels {
-  inspectAction: string;
-  collapseAction: string;
-  calibrateAction: string;
-  insightsCountLabel: string;
-}
-
-withDefaults(
-  defineProps<{
-    alignmentString: string;
-    isComplete: boolean;
-    isExpanded: boolean;
-    isCompact: boolean;
-    totalInsightsCount: number;
-    primaryInsight: AIInsight | null;
-    uiLabels: UILabels;
-  }>(),
-  {
-    isComplete: false,
-    isExpanded: false,
-    isCompact: false,
-    totalInsightsCount: 0,
-    primaryInsight: null
-  }
-);
-
-defineEmits<{
-  /** Toggles the expansion state of the side inspection module panel */
-  (e: 'toggle-expand'): void;
-  /** Dispatches an intent to drill-down into full-screen workspace calibration */
-  (e: 'open-calibration', id: string): void;
+defineProps<{
+  primaryGap?: ConsultationGap | null;
 }>();
 </script>

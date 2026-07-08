@@ -36,8 +36,8 @@ import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
 import VBox from '@/components/atoms/layout/VBox.vue';
-import VEdgeFloatingEditor from '@/components/molecules/canvases/VEdgeFloatingEditor.vue';
-import VNodeFloatingEditor from '@/components/molecules/canvases/VNodeFloatingEditor.vue';
+import VEdgeFloatingEditor from '@/components/organisms/canvases/VEdgeFloatingEditor.vue';
+import VNodeFloatingEditor from '@/components/organisms/canvases/VNodeFloatingEditor.vue';
 import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue';
 import VConceptualNode from '@/components/organisms/canvases/VConceptualNode.vue';
 

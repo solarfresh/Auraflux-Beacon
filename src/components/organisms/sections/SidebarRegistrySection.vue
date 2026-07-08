@@ -40,11 +40,10 @@
           variant="ghost"
           size="xs"
           icon-only
+          icon-name="Plus"
           class="opacity-0 group-hover:opacity-100 transition-opacity"
           @click.stop="emit('add')"
-        >
-          <VIcon name="Plus" size="sm" />
-        </VButton>
+        />
       </VCluster>
     </VBox>
 
@@ -107,7 +106,7 @@ const props = withDefaults(defineProps<{
   canAdd?: boolean;
 }>(), {
   isCollapsible: true,
-  canAdd: true
+  canAdd: false
 });
 
 const emit = defineEmits<{

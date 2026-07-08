@@ -18,36 +18,26 @@
     <template #body>
       <VStack gap="md" class="min-w-0 transition-all duration-300">
 
-        <BlindSpotNavigator
-          :alignment-string="macroAlignmentString"
-          :is-complete="isGraphFullyAligned"
-          :is-expanded="isStageTwoExpanded"
-          :is-compact="false"
-          :total-insights-count="insightsList.length"
-          :primary-insight="primaryInsight"
-          :ui-labels="uiLabels"
-          @toggle-expand="handleToggleExpand"
-          @open-calibration="navigateToStageThreeCalibration"
-        />
-
-        <LogicConflictAlert
-          v-if="hasLogicConflict"
-          :conflict-data="activeConflict"
+        <ConsultationAlert
+          v-if="activeAlert"
+          :type="activeAlert.type"
+          :title="activeAlert.title"
+          :description="activeAlert.description"
+          :consensus="activeAlert.consensus"
+          :conflict-data="activeAlert.conflictData"
           class="animate-in fade-in slide-in-from-top-2"
-          @resolve="emit('resolve-conflict')"
-          @dismiss="hasLogicConflict = false"
+          @resolve="handleResolveGovernance"
+          @dismiss="handleDismissGovernance"
         />
 
-        <VBox border="bottom" />
+        <VBox v-if="activeAlert" border="bottom" />
 
         <VStack gap="xs" class="w-full">
-
           <SidebarRegistrySection
             title="Proposals"
             section-type="TOP"
             :nodes="mappedProposals"
             :selected-node-id="selectedNodeId"
-            :can-add="true"
             @select="handleNodeSelect"
             @hover="handleNodeHover"
             @teleport="handleProposalTeleport"
@@ -59,7 +49,8 @@
             section-type="MIDDLE"
             :nodes="mappedReflections"
             :selected-node-id="selectedNodeId"
-            :can-add="false"
+            :can-add="true"
+            @add="handleAddNewReflection"
             @select="handleNodeSelect"
             @hover="handleNodeHover"
           />
@@ -69,15 +60,25 @@
             section-type="BOTTOM"
             :nodes="mappedConsensus"
             :selected-node-id="selectedNodeId"
-            :can-add="false"
             @select="handleNodeSelect"
             @hover="handleNodeHover"
           />
 
-
           <VBox class="h-16" aria-hidden="true" />
         </VStack>
       </VStack>
+
+      <VBox
+        v-if="isEditorOpen && editingNode"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs"
+        @click.self="isEditorOpen = false"
+      >
+        <VNodeFormEditor
+          :node="editingNode"
+          @confirm="handleSave"
+          @cancel="isEditorOpen = false"
+        />
+      </VBox>
     </template>
   </BaseSidebarLayout>
 </template>
@@ -91,10 +92,10 @@ import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import BlindSpotNavigator from '@/components/organisms/doamin/consultation/BlindSpotNavigator.vue';
-import LogicConflictAlert from '@/components/organisms/doamin/consultation/LogicConflictAlert.vue';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
+import ConsultationAlert from '@/components/organisms/doamin/consultation/ConsultationAlert.vue';
+import VNodeFormEditor from '@/components/organisms/forms/VNodeFormEditor.vue';
 
 import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@/interfaces/core';
@@ -102,8 +103,6 @@ import type { EntityStatus, ID } from '@/interfaces/core';
 const emit = defineEmits<{
   (e: 'open-material-manager'): void;
   (e: 'open-consensus-manager'): void;
-  (e: 'open-reflection-manager'): void;
-  (e: 'edit-proposal', id: string): void;
   (e: 'resolve-conflict'): void;
   (e: 'node-selected', id: ID): void;
   (e: 'node-hovered', id: ID | null): void;
@@ -112,143 +111,71 @@ const emit = defineEmits<{
 
 // --- ⚙️ Core Telemetry States ---
 const confirmedConsensusCount = ref<number>(4);
-const hasLogicConflict = ref<boolean>(true);
+const hasLogicConflict = ref<boolean>(false);
 const selectedNodeId = ref<ID | null>(null);
-const isStageTwoExpanded = ref(false);
 
 // --- 📦 Normalized Business Domain Data Models ---
-interface NodeDimension {
-  type: NodeType;
-  label: string;
-  isActive: boolean;
-  activeCount: number;
-  totalCount: number;
-}
-
-interface AIInsight {
-  id: string;
-  severity: 'CRITICAL' | 'WARNING' | 'INFO';
-  targetDimension: NodeType;
-  title: string;
-  description: string;
-  question: string;
-  canSidebarPatch: boolean;
-  patchActionLabel?: string;
-  patchPayload?: Record<string, any>;
-}
-
-interface Proposal {
+interface ConsultationGap {
   id: string;
   title: string;
   description: string;
-  status: EntityStatus; // Replaced legacy ProposalStatus with global EntityStatus schema
-  createdAt: string;
-  dimension: NodeType;
+  consensus?: string;
 }
 
-const dimensions = ref<NodeDimension[]>([
-  { type: 'CONCEPT', label: 'Concept', isActive: true, activeCount: 3, totalCount: 4 },
-  { type: 'RESOURCE', label: 'Resource', isActive: false, activeCount: 0, totalCount: 2 },
-  { type: 'BOUNDARY', label: 'Boundary', isActive: true, activeCount: 2, totalCount: 2 },
-  { type: 'OUTCOME', label: 'Outcome', isActive: true, activeCount: 1, totalCount: 1 },
-  { type: 'EVENT', label: 'Event', isActive: true, activeCount: 1, totalCount: 1 },
-  { type: 'FOCUS', label: 'FOCUS', isActive: true, activeCount: 1, totalCount: 1 },
-]);
-
-const insightsList = ref<AIInsight[]>([
-  {
-    id: 'insight-resource-01',
-    severity: 'CRITICAL',
-    targetDimension: 'RESOURCE',
-    title: 'RESOURCE Dimension Interrupted',
-    description: 'The current discussion heavily weights on target constraints but lacks external evidence.',
-    question: 'What existing metrics do you currently have to defend this particular logistics trajectory?',
-    canSidebarPatch: false
-  }
-]);
-
-// Updated mock array values to align fully with core EntityStatus schemas
-const activeProposals = ref<Proposal[]>([
+/** * Refactored: Replaced explicit Proposal interface with ConceptualNode
+ * to enforce structural integrity across all domain modules.
+ */
+const activeProposals = ref<ConceptualNode[]>([
   {
     id: 'prop-001',
-    title: 'Q3 Market Penetration',
-    description: 'Focus on social media ad spend for the upcoming product launch.',
-    status: 'AI_EXTRACTED', // Proposed by AI Agent, awaiting user review
-    createdAt: '2026-07-01T10:00:00Z',
-    dimension: 'RESOURCE'
+    type: 'RESOURCE',
+    label: 'Q3 Market Penetration',
+    content: 'Focus on social media ad spend for the upcoming product launch.',
+    status: 'AI_EXTRACTED'
   },
   {
     id: 'prop-002',
-    title: 'ISO-27001 Compliance Audit',
-    description: 'Initiate mandatory data security audit for the European market entry.',
-    status: 'USER_DRAFT', // Under active editing or curation by the user
-    createdAt: '2026-07-01T11:30:00Z',
-    dimension: 'BOUNDARY'
+    type: 'BOUNDARY',
+    label: 'ISO-27001 Compliance Audit',
+    content: 'Initiate mandatory data security audit for the European market entry.',
+    status: 'USER_DRAFT'
   }
 ]);
 
-// --- 🔄 Structural Adapters with Native Type Inheritance ---
+const insightsList = ref<ConsultationGap[]>([
+  {
+    id: 'insight-resource-01',
+    title: 'RESOURCE Dimension Interrupted',
+    description: 'Discussion lacks external evidence for specified market constraints.',
+    consensus: 'Fiscal Discipline Baseline (Cap $200k)'
+  }
+]);
 
-/** * Maps Proposal data models into clean ConceptualNode objects.
- * Since properties are unified under EntityStatus, this inherits pure native types.
- */
-const mappedProposals = computed<ConceptualNode[]>(() => {
-  return activeProposals.value.map(prop => ({
-    id: prop.id,
-    type: prop.dimension,
-    label: prop.title,
-    content: prop.description,
-    status: prop.status
-  }));
-});
+// --- 🔄 Structural Adapters ---
+const mappedProposals = computed<ConceptualNode[]>(() => activeProposals.value);
 
-/** * Maps active consultation reflection summaries into ConceptualNode blueprints.
- */
-const mappedReflections = computed<ConceptualNode[]>(() => {
-  return [
-    {
-      id: 'reflect-001',
-      type: 'CONCEPT',
-      label: 'Client Overheads Hesitation',
-      content: 'Client sounded hesitant when overhead thresholds were brought up during Q2 analysis.',
-      status: 'USER_DRAFT'
-    }
-  ];
-});
+const mappedReflections = computed<ConceptualNode[]>(() => [{
+  id: 'reflect-001',
+  type: 'CONCEPT',
+  label: 'Client Overheads Hesitation',
+  content: 'Client sounded hesitant when overhead thresholds were brought up.',
+  status: 'USER_DRAFT'
+}]);
 
-/** * Maps verified system metrics into consensus check items.
- */
-const mappedConsensus = computed<ConceptualNode[]>(() => {
-  return [
-    {
-      id: 'consensus-001',
-      type: 'OUTCOME',
-      label: 'Verified Fiscal Discipline Baseline',
-      content: `Currently maintaining ${confirmedConsensusCount.value} verified strategic consensus checkpoints.`,
-      status: 'LOCKED'
-    }
-  ];
-});
+const mappedConsensus = computed<ConceptualNode[]>(() => [{
+  id: 'consensus-001',
+  type: 'OUTCOME',
+  label: 'Verified Fiscal Discipline Baseline',
+  content: `Currently maintaining ${confirmedConsensusCount.value} verified checkpoints.`,
+  status: 'LOCKED'
+}]);
+
+const isNewNode = ref(false);
+const isEditorOpen = ref(false);
+const editingNode = ref<ConceptualNode | null>(null);
 
 // --- 🧠 Computed Indicators ---
-const uiLabels = {
-  inspectAction: 'Expand Quick Fix ↓',
-  collapseAction: 'Collapse Fix ↑',
-  calibrateAction: 'Calibrate Now',
-  insightsCountLabel: 'Insights Detected'
-};
-
-const primaryInsight = computed<AIInsight | null>(() => {
-  if (insightsList.value.length === 0) return null;
-  return insightsList.value.find(i => i.severity === 'CRITICAL') || insightsList.value[0] || null;
-});
-
-const macroAlignmentString = computed(() => {
-  const settledCount = dimensions.value.filter(d => d.isActive).length;
-  return `${settledCount} / ${dimensions.value.length} Dimensions Settled`;
-});
-
-const isGraphFullyAligned = computed(() => dimensions.value.every(d => d.isActive));
+const primaryGap = computed<ConsultationGap | null>(() => insightsList.value[0] || null);
 
 const activeConflict = ref({
   title: 'Resource Allocation Violation',
@@ -257,21 +184,82 @@ const activeConflict = ref({
   impactAssessment: 'This proposal contradicts the agreed-upon fiscal discipline.'
 });
 
-// --- ⚡ Central Unified Event Handlers ---
-const handleToggleExpand = () => { isStageTwoExpanded.value = !isStageTwoExpanded.value; };
-const handleNodeSelect = (id: ID) => { selectedNodeId.value = id; emit('node-selected', id); };
+const activeAlert = computed(() => {
+  if (activeConflict.value) {
+    return {
+      type: 'CONFLICT' as const,
+      title: activeConflict.value.title,
+      conflictData: activeConflict.value
+    };
+  }
+  if (primaryGap.value) {
+    return {
+      type: 'GAP' as const,
+      title: primaryGap.value.title,
+      description: primaryGap.value.description,
+      consensus: primaryGap.value.consensus
+    };
+  }
+  return null;
+});
+
+const handleAddNewReflection = () => {
+  editingNode.value = {
+    id: `new-${Date.now()}`,
+    type: 'CONCEPT', // 或是 INSIGHT
+    label: '',
+    status: 'USER_DRAFT'
+  };
+
+  isNewNode.value = true;
+  isEditorOpen.value = true;
+};
+
+const handleResolveGovernance = () => {
+  if (hasLogicConflict.value) emit('resolve-conflict');
+  else console.log('[Router] Calibration');
+};
+
+const handleDismissGovernance = () => {
+  if (hasLogicConflict.value) hasLogicConflict.value = false;
+  else insightsList.value = [];
+};
+
+// --- ⚡ Event Handlers ---
+const handleNodeSelect = (id: ID) => {
+  selectedNodeId.value = id;
+
+  const allNodes = [...activeProposals.value, ...mappedReflections.value, ...mappedConsensus.value];
+  const targetNode = allNodes.find(n => n.id === id);
+
+  if (targetNode) {
+    editingNode.value = { ...targetNode };
+    isEditorOpen.value = true;
+  }
+
+  emit('node-selected', id);
+};
 const handleNodeHover = (id: ID | null) => { emit('node-hovered', id); };
 const handleProposalTeleport = (id: string) => { emit('teleport-node', id); };
 
 const navigateToStageThreeCalibration = (insightId: string) => {
-  console.log(`[Router] Navigating to Calibration Workspace for Insight: ${insightId}`);
+  console.log(`[Router] Calibration: ${insightId}`);
 };
 
 const navigateToProposalManager = () => {
-  console.log('[Router] Opening Proposal Creation Hub');
   emit('open-consensus-manager');
 };
 
 const sandboxContainer = ref<HTMLElement | null>(null);
 const scrollToSandbox = () => { sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' }); };
+
+const handleSave = (updatedNode: ConceptualNode) => {
+  const index = activeProposals.value.findIndex(n => n.id === updatedNode.id);
+  if (index !== -1) {
+    activeProposals.value[index] = updatedNode;
+  }
+
+  isEditorOpen.value = false;
+  editingNode.value = null;
+};
 </script>

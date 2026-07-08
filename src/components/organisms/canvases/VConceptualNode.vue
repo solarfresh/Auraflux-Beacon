@@ -28,14 +28,18 @@
             {{ props.data.label }}
           </VTypography>
 
-          <div
-            v-if="props.data.type === 'INSIGHT' && props.data.userNotes"
-            class="p-2 bg-white/60 rounded border border-white/50 shadow-inner"
+          <VBox
+            v-if="props.data.type === 'INSIGHT' && props.data.rationale"
+            background="white"
+            padding="xs"
+            rounded="sm"
+            border="all"
+            class="bg-opacity-60 shadow-inner"
           >
             <VTypography size="xs" class="italic opacity-80 line-clamp-2">
-              "{{ props.data.userNotes }}"
+              "{{ props.data.rationale }}"
             </VTypography>
-          </div>
+          </VBox>
 
           </VStack>
       </VStack>
