@@ -1,5 +1,3 @@
-import { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
-import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import {
 	ExplorationState,
 } from '@/interfaces/exploration';
@@ -8,64 +6,19 @@ import { v4 as uuidv4 } from 'uuid';
 
 export const useExplorationStore = defineStore('exploration', {
 	state: (): ExplorationState => ({
-		stabilityScore: 10,
-
 		canvasView: { canvasId: '', nodes: new Map(), edges: [] },
-		activeCanvasId: '',
 		selectedNodeId: '',
-		sidebarNodes: new Map(),
 
 		chatMessages: [],
 		isTyping: false,
 		aiSearchSuggestions: [],
 		hasUnreadAIChat: false,
-
-		reflectionLogs: [],
-		isExplorationSufficient: false,
 	}),
 
 	getters: {
 	},
 
 	actions: {
-		async setSidebarRegistryInfo(info: SidebarRegistryInfo) {
-			this.stabilityScore = info.stabilityScore;
-
-			// TODO: The data model of final question must be defined
-			this.sidebarNodes.set('focusQuestion', {
-				id: 'focusQuestion',
-				label: info.finalQuestion,
-				type: 'FOCUS' as NodeType,
-			})
-
-			this.activeCanvasId = info.activeCanvasId;
-
-			info.nodes.map((node: ConceptualNode) => {
-				this.sidebarNodes.set(node.id, node);
-			});
-		},
-
-		// --- Multi-Canvas Management (U.S. 2, 3) ---
-
-		/** Switches the active canvas view and loads its data */
-		async setActiveCanvasView(viewId: string) {
-			if (this.activeCanvasId === viewId) return;
-
-			// 1. Save current view's nodes/edges (critical step)
-			// SaveNodesAndEdges(this.activeCanvasViewId, this.conceptualNodes, this.conceptualEdges);
-
-			this.activeCanvasId = viewId;
-			// 2. Load new view's data
-			// this.conceptualNodes = await api.fetchData(`/exploration/canvas/${viewId}/nodes`);
-			// this.conceptualEdges = await api.fetchData(`/exploration/canvas/${viewId}/edges`);
-
-			// For now, simulating load:
-			// this.conceptualNodes = [];
-			// this.conceptualEdges = [];
-		},
-
-		// --- AI Interaction (U.S. 10, 11) ---
-
 		addMessage(content: string, isUser: boolean = true) {
 			this.chatMessages.push({
 				id: uuidv4(),

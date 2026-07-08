@@ -68,6 +68,8 @@ export const ProjectsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
     updateProjectDetail: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
+    getConceptualNodes: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
   },
   consultation: {
     chat: (projectId: ID) =>
@@ -78,8 +80,8 @@ export const ProjectsEndpoints = {
   exploration: {
     createSession: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/session/`,
-    getSidebarRegistryInfo: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/sidebar/`,
+    getSessionInfo: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/session/`,
     recommendConceptualNodes: (projectId: ID, canvasId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/${canvasId}/nodes/recommend/`,
   },

@@ -4,7 +4,6 @@ import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api'
 import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ChatMessage } from '@/interfaces/core';
 import { ID } from '@/interfaces/core';
-import type { SidebarRegistryInfo } from '@/interfaces/exploration';
 import type { Project } from '@/interfaces/project';
 import type { User } from '@/interfaces/user';
 import axios, { AxiosResponse } from 'axios';
@@ -176,6 +175,9 @@ export const apiService = {
       updateProjectDetail: (projectId: ID, data: Partial<Project>): Promise<AxiosResponse<Project>> => {
         return apiClient.put(ProjectsEndpoints.base.updateProjectDetail(projectId), data);
       },
+      getConceptualNodes: (projectId: ID): Promise<AxiosResponse<ConceptualNode[]>> => {
+        return apiClient.get(ProjectsEndpoints.base.getConceptualNodes(projectId));
+      },
     },
     consultation: {
       chat: (projectId: ID, messageContent: string, agentName: string): Promise<AxiosResponse> => {
@@ -186,11 +188,11 @@ export const apiService = {
       },
     },
     exploration: {
-      createSession: (projectId: ID, stabilityScore: number, finalQuestion: string): Promise<AxiosResponse<any>> => {
-        return apiClient.post(ProjectsEndpoints.exploration.createSession(projectId), {stabilityScore: stabilityScore, finalQuestion: finalQuestion})
+      createSession: (projectId: ID): Promise<AxiosResponse> => {
+        return apiClient.post(ProjectsEndpoints.exploration.createSession(projectId))
       },
-      getSidebarRegistryInfo: (projectId: ID): Promise<AxiosResponse<SidebarRegistryInfo>> => {
-        return apiClient.get(ProjectsEndpoints.exploration.getSidebarRegistryInfo(projectId))
+      getSessionInfo: (projectId: ID): Promise<AxiosResponse> => {
+        return apiClient.get(ProjectsEndpoints.exploration.getSessionInfo(projectId))
       },
       recommendConceptualNodes: (projectId: ID, canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
         return apiClient.post(ProjectsEndpoints.exploration.recommendConceptualNodes(projectId, canvasId))

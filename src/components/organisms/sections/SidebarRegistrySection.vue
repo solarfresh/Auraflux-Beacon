@@ -102,6 +102,7 @@ import VBox from '@/components/atoms/layout/VBox.vue';
 import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
+import VEntityCard from '@/components/molecules/resources/VEntityCard.vue';
 import VTreeItem from '@/components/organisms/domain/canvases/VTreeItem.vue';
 import { computed, ref } from 'vue';
 

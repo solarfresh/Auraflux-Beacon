@@ -63,73 +63,62 @@
         />
       </VStack>
     </template>
-
-    <template #footer>
-      <VBox
-        background="slate-50"
-        padding="md"
-        border="top"
-        class="flex items-center justify-between"
-      >
-        <VTypography size="xs" color="slate-500" weight="medium">
-          Stability
-        </VTypography>
-
-        <VBox padding="none" class="flex items-center gap-2">
-          <VBox
-            padding="none"
-            class="w-2 h-2 rounded-full shadow-sm"
-            :background="stabilityScore < 4 ? 'rose-50' : 'emerald-50'"
-            :class="stabilityScore < 4 ? 'bg-red-400' : 'bg-emerald-400'"
-          />
-          <VTypography
-            size="xs"
-            weight="bold"
-            :class="stabilityScore < 4 ? 'text-red-600' : 'text-emerald-600'"
-          >
-            {{ stabilityScore }}/10
-          </VTypography>
-        </VBox>
-      </VBox>
-    </template>
   </BaseSidebarLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { useRegistry } from '@/composables/useRegistry';
+import { useCanvasStore } from '@/stores/canvas';
 import { useExplorationStore } from '@/stores/exploration';
+import { useProjectStore } from '@/stores/project';
 import type { NodeType } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
 
 // Layout Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
 
 // Layout & UI
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
 
-/**
- * DiscoverySidebar: The control center for the Research Canvas.
- * It manages the visibility and organization of all nodes within the registry,
- * categorized by their functional stability.
- */
-const {
-  registryNodes,
-  selectedNodeId,
-  inboxNodes,
-  selectNode
-} = useRegistry();
-
+const canvasStore = useCanvasStore();
 const explorationStore = useExplorationStore();
+const projectStore = useProjectStore();
 
 // --- Local State ---
+const selectedNodeId = ref<ID | null>(null);
 const viewMode = ref<'all' | 'inbox'>('all');
-const stabilityScore = computed(() => explorationStore.stabilityScore);
+
+/**
+ * GLOBAL REGISTRY ACCESS
+ * Ensures the Sidebar has access to the full manifest of nodes.
+ */
+const registryNodes = computed(() => {
+  return Array.from(projectStore.conceptualNodes.entries()).map(([id, node]) => {
+    return node
+  })
+});
+
+/**
+ * INBOX VIEW
+ * Nodes that are not yet placed on any canvas (DIMMED state).
+ */
+const inboxNodes = computed(() => {
+  const currentCanvas = canvasStore.getGraphCache(projectStore.activeCanvasId as ID);
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
+
+  if (!currentCanvas?.nodes) {
+    return sidebarNodesArray;
+  }
+
+  if (typeof currentCanvas.nodes.has === 'function') {
+    return sidebarNodesArray.filter(node => !currentCanvas.nodes.has(node.id));
+  }
+
+  return sidebarNodesArray.filter(node => !(node.id in currentCanvas.nodes));
+});
 
 // --- Logic ---
 const filterNodesByTypes = (types: NodeType[]) => {
@@ -146,5 +135,9 @@ const handleAction = (actionType: string) => {
 const handleTeleport = (nodeId: string, canvasId?: string ) => {
   console.log(`Teleporting to node ${nodeId}`);
   // Global canvas navigation logic
+};
+
+const selectNode = (nodeId: ID | null) => {
+  selectedNodeId.value = nodeId;
 };
 </script>

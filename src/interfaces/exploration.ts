@@ -1,35 +1,20 @@
 import { ID, ChatMessage } from './core';
-import { ConceptualNode, ConceptualEdge, ConceptualGraph } from './conceptual-map';
+import { ConceptualGraph } from './conceptual-map';
 
 export type ManagementType = 'final-question' | 'keyword' | 'manual-resource' | 'reflection-log' | 'scope' | null;
 
 export interface ExplorationState {
-  stabilityScore: number;
-
   // --- Resource Management ---
 
   canvasView: ConceptualGraph;
-  activeCanvasId: ID; // The currently visible canvas view
   selectedNodeId: ID | null;
-  sidebarNodes: Map<string, ConceptualNode>;
 
   // --- AI Interaction & State ---
   chatMessages: AIChatMessage[];
   isTyping: boolean;
   aiSearchSuggestions: string[];
   hasUnreadAIChat: boolean; // For Notification Badge (U.S. 10)
-
-  // --- Reflection & Progress ---
-  reflectionLogs: any[]; // Placeholder for reflection entries
-  isExplorationSufficient: boolean; // Ready to transition (U.S. footer)
 }
-
-export interface SidebarRegistryInfo {
-  stabilityScore: number;
-  finalQuestion: string;
-  activeCanvasId: ID;
-  nodes: ConceptualNode[];
-};
 
 /**
  * AI Guide & Search Chat Message
@@ -49,29 +34,4 @@ export interface AIChatMessage extends ChatMessage {
 
   /** Meta-type to help the UI render different message styles. */
   metaType?: 'suggestion' | 'summary' | 'question';
-}
-
-/**
- * Manual Resource Input Data
- * Interface for the 'Add Resource' modal when a user manually inputs data.
- */
-export interface ManualResourceData {
-  /** URL to be scraped/fetched by the backend. */
-  url?: string;
-
-  /** Mandatory if 'url' is absent. Allows direct notes or quotes. */
-  content?: string;
-
-  /** User-defined title. Might be overwritten by metadata if it's a URL. */
-  title?: string;
-
-  /** Keywords or tags manually associated by the user. */
-  manualTags?: string[];
-}
-
-export interface NodeSummary {
-  insight: number;
-  query: number;
-  resource: number;
-  group: number;
 }

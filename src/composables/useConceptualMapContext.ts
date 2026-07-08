@@ -66,7 +66,6 @@ export function useConceptualMapContext(config?: ContextConfig) {
   const editingNodeId = ref<string>('');
   const localNodeData = ref({
     label: '',
-    userNotes: '',
     status: ''
   });
 
@@ -101,7 +100,6 @@ export function useConceptualMapContext(config?: ContextConfig) {
     editingNodeId.value = nodeId;
     localNodeData.value = {
       label: node.label || '',
-      userNotes: node.userNotes || '',
       status: node.status || 'LOCKED'
     };
   };
@@ -109,7 +107,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   const closeNodeEditor = () => {
     isNodeEditActive.value = false;
     editingNodeId.value = '';
-    localNodeData.value = { label: '', userNotes: '', status: '' };
+    localNodeData.value = { label: '', status: '' };
   };
 
   // --------------------------------------------------------------------------
