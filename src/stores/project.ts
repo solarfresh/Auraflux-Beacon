@@ -100,6 +100,23 @@ export const useProjectStore = defineStore('project', () => {
     currentProjectId.value = projectId;
   };
 
+  /**
+   * Dispatches node updates including moving, editing, or structural deletes.
+   */
+  const updateConceptualNode = async (node: ConceptualNode) => {
+    if (!currentProjectId.value) return;
+
+    try {
+      await apiService.projects.base.updateConceptualNodes(
+        currentProjectId.value, node.id, node
+      );
+      conceptualNodes.value.set(node.id, node);
+    } catch (error) {
+      console.error(`[API Error] Failed to persist node:`, error);
+      throw error;
+    }
+  };
+
   async function updateProjectDetail(data: Partial<Project>) {
     try {
       let response = await apiService.projects.base.updateProjectDetail(currentProjectId.value as ID, data);
@@ -149,18 +166,21 @@ export const useProjectStore = defineStore('project', () => {
   // --- Return public API ---
   return {
     activeCanvasId,
+    chatMessages,
     projects,
     currentProjectId,
     conceptualNodes,
     // Getters
     currentStage,
     projectName,
+    isTyping,
     // Actions
     loadConceptualNodes,
     loadExplorationPhaseData,
     loadProjects,
     loadProjectDetail,
     setCurrentProjectId,
+    updateConceptualNode,
     updateProjectDetail,
     addMessage,
     getMessages

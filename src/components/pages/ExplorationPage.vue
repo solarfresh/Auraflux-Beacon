@@ -39,7 +39,7 @@ import { useRoute } from 'vue-router';
 
 import ConceptualMapCanvas from '@/components/organisms/domain/canvases/ConceptualMapCanvas.vue';
 import StrategicDiscoveryPanel from '@/components/organisms/panels/StrategicDiscoveryPanel.vue';
-import DiscoverySidebar from '@/components/organisms/sidebars/DiscoverySidebar.vue';
+import DiscoverySidebar from '@/components/organisms/domain/canvases/DiscoverySidebar.vue';
 import ThreePaneWorkspaceTemplate from '@/components/templates/ThreePaneWorkspaceTemplate.vue';
 
 // Stores

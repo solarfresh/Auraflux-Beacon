@@ -7,13 +7,13 @@ import type {
 import type { WebSocketMessage } from '@/interfaces/notification';
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
-import { useConsultationStore } from './consultation';
+import { useProjectStore } from '@/stores/project';
 
 // Define your WebSocket URL
 const AURAFLUX_WS_URL = config.AURAFLUX_WS_URL;
 
 export const useNotificationStore = defineStore('notification', () => {
-    const consultationStore = useConsultationStore();
+    const projectStore = useProjectStore();
 
     // Extract the reactive properties from the composable
     const {
@@ -55,10 +55,10 @@ export const useNotificationStore = defineStore('notification', () => {
         let responseText = payload['full_response_text']
         let status = payload['status']
 
-        let lastMessage = consultationStore.chatMessages.at(-1) as ChatMessage;
+        let lastMessage = projectStore.chatMessages.at(-1) as ChatMessage;
         lastMessage.content = responseText
         if (status === 'COMPLETE') {
-            consultationStore.isTyping = false
+            projectStore.isTyping = false
         }
     }
 

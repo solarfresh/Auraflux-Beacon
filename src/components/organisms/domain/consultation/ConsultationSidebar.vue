@@ -84,6 +84,7 @@
 </template>
 
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
 import { computed, ref } from 'vue';
 
 import VButton from '@/components/atoms/buttons/VButton.vue';
@@ -97,8 +98,12 @@ import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegis
 import ConsultationAlert from '@/components/organisms/domain/consultation/ConsultationAlert.vue';
 import VNodeFormEditor from '@/components/organisms/forms/VNodeFormEditor.vue';
 
-import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
-import type { EntityStatus, ID } from '@/interfaces/core';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import type { ID } from '@/interfaces/core';
+
+import { useProjectStore } from '@/stores/project';
+
+const projectStore = useProjectStore();
 
 const emit = defineEmits<{
   (e: 'open-material-manager'): void;
@@ -122,26 +127,6 @@ interface ConsultationGap {
   consensus?: string;
 }
 
-/** * Refactored: Replaced explicit Proposal interface with ConceptualNode
- * to enforce structural integrity across all domain modules.
- */
-const activeProposals = ref<ConceptualNode[]>([
-  {
-    id: 'prop-001',
-    type: 'RESOURCE',
-    label: 'Q3 Market Penetration',
-    content: 'Focus on social media ad spend for the upcoming product launch.',
-    status: 'AI_EXTRACTED'
-  },
-  {
-    id: 'prop-002',
-    type: 'BOUNDARY',
-    label: 'ISO-27001 Compliance Audit',
-    content: 'Initiate mandatory data security audit for the European market entry.',
-    status: 'USER_DRAFT'
-  }
-]);
-
 const insightsList = ref<ConsultationGap[]>([
   {
     id: 'insight-resource-01',
@@ -151,24 +136,26 @@ const insightsList = ref<ConsultationGap[]>([
   }
 ]);
 
+const registryNodes = computed(() => projectStore.conceptualNodes);
+
 // --- 🔄 Structural Adapters ---
-const mappedProposals = computed<ConceptualNode[]>(() => activeProposals.value);
+const mappedProposals = computed<ConceptualNode[]>(() => {
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
 
-const mappedReflections = computed<ConceptualNode[]>(() => [{
-  id: 'reflect-001',
-  type: 'CONCEPT',
-  label: 'Client Overheads Hesitation',
-  content: 'Client sounded hesitant when overhead thresholds were brought up.',
-  status: 'USER_DRAFT'
-}]);
+  return sidebarNodesArray.filter(node => node.status === 'AI_EXTRACTED' || node.status === 'ON_HOLD');
+});
 
-const mappedConsensus = computed<ConceptualNode[]>(() => [{
-  id: 'consensus-001',
-  type: 'OUTCOME',
-  label: 'Verified Fiscal Discipline Baseline',
-  content: `Currently maintaining ${confirmedConsensusCount.value} verified checkpoints.`,
-  status: 'LOCKED'
-}]);
+const mappedReflections = computed<ConceptualNode[]>(() => {
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
+
+  return sidebarNodesArray.filter(node => node.status === 'USER_DRAFT');
+});
+
+const mappedConsensus = computed<ConceptualNode[]>(() => {
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
+
+  return sidebarNodesArray.filter(node => node.status === 'LOCKED');
+});
 
 const isNewNode = ref(false);
 const isEditorOpen = ref(false);
@@ -205,8 +192,8 @@ const activeAlert = computed(() => {
 
 const handleAddNewReflection = () => {
   editingNode.value = {
-    id: `new-${Date.now()}`,
-    type: 'CONCEPT', // 或是 INSIGHT
+    id: uuidv4(),
+    type: 'CONCEPT',
     label: '',
     status: 'USER_DRAFT'
   };
@@ -229,8 +216,7 @@ const handleDismissGovernance = () => {
 const handleNodeSelect = (id: ID) => {
   selectedNodeId.value = id;
 
-  const allNodes = [...activeProposals.value, ...mappedReflections.value, ...mappedConsensus.value];
-  const targetNode = allNodes.find(n => n.id === id);
+  const targetNode = registryNodes.value.get(id);
 
   if (targetNode) {
     editingNode.value = { ...targetNode };
@@ -254,10 +240,7 @@ const sandboxContainer = ref<HTMLElement | null>(null);
 const scrollToSandbox = () => { sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' }); };
 
 const handleSave = (updatedNode: ConceptualNode) => {
-  const index = activeProposals.value.findIndex(n => n.id === updatedNode.id);
-  if (index !== -1) {
-    activeProposals.value[index] = updatedNode;
-  }
+  projectStore.updateConceptualNode(updatedNode);
 
   isEditorOpen.value = false;
   editingNode.value = null;

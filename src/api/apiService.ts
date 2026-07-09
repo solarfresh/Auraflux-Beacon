@@ -178,6 +178,9 @@ export const apiService = {
       getConceptualNodes: (projectId: ID): Promise<AxiosResponse<ConceptualNode[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getConceptualNodes(projectId));
       },
+      updateConceptualNodes: (projectId: ID, nodeId: ID, data: Partial<ConceptualNode>): Promise<AxiosResponse<ConceptualNode>> => {
+        return apiClient.put(ProjectsEndpoints.base.updateConceptualNodes(projectId, nodeId), data);
+      },
     },
     consultation: {
       chat: (projectId: ID, messageContent: string, agentName: string): Promise<AxiosResponse> => {

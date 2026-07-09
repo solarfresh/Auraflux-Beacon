@@ -20,7 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import { useConsultationStore } from '@/stores/consultation';
 import { computed, onMounted, ref } from 'vue';
 
 import ChatInterface from '@/components/organisms/chat/ChatInterface.vue';
@@ -32,17 +31,12 @@ import { useRoute } from 'vue-router';
 import { useProjectStore } from '@/stores/project';
 
 // --- Initialization ---
-const consultationStore = useConsultationStore();
 const projectStore = useProjectStore();
 const route = useRoute();
 
 // --- Store State Mapping (Computed Properties) ---
-const chatMessages = computed(() => consultationStore.chatMessages);
-const isTyping = computed(() => consultationStore.isTyping);
-
-const currentProjectId = computed((): ID => {
-  return route.params.id as ID || projectStore.currentProjectId || '';
-});
+const chatMessages = computed(() => projectStore.chatMessages);
+const isTyping = computed(() => projectStore.isTyping);
 
 // --- Lifecycle ---
 onMounted(async () => {
@@ -51,8 +45,8 @@ onMounted(async () => {
     projectStore.setCurrentProjectId(route.params.id as ID);
   }
 
-  if (projectStore.currentStage !== 'EXPLORATION') {
-    projectStore.updateProjectDetail({currentStage: 'EXPLORATION'})
+  if (projectStore.currentStage !== 'CONSULTATION') {
+    projectStore.updateProjectDetail({currentStage: 'CONSULTATION'})
   }
 
   await projectStore.getMessages();

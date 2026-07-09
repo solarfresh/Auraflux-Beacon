@@ -69,7 +69,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useCanvasStore } from '@/stores/canvas';
-import { useExplorationStore } from '@/stores/exploration';
 import { useProjectStore } from '@/stores/project';
 import type { NodeType } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
@@ -84,7 +83,6 @@ import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegis
 import VButton from '@/components/atoms/buttons/VButton.vue';
 
 const canvasStore = useCanvasStore();
-const explorationStore = useExplorationStore();
 const projectStore = useProjectStore();
 
 // --- Local State ---
