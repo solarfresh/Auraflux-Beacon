@@ -36,6 +36,19 @@ export const useProjectStore = defineStore('project', () => {
   });
 
   // --- Actions (Functions) ---
+  async function createProject(project: Project) {
+    try {
+      let response = await apiService.projects.base.createProject(project);
+      if (response.data) {
+        projects.value.set(response.data.id, response.data);
+      } else {
+      console.log(response.data);
+      }
+    } catch (error) {
+      console.error('Failed to create a project:', error);
+    }
+  };
+
   async function loadProjects() {
     try {
       let response = await apiService.projects.base.getProject();
@@ -175,6 +188,7 @@ export const useProjectStore = defineStore('project', () => {
     projectName,
     isTyping,
     // Actions
+    createProject,
     loadConceptualNodes,
     loadExplorationPhaseData,
     loadProjects,

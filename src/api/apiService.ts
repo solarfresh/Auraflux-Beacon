@@ -169,6 +169,9 @@ export const apiService = {
       getProject: (): Promise<AxiosResponse<Project[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getProject())
       },
+      createProject: (data: Project): Promise<AxiosResponse<Project>> => {
+        return apiClient.post(ProjectsEndpoints.base.createProject(), data);
+      },
       getProjectDetail: (projectId: ID): Promise<AxiosResponse<Project>> => {
         return apiClient.get(ProjectsEndpoints.base.getProjectDetail(projectId))
       },
