@@ -5,7 +5,7 @@
     background="white"
     :class="[
       // Positioning & Z-Index (Z-60 to sit above Floating Controls)
-      'absolute! top-full -right-1 z-60',
+      'absolute top-[calc(100%+8px)] right-0 z-60',
 
       // Layout & Sizing
       'min-w-40 py-1 flex flex-col',

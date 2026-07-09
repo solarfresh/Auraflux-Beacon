@@ -10,7 +10,7 @@ Resource molecules are **"Data-to-UI Converters"**. They represent the persisted
 * **Semantic Border Logic**:
     * **Solid**: Verified, human-curated, or stable data.
     * **Dashed**: System-suggested, AI-generated drafts, or functional placeholders.
-* **Layout Sovereignty**: Molecules with complex internal controls (like Toolbars) must not use custom CSS for spacing. Use nested `VCluster` for alignment and constrained `VBox` atoms (e.g., `width="px"`) for visual dividers to maintain **Atomic Physicality**.
+* **The "Flat Skin" & Layout Sovereignty**: To maintain performance and predictable fluid layouts, do not build heavy, highly-abstracted business card bases. Instead, utilize `VBox` directly for atomic skin adjustments (backgrounds, borders), or wrap content inside the standardized `VCard` molecule. `VCard` acts strictly as a structural layout compound—marrying `VBox` (Skin) and `VStack` (Flow)—without trapping business logic or overriding atomic design tokens.
 * **Prompt Transparency**: Uses `line-clamp-2` to provide a "peek" into the `system_prompt`, allowing architects to distinguish between agents with similar names but different instructional logic.
 * **Model Distinction**: Specifically highlights the `modelType` (e.g., Gemini, GPT-4) as a primary metadata chip to signal the agent's underlying "cognitive" cost and capability.
 * **Role-Based Styling**: Automatically maps the `agent.name` or `agent.role` to specific visual treatments to help users differentiate between "Explorers" (Initiation phase) and "Refiners" (Focusing phase) within the Kuhlthau ISP model.
@@ -19,53 +19,59 @@ Resource molecules are **"Data-to-UI Converters"**. They represent the persisted
 
 ## 🛠 Component Catalog
 
-### 1. VProjectCard (The Workspace Entry)
+### 1. VCard (The Structural Layout Shell)
+A generic, structural layout molecule used to wrap fragmented metadata or text nodes into a cohesive card block.
+* **Physical Layer**: `VBox` (Root Skin) > `VStack` (Internal Flow Grid) > `[Slot Content]`.
+* **Responsibility**: Establishing a solid visual boundary, elevation (micro-shadows), and hover interactions across sidebar widgets and dynamic panels while preventing text elements from horizontal collision.
+* **Key Props**: `padding`, `gap`, `border`, `background`, `rounded`, `clickable`, `hoverable`.
+
+### 2. VProjectCard (The Workspace Entry)
 The primary entry point for research workspaces.
 * **Physical Layer**: `VBox` (Root) > `VStack` > [`VCluster` (Header), `VTypography` (Content), `VSpacer`, `VCluster` (Metadata)].
 * **Responsibility**: Displaying project health, AI-suggestion status, and metadata tags.
 * **Key Props**: `project` (Project Object).
 
-### 2. VInteractivePlaceholder (The Invitation)
+### 3. VInteractivePlaceholder (The Invitation)
 A structural invitation for user input, signaling "available capacity" within a grid or list.
 * **Physical Layer**: `VBox` (Dashed) > `VStack` > [`VIcon`, `VTypography` (Label)].
 * **Responsibility**: Standardizing the "Add New" pattern across all resource types.
 * **Key Props**: `iconName`, `label`, `clickable`.
 
-### 3. VEntityChip (The Metadata Tag)
+### 4. VEntityChip (The Metadata Tag)
 A dense, interactive representation of keywords, research scopes, or identified concepts.
 * **Physical Layer**: `VBox` > `VCluster` > [`VIcon`, `VTypography`, `VButton` (iconOnly)].
 * **Design Intent**: Uses `group-hover` to reveal management actions (like removal) to reduce visual noise.
 * **Key Props**: `label`, `iconName`, `removable`.
 
-### 4. VStatusCard (The Structural Shell)
+### 5. VStatusCard (The Structural Shell)
 A generic resource card used for simple data displays that don't yet have a specialized business molecule.
 * **Composition**: `VAlert` > `VStack` > `VCluster`.
 
-#### 5. VProjectToolbar (The Dimension Controller)
+#### 6. VProjectToolbar (The Dimension Controller)
 A specialized orchestrator that manages the visibility and sequence of a resource collection.
 * **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group), `VCluster` (Sort + Action)].
 * **Responsibility**: Mapping the **Resource Lifecycle** (All/Active/Archived) and **Temporal Hierarchy** (Recently Edited/Created) to the active view.
 * **Key Props**: `modelValue` (Object with `filter` & `sort`), `v-model`.
 
-### **6. VAgentCard (The Autonomous Blueprint)**
+### **7. VAgentCard (The Autonomous Blueprint)**
 A specialized entity tile that visualizes the configuration, operational role, and behavioral constraints of an AI Agent.
 * **Physical Layer**: `VBox` (Root) > `VStack` > [`VCluster` (Header: Icon & Status), `VStack` (Identity & Prompt Snippet), `VCluster` (Metadata: Model & Role)].
 * **Responsibility**: Translating complex LLM configurations (System Prompts, Model Parameters) into a scannable interface for agent orchestration.
 * **Key Props**: `agent` (Agent Object conforming to `Agent` Interface).
 
-#### **7. VAgentToolbar (The Dimension Controller)**
+#### **8. VAgentToolbar (The Dimension Controller)**
 A specialized orchestrator that manages the visibility and sequence of an Agent collection, focusing on model families and deployment status.
 * **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group: Status), `VCluster` (Model Select + Sort)].
 * **Responsibility**: Mapping the **Agent Lifecycle** (Active/Draft/Archived) and **Model Hierarchy** (Gemini/GPT/Claude) to the active view.
 * **Key Props**: `modelValue` (Object with `filter`, `modelFamily`, & `sorter`), `v-model`.
 
-### **8. VModelProviderCard (The Infrastructure Engine)**
+### **9. VModelProviderCard (The Infrastructure Engine)**
 A specialized entity tile that visualizes the health, authentication, and performance of an AI service provider.
 * **Physical Layer**: `VBox` (Root) > `VCluster` (Identity) > `VStack` (Key Snippet) > `VCluster` (Metadata).
 * **Responsibility**: Displaying API connection health, masked key fingerprints, and real-time latency.
 * **Key Props**: `provider` (ModelProvider Object).
 
-### **9. VModelProviderToolbar (The Infrastructure Monitor)**
+### **10. VModelProviderToolbar (The Infrastructure Monitor)**
 An orchestrator that manages the visibility of AI connectors, focusing on connection health and provider types.
 * **Physical Layer**: `VBox` (Root/Sticky) > `VCluster` > [`VBox` (Segmented Group: Health), `VCluster` (Type Select + Sort)].
 * **Responsibility**: Mapping the **Provider Status** (Active/Error/Pending) and **Service Type** (Google/OpenAI/Local) to the active view.
@@ -76,7 +82,7 @@ An orchestrator that manages the visibility of AI connectors, focusing on connec
 ## 🤖 AI Implementation Rules
 
 > [!IMPORTANT]
-> **Rule 1: No Over-Abstraction.** Strictly follow the **"No CardBase"** policy. Use `VBox` directly at the root of every resource card to ensure props like `padding` and `hoverBackground` remain easily adjustable.
+> **Rule 1: No Heavy Business Abstraction.** Do not create business-specific generic card bases. For raw layout wrapping that requires a physical boundary, micro-shadows, and guaranteed block-level flow, use the generic `VCard` molecule directly at the root. Keep properties like `padding` and `hoverBackground` easily adjustable via tokens.
 > **Rule 2: Responsive Content.** Always use `VTypography` with the `line-clamp` utility for descriptions to prevent card height misalignment in `VGrid` layouts.
 > **Rule 3: State-Driven Identity.** If a resource is AI-generated (e.g., `project.status === 'AI_SUGGESTED'`), the root `VBox` **must** use `border="dashed"` and `background="amber-50"`.
 > **Rule 4: Metadata Threshold.** Resource cards should never display more than 3 tags/chips simultaneously. Use a "+N" counter for overflow to maintain visual balance.
@@ -90,6 +96,7 @@ An orchestrator that manages the visibility of AI connectors, focusing on connec
 > **Rule 12: Pulse Feedback.** For active infrastructure, the status indicator in `VModelProviderCard` **must** include a subtle `animate-pulse` to signal "system power" (Live connection).
 > **Rule 13: Mono-Space Precision.** Technical metadata (Latency, Fingerprints, Model IDs) within resource cards must use `font-mono` to differentiate system-level data from user-generated content.
 > **Rule 14: Connectivity Borders.** If a provider fails verification (`status === 'ERROR'`), the root `VBox` border **must** switch to `dashed` and `rose-200`, signaling that the functional "bridge" to the AI engine is broken.
+> **Rule 15: Structural Block Protection.** When rendering unpredictable AI-generated strings (such as titles, descriptions, or structural questions) inside a module, they must be contained within a `VCard` or an explicit vertical `VStack` flow. This enforces standard block-level line breaks and prevents malicious horizontal pushing or text overlapping in narrow viewport scenarios.
 
 ### Standard Implementation Pattern
 
@@ -132,6 +139,7 @@ An orchestrator that manages the visibility of AI connectors, focusing on connec
 
 ```text
 src/components/molecules/resources/
+├── VCard.vue                  # Layout: Standardized container with boundary & depth
 ├── VProjectCard.vue            # Business: Project entity tile
 ├── VAgentCard                  # Business: Agent entity tile
 ├── VAgentToolbar.vue           # Agent filter & model orchestrator

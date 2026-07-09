@@ -32,6 +32,14 @@ export type EdgeType =
   | 'REF'        // Weak association
   | 'LINK';       // Structural connection
 
+
+export type RefType = 'LINK' | 'DOCUMENT' | 'NODE';
+
+export interface SourceReference {
+  name: string;
+  type: RefType;
+};
+
 /**
  * ConceptualNode: Single Source of Truth for Canvas Nodes
  */
@@ -45,31 +53,17 @@ export interface ConceptualNode {
   /** Type: Determines the node's role and visual representation. */
   type: NodeType;
 
-  /** * Anti-Hallucination: Health Score (0-10)
-   * Drives the Jitter animation. Values < 4 trigger visual alarm.
-   */
-  groundedness: number;
-
-  /** * Materiality: Grounding state
-   * SOLID: Evidence-backed
-   * PULSING: Hypothesis / Shadow
-   * DIMMED: Inbox / Placeholder
-   */
-  solidity: 'SOLID' | 'PULSING' | 'DIMMED';
-
   // --- Knowledge Content (Empirical Layer) ---
   content?: string;      // Detailed snippet
-  sourceRef?: string;   // Grounding reference
+  sourceRef?: ConceptualNode[];   // Grounding reference
 
   // --- AI Reasoning (Logic Layer) ---
   rationale?: string;    // AI's justification
-  anchorId?: ID;        // Parent node for growth tracking
 
   // --- Spatial Information (Layout Layer) ---
   position?: Point2D;
 
   // NOTE: Pre-existing UI states (Optional depending on frontend needs)
-  userNotes?: string;   // Maps to content if needed
   status?: EntityStatus;
 }
 

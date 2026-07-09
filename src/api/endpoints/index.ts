@@ -45,17 +45,6 @@ export const CanvasesEndpoints = {
   }
 }
 
-export const KnowledgeEndpoints = {
-  keywords: {
-    update: (keywordId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/knowledge/keywords/${keywordId}/`,
-  },
-  scopes: {
-    update: (scopeId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/knowledge/scopes/${scopeId}/`,
-  }
-}
-
 export const UsersEndpoints = {
   check: {
     get: () =>
@@ -79,35 +68,23 @@ export const ProjectsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
     updateProjectDetail: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
-    createReflectionLog: (projectId:ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/reflection/`,
-    getReflectionLog: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/reflection/`,
-    updateReflectionLogById: (logId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/reflection/${logId}/`,
+    getConceptualNodes: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
+    updateConceptualNodes: (projectId: ID, nodeId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/${nodeId}/`,
   },
-  initiation: {
+  consultation: {
     chat: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/chat/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/consultation/chat/`,
     getChatHistory: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/chat/history/`,
-    getRefinedTopic: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/initiation/topic/`,
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/consultation/chat/history/`,
   },
   exploration: {
     createSession: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/session/`,
-    getSidebarRegistryInfo: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/sidebar/`,
+    getSessionInfo: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/session/`,
     recommendConceptualNodes: (projectId: ID, canvasId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/exploration/${canvasId}/nodes/recommend/`,
   },
-  keywords: {
-    create: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/keywords/`,
-  },
-  scopes: {
-    create: (projectId: ID) =>
-      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/scopes/`,
-  }
 }

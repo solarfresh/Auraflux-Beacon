@@ -70,7 +70,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';
-import type { ProcessedScope } from '@/interfaces/initiation';
+import type { ProcessedScope } from '@/interfaces/consultation';
 
 // Ensure attributes are applied to the Box and not the root wrapper
 defineOptions({ inheritAttrs: false });

@@ -24,19 +24,10 @@
 
 <script setup lang="ts">
 import VOverlayLoader from '@/components/molecules/feedback/VOverlayLoader.vue';
-import HeaderToolbar from '@/components/organisms/navigation/HeaderToolbar.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useLoginStore } from '@/stores/login';
-import { useNotificationStore } from '@/stores/notification';
-import { useProjectStore } from '@/stores/project';
 
-const projectStore = useProjectStore();
 const authStore = useAuthStore();
 const loginStore = useLoginStore();
-const store = useNotificationStore();
-
-const handleLoginClick = () => {
-  loginStore.openModal();
-};
 </script>

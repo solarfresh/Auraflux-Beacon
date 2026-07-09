@@ -59,7 +59,7 @@ import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import type { EntityStatus } from '@/interfaces/core';
-import type { ProcessedKeyword } from '@/interfaces/initiation';
+import type { ProcessedKeyword } from '@/interfaces/consultation';
 
 // Explicitly disable inheritance to control the binding point in the template
 defineOptions({

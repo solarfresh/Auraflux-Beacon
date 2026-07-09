@@ -11,7 +11,7 @@ import {
   mockEdgeEvents
 } from '@/tests/mocks/vue-flow'
 import { createMockCanvasContext } from '@/tests/mocks/canvas-context'
-import VConceptualEdge from '@/components/organisms/canvases/VConceptualEdge.vue'
+import VConceptualEdge from '@/components/organisms/domain/canvases/VConceptualEdge.vue'
 
 // Initialize global Vue Flow API routing intercepts
 mockVueFlowCore()

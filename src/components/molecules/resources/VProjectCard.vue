@@ -30,7 +30,7 @@
               ISP Stage
             </VTypography>
             <VTypography tag="span" size="xs" weight="bold" :color="isAIGenerated ? 'amber-700' : 'indigo-700'">
-              {{ project.currentStage || 'Initiation' }}
+              {{ project.currentStage || 'Consultation' }}
             </VTypography>
           </VStack>
         </VCluster>

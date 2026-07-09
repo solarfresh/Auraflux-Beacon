@@ -64,7 +64,7 @@ const props = defineProps({
 /** Maps ISP stages to user-friendly status messages */
 const stageMessage = computed(() => {
   switch (props.currentStage) {
-    case 'Initiation': return 'Feeling Unsure is Normal.';
+    case 'Consultation': return 'Feeling Unsure is Normal.';
     case 'Formulation': return 'Finding Focus...';
     case 'Exploration': return 'Seeking Information...';
     default: return 'Progress:';

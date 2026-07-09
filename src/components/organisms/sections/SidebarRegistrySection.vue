@@ -40,11 +40,10 @@
           variant="ghost"
           size="xs"
           icon-only
+          icon-name="Plus"
           class="opacity-0 group-hover:opacity-100 transition-opacity"
           @click.stop="emit('add')"
-        >
-          <VIcon name="Plus" size="4" />
-        </VButton>
+        />
       </VCluster>
     </VBox>
 
@@ -64,13 +63,25 @@
           </VEmptyState>
 
           <VTreeItem
+            v-if="isDraggable"
             v-for="node in nodes"
             :key="node.id"
             :node="node"
             :is-active="selectedNodeId === node.id"
-            :allow-jitter="sectionType !== 'TOP'"
+            @select="emit('select', node.id)"
+            @hover="emit('hover', node.id)"
+            @teleport="(nodeId: ID) => emit('teleport', nodeId)"
+          />
+          <VEntityCard
+            v-else
+            v-for="node in nodes"
+            :node="node"
+            :is-active="selectedNodeId === node.id"
+            padding="xs"
+            :show-content="false"
             @click="emit('select', node.id)"
-            @teleport="data => emit('teleport', data)"
+            @mouseenter="emit('hover', node.id)"
+            @mouseleave="emit('hover', null)"
           />
         </VStack>
       </VBox>
@@ -79,41 +90,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-// Atomic Imports
-import VBox from '@/components/atoms/layout/VBox.vue';
-import VStack from '@/components/atoms/layout/VStack.vue';
-import VCluster from '@/components/atoms/layout/VCluster.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
+/**
+ * SidebarRegistrySection.vue
+ * Renders structured stability sub-lists inside the Knowledge Registry Sidebar.
+ * Refactored to drop legacy jitter parameters and ensure streamlined custom event bubbling.
+ */
 import VButton from '@/components/atoms/buttons/VButton.vue';
-// Molecule Imports
-import VTreeItem from '@/components/molecules/navs/VTreeItem.vue';
+import VIcon from '@/components/atoms/indicators/VIcon.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
+import VEntityCard from '@/components/molecules/resources/VEntityCard.vue';
+import VTreeItem from '@/components/organisms/domain/canvases/VTreeItem.vue';
+import { computed, ref } from 'vue';
 
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
-import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { BackgroundToken } from '@/interfaces/layout';
 
-/**
- * VStabilitySection: Represents a gradient of data stability in ISP.
- * Aligns with "Molecules: Navs" (VNavGroup pattern).
- */
 const props = withDefaults(defineProps<{
   title: string;
   sectionType: 'TOP' | 'MIDDLE' | 'BOTTOM';
   nodes: ConceptualNode[];
   selectedNodeId: ID | null;
   isCollapsible?: boolean;
+  isDraggable?: boolean;
   canAdd?: boolean;
 }>(), {
   isCollapsible: true,
-  canAdd: true
+  isDraggable: true,
+  canAdd: false
 });
 
 const emit = defineEmits<{
   (e: 'select', id: ID): void;
-  (e: 'teleport', data: any): void;
+  (e: 'hover', id: ID | null): void;
+  (e: 'teleport', nodeId: ID): void;
   (e: 'add'): void;
 }>();
 
@@ -127,16 +141,16 @@ const toggleSection = () => {
 // --- Architectural Layout Logic ---
 const sectionBackground = computed(() => {
   const mapping = {
-    TOP: 'white',           // Stable foundation
-    MIDDLE: 'slate-50',     // Transitioning
-    BOTTOM: 'indigo-50',    // High-volatility exploration
+    TOP: 'white',
+    MIDDLE: 'slate-50',
+    BOTTOM: 'indigo-50',
   };
   return mapping[props.sectionType] || 'white';
 });
 </script>
 
 <style scoped>
-/* Motion tokens for expanding/collapsing content */
+/* Motion tokens for expanding/collapsing content drawer safely */
 .section-slide-enter-active,
 .section-slide-leave-active {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

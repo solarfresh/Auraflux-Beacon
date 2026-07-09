@@ -3,7 +3,7 @@
     <VButton
       v-if="collapsible"
       variant="ghost"
-      class="w-full !justify-between !px-0 border-b !rounded-none pb-1 group text-left transition-opacity"
+      class="w-full justify-between! px-0! border-b rounded-none! pb-1 group text-left transition-opacity"
       :class="[variantClasses.border, isClosed ? 'opacity-60 hover:opacity-100' : 'opacity-100']"
       @click="toggle"
     >

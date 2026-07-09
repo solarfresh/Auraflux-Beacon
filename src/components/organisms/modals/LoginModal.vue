@@ -105,7 +105,7 @@ const handleLogin = async () => {
       username.value = '';
       password.value = '';
       emit('close');
-      router.push('/isearch/')
+      router.push('/projects/')
     } else {
       error.value = 'Invalid username or password.';
     }

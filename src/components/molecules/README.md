@@ -17,7 +17,7 @@ Complex input patterns that combine labels, inputs, and actions.
 
 Stateless observers that communicate system status or manage contextual focus.
 
-  * **Key Components:** `VAlert`, `VModal`, `VOverlayLoader`, `VStatusScore`, `VUserAvatar`.
+  * **Key Components:** `VAlert`, `VModal`, `VOverlayLoader`, `VUserAvatar`.
   * **Focus:** Immediate reaction, backdrop management, and presence feedback.
 
 #### 3\. 📦 [Resources](https://www.google.com/search?q=resources/README.md) (Data Entities)
@@ -113,7 +113,7 @@ src/components/molecules/
 ├── feedback/       # VAlert, VModal, VOverlayLoader, VStatusScore, VUserAvatar
 ├── forms/          # VFormField, VInputGroup, VButtonToolbar
 ├── layout/         # VFloatControl, VStatucGraph
-├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VTreeItem, VWelcomeGateway
+├── navs/           # VNavGroup, VNavTabs, VNavListItem, VActionListItem, VTagListItem, VTimelineItem, VWelcomeGateway
 ├── resources/      # VProjectCard, VEntityChip, VStatusCard, VInteractivePlaceholder
 └── README.md       # You are here
 ```

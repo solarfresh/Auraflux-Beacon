@@ -28,14 +28,18 @@
             {{ props.data.label }}
           </VTypography>
 
-          <div
-            v-if="props.data.type === 'INSIGHT' && props.data.userNotes"
-            class="p-2 bg-white/60 rounded border border-white/50 shadow-inner"
+          <VBox
+            v-if="props.data.type === 'INSIGHT' && props.data.rationale"
+            background="white"
+            padding="xs"
+            rounded="sm"
+            border="all"
+            class="bg-opacity-60 shadow-inner"
           >
             <VTypography size="xs" class="italic opacity-80 line-clamp-2">
-              "{{ props.data.userNotes }}"
+              "{{ props.data.rationale }}"
             </VTypography>
-          </div>
+          </VBox>
 
           </VStack>
       </VStack>
@@ -96,19 +100,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue'
-import { Position, type NodeProps } from '@vue-flow/core'
-import type { ConceptualNode } from '@/interfaces/conceptual-map'
-import { NODE_THEMES } from '@/constants/canvases'
+import { NODE_THEMES } from '@/constants/canvases';
+import type { ConceptualNode } from '@/interfaces/conceptual-map';
+import { Position, type NodeProps } from '@vue-flow/core';
+import { computed, inject } from 'vue';
 
 // Components
-import VButton from '@/components/atoms/buttons/VButton.vue'
-import VNodeHandle from '@/components/atoms/canvases/VNodeHandle.vue'
-import VBadge from '@/components/atoms/indicators/VBadge.vue'
-import VTypography from '@/components/atoms/indicators/VTypography.vue'
-import VCluster from '@/components/atoms/layout/VCluster.vue'
-import VStack from '@/components/atoms/layout/VStack.vue'
-import VNodeContainer from '@/components/organisms/canvases/VNodeContainer.vue'
+import VButton from '@/components/atoms/buttons/VButton.vue';
+import VNodeHandle from '@/components/atoms/canvases/VNodeHandle.vue';
+import VBadge from '@/components/atoms/indicators/VBadge.vue';
+import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VBox from '@/components/atoms/layout/VBox.vue';
+import VCluster from '@/components/atoms/layout/VCluster.vue';
+import VStack from '@/components/atoms/layout/VStack.vue';
+import VNodeContainer from '@/components/organisms/domain/canvases/VNodeContainer.vue';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 
 const context = inject(ConceptualMapContextKey);

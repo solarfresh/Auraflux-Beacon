@@ -1,6 +1,6 @@
 <template>
   <div
-    class="v-node-shield transition-all duration-300 min-w-[200px]"
+    class="v-node-shield transition-all duration-300 min-w-50"
     :class="[
       // Background and base rounding
       themeClass,

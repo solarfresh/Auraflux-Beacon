@@ -111,6 +111,6 @@ const resetFilters = () => {
 
 const navigateToProject = (projectId: ID, currentStage: ISPStage) => {
   projectStore.setCurrentProjectId(projectId);
-  router.push(`/isearch/${projectId}/${currentStage.toLowerCase()}/`)
+  router.push(`/projects/${projectId}/${currentStage.toLowerCase()}/`)
 };
 </script>

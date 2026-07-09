@@ -27,12 +27,6 @@ A structural wrapper for grouping related list items.
 * **Bootstrap Ref**: Similar to `.accordion` or `.list-group`.
 * **Features**: Supports `collapsible` mode and theme-based headers.
 
-### 3. VNavAlert
-
-A high-level banner that surfaces items requiring user intervention across sections.
-
-* **Composition**: `VBox` > `VCluster` > [`VIcon`, `VTypography`, `VBadge`].
-
 ### 4. VActionListItem
 
 A specialized navigation item designed for **explicit triggers**.
@@ -107,13 +101,8 @@ The **Psychological Airbridge**. A specialized entry portal designed to transiti
 src/components/molecules/navs/
 ├── VNavTabs.vue         # Tabbed switching (was TabbedPanel)
 ├── VNavGroup.vue        # Structural grouping (was SectionGroup)
-├── VNavAlert.vue        # Contextual redirect (was UnifiedReviewAlert)
 ├── VActionListItem.vue  # Items with explicit triggers (was ScopeListItem)
 ├── VNavListItem.vue     # Base link (Standard)
-├── VTagListItem.vue     # Status-colored items
-├── VMetaListItem.vue    # Complex metadata items
-├── VTimelineItem.vue    # Chronological items
-├── VTreeItem.vue        # Hierarchical nodes
 ├── VWelcomeGateway.vue  # Intent-based entry portal
 └── README.md            # You are here
 
