@@ -64,6 +64,8 @@ export const ProjectsEndpoints = {
   base: {
     getProject: () =>
       `${AURAFLUX_NEXUS_URL}/projects/`,
+    createProject: () =>
+      `${AURAFLUX_NEXUS_URL}/projects/`,
     getProjectDetail: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
     updateProjectDetail: (projectId: ID) =>

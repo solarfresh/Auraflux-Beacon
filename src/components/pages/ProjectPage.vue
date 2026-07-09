@@ -10,17 +10,17 @@
         >
           <VProjectToolbar
             v-model="selectorState"
-            @create="isCreateModalOpen = true"
+            @create="isEditModalOpen = true"
           />
         </VBox>
 
         <VBox v-if="hasProjects || isFiltering" class="max-w-7xl mx-auto w-full px-6">
           <VGrid cols="1 sm:2 lg:3 xl:4" gap="lg">
             <VInteractivePlaceholder
-              label="Start New Research"
+              label="Start New Project"
               icon-name="Plus"
               class="h-48"
-              @click="isCreateModalOpen = true"
+              @click="isEditModalOpen = true"
             />
             <VProjectCard
               v-for="project in filteredProjects"
@@ -39,7 +39,16 @@
         />
       </VStack>
     </VBox>
+  </VBox>
 
+  <VBox tag="main" class="w-full min-h-screen bg-slate-50">
+    <ProjectModal
+      :is-open="isEditModalOpen"
+      :project="localProject"
+      :is-new="true"
+      @cancel="isEditModalOpen = false"
+      @confirm="handleProjectEditting"
+    />
   </VBox>
 </template>
 
@@ -52,17 +61,11 @@ import { useProjectStore } from '@/stores/project';
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
 import VGrid from '@/components/atoms/layout/VGrid.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
-
-// Resource Molecules
 import VProjectToolbar from '@/components/molecules/resources/VProjectToolbar.vue';
 import VProjectCard from '@/components/molecules/resources/VProjectCard.vue';
 import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
-
-// Feedback Molecules
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import ProjectModal from '@/components/organisms/modals/ProjectModal.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { ISPStage, Project } from '@/interfaces/project';
@@ -73,7 +76,18 @@ const projectStore = useProjectStore();
 
 // --- State Management ---
 const isFiltering = ref(false);
-const isCreateModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+
+const localProject = ref<Project>({
+  id: '',
+  name: '',
+  description: '',
+  status: 'LOCKED',
+  currentStage: 'CONSULTATION',
+  tags: [],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+});
 
 const selectorState = ref<BaseSelectorState>({
   filter: 'LOCKED',
@@ -107,6 +121,20 @@ onMounted(async () => {
 
 const resetFilters = () => {
   selectorState.value.filter = 'ALL';
+};
+
+const handleProjectEditting = async () => {
+  localProject.value = {
+    id: '',
+    name: '',
+    description: '',
+    status: 'LOCKED',
+    currentStage: 'CONSULTATION',
+    tags: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+  projectStore.createProject(localProject.value);
 };
 
 const navigateToProject = (projectId: ID, currentStage: ISPStage) => {
