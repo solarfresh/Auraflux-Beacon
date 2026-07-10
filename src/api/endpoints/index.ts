@@ -70,6 +70,8 @@ export const ProjectsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
     updateProjectDetail: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
+    createConceptualNodes: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
     getConceptualNodes: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
     updateConceptualNodes: (projectId: ID, nodeId: ID) =>

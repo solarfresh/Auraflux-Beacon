@@ -239,9 +239,7 @@ const navigateToProposalManager = () => {
 const sandboxContainer = ref<HTMLElement | null>(null);
 const scrollToSandbox = () => { sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' }); };
 
-const handleSave = (updatedNode: ConceptualNode) => {
-  projectStore.updateConceptualNode(updatedNode);
-
+const handleSave = () => {
   isEditorOpen.value = false;
   editingNode.value = null;
 };

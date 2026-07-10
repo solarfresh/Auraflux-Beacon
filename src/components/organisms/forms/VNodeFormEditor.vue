@@ -22,6 +22,17 @@
       <VBox border="bottom" class="h-0 w-full shrink-0" />
 
       <VStack gap="sm" class="w-full overflow-y-auto pr-2 custom-scrollbar">
+        <VFormField id="node-type" label="Node Type">
+          <VSelect
+            v-model="localNode.type"
+            id="node-type"
+            size="sm"
+          >
+            <option v-for="type in availableNodeTypes" :key="type" :value="type">
+              {{ type }}
+            </option>
+          </VSelect>
+        </VFormField>
         <VFormField id="label" label="Concept Label" :required="true">
           <VInput v-model="localNode.label" size="sm" />
         </VFormField>
@@ -85,6 +96,7 @@
 <script setup lang="ts">
 import VButton from '@/components/atoms/buttons/VButton.vue';
 import VInput from '@/components/atoms/forms/VInput.vue';
+import VSelect from '@/components/atoms/forms/VSelect.vue';
 import VTextarea from '@/components/atoms/forms/VTextarea.vue';
 import VIcon from '@/components/atoms/indicators/VIcon.vue';
 import VTypography from '@/components/atoms/indicators/VTypography.vue';
@@ -94,12 +106,21 @@ import VStack from '@/components/atoms/layout/VStack.vue';
 import VEntityStatusActionGroup from '@/components/molecules/domain/VEntityStatusActionGroup.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 import { ICON_MAP } from '@/constants/canvases';
-import type { EntityStatus } from '@/interfaces/core';
 import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
+import type { EntityStatus } from '@/interfaces/core';
 import { computed, ref } from 'vue';
+import { useProjectStore } from '@/stores/project';
+
+const projectStore = useProjectStore();
 
 const props = defineProps<{ node: ConceptualNode; isNew?: boolean }>();
 const emit = defineEmits(['confirm', 'cancel']);
+
+const availableNodeTypes: NodeType[] = [
+  'EVENT', 'OUTCOME', 'BOUNDARY', 'ENTITY',
+  'FOCUS', 'RESOURCE', 'CONCEPT', 'INSIGHT',
+  'QUERY', 'NAVIGATION', 'GROUP'
+];
 
 const localNode = ref({ ...props.node });
 const isModified = computed(() => JSON.stringify(localNode.value) !== JSON.stringify(props.node));
@@ -111,6 +132,14 @@ const getNodeIcon = (type: NodeType): string => {
 const nodeTypeIcon = computed(() => getNodeIcon(localNode.value.type));
 
 const handleSubmit = (status: EntityStatus) => {
-  emit('confirm', { ...localNode.value, status });
+  let node = { ...localNode.value, status };
+
+  if (props.isNew) {
+    projectStore.createConceptualNodes(node);
+  } else {
+    projectStore.updateConceptualNode(node);
+  }
+
+  emit('confirm');
 };
 </script>

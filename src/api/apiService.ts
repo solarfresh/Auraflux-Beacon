@@ -178,6 +178,9 @@ export const apiService = {
       updateProjectDetail: (projectId: ID, data: Partial<Project>): Promise<AxiosResponse<Project>> => {
         return apiClient.put(ProjectsEndpoints.base.updateProjectDetail(projectId), data);
       },
+      createConceptualNodes: (projectId: ID, data: ConceptualNode): Promise<AxiosResponse<ConceptualNode>> => {
+        return apiClient.post(ProjectsEndpoints.base.createConceptualNodes(projectId), data);
+      },
       getConceptualNodes: (projectId: ID): Promise<AxiosResponse<ConceptualNode[]>> => {
         return apiClient.get(ProjectsEndpoints.base.getConceptualNodes(projectId));
       },

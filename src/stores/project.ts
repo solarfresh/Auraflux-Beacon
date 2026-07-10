@@ -36,6 +36,20 @@ export const useProjectStore = defineStore('project', () => {
   });
 
   // --- Actions (Functions) ---
+  const createConceptualNodes = async (node: ConceptualNode) => {
+    if (!currentProjectId.value) return;
+
+    try {
+      await apiService.projects.base.createConceptualNodes(
+        currentProjectId.value, node
+      );
+      conceptualNodes.value.set(node.id, node);
+    } catch (error) {
+      console.error(`[API Error] Failed to persist node:`, error);
+      throw error;
+    }
+  };
+
   async function createProject(project: Project) {
     try {
       let response = await apiService.projects.base.createProject(project);
@@ -113,9 +127,6 @@ export const useProjectStore = defineStore('project', () => {
     currentProjectId.value = projectId;
   };
 
-  /**
-   * Dispatches node updates including moving, editing, or structural deletes.
-   */
   const updateConceptualNode = async (node: ConceptualNode) => {
     if (!currentProjectId.value) return;
 
@@ -188,6 +199,7 @@ export const useProjectStore = defineStore('project', () => {
     projectName,
     isTyping,
     // Actions
+    createConceptualNodes,
     createProject,
     loadConceptualNodes,
     loadExplorationPhaseData,
