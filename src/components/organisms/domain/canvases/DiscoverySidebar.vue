@@ -85,6 +85,7 @@
       >
         <VNodeFormEditor
           :node="editingNode"
+          :is-new="isNewNode"
           @confirm="handleSave"
           @cancel="isEditorOpen = false"
         />
