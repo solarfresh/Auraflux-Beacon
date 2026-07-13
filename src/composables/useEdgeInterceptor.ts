@@ -90,9 +90,9 @@ export function useEdgeInterceptor(explicitContext?: any) {
       id: edge.id,
       status: 'USER_DRAFT',
       source: connection.source,
-      sourceHandle: connection.sourceHandle || '',
+      sourceHandle: connection.sourceHandle?.replace('source-', '') || '',
       target: connection.target,
-      targetHandle: connection.targetHandle || '',
+      targetHandle: connection.targetHandle?.replace('target-', '') || '',
     }
 
     const midpoint = calculateMidpoint(connection, null);

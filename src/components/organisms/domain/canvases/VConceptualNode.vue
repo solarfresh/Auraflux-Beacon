@@ -47,51 +47,59 @@
 
     <template #overlay>
       <VNodeHandle
-        id="top"
+        id="source-top"
         type="source"
+        style="z-index: 20 !important; pointer-events: auto !important;"
         :position="Position.Top"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="bottom"
+        id="source-bottom"
         type="source"
+        style="z-index: 20 !important; pointer-events: auto !important;"
         :position="Position.Bottom"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="right"
+        id="source-right"
         type="source"
+        style="z-index: 20 !important; pointer-events: auto !important;"
         :position="Position.Right"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="left"
+        id="source-left"
         type="source"
+        style="z-index: 20 !important; pointer-events: auto !important;"
         :position="Position.Left"
         :color-class="theme.handle"
       />
 
       <VNodeHandle
-        id="top"
+        id="target-top"
         type="target"
+        style="z-index: 10 !important; pointer-events: auto !important;"
         :position="Position.Top"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="bottom"
+        id="target-bottom"
         type="target"
+        style="z-index: 10 !important; pointer-events: auto !important;"
         :position="Position.Bottom"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="right"
+        id="target-right"
         type="target"
+        style="z-index: 10 !important; pointer-events: auto !important;"
         :position="Position.Right"
         :color-class="theme.handle"
       />
       <VNodeHandle
-        id="left"
+        id="target-left"
         type="target"
+        style="z-index: 10 !important; pointer-events: auto !important;"
         :position="Position.Left"
         :color-class="theme.handle"
       />

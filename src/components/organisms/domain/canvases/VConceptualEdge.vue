@@ -108,8 +108,8 @@ if (!context) {
 
 // --- Path & Label Center Coordinates Calculation ---
 const pathData = computed(() => {
-  const sourcePos = props.sourceHandle && HANDLE_MAP[props.sourcePosition] ? HANDLE_MAP[props.sourcePosition] : props.sourcePosition
-  const targetPos = props.targetHandle && HANDLE_MAP[props.targetPosition] ? HANDLE_MAP[props.targetPosition] : props.targetPosition
+  const sourcePos = props.sourceHandleId?.replace('source-', '') && HANDLE_MAP[props.sourcePosition] ? HANDLE_MAP[props.sourcePosition] : props.sourcePosition
+  const targetPos = props.targetHandle?.replace('target-', '') && HANDLE_MAP[props.targetPosition] ? HANDLE_MAP[props.targetPosition] : props.targetPosition
 
   const dx = Math.abs(props.sourceX - props.targetX)
   const dy = Math.abs(props.sourceY - props.targetY)
