@@ -329,9 +329,9 @@ export function useConceptualMapContext(config?: ContextConfig) {
         evidence: '',
         weight: 1.0,
         source: connection.source,
-        sourceHandle: connection.sourceHandle?.replace('source-', '') || '',
+        sourceHandle: connection.sourceHandle?.replace('source-', '').replace('target-', '') || '',
         target: connection.target,
-        targetHandle: connection.targetHandle?.replace('target-', '') || '',
+        targetHandle: connection.targetHandle?.replace('source-', '').replace('target-', '') || '',
       };
     } else {
       closeInterceptor();

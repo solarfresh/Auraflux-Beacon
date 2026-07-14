@@ -124,9 +124,7 @@ const viewMode = ref<'all' | 'inbox'>('all');
  * Ensures the Sidebar has access to the full manifest of nodes.
  */
 const registryNodes = computed(() => {
-  return Array.from(projectStore.conceptualNodes.entries()).map(([id, node]) => {
-    return node
-  })
+  return Array.from(projectStore.conceptualNodes.values()).filter(node => node.status !== 'ON_HOLD');
 });
 
 /**
@@ -135,7 +133,7 @@ const registryNodes = computed(() => {
  */
 const inboxNodes = computed(() => {
   const currentCanvas = canvasStore.getGraphCache(projectStore.activeCanvasId as ID);
-  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values()).filter(node => node.status !== 'ON_HOLD');;
 
   if (!currentCanvas?.nodes) {
     return sidebarNodesArray;

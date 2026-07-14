@@ -142,7 +142,7 @@ const registryNodes = computed(() => projectStore.conceptualNodes);
 const mappedProposals = computed<ConceptualNode[]>(() => {
   const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
 
-  return sidebarNodesArray.filter(node => node.status === 'AI_EXTRACTED' || node.status === 'ON_HOLD');
+  return sidebarNodesArray.filter(node => node.status === 'AI_EXTRACTED');
 });
 
 const mappedReflections = computed<ConceptualNode[]>(() => {
