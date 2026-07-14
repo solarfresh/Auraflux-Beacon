@@ -37,7 +37,7 @@
           :is-collapsible="true"
           :can-add="true"
           @add="handleAddNewNode('OUTCOME')"
-          @select="selectNode"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
 
@@ -49,7 +49,7 @@
           :selected-node-id="selectedNodeId"
           :can-add="true"
           @add="handleAddNewNode('ENTITY')"
-          @select="selectNode"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
 
@@ -61,7 +61,7 @@
           :selected-node-id="selectedNodeId"
           :can-add="true"
           @add="handleAddNewNode('CONCEPT')"
-          @select="selectNode"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
 
@@ -73,23 +73,24 @@
           :selected-node-id="selectedNodeId"
           :can-add="true"
           @add="handleAddNewNode('FOCUS')"
-          @select="selectNode"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
       </VStack>
 
-      <VBox
-        v-if="isEditorOpen && editingNode"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs"
-        @click.self="isEditorOpen = false"
-      >
-        <VNodeFormEditor
-          :node="editingNode"
-          :is-new="isNewNode"
-          @confirm="handleSave"
-          @cancel="isEditorOpen = false"
-        />
-      </VBox>
+      <Teleport to="body" :disabled="!(isEditorOpen && editingNode)">
+        <VBox
+          class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs"
+          @click.self="isEditorOpen = false"
+        >
+          <VNodeFormEditor
+            :node="editingNode!"
+            :is-new="isNewNode"
+            @confirm="handleSave"
+            @cancel="isEditorOpen = false"
+          />
+        </VBox>
+      </Teleport>
     </template>
   </BaseSidebarLayout>
 </template>
@@ -175,7 +176,15 @@ const handleTeleport = (nodeId: string, canvasId?: string ) => {
   // Global canvas navigation logic
 };
 
-const selectNode = (nodeId: ID | null) => {
+const handleNodeSelect = (nodeId: ID | null) => {
+  if (!nodeId) return;
+
   selectedNodeId.value = nodeId;
+
+  const targetNode = projectStore.conceptualNodes.get(nodeId);
+  if (targetNode) {
+    editingNode.value = { ...targetNode };
+    isEditorOpen.value = true;
+  }
 };
 </script>

@@ -5,7 +5,7 @@
     rounded="xl"
     border="all"
     padding="md"
-    class="w-96 shadow-xl animate-in fade-in zoom-in duration-200"
+    class="shadow-xl animate-in fade-in zoom-in duration-200"
   >
     <VStack gap="md" class="max-h-[85vh] overflow-hidden">
 
@@ -76,11 +76,13 @@
       </VStack>
 
       <VEntityStatusActionGroup
+        :is-new="props.isNew"
         :is-locked="localNode.status === 'LOCKED'"
         :is-modified="isModified"
         :disabled="!localNode.label"
         :labels="{
-          unlockedHold: 'Save Draft',
+          unlockedDraft: 'Save Draft',
+          unlockedHold: 'Put On Hold',
           unlockedPrimary: 'Lock Node',
           unlockedPrimaryClass: 'bg-emerald-600! hover:bg-emerald-700!',
           lockedHold: 'Put On Hold',
