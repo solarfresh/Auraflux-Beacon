@@ -196,7 +196,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   /**
    * Dispatches node updates including moving, editing, or structural deletes.
    */
-  const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') => {
+  const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'edit' | 'delete') => {
     const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
     if (!canvasId) {
       console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
@@ -213,16 +213,15 @@ export function useConceptualMapContext(config?: ContextConfig) {
       };
 
       try {
+        const response = await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+
         if (action === 'edit') {
-          await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+          recommendConceptualNodes();
         }
 
-        if (action === 'move') {
-          await apiService.canvases.nodes.create(canvasId, modifiedNodeData);
+        if (response.data) {
+          conceptualNodes.set(node.id, node);
         }
-
-        // recommendConceptualNodes();
-        conceptualNodes.set(node.id, node);
       } catch (error) {
         console.error(`[Context API Error] Failed to persist node via ${action}:`, error);
         throw error;
@@ -357,6 +356,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   // --------------------------------------------------------------------------
   return {
     // Reactive States (Leaf components grab references directly)
+    config,
     conceptualNodes,
     conceptualEdges,
     isDragging,

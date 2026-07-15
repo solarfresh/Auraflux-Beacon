@@ -141,6 +141,7 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     ...node.data,
     position: { x: node.position.x, y: node.position.y }
   };
+
   canvasContext.updateConceptualMapNode(updatedNode, 'move');
 }
 </script>
