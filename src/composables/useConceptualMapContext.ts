@@ -213,11 +213,16 @@ export function useConceptualMapContext(config?: ContextConfig) {
       };
 
       try {
-        await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
-        conceptualNodes.set(node.id, node);
         if (action === 'edit') {
-          recommendConceptualNodes();
+          await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
         }
+
+        if (action === 'move') {
+          await apiService.canvases.nodes.create(canvasId, modifiedNodeData);
+        }
+
+        // recommendConceptualNodes();
+        conceptualNodes.set(node.id, node);
       } catch (error) {
         console.error(`[Context API Error] Failed to persist node via ${action}:`, error);
         throw error;
@@ -377,7 +382,6 @@ export function useConceptualMapContext(config?: ContextConfig) {
     updateLocalEdgeData,
     openNodeEditor,
     closeNodeEditor,
-    recommendConceptualEdges,
-    recommendConceptualNodes
+    recommendConceptualEdges
   };
 }

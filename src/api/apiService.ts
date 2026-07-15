@@ -144,10 +144,13 @@ export const apiService = {
       },
     },
     nodes: {
+      create: (canvasId: ID, data: Partial<ConceptualNode>) => {
+        return apiClient.post(CanvasesEndpoints.nodes.create(canvasId), data);
+      },
       delete: (canvasId: ID, nodeId: ID) => {
         apiClient.delete(CanvasesEndpoints.nodes.delete(canvasId, nodeId));
       },
-      update: (canvasId: ID, nodeId: ID, data: any): Promise<AxiosResponse<ConceptualNode>> => {
+      update: (canvasId: ID, nodeId: ID, data: Partial<ConceptualNode>): Promise<AxiosResponse<ConceptualNode>> => {
         return apiClient.put(CanvasesEndpoints.nodes.delete(canvasId, nodeId), data);
       },
     }
