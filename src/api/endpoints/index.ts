@@ -38,6 +38,8 @@ export const CanvasesEndpoints = {
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/edges/${edgeId}/`,
   },
   nodes: {
+    create: (canvasId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/nodes/`,
     delete: (canvasId: ID, nodeId: ID) =>
       `${AURAFLUX_NEXUS_URL}/canvases/${canvasId}/nodes/${nodeId}/`,
     update: (canvasId: ID, nodeId: ID) =>
@@ -70,6 +72,8 @@ export const ProjectsEndpoints = {
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
     updateProjectDetail: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/`,
+    createConceptualNodes: (projectId: ID) =>
+      `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
     getConceptualNodes: (projectId: ID) =>
       `${AURAFLUX_NEXUS_URL}/projects/${projectId}/nodes/`,
     updateConceptualNodes: (projectId: ID, nodeId: ID) =>

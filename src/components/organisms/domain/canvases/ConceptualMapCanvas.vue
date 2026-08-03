@@ -116,9 +116,9 @@ const vueFlowEdges = computed(() => canvasContext.conceptualEdges.value.map(e =>
   id: e.id,
   updatable: true,
   source: e.source,
-  sourceHandle: e.sourceHandle,
+  sourceHandle: `source-${e.sourceHandle}`,
   target: e.target,
-  targetHandle: e.targetHandle,
+  targetHandle: `target-${e.targetHandle}`,
   type: e.type ?? 'REF',
   label: e.label,
   animated: e.type === 'TRIGGERS',
@@ -141,6 +141,7 @@ function handleNodeDragStop({ node }: NodeDragEvent) {
     ...node.data,
     position: { x: node.position.x, y: node.position.y }
   };
+
   canvasContext.updateConceptualMapNode(updatedNode, 'move');
 }
 </script>

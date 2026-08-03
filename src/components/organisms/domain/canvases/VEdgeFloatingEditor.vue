@@ -7,7 +7,7 @@
       padding="md"
       rounded="lg"
       border="all"
-      class="w-72 shadow-xl animate-in fade-in zoom-in duration-200 nodrag nopan v-edge-floating-editor"
+      class="shadow-xl animate-in fade-in zoom-in duration-200 nodrag nopan v-edge-floating-editor"
       :style="editorStyle"
     >
       <VStack gap="md">
@@ -60,11 +60,13 @@
         </VFormField>
 
         <VEntityStatusActionGroup
+          :is-new="isNew"
           :is-locked="isLocked"
           :is-modified="isEdgeModified"
           :disabled="false"
           :labels="{
-            unlockedHold: 'Save Draft',
+            unlockedDraft: 'Save Draft',
+            unlockedHold: 'Put On Hold',
             unlockedPrimary: 'Lock Link',
             unlockedPrimaryClass: 'bg-emerald-600! hover:bg-emerald-700!',
             lockedHold: 'Put On Hold',
@@ -139,6 +141,10 @@ const editorStyle = computed(() => {
     pointerEvents: 'all' as const,
     zIndex: 1000,
   };
+});
+
+const isNew = computed(() => {
+  return context.interceptorAction === 'create';
 });
 
 // --- Computed State Layers ---

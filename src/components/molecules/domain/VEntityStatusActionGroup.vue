@@ -7,13 +7,24 @@
  -->
     <template v-if="!props.isLocked">
       <VButton
-        variant="secondary"
+        v-if="!props.isNew"
+        variant="danger"
         size="sm"
         icon-name="ArchiveBox"
         :disabled="props.disabled"
         @click="emit('submit', 'ON_HOLD')"
       >
         {{ props.labels.unlockedHold || 'Put On Hold' }}
+      </VButton>
+
+      <VButton
+        variant="secondary"
+        size="sm"
+        icon-name="PencilSquare"
+        :disabled="props.disabled"
+        @click="emit('submit', 'USER_DRAFT')"
+      >
+        {{ props.labels.unlockedDraft || 'Save as Draft' }}
       </VButton>
 
       <VButton
@@ -30,7 +41,7 @@
 
     <template v-else>
       <VButton
-        variant="secondary"
+        variant="danger"
         size="sm"
         icon-name="ArchiveBox"
         @click="emit('submit', 'ON_HOLD')"
@@ -56,6 +67,7 @@ import VCluster from '@/components/atoms/layout/VCluster.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
 
 interface ActionGroupLabels {
+  unlockedDraft?: string;
   unlockedHold?: string;
   unlockedPrimary?: string;
   unlockedPrimaryIcon?: string;
@@ -65,6 +77,7 @@ interface ActionGroupLabels {
 }
 
 const props = withDefaults(defineProps<{
+  isNew: boolean;
   isLocked: boolean;
   isModified: boolean;
   disabled: boolean;

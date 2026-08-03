@@ -196,7 +196,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   /**
    * Dispatches node updates including moving, editing, or structural deletes.
    */
-  const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'link' | 'edit' | 'delete' | 'group') => {
+  const updateConceptualMapNode = async (node: ConceptualNode, action: 'move' | 'edit' | 'delete') => {
     const canvasId = config?.getCanvasId ? config.getCanvasId() : null;
     if (!canvasId) {
       console.log('[Context API Warning] Missing canvas ID in configuration. Edge update aborted.');
@@ -213,10 +213,14 @@ export function useConceptualMapContext(config?: ContextConfig) {
       };
 
       try {
-        await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
-        conceptualNodes.set(node.id, node);
+        const response = await apiService.canvases.nodes.update(canvasId, node.id, modifiedNodeData);
+
         if (action === 'edit') {
           recommendConceptualNodes();
+        }
+
+        if (response.data) {
+          conceptualNodes.set(node.id, node);
         }
       } catch (error) {
         console.error(`[Context API Error] Failed to persist node via ${action}:`, error);
@@ -329,9 +333,9 @@ export function useConceptualMapContext(config?: ContextConfig) {
         evidence: '',
         weight: 1.0,
         source: connection.source,
-        sourceHandle: connection.sourceHandle || '',
+        sourceHandle: connection.sourceHandle?.replace('source-', '').replace('target-', '') || '',
         target: connection.target,
-        targetHandle: connection.targetHandle || '',
+        targetHandle: connection.targetHandle?.replace('source-', '').replace('target-', '') || '',
       };
     } else {
       closeInterceptor();
@@ -352,6 +356,7 @@ export function useConceptualMapContext(config?: ContextConfig) {
   // --------------------------------------------------------------------------
   return {
     // Reactive States (Leaf components grab references directly)
+    config,
     conceptualNodes,
     conceptualEdges,
     isDragging,
@@ -377,7 +382,6 @@ export function useConceptualMapContext(config?: ContextConfig) {
     updateLocalEdgeData,
     openNodeEditor,
     closeNodeEditor,
-    recommendConceptualEdges,
-    recommendConceptualNodes
+    recommendConceptualEdges
   };
 }

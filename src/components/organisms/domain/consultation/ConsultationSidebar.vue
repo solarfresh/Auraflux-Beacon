@@ -142,7 +142,7 @@ const registryNodes = computed(() => projectStore.conceptualNodes);
 const mappedProposals = computed<ConceptualNode[]>(() => {
   const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
 
-  return sidebarNodesArray.filter(node => node.status === 'AI_EXTRACTED' || node.status === 'ON_HOLD');
+  return sidebarNodesArray.filter(node => node.status === 'AI_EXTRACTED');
 });
 
 const mappedReflections = computed<ConceptualNode[]>(() => {
@@ -239,9 +239,7 @@ const navigateToProposalManager = () => {
 const sandboxContainer = ref<HTMLElement | null>(null);
 const scrollToSandbox = () => { sandboxContainer.value?.scrollIntoView({ behavior: 'smooth' }); };
 
-const handleSave = (updatedNode: ConceptualNode) => {
-  projectStore.updateConceptualNode(updatedNode);
-
+const handleSave = () => {
   isEditorOpen.value = false;
   editingNode.value = null;
 };

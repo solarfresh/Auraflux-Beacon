@@ -88,11 +88,6 @@ const handleQuickAction = async (action: EntityActionType) => {
     case 'LOCK':
       node.status = 'LOCKED';
       await context.updateConceptualMapNode(node, 'edit');
-
-      // Proactively prompt additional map concepts if accepting raw AI discoveries
-      if (props.status === 'AI_EXTRACTED') {
-        context.recommendConceptualNodes();
-      }
       break;
 
     case 'REJECT':

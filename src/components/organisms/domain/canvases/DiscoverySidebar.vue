@@ -29,63 +29,95 @@
     <template #body>
       <VStack gap="none" full-height scrollable>
         <SidebarRegistrySection
-          title="Anchors & Portals"
+          title="Framework & Scope"
           section-type="TOP"
-          :node-types="['FOCUS', 'NAVIGATION']"
-          :nodes="filterNodesByTypes(['FOCUS', 'NAVIGATION'])"
+          :node-types="['OUTCOME', 'BOUNDARY']"
+          :nodes="filterNodesByTypes(['OUTCOME', 'BOUNDARY'])"
           :selected-node-id="selectedNodeId"
-          :is-collapsible="false"
-          @add="handleAction('create-portal')"
-          @select="selectNode"
+          :is-collapsible="true"
+          :can-add="true"
+          @add="handleAddNewNode('OUTCOME')"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
 
         <SidebarRegistrySection
-          title="Structure"
+          title="Empirical Evidence"
           section-type="MIDDLE"
-          :node-types="['GROUP', 'CONCEPT']"
-          :nodes="filterNodesByTypes(['GROUP', 'CONCEPT'])"
+          :node-types="['EVENT', 'RESOURCE', 'ENTITY']"
+          :nodes="filterNodesByTypes(['EVENT', 'RESOURCE', 'ENTITY'])"
           :selected-node-id="selectedNodeId"
-          @add="handleAction('create-concept')"
-          @select="selectNode"
+          :can-add="true"
+          @add="handleAddNewNode('ENTITY')"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
 
         <SidebarRegistrySection
-          title="Evidence & Inquiry"
-          section-type="BOTTOM"
-          :node-types="['RESOURCE', 'INSIGHT', 'QUERY']"
-          :nodes="filterNodesByTypes(['RESOURCE', 'INSIGHT', 'QUERY'])"
+          title="Synthesis & Gaps"
+          section-type="MIDDLE"
+          :node-types="['INSIGHT', 'CONCEPT', 'QUERY']"
+          :nodes="filterNodesByTypes(['INSIGHT', 'CONCEPT', 'QUERY'])"
           :selected-node-id="selectedNodeId"
-          @add="handleAction('quick-capture')"
-          @select="selectNode"
+          :can-add="true"
+          @add="handleAddNewNode('CONCEPT')"
+          @select="handleNodeSelect"
+          @teleport="handleTeleport"
+        />
+
+        <SidebarRegistrySection
+          title="Structure & Navigation"
+          section-type="BOTTOM"
+          :node-types="['GROUP', 'FOCUS', 'NAVIGATION']"
+          :nodes="filterNodesByTypes(['GROUP', 'FOCUS', 'NAVIGATION'])"
+          :selected-node-id="selectedNodeId"
+          :can-add="true"
+          @add="handleAddNewNode('FOCUS')"
+          @select="handleNodeSelect"
           @teleport="handleTeleport"
         />
       </VStack>
+
+      <Teleport to="body" :disabled="!isEditorOpen || !editingNode">
+        <VBox
+          v-if="isEditorOpen && editingNode"
+          class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs"
+          @click.self="isEditorOpen = false"
+        >
+          <VNodeFormEditor
+            :node="editingNode!"
+            :is-new="isNewNode"
+            @confirm="handleSave"
+            @cancel="isEditorOpen = false"
+          />
+        </VBox>
+      </Teleport>
     </template>
   </BaseSidebarLayout>
 </template>
 
 <script setup lang="ts">
+import { v4 as uuidv4 } from 'uuid';
 import { ref, computed } from 'vue';
 import { useCanvasStore } from '@/stores/canvas';
 import { useProjectStore } from '@/stores/project';
-import type { NodeType } from '@/interfaces/conceptual-map';
+import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
 
-// Layout Atoms
 import VBox from '@/components/atoms/layout/VBox.vue';
 import VStack from '@/components/atoms/layout/VStack.vue';
-
-// Layout & UI
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
 import VButton from '@/components/atoms/buttons/VButton.vue';
+import VNodeFormEditor from '@/components/organisms/forms/VNodeFormEditor.vue';
 
 const canvasStore = useCanvasStore();
 const projectStore = useProjectStore();
 
 // --- Local State ---
+const isEditorOpen = ref(false);
+const isNewNode = ref(false);
+const editingNode = ref<ConceptualNode | null>(null);
 const selectedNodeId = ref<ID | null>(null);
 const viewMode = ref<'all' | 'inbox'>('all');
 
@@ -94,9 +126,7 @@ const viewMode = ref<'all' | 'inbox'>('all');
  * Ensures the Sidebar has access to the full manifest of nodes.
  */
 const registryNodes = computed(() => {
-  return Array.from(projectStore.conceptualNodes.entries()).map(([id, node]) => {
-    return node
-  })
+  return Array.from(projectStore.conceptualNodes.values()).filter(node => node.status !== 'ON_HOLD');
 });
 
 /**
@@ -105,7 +135,7 @@ const registryNodes = computed(() => {
  */
 const inboxNodes = computed(() => {
   const currentCanvas = canvasStore.getGraphCache(projectStore.activeCanvasId as ID);
-  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values());
+  const sidebarNodesArray = Array.from(projectStore.conceptualNodes.values()).filter(node => node.status !== 'ON_HOLD');;
 
   if (!currentCanvas?.nodes) {
     return sidebarNodesArray;
@@ -125,9 +155,21 @@ const filterNodesByTypes = (types: NodeType[]) => {
 };
 
 // --- Handlers ---
-const handleAction = (actionType: string) => {
-  console.log(`Discovery Action: ${actionType}`);
-  // Logic for opening specific modals based on actionType
+const handleAddNewNode = (nodeType: NodeType) => {
+  editingNode.value = {
+    id: uuidv4(),
+    type: nodeType,
+    label: '',
+    status: 'USER_DRAFT'
+  };
+
+  isNewNode.value = true;
+  isEditorOpen.value = true;
+};
+
+const handleSave = () => {
+  isEditorOpen.value = false;
+  editingNode.value = null;
 };
 
 const handleTeleport = (nodeId: string, canvasId?: string ) => {
@@ -135,7 +177,15 @@ const handleTeleport = (nodeId: string, canvasId?: string ) => {
   // Global canvas navigation logic
 };
 
-const selectNode = (nodeId: ID | null) => {
+const handleNodeSelect = (nodeId: ID | null) => {
+  if (!nodeId) return;
+
   selectedNodeId.value = nodeId;
+
+  const targetNode = projectStore.conceptualNodes.get(nodeId);
+  if (targetNode) {
+    editingNode.value = { ...targetNode };
+    isEditorOpen.value = true;
+  }
 };
 </script>
