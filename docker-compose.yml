@@ -24,6 +24,7 @@ services:
     #   - ./docker-var.env
     volumes:
       - ./tsconfig.base.json:/auraflux/tsconfig.base.json
+      - ./.env.development:/auraflux/.env.development
       - ./apps:/auraflux/apps
       - ./packages:/auraflux/packages
       - /auraflux/apps/consultant/node_modules

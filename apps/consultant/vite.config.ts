@@ -7,6 +7,7 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   base: '/',
+  envDir: resolve(import.meta.dirname, '../../'),
   plugins: [
     tailwindcss(),
     vue(),
