@@ -12,17 +12,17 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/tests/*": ["./tests/*"]
+      "@auraflux/design-system/*": ["packages/design-system/src/*"],
+      "@auraflux/shared-core/*": ["packages/shared-core/src/*"]
     },
     "lib": ["esnext", "dom"],
     "types": ["node"]
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "tests/**/*",
     "**/*.spec.ts"
   ],
   "exclude": ["node_modules"]
