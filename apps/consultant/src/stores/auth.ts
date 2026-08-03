@@ -1,7 +1,7 @@
 import type { User } from '@/interfaces/user';
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { apiService } from '@/api/apiService';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 
 export const useAuthStore = defineStore('auth', () => {
   // --- State ---

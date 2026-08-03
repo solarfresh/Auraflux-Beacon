@@ -13,7 +13,7 @@ import type { ConceptualNode, ConceptualEdge, ConceptualGraph } from '@/interfac
 import { useCanvasStore } from '@/stores/canvas';
 import { useNotificationStore } from '@/stores/notification';
 import { POSITION_SCALE } from '@/constants/canvases';
-import { apiService } from '@/api/apiService';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 
 interface ContextConfig {
   getCanvasId?: () => ID;

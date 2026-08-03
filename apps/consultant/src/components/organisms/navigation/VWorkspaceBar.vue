@@ -50,11 +50,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
-import VDropdownItem from '@/components/atoms/buttons/VDropdownItem.vue';
+import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '@/stores/project';

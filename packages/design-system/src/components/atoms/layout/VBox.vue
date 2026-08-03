@@ -33,7 +33,7 @@
  * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed, useAttrs } from 'vue';
-import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@/interfaces/layout';
+import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@auraflux/design-system/interfaces/layout';
 
 const props = withDefaults(defineProps<{
   /** HTML tag to render */

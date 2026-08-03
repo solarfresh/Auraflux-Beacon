@@ -52,9 +52,9 @@
 </template>
 
 <script setup lang="ts">
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue'
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue'
-import VButton from '@/components/atoms/buttons/VButton.vue'
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue'
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue'
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue'
 
 const props = defineProps<{
   status: string

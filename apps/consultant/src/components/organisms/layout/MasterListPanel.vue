@@ -61,11 +61,11 @@
  * and applied directly to the internal Box to prevent array nesting.
  */
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VIcon from 'packages/design-system/src/components/atoms/indicators/VIcon.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 
 // We disable attribute inheritance on the root so we can
 // manually bind $attrs to the specific internal Box container.

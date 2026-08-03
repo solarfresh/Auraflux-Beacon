@@ -95,12 +95,12 @@
  * Renders structured stability sub-lists inside the Knowledge Registry Sidebar.
  * Refactored to drop legacy jitter parameters and ensure streamlined custom event bubbling.
  */
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VIcon from 'packages/design-system/src/components/atoms/indicators/VIcon.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import VEntityCard from '@/components/molecules/resources/VEntityCard.vue';
 import VTreeItem from '@/components/organisms/domain/canvases/VTreeItem.vue';
@@ -108,7 +108,7 @@ import { computed, ref } from 'vue';
 
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
-import type { BackgroundToken } from '@/interfaces/layout';
+import type { BackgroundToken } from '@auraflux/design-system/interfaces/layout';
 
 const props = withDefaults(defineProps<{
   title: string;

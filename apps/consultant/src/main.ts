@@ -1,5 +1,5 @@
-import '@vue-flow/core/dist/style.css'
-import './assets/main.css'
+import '@vue-flow/core/dist/style.css';
+import '@auraflux/design-system/assets/main.css';
 
 import { createApp } from 'vue'
 import App from './App.vue'

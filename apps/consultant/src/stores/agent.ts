@@ -1,5 +1,5 @@
-import config from '@/config';
-import { apiService } from '@/api/apiService';
+import config from '@auraflux/shared-core/config';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 import type { ID } from '@/interfaces/core';
 import type { Agent, ModelProvider } from '@/interfaces/agents';
 import { defineStore } from 'pinia';

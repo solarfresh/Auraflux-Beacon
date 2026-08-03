@@ -58,9 +58,9 @@ import { useRouter } from 'vue-router';
 import { useProjectStore } from '@/stores/project';
 
 // Layout Atoms
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VGrid from 'packages/design-system/src/components/atoms/layout/VGrid.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
 import VProjectToolbar from '@/components/molecules/resources/VProjectToolbar.vue';
 import VProjectCard from '@/components/molecules/resources/VProjectCard.vue';
 import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';

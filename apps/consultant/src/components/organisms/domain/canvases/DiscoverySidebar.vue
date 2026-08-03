@@ -104,11 +104,11 @@ import { useProjectStore } from '@/stores/project';
 import type { NodeType, ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
 
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import BaseSidebarLayout from '@/components/organisms/layout/BaseSidebarLayout.vue';
 import SidebarRegistrySection from '@/components/organisms/sections/SidebarRegistrySection.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VNodeFormEditor from '@/components/organisms/forms/VNodeFormEditor.vue';
 
 const canvasStore = useCanvasStore();

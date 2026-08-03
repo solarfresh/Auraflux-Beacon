@@ -73,8 +73,8 @@
 <script setup lang="ts">
 import type { EntityActionType } from '@/interfaces/core';
 
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 
 /**
  * Available atomic event triggers dispatched directly on single-click streams.

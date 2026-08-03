@@ -68,10 +68,10 @@
  * A clean structural shell.
  * Removed 'bodyClass' prop to prevent recursive array nesting ['p-2', ['p-2']].
  */
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   title?: string;

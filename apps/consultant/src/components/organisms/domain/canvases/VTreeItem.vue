@@ -37,9 +37,9 @@
  * Replaced native div with the atomic VBox component to enforce token uniformity.
  */
 import { ref } from 'vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VEntityCard from '@/components/molecules/resources/VEntityCard.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 
 const props = defineProps<{

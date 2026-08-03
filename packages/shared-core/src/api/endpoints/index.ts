@@ -1,4 +1,4 @@
-import config from '@/config';
+import config from '@auraflux/shared-core/config';
 import { ID } from '@/interfaces/core';
 
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;

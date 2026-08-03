@@ -34,7 +34,7 @@ import VNodeShape from '@/components/atoms/canvases/VNodeShape.vue';
 import VNodeShield from '@/components/atoms/canvases/VNodeShield.vue';
 
 // 🟢 Import the new unified micro-toolbar actions component and type definition
-import VEntityCanvasQuickActions from '@/components/molecules/canvases/VEntityCanvasQuickActions.vue';
+import VEntityCanvasQuickActions from '@/components/molecules/canvases/VEntityCanvasQuickActions.vue'
 
 const context = inject(ConceptualMapContextKey);
 

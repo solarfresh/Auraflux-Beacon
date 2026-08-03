@@ -38,9 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 interface Props {
   variant?: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'outline';

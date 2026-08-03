@@ -87,14 +87,14 @@ import { EdgeLabelRenderer, useVueFlow } from '@vue-flow/core'; // 🟢 Added us
 import { useEdgeInterceptor } from '@/composables/useEdgeInterceptor';
 
 // Atoms & Molecules Layout Imports
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VInput from 'packages/design-system/src/components/atoms/forms/VInput.vue';
-import VSelect from 'packages/design-system/src/components/atoms/forms/VSelect.vue';
-import VTextarea from 'packages/design-system/src/components/atoms/forms/VTextarea.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
+import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 
 // Shared State Machine Action Component

@@ -87,12 +87,12 @@ import { nextTick, ref, watch } from 'vue';
 import type { ChatMessage } from '@/interfaces/core';
 
 // Atoms & Molecules
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VMarkdown from 'packages/design-system/src/components/atoms/indicators/VMarkdown.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VIcon from 'packages/design-system/src/components/atoms/indicators/VIcon.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VMarkdown from '@auraflux/design-system/components/atoms/indicators/VMarkdown.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VInputGroup from '@/components/molecules/forms/VInputGroup.vue';
 
 const props = defineProps<{

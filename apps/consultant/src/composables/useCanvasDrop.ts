@@ -9,7 +9,7 @@ import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import { useVueFlow } from '@vue-flow/core';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 import { POSITION_SCALE } from '@/constants/canvases';
-import { apiService } from '@/api/apiService';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 
 const tunnelDraggedNode = ref<ConceptualNode | null>(null);
 const isTunnelDragging = ref(false);

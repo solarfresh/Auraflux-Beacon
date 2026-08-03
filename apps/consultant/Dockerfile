@@ -4,11 +4,13 @@ FROM node:24-alpine
 # Install the specific version of npm
 RUN npm install -g npm@11.9.0
 
+RUN mkdir -p /auraflux/apps/consultant
+
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /auraflux/apps/consultant
 
 # Copy package.json and package-lock.json to the working directory
-COPY ./package*.json ./
+COPY apps/consultant/package*.json ./
 
 # Install dependencies
 RUN npm install

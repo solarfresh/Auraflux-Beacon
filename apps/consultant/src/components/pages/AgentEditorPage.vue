@@ -202,11 +202,11 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useAgentStore } from '@/stores/agent';
 import { useRoute } from 'vue-router';
 
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VGrid from 'packages/design-system/src/components/atoms/layout/VGrid.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 // Molecules
 import VForm from '@/components/molecules/forms/VForm.vue';
@@ -214,9 +214,9 @@ import VFieldset from '@/components/molecules/forms/VFieldset.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
 
 // Atoms
-import VInput from 'packages/design-system/src/components/atoms/forms/VInput.vue';
-import VTextarea from 'packages/design-system/src/components/atoms/forms/VTextarea.vue';
-import VSelect from 'packages/design-system/src/components/atoms/forms/VSelect.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
+import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { Agent, ModelProvider } from '@/interfaces/agents';

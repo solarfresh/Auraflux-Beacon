@@ -1,4 +1,4 @@
-import { apiService } from '@/api/apiService';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
 import type { ID } from '@/interfaces/core';
 import type { Project } from '@/interfaces/project';

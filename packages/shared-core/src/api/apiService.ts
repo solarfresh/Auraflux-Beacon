@@ -1,4 +1,4 @@
-import { AgentsEndpoints, CanvasesEndpoints, ProjectsEndpoints, UsersEndpoints } from '@/api/endpoints';
+import { AgentsEndpoints, CanvasesEndpoints, ProjectsEndpoints, UsersEndpoints } from '@auraflux/shared-core/api/endpoints';
 import type { Agent, ModelProvider } from '@/interfaces/agents';
 import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
 import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';

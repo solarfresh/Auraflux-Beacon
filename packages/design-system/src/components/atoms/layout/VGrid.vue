@@ -25,8 +25,8 @@
  * * @category Atoms
  * @subcategory Layout
  */
-import { alignClasses, gapClasses, justifyClasses } from '@/constants/layout';
-import type { Alignment, GapSize, SpacingToken, Justification } from '@/interfaces/layout';
+import { alignClasses, gapClasses, justifyClasses } from '@auraflux/design-system/constants/layout';
+import type { Alignment, GapSize, SpacingToken, Justification } from '@auraflux/design-system/interfaces/layout';
 
 const props = withDefaults(defineProps<{
   /** HTML tag to render */

@@ -21,8 +21,8 @@
  * Manages vertical layout (flex-direction: column).
  * Responsible for consistent spacing (gap) between child elements.
  */
-import { alignClasses, gapClasses, justifyClasses } from '@/constants/layout';
-import type { Alignment, GapSize, Justification } from '@/interfaces/layout';
+import { alignClasses, gapClasses, justifyClasses } from '@auraflux/design-system/constants/layout';
+import type { Alignment, GapSize, Justification } from '@auraflux/design-system/interfaces/layout';
 
 const props = withDefaults(defineProps<{
   /** HTML element to render */

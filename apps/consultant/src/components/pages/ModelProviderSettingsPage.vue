@@ -64,9 +64,9 @@
 </template>
 
 <script setup lang="ts">
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VGrid from 'packages/design-system/src/components/atoms/layout/VGrid.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
 import VModelProviderCard from '@/components/molecules/resources/VModelProviderCard.vue';

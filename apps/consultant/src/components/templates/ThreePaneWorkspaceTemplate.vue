@@ -79,8 +79,8 @@
  * Orchestrates high-level z-index management and global layout constraints.
  */
 import { ref } from 'vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VFloatControl from '@/components/molecules/layout/VFloatControl.vue';
 
 const isRightOpen = ref(true);

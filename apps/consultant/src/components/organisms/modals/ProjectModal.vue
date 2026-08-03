@@ -79,10 +79,10 @@ import { useProjectStore } from '@/stores/project';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 import VForm from '@/components/molecules/forms/VForm.vue';
 import VFormField from '@/components/molecules/forms/VFormField.vue';
-import VInput from 'packages/design-system/src/components/atoms/forms/VInput.vue';
-import VTextarea from 'packages/design-system/src/components/atoms/forms/VTextarea.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VTagInput from '@/components/molecules/forms/VTagInput.vue';
 
 import type { Project } from '@/interfaces/project';

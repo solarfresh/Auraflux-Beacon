@@ -5,7 +5,7 @@
  * completely decoupled from Vue Flow high-frequency reactive rendering loops.
  */
 import { defineStore } from 'pinia';
-import { apiService } from '@/api/apiService';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 import type { ConceptualGraph } from '@/interfaces/conceptual-map';
 
 export const useCanvasStore = defineStore('canvas', {

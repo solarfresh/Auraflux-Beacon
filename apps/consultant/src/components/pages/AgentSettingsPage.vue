@@ -45,10 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import { apiService } from '@/api/apiService';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VGrid from 'packages/design-system/src/components/atoms/layout/VGrid.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import { apiService } from '@auraflux/shared-core/api/apiService';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import VAgentCard from '@/components/molecules/resources/VAgentCard.vue';
 import VAgentToolbar from '@/components/molecules/resources/VAgentToolbar.vue';

@@ -114,13 +114,13 @@ import { Position, type NodeProps } from '@vue-flow/core';
 import { computed, inject } from 'vue';
 
 // Components
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VNodeHandle from '@/components/atoms/canvases/VNodeHandle.vue';
-import VBadge from 'packages/design-system/src/components/atoms/indicators/VBadge.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VNodeContainer from '@/components/organisms/domain/canvases/VNodeContainer.vue';
 import { ConceptualMapContextKey } from '@/constants/injection-keys';
 

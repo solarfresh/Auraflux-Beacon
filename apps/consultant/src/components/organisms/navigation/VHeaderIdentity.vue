@@ -13,7 +13,7 @@ import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAgentStore } from '@/stores/agent';
 import { useProjectStore } from '@/stores/project';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VEntityIdentity from '@/components/molecules/domain/VEntityIdentity.vue';
 
 const route = useRoute();

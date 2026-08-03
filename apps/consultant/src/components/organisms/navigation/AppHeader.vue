@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
 import VHeaderActions from '@/components/organisms/navigation/VHeaderActions.vue';
 import VHeaderIdentity from '@/components/organisms/navigation/VHeaderIdentity.vue';

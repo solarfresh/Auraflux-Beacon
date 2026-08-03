@@ -41,8 +41,8 @@
  * * A specialized action trigger for menu systems.
  * Integrates VTypography for consistent text rendering.
  */
-import VIcon from '@/components/atoms/indicators/VIcon.vue';
-import VTypography from '@/components/atoms/indicators/VTypography.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 withDefaults(defineProps<{
   /** Heroicon name string */

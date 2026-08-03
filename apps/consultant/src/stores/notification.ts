@@ -1,5 +1,5 @@
 import { useWebSocket } from '@/composables/useWebSocket';
-import config from '@/config';
+import config from '@auraflux/shared-core/config';
 import { ConceptualEdge, ConceptualGraph } from '@/interfaces/conceptual-map';
 import type {
     ChatMessage

@@ -32,9 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
-import VCloseButton from '@/components/atoms/buttons/VCloseButton.vue';
+import VCloseButton from '@auraflux/design-system/components/atoms/buttons/VCloseButton.vue';
 
 // Define the component's props and events
 const props = defineProps<{

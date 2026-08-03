@@ -53,12 +53,12 @@
 </template>
 
 <script setup lang="ts">
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VISPStageCard from '@/components/molecules/domain/VISPStageCard.vue';
-import VStaticGraph from '@/components/molecules/layout/VStaticGraph.vue';
+import VStaticGraph from '@/components/molecules/canvases/VStaticGraph.vue';
 import VWelcomeGateway from '@/components/molecules/navs/VWelcomeGateway.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';
 import type { IntentOption } from '@/interfaces/user';

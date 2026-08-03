@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 
 interface ActionGroupLabels {
   unlockedDraft?: string;

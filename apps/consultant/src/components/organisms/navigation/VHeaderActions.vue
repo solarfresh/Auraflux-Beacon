@@ -72,10 +72,10 @@
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VDropdownItem from '@/components/atoms/buttons/VDropdownItem.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VDropdownMenu from '@/components/molecules/layout/VDropdownMenu.vue';
 import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 

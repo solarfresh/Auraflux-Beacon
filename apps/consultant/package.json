@@ -1,10 +1,10 @@
 {
-  "name": "auraflux_beacon",
+  "name": "auraflux_consultant",
   "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host 0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
     "test:unit": "vitest --config vitest.config.ts",

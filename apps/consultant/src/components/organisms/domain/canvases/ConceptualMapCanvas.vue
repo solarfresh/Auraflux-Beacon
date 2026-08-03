@@ -35,7 +35,7 @@ import { MarkerType, type NodeDragEvent, VueFlow } from '@vue-flow/core';
 import { computed, markRaw, provide, ref, watch } from 'vue';
 
 // Atoms & Molecules
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VEdgeFloatingEditor from '@/components/organisms/domain/canvases/VEdgeFloatingEditor.vue';
 import VNodeFloatingEditor from '@/components/organisms/domain/canvases/VNodeFloatingEditor.vue';
 import VConceptualEdge from '@/components/organisms/domain/canvases/VConceptualEdge.vue';

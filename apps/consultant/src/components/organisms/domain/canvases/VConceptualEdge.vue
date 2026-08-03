@@ -83,11 +83,11 @@ import type { EntityActionType } from '@/interfaces/core'
 import { HANDLE_MAP } from '@/constants/canvases'
 
 // Atoms & Shared Components Imports
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue'
-import VBadge from 'packages/design-system/src/components/atoms/indicators/VBadge.vue'
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue'
-import VIcon from 'packages/design-system/src/components/atoms/indicators/VIcon.vue'
-import VCluster from 'packages/design-system/src/components/atoms/layout/VCluster.vue'
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue'
+import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue'
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue'
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue'
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue'
 
 // 🟢 Quick Action Micro-Toolbar Import
 import VEntityCanvasQuickActions from '@/components/molecules/canvases/VEntityCanvasQuickActions.vue'

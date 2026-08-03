@@ -1,6 +1,6 @@
 import { ref, onMounted, onUnmounted, type Ref } from 'vue';
 import type { WebSocketMessage } from '@/interfaces/notification';
-import config from '@/config';
+import config from '@auraflux/shared-core/config';
 
 /**
  * Establishes and manages a WebSocket connection for receiving notifications.

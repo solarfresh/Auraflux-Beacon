@@ -21,8 +21,8 @@
  * Manages horizontal layout (flex-direction: row).
  * Used for grouping elements side-by-side with consistent spacing.
  */
-import { alignClasses, gapClasses, justifyClasses } from '@/constants/layout';
-import type { Alignment, GapSize, Justification } from '@/interfaces/layout';
+import { alignClasses, gapClasses, justifyClasses } from '@auraflux/design-system/constants/layout';
+import type { Alignment, GapSize, Justification } from '@auraflux/design-system/interfaces/layout';
 
 const props = withDefaults(defineProps<{
   /** HTML element to render */

@@ -22,8 +22,8 @@
  * Maps backend project states to UI themes.
  */
 import { computed } from 'vue';
-import VStatusCard from '@/components/molecules/resources/VStatusCard.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
+import VStatusCard from '@auraflux/design-system/components/molecules/resources/VStatusCard.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import type { EntityStatus } from '@/interfaces/core';
 
 interface Props {

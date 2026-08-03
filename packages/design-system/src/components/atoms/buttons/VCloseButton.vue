@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import VButton from '@/components/atoms/buttons/VButton.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 
 /**
  * CloseButton Molecule

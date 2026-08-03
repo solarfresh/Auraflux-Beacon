@@ -48,11 +48,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import VButton from '@/components/atoms/buttons/VButton.vue';
-import VIcon from 'packages/design-system/src/components/atoms/indicators/VIcon.vue';
-import VTypography from 'packages/design-system/src/components/atoms/indicators/VTypography.vue';
-import VBox from 'packages/design-system/src/components/atoms/layout/VBox.vue';
-import VStack from 'packages/design-system/src/components/atoms/layout/VStack.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VAlert from '@/components/molecules/feedback/VAlert.vue';
 
 const props = defineProps<{
