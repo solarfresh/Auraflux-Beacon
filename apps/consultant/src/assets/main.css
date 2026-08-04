@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@source "../../../../packages//design-system/src/**/*.vue";
+@source "../../../../packages/design-system/src/**/*.ts";
+
 /* --- Global Scrollbar Styling --- */
 
 @layer base {

@@ -69,7 +69,7 @@ import ProjectModal from '@/components/organisms/modals/ProjectModal.vue';
 
 import type { ID } from '@/interfaces/core';
 import type { ISPStage, Project } from '@/interfaces/project';
-import type { BaseSelectorState } from '@/interfaces/indicators';
+import type { BaseSelectorState } from '@auraflux/design-system/interfaces/indicators';
 
 const router = useRouter();
 const projectStore = useProjectStore();

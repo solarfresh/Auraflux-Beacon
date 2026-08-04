@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/vue3-vite';
-import '@auraflux/design-system/assets/main.css';
+import './preview.css';
 
 const preview: Preview = {
   parameters: {

@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { userEvent, expect, within } from '@storybook/test';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
 // 🎯 Extract exact props type from component to ensure TS auto-completion & type checking
@@ -10,7 +9,7 @@ type VBoxProps = InstanceType<typeof VBox>['$props'];
  * Strictly adheres to Design Tokens to manage padding, border, background, and clickable interactions.
  */
 const meta = {
-  title: 'Atoms/VBox',
+  title: 'Atoms/Layout/VBox',
   component: VBox,
   tags: ['autodocs'], // 💡 Storybook auto-generates argTypes (Controls) directly from `defineProps`, no manual argTypes needed!
   args: {

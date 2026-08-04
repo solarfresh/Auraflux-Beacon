@@ -1,6 +1,7 @@
 // This file has been automatically migrated to valid ESM format by Storybook.
 import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from '@storybook/vue3-vite';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve, dirname } from 'path';
 import { mergeConfig, type InlineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
@@ -20,8 +21,10 @@ const config: StorybookConfig = {
   },
   async viteFinal(config: InlineConfig) {
     return mergeConfig(config, {
-      plugins: [vue()],
-
+      plugins: [
+        tailwindcss(),
+        vue()
+      ],
       resolve: {
         alias: {
           '@auraflux/design-system': resolve(__dirname, '../../../packages/design-system/src'),

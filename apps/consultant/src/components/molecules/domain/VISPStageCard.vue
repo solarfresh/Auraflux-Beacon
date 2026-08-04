@@ -1,12 +1,12 @@
 <template>
   <VBox
     :background="'white'"
-    :border="'none'"
+    :border="'all'"
     :padding="size === 'lg' ? 'lg' : 'md'"
     rounded="xl"
     :class="[
       'transition-all duration-300 group w-full',
-      'shadow-lg border-indigo-200 translate-x-2',
+      'shadow-lg hover:translate-x-2',
     ]"
   >
     <VCluster gap="md" align="center">
