@@ -1,0 +1,32 @@
+{
+  "name": "@auraflux/storybook",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build": "storybook build -o dist",
+    "preview": "vite preview --outDir dist --port 6006",
+    "test-story": "test-storybook"
+  },
+  "dependencies": {
+    "@auraflux/design-system": "*",
+    "@auraflux/storybook": "file:",
+    "vue": "^3.5.34"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^10.5.6",
+    "@storybook/addon-docs": "^10.5.6",
+    "@storybook/addon-vitest": "^10.5.6",
+    "@storybook/vue3": "^10.5.6",
+    "@storybook/vue3-vite": "^10.5.6",
+    "@types/node": "^26.1.2",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "autoprefixer": "^10.5.4",
+    "postcss": "^8.5.25",
+    "storybook": "^10.5.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.0.16"
+  }
+}

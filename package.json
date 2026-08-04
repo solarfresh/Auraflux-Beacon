@@ -1,0 +1,8 @@
+{
+  "name": "auraflux-beacon",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
