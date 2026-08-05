@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "strict": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@auraflux/design-system/*": ["../../packages/design-system/src/*"]
+    }
+  },
+
+  "include": [
+    ".storybook/**/*.ts",
+    "../../packages/design-system/src/**/*.ts",
+    "../../packages/design-system/src/**/*.d.ts",
+    "../../packages/design-system/src/**/*.vue",
+    "../../packages/design-system/src/**/*.stories.ts",
+    "../../packages/design-system/src/**/*.mdx"
+  ],
+  "exclude": ["node_modules", "dist", "storybook-static"]
+}

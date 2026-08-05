@@ -1,0 +1,121 @@
+<template>
+  <component
+    :is="tag"
+    :class="[
+      // Spacing
+      padding && paddingMap[padding],
+
+      // Shape & Border
+      roundedClass,
+      border && borderMap[border],
+
+      // Color & Interaction
+      background && backgroundMap[background],
+      hoverBackground && `hover:${backgroundMap[hoverBackground]}`,
+      { 'cursor-pointer select-none active:opacity-80 transition-opacity': clickable },
+
+      // Interaction logic
+      interactionClasses,
+
+      // Custom overrides from parent
+      $attrs.class
+    ]"
+    v-bind="filteredAttrs"
+  >
+    <slot />
+  </component>
+</template>
+
+<script setup lang="ts">
+/**
+ * Box Atom (The "Skin" layer)
+ * A foundational container that manages padding, borders, and backgrounds.
+ * It strictly adheres to Design Tokens to prevent "Magic Values".
+ */
+import { computed, useAttrs } from 'vue';
+import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@auraflux/design-system/interfaces/layout';
+
+const props = withDefaults(defineProps<{
+  /** HTML tag to render */
+  tag?: string;
+  /** Internal spacing token */
+  padding?: SpacingToken;
+  /** Radius token. If true, uses 'md' (8px) as default */
+  rounded?: RoundedToken;
+  /** Border position token */
+  border?: BorderToken;
+  /** Semantic background token */
+  background?: BackgroundToken;
+  /** Background color on hover */
+  hoverBackground?: BackgroundToken;
+  /** Adds pointer cursor and active state */
+  clickable?: boolean;
+}>(), {
+  tag: 'div',
+  padding: 'none',
+  rounded: false,
+  border: 'none',
+  background: 'transparent',
+  clickable: false
+});
+
+// --- Token Mapping ---
+
+const paddingMap: Record<SpacingToken, string> = {
+  none: 'p-0',
+  xs: 'p-2',   // 8px
+  sm: 'p-3',   // 12px
+  md: 'p-4',   // 16px
+  lg: 'p-6',   // 24px
+  xl: 'p-8'    // 32px
+};
+
+const borderMap: Record<BorderToken, string> = {
+  all: 'border border-slate-100',
+  top: 'border-t border-slate-100',
+  bottom: 'border-b border-slate-100',
+  left: 'border-l border-slate-100',
+  right: 'border-r border-slate-100',
+  dashed: 'border-2 border-dashed border-slate-200',
+  none: 'border-none'
+};
+
+const backgroundMap: Record<BackgroundToken, string> = {
+  white: 'bg-white',
+  'slate-50': 'bg-slate-50',
+  'indigo-50': 'bg-indigo-50',
+  'amber-50': 'bg-amber-50',
+  'rose-50': 'bg-rose-50',
+  'emerald-50': 'bg-emerald-50',
+  transparent: 'bg-transparent'
+};
+
+// --- Computed Logic ---
+/**
+ * Generates the interaction classes for clickable elements.
+ */
+const interactionClasses = computed(() => {
+  if (!props.clickable) return '';
+  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-500 outline-none';
+});
+
+/**
+ * Resolves the rounding class based on boolean or token input.
+ * Fixed the type issue where rounded="xl" was previously invalid.
+ */
+const roundedClass = computed(() => {
+  if (props.rounded === true) return 'rounded-md';
+  if (props.rounded === false || props.rounded === 'none') return 'rounded-none';
+  return `rounded-${props.rounded}`;
+});
+
+/**
+ * Ensure attributes (like @click) are passed down correctly
+ * while we manually handle 'class'.
+ */
+const attrs = useAttrs();
+const filteredAttrs = computed(() => {
+  const { class: _, ...rest } = attrs;
+  return rest;
+});
+</script>
