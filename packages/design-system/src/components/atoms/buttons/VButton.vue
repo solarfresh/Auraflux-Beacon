@@ -3,9 +3,12 @@
     :class="[
       'inline-flex items-center justify-center transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
       // Variant Mapping
-      variantClasses[variant],
+      variantStyles.bg,
+      variantStyles.text,
+      variantStyles.hover,
+      variantStyles.border || '',
       // Size & Shape Mapping
-      iconOnly ? iconSizeClasses[size] : textSizeClasses[size],
+      iconOnly ? sizeStyles.iconButton : sizeStyles.button,
       // Rounded logic
       iconOnly ? 'rounded-lg' : 'rounded-xl'
     ]"
@@ -18,7 +21,7 @@
       <VIcon
         v-if="iconName"
         :name="iconName"
-        :color="iconColorClasses[variant]"
+        :color="variantStyles.text"
         :size="size === 'lg' ? 'md' : 'sm'"
         :class="{ 'mr-2': !iconOnly }"
       />
@@ -29,7 +32,7 @@
         weight="semibold"
         class="whitespace-nowrap"
         :size="size"
-        :color="textColorClasses[variant]"
+        :color="variantStyles.text"
       >
         <slot />
       </VTypography>
@@ -38,63 +41,32 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import type { ComponentVariant, ComponentSize } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
-interface Props {
-  variant?: 'primary' | 'secondary' | 'tertiary' | 'ghost' | 'danger' | 'outline';
-  size?: 'xs' | 'sm' | 'md' | 'lg';
+export interface VButtonProps {
+  variant?: ComponentVariant;
+  size?: ComponentSize;
   iconName?: string;
   iconOnly?: boolean;
   loading?: boolean;
   disabled?: boolean;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<VButtonProps>(), {
   variant: 'primary',
   size: 'md',
   iconOnly: false
 });
 
-// --- Style Maps ---
-const variantClasses = {
-  primary: 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-sm',
-  secondary: 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100',
-  tertiary: 'bg-transparent text-slate-600 hover:bg-slate-100',
-  danger: 'bg-red-50 text-red-600 hover:bg-red-100',
-  outline: 'bg-transparent border border-slate-200 text-slate-700 hover:border-slate-300',
-  ghost: 'bg-transparent text-slate-400 hover:text-slate-600'
-};
+const sizeStyles = computed(() => {
+  return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
+});
 
-const textSizeClasses = {
-  xs: 'px-2.5 py-1.5 text-xs',
-  sm: 'px-3 py-2 text-sm',
-  md: 'px-5 py-2.5 text-base',
-  lg: 'px-6 py-3 text-lg'
-};
-
-const textColorClasses = {
-  primary: 'text-white',
-  secondary: 'text-indigo-700',
-  tertiary: 'text-slate-600',
-  danger: 'text-red-600',
-  outline: 'text-slate-700',
-  ghost: 'text-slate-400'
-}
-
-const iconSizeClasses = {
-  xs: 'p-1',
-  sm: 'p-1.5',
-  md: 'p-2.5',
-  lg: 'p-3'
-};
-
-const iconColorClasses = {
-  primary: 'white',
-  secondary: 'indigo-700',
-  tertiary: 'slate-600',
-  danger: 'red-600',
-  outline: 'slate-700',
-  ghost: 'slate-400'
-}
+const variantStyles = computed(() => {
+  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.primary;
+});
 </script>
