@@ -209,7 +209,7 @@ import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.v
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 // Molecules
-import VForm from '@/components/molecules/forms/VForm.vue';
+import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFieldset from '@auraflux/design-system/components/molecules/forms/VFieldset.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 

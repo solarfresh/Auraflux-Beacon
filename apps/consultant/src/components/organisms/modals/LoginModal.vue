@@ -73,7 +73,7 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import VForm from '@/components/molecules/forms/VForm.vue';
+import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VAlert from '@/components/molecules/feedback/VAlert.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
