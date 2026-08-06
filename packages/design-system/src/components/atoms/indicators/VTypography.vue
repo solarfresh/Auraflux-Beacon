@@ -1,61 +1,43 @@
 <template>
-  <component :is="tag" :class="textClasses">
+  <component :is="tag" :class="[
+    fontWeightStyles,
+    sizeStyles.text,
+    variantStyles.text
+  ]">
     <slot></slot>
   </component>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { FontWeightToken, SizeToken, TagToken, VariantToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_FONT_WEIGHT_CLASSES, SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
-const props = defineProps({
-  tag: {
-    type: String,
-    default: 'p',
-    validator: (value: string) => ['p', 'span', 'strong', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'li'].includes(value),
-  },
-  size: {
-    type: String,
-    default: 'base', // 'xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'
-    validator: (value: string) => ['xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(value),
-  },
-  weight: {
-    type: String,
-    default: 'normal', // 'light', 'normal', 'medium', 'semibold', 'bold'
-    validator: (value: string) => ['light', 'normal', 'medium', 'semibold', 'bold'].includes(value),
-  },
-  color: {
-    type: String,
-    default: 'slate-900', // e.g., 'slate-900', 'blue-500', 'white'
-  },
+export interface VTypographyProps {
+  tag?: TagToken;
+  size?: SizeToken;
+  weight?: FontWeightToken;
+  variant?: VariantToken;
+}
+
+const props = withDefaults(defineProps<VTypographyProps>(), {
+  tag: 'p',
+  size: 'md',
+  weight: 'normal',
+  variant: 'outline',
 });
 
-const sizeMap: { [key: string]: string } = {
-  xs: 'text-xs',
-  sm: 'text-sm',
-  base: 'text-base',
-  md: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
-  '3xl': 'text-3xl',
-  '4xl': 'text-4xl',
-  '5xl': 'text-5xl',
-};
 
-const weightMap: { [key: string]: string } = {
-  light: 'font-light',
-  normal: 'font-normal',
-  medium: 'font-medium',
-  semibold: 'font-semibold',
-  bold: 'font-bold',
-};
+const fontWeightStyles = computed(() => {
+  return SHARED_FONT_WEIGHT_CLASSES[props.weight] || SHARED_FONT_WEIGHT_CLASSES.normal;
+});
 
-const textClasses = computed(() => {
-  return [
-    sizeMap[props.size],
-    weightMap[props.weight],
-    `text-${props.color}`
-  ];
+const sizeStyles = computed(() => {
+  return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
+});
+
+const variantStyles = computed(() => {
+  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.outline;
 });
 </script>
 

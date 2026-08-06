@@ -1,4 +1,4 @@
-import type { Alignment, BorderToken, Justification, RoundedToken, SizeToken, SpacingToken, SurfaceToken, VariantToken } from '@auraflux/design-system/interfaces/theme';
+import type { Alignment, BorderToken, FontWeightToken, Justification, RoundedToken, SizeToken, SpacingToken, SurfaceToken, VariantToken } from '@auraflux/design-system/interfaces/theme';
 
 export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
   start: 'items-start',
@@ -16,6 +16,23 @@ export const SHARED_BORDER_CLASSES: Record<BorderToken, string> = {
   right: 'border-r',
   dashed: 'border-2 border-dashed',
   none: 'border-none'
+};
+
+export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {
+  light: 'font-light',
+  normal: 'font-normal',
+  medium: 'font-medium',
+  semibold: 'font-semibold',
+  bold: 'font-bold',
+};
+
+export const SHARED_GAP_CLASSES: Record<SizeToken, string> = {
+  xs: 'gap-1', // 4px
+  sm: 'gap-2', // 8px
+  md: 'gap-4', // 16px
+  lg: 'gap-6', // 24px
+  xl: 'gap-8', // 32px
+  '2xl': 'gap-10',
 };
 
 export const SHARED_JUSTIFY_CLASSES: Record<Justification, string> = {
@@ -45,51 +62,72 @@ export const SHARED_ROUNDED_CLASS: Record<RoundedToken, string> = {
   full: 'rounded-full',
 };
 
-export const SHARED_SIZE_CLASSES: Record<SizeToken, { control: string; iconButton: string; icon: string; badge: string }> = {
+export const SHARED_SIZE_CLASSES: Record<SizeToken, { badge: string; control: string; iconButton: string; icon: string; text: string; }> = {
   xs: {
+    badge: 'px-1.5 py-0.5 text-[10px] leading-none',
     control: 'px-2.5 py-1.5 text-xs',
     iconButton: 'p-1',
     icon: 'w-3 h-3',
-    badge: 'px-1.5 py-0.5 text-[10px] leading-none',
+    text: 'text-xs'
   },
   sm: {
+    badge: 'px-2 py-0.5 text-xs',
     control: 'px-3 py-2 text-sm',
     iconButton: 'p-1.5',
     icon: 'w-4 h-4',
-    badge: 'px-2 py-0.5 text-xs',
+    text: 'text-sm'
   },
   md: {
+    badge: 'px-2.5 py-1 text-sm',
     control: 'px-5 py-2.5 text-base',
     iconButton: 'p-2.5',
     icon: 'w-6 h-6',
-    badge: 'px-2.5 py-1 text-sm',
+    text: 'text-md'
   },
   lg: {
+    badge: 'px-3 py-1.5 text-base',
     control: 'px-6 py-3 text-lg',
     iconButton: 'p-3',
     icon: 'w-8 h-8',
-    badge: 'px-3 py-1.5 text-base',
+    text: 'text-lg'
   },
   xl: {
+    badge: 'px-3.5 py-2 text-lg',
     control: 'px-7 py-3.5 text-xl',
     iconButton: 'p-3.5',
     icon: 'w-10 h-10',
-    badge: 'px-3.5 py-2 text-lg',
+    text: 'text-xl'
   },
   '2xl': {
+    badge: 'px-4 py-2.5 text-xl',
     control: 'px-8 py-4 text-2xl',
     iconButton: 'p-4',
     icon: 'w-12 h-12',
-    badge: 'px-4 py-2.5 text-xl',
+    text: 'text-2xl'
   },
 };
 
-export const SHARED_SURFACE_CLASSES: Record<SurfaceToken, string> = {
-  base: 'bg-white text-slate-900',
-  subtle: 'bg-slate-50 text-slate-800',
-  sunken: 'bg-slate-100 text-slate-800',
-  bordered: 'bg-white border border-slate-200 text-slate-900',
-  transparent: 'bg-transparent text-current',
+export const SHARED_SURFACE_CLASSES: Record<SurfaceToken, { bg: string; text: string; border: string }> = {
+  base: {
+    bg: 'bg-white',
+    text: 'text-slate-900',
+    border: 'border-slate-200/80',
+  },
+  subtle: {
+    bg: 'bg-slate-50/80',
+    text: 'text-slate-700',
+    border: 'border-slate-200/60',
+  },
+  sunken: {
+    bg: 'bg-slate-100',
+    text: 'text-slate-800',
+    border: 'border-slate-300/60',
+  },
+  transparent: {
+    bg: 'bg-transparent',
+    text: 'text-current',
+    border: 'border-transparent',
+  },
 };
 
 export const SHARED_VARIANT_CLASSES: Record<VariantToken, { bg: string; text: string; border?: string; hover?: string }> = {
@@ -101,6 +139,7 @@ export const SHARED_VARIANT_CLASSES: Record<VariantToken, { bg: string; text: st
   secondary: {
     bg: 'bg-indigo-50',
     text: 'text-indigo-700',
+    border: 'border-indigo-200/60',
     hover: 'hover:bg-indigo-100',
   },
   tertiary: {
@@ -132,15 +171,15 @@ export const SHARED_VARIANT_CLASSES: Record<VariantToken, { bg: string; text: st
     hover: 'hover:bg-amber-100',
   },
   danger: {
-    bg: 'bg-red-50',
-    text: 'text-red-700',
-    border: 'border border-red-200',
-    hover: 'hover:bg-red-100',
+    bg: 'bg-rose-50',
+    text: 'text-rose-700',
+    border: 'border-rose-200/60',
+    hover: 'hover:bg-rose-100',
   },
   info: {
     bg: 'bg-blue-50',
     text: 'text-blue-700',
-    border: 'border border-blue-200',
+    border: 'border-blue-200/60',
     hover: 'hover:bg-blue-100',
   },
 };

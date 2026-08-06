@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
 import VButton, {type VButtonProps} from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import type { Meta, StoryObj } from '@storybook/vue3';
 
 const meta = {
   title: 'Atoms/Buttons/VButton',
   component: VButton,
   tags: ['autodocs'],
   args: {
+    type: 'button',
     variant: 'primary',
     size: 'md',
     disabled: false,
@@ -32,10 +32,10 @@ export const Default: Story = {
 
 export const Variants: Story = {
   render: () => ({
-    components: { VButton, VBox, VCluster, VTypography },
+    components: { VButton, VBox, VCluster },
     template: `
       <VBox surface="base" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="md" wrap="true">
+        <VCluster align="center" gap="md" wrap=true>
           <VButton variant="primary">Primary</VButton>
           <VButton variant="secondary">Secondary</VButton>
           <VButton variant="tertiary">Tertiary</VButton>

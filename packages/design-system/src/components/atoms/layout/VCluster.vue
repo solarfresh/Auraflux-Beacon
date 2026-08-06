@@ -4,9 +4,9 @@
     :class="[
       'flex flex-row',
       wrap ? 'flex-wrap' : 'flex-nowrap',
-      alignClasses[align],
-      justifyClasses[justify],
-      gapClasses[gap],
+      alignStyles,
+      justifyStyles,
+      gapStyles,
       inline ? 'inline-flex' : 'flex',
       fullWidth ? 'w-full' : 'w-auto'
     ]"
@@ -21,14 +21,15 @@
  * Manages horizontal layout (flex-direction: row).
  * Used for grouping elements side-by-side with consistent spacing.
  */
-import { alignClasses, gapClasses, justifyClasses } from '@auraflux/design-system/constants/layout';
-import type { Alignment, GapSize, Justification } from '@auraflux/design-system/interfaces/layout';
+import { computed } from 'vue';
+import type {Alignment, Justification, SizeToken, TagToken} from '@auraflux/design-system/interfaces/theme';
+import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
 
-const props = withDefaults(defineProps<{
+export interface VClusterProps {
   /** HTML element to render */
-  tag?: string;
+  tag?: TagToken;
   /** Horizontal gap between children */
-  gap?: GapSize;
+  gap?: SizeToken;
   /** Vertical alignment of children */
   align?: Alignment;
   /** Horizontal distribution of children */
@@ -39,7 +40,9 @@ const props = withDefaults(defineProps<{
   inline?: boolean;
   /** Force the cluster to take up full available width */
   fullWidth?: boolean;
-}>(), {
+};
+
+const props = withDefaults(defineProps<VClusterProps>(), {
   tag: 'div',
   gap: 'md',
   align: 'center', // Default to center for horizontal alignment
@@ -47,5 +50,17 @@ const props = withDefaults(defineProps<{
   wrap: false,
   inline: false,
   fullWidth: false,
+});
+
+const alignStyles = computed(() => {
+  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.center;
+});
+
+const gapStyles = computed(() => {
+  return SHARED_GAP_CLASSES[props.gap] || SHARED_GAP_CLASSES.md;
+});
+
+const justifyStyles = computed(() => {
+  return SHARED_JUSTIFY_CLASSES[props.justify] || SHARED_JUSTIFY_CLASSES.start;
 });
 </script>

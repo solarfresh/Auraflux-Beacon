@@ -1,11 +1,11 @@
-type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'destructive' | 'outline' | 'danger-outline' | 'ghost' | 'danger-ghost';
-type ButtonSize = 'xs' | 'sm' | 'md' | 'lg';;
+import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
 
-export interface ButtonProps {
+export interface VButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  iconOnly?: boolean;
+  variant?: VariantToken;
+  size?: SizeToken;
   iconName?: string;
+  iconOnly?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
 }

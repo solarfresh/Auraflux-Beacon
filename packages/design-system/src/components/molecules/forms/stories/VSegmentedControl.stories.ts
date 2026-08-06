@@ -33,7 +33,7 @@ export const Default: Story = {
       return { args, selected, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="space-y-4 w-fit">
+      <VBox surface="base" border="all" padding="lg" rounded="xl" class="space-y-4 w-fit">
         <VSegmentedControl
           v-model="selected"
           :options="options"
@@ -62,7 +62,7 @@ export const WithIcons: Story = {
       return { activeTab, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="w-fit">
+      <VBox surface="base" border="all" padding="lg" rounded="xl" class="w-fit">
         <VSegmentedControl
           v-model="activeTab"
           :options="options"
@@ -88,7 +88,7 @@ export const WithDisabledOption: Story = {
       return { activeState, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="w-fit">
+      <VBox surface="base" border="all" padding="lg" rounded="xl" class="w-fit">
         <VSegmentedControl
           v-model="activeState"
           :options="options"

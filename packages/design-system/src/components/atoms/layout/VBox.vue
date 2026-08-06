@@ -8,7 +8,10 @@
       // Shape & Border
       roundedStyles,
       borderStyles,
-      surfaceStyles,
+      surfaceStyles.bg,
+      surfaceStyles.text,
+      surfaceStyles.border || '',
+
       // Interaction logic
       interactionStyles,
     ]"

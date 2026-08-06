@@ -57,22 +57,22 @@ export const VerticalSizes: Story = {
       <VBox background="white" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="lg">
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">sm (h-4)</VTypography>
+            <VTypography size="xs" variant="outline" class="font-mono">sm (h-4)</VTypography>
             <VDivider orientation="vertical" size="sm" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">md (h-6)</VTypography>
+            <VTypography size="xs" variant="outline" class="font-mono">md (h-6)</VTypography>
             <VDivider orientation="vertical" size="md" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">lg (h-8)</VTypography>
+            <VTypography size="xs" variant="outline" class="font-mono">lg (h-8)</VTypography>
             <VDivider orientation="vertical" size="lg" />
           </VCluster>
 
           <VCluster align="center" gap="xs" class="h-12">
-            <VTypography size="xs" color="slate-400" class="font-mono">full (h-full)</VTypography>
+            <VTypography size="xs" variant="outline" class="font-mono">full (h-full)</VTypography>
             <VDivider orientation="vertical" size="full" />
           </VCluster>
         </VCluster>
@@ -93,14 +93,14 @@ export const Horizontal: Story = {
     template: `
       <VBox background="white" border="all" padding="md" rounded="xl" class="w-80 shadow-sm">
         <VStack gap="xs">
-          <VTypography tag="h3" size="base" weight="semibold" color="slate-800">Account Settings</VTypography>
-          <VTypography tag="p" size="xs" color="slate-500">Manage your profile and security settings.</VTypography>
+          <VTypography tag="h3" size="base" weight="semibold" variant="outline">Account Settings</VTypography>
+          <VTypography tag="p" size="xs" variant="ghost">Manage your profile and security settings.</VTypography>
 
           <VDivider v-bind="args" />
 
           <VStack gap="xs">
-            <VButton variant="ghost" size="sm" class="w-full justify-start text-slate-700">Profile Overview</VButton>
-            <VButton variant="ghost" size="sm" class="w-full justify-start text-slate-700">API Tokens</VButton>
+            <VButton variant="ghost" size="sm" class="w-full justify-start variant="outline">Profile Overview</VButton>
+            <VButton variant="ghost" size="sm" class="w-full justify-start variant="outline">API Tokens</VButton>
           </VStack>
         </VStack>
       </VBox>

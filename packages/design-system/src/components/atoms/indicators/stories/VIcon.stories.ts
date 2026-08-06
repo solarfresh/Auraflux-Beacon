@@ -34,50 +34,50 @@ export const Variants: Story = {
     components: { VIcon, VBox, VCluster, VTypography },
     template: `
       <VBox surface="base" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="lg" wrap="true">
+        <VCluster align="center" gap="lg" wrap=true>
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="primary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Primary</VTypography>
+            <VTypography size="xs" variant="primary" class="font-mono">Primary</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Secondary</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">Secondary</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="tertiary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Tertiary</VTypography>
+            <VTypography size="xs" variant="tertiary" class="font-mono">Tertiary</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="danger" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Danger</VTypography>
+            <VTypography size="xs" variant="danger" class="font-mono">Danger</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="outline" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Outline</VTypography>
+            <VTypography size="xs" variant="outline" class="font-mono">Outline</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="ghost" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Ghost</VTypography>
+            <VTypography size="xs" variant="ghost" class="font-mono">Ghost</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="success" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Success</VTypography>
+            <VTypography size="xs" variant="success" class="font-mono">Success</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="warning" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Warning</VTypography>
+            <VTypography size="xs" variant="warning" class="font-mono">Warning</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="info" />
-            <VTypography size="xs" color="slate-400" class="font-mono">Info</VTypography>
+            <VTypography size="xs" variant="info" class="font-mono">Info</VTypography>
           </VCluster>
 
         </VCluster>
@@ -94,32 +94,32 @@ export const Sizes: Story = {
         <VCluster align="center" gap="lg">
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="xs" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">xs (w-3 h-3)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">xs (w-3 h-3)</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="sm" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">sm (w-4 h-4)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">sm (w-4 h-4)</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="md" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">md (w-6 h-6)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">md (w-6 h-6)</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="lg" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">lg (w-8 h-8)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">lg (w-8 h-8)</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="xl" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">xl (w-10 h-10)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">xl (w-10 h-10)</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="2xl" variant="secondary" />
-            <VTypography size="xs" color="slate-400" class="font-mono">2xl (w-12 h-12)</VTypography>
+            <VTypography size="xs" variant="secondary" class="font-mono">2xl (w-12 h-12)</VTypography>
           </VCluster>
         </VCluster>
       </VBox>
@@ -135,12 +135,12 @@ export const StyleVariants: Story = {
         <VCluster align="center" gap="xl">
           <VCluster align="center" gap="sm">
             <VIcon name="Heart" type="solid" size="lg" variant="secondary" />
-            <VTypography size="sm" color="slate-700">Solid</VTypography>
+            <VTypography size="sm" variant="secondary">Solid</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="sm">
             <VIcon name="Heart" type="outline" size="lg" variant="secondary" />
-            <VTypography size="sm" color="slate-700">Outline</VTypography>
+            <VTypography size="sm" variant="secondary">Outline</VTypography>
           </VCluster>
         </VCluster>
       </VBox>

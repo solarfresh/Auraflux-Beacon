@@ -21,7 +21,7 @@
       <VIcon
         v-if="iconName"
         :name="iconName"
-        :color="variantStyles.text"
+        :variant="variant"
         :size="size === 'lg' ? 'md' : 'sm'"
         :class="{ 'mr-2': !iconOnly }"
       />
@@ -32,7 +32,7 @@
         weight="semibold"
         class="whitespace-nowrap"
         :size="size"
-        :color="variantStyles.text"
+        :variant="variant"
       >
         <slot />
       </VTypography>
@@ -48,6 +48,7 @@ import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces
 import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VButtonProps {
+  type?: 'button' | 'submit' | 'reset';
   variant?: VariantToken;
   size?: SizeToken;
   iconName?: string;
@@ -57,6 +58,7 @@ export interface VButtonProps {
 }
 
 const props = withDefaults(defineProps<VButtonProps>(), {
+  type: 'button',
   variant: 'primary',
   size: 'md',
   iconOnly: false
