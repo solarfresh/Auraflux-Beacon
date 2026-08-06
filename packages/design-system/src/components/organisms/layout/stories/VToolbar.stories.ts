@@ -19,7 +19,7 @@ const meta = {
   component: VToolbar,
   tags: ['autodocs'],
   args: {
-    background: 'white',
+    surface: 'base',
     border: 'bottom',
     sticky: false, // Set to false by default in Storybook canvas for predictable layout preview
     paddingX: 'md',
@@ -42,7 +42,7 @@ export const Default: Story = {
     template: `
       <VToolbar v-bind="args">
         <template #start>
-          <VTypography tag="h1" size="lg" weight="semibold" color="slate-800">
+          <VTypography tag="h1" size="lg" weight="semibold">
             Projects
           </VTypography>
         </template>

@@ -27,7 +27,7 @@
  * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed } from 'vue';
-import type {SpacingToken, RoundedToken, BorderToken, VariantToken, SurfaceToken} from '@auraflux/design-system/interfaces/theme';
+import type {SpacingToken, RoundedToken, BorderToken, SurfaceToken} from '@auraflux/design-system/interfaces/theme';
 import { SHARED_BORDER_CLASSES, SHARED_PADDING_CLASS, SHARED_ROUNDED_CLASS, SHARED_SURFACE_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VBoxProps {

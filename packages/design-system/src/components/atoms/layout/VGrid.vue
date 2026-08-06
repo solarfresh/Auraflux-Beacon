@@ -7,10 +7,9 @@
       resolveGridCols(cols),
       padding && paddingMap[padding],
       // Spacing (Gap)
-      gap && gapClasses[gap],
-      // Alignment
-      alignClasses[align],
-      justifyClasses[justify]
+      alignStyles,
+      justifyStyles,
+      gapStyles,
     ]"
   >
     <slot />
@@ -25,12 +24,13 @@
  * * @category Atoms
  * @subcategory Layout
  */
-import { alignClasses, gapClasses, justifyClasses } from '@auraflux/design-system/constants/layout';
-import type { Alignment, GapSize, SpacingToken, Justification } from '@auraflux/design-system/interfaces/layout';
+import { computed } from 'vue';
+import type {Alignment, Justification, SizeToken, SpacingToken, TagToken} from '@auraflux/design-system/interfaces/theme';
+import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
 
-const props = withDefaults(defineProps<{
+export interface VGridProps {
   /** HTML tag to render */
-  tag?: string;
+  tag?: TagToken;
 
   padding?: SpacingToken;
   /** * Column configuration.
@@ -38,12 +38,14 @@ const props = withDefaults(defineProps<{
    */
   cols?: number | string;
   /** Spatial distribution token between cells */
-  gap?: GapSize;
+  gap?: SizeToken;
   /** Vertical alignment of items (align-items) */
   align?: Alignment;
   /** Horizontal distribution of content (justify-content) */
   justify?: Justification;
-}>(), {
+};
+
+const props = withDefaults(defineProps<VGridProps>(), {
   tag: 'div',
   padding: 'none',
   cols: 1,
@@ -51,6 +53,7 @@ const props = withDefaults(defineProps<{
   align: 'stretch',
   justify: 'start'
 });
+
 // --- Helper Logic ---
 const paddingMap: Record<SpacingToken, string> = {
   none: 'p-0',
@@ -76,4 +79,16 @@ const resolveGridCols = (cols: number | string) => {
   const colsStr = String(cols);
   return colsStr.split(' ').map(part => gridColsMap[part] || '').join(' ');
 };
+
+const alignStyles = computed(() => {
+  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.center;
+});
+
+const gapStyles = computed(() => {
+  return SHARED_GAP_CLASSES[props.gap] || SHARED_GAP_CLASSES.md;
+});
+
+const justifyStyles = computed(() => {
+  return SHARED_JUSTIFY_CLASSES[props.justify] || SHARED_JUSTIFY_CLASSES.start;
+});
 </script>

@@ -8,7 +8,7 @@
         weight="bold"
       >
         {{ label }}
-        <VTypography tag="span" v-if="required" class="text-red-500 ml-0.5">*</VTypography>
+        <VTypography tag="span" v-if="required" variant="danger" class="ml-0.5">*</VTypography>
       </VTypography>
 
       <slot name="hint" />

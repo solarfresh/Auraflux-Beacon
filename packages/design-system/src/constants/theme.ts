@@ -1,4 +1,14 @@
-import type { Alignment, BorderToken, FontWeightToken, Justification, RoundedToken, SizeToken, SpacingToken, SurfaceToken, VariantToken } from '@auraflux/design-system/interfaces/theme';
+import type {
+  Alignment,
+  BorderToken,
+  FontWeightToken,
+  Justification,
+  RoundedToken,
+  SizeToken,
+  SpacingToken,
+  SurfaceToken,
+  VariantToken
+} from '@auraflux/design-system/interfaces/theme';
 
 export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
   start: 'items-start',

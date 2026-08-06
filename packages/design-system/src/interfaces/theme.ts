@@ -7,7 +7,7 @@ export type SizeToken = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type SurfaceToken = 'base' | 'subtle' | 'sunken' | 'transparent';
 export type RoundedToken = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 export type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label' | 'li';
+export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label' | 'legend' | 'li';
 export type FontWeightToken = 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
 
 export type VariantToken =

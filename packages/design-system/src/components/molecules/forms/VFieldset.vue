@@ -1,11 +1,11 @@
 <template>
   <VBox
     tag="fieldset"
-    background="white"
+    surface="subtle"
     border="all"
     rounded="lg"
     :padding="padding"
-    class="v-fieldset border-slate-200/60 shadow-sm"
+    class="v-fieldset shadow-sm"
   >
     <VStack gap="md">
       <VStack v-if="title || description" gap="xs" tag="legend" class="px-1">
@@ -14,7 +14,7 @@
           tag="h3"
           size="sm"
           weight="bold"
-          color="slate-900"
+          variant="outline"
           class="uppercase tracking-wider"
         >
           {{ title }}
@@ -23,7 +23,7 @@
         <VTypography
           v-if="description"
           size="xs"
-          color="slate-500"
+          variant="tertiary"
           class="leading-relaxed"
         >
           {{ description }}
@@ -46,15 +46,17 @@
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import type { SpacingToken } from '@auraflux/design-system/interfaces/layout';
+import type { SpacingToken } from '@auraflux/design-system/interfaces/theme';
 
-const props = withDefaults(defineProps<{
+export interface VFieldsetProps {
   /** The primary heading for this configuration group */
   title?: string;
   padding?: SpacingToken;
   /** Optional sub-text to guide the user on how to configure these fields */
   description?: string;
-}>(), {
+};
+
+const props = withDefaults(defineProps<VFieldsetProps>(), {
   padding: 'md',
 })
 </script>

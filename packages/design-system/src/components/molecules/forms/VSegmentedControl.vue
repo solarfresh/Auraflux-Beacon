@@ -1,6 +1,6 @@
 <template>
   <VBox
-    background="slate-50"
+    surface="subtle"
     padding="xs"
     rounded="xl"
     class="inline-flex items-center select-none"
