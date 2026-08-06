@@ -106,7 +106,7 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VEntityStatusActionGroup from '@/components/molecules/domain/VEntityStatusActionGroup.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import { ICON_MAP } from '@/constants/canvases';
 import type { ConceptualNode, NodeType } from '@/interfaces/conceptual-map';
 import type { EntityStatus } from '@/interfaces/core';

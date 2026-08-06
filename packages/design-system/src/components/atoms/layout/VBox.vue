@@ -11,7 +11,7 @@
       surfaceStyles.bg,
       surfaceStyles.text,
       surfaceStyles.border || '',
-
+      inline ? 'inline-flex' : '',
       // Interaction logic
       interactionStyles,
     ]"
@@ -41,6 +41,7 @@ export interface VBoxProps {
   border?: BorderToken;
   surface?: SurfaceToken;
   /** Adds pointer cursor and active state */
+  inline?: boolean;
   clickable?: boolean;
 };
 
@@ -50,6 +51,7 @@ const props = withDefaults(defineProps<VBoxProps>(), {
   rounded: 'none',
   border: 'none',
   surface: 'base',
+  inline: false,
   clickable: false
 });
 

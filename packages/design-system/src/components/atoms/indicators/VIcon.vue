@@ -29,7 +29,6 @@ export interface VIconProps {
   type?: 'solid' | 'outline';
   /** Icon size preset */
   size?: SizeToken;
-  /** Tailwind text color class (e.g. 'text-indigo-600') */
   variant?: VariantToken;
 }
 

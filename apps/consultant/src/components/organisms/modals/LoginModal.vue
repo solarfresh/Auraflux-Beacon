@@ -1,16 +1,16 @@
 <template>
   <VModal :is-open="isOpen" size="md" @close="emit('close')">
-    <VBox tag="header" background="slate-50" padding="lg" border="bottom" class="text-center">
+    <VBox tag="header" surface="subtle" padding="lg" border="bottom" class="text-center">
       <VStack align="center" gap="md">
-        <VBox surface="base" padding="sm" rounded="2xl" border="all" class="shadow-sm inline-flex">
-          <VIcon name="LockClosed" size="xs" class="text-indigo-600" />
+        <VBox surface="base" padding="sm" rounded="2xl" border="all" :inline="true" class="shadow-sm">
+          <VIcon name="LockClosed" size="xs" variant="secondary" />
         </VBox>
 
         <VStack gap="xs">
           <VTypography tag="h2" size="2xl" weight="bold">
             User Login
           </VTypography>
-          <VTypography size="sm" class="text-slate-500">
+          <VTypography size="sm" variant="tertiary">
             Access your research initiatives and strategic workspace.
           </VTypography>
         </VStack>
@@ -31,8 +31,8 @@
         <transition name="fade">
           <VAlert v-if="error" variant="danger">
             <VCluster gap="xs">
-              <VIcon name="ExclamationCircle" size="4" />
-              <VTypography size="xs">{{ error }}</VTypography>
+              <VIcon name="ExclamationCircle" size="sm" variant="danger" />
+              <VTypography size="xs" variant="danger">{{ error }}</VTypography>
             </VCluster>
           </VAlert>
         </transition>
@@ -53,7 +53,7 @@
     </VBox>
 
     <VBox tag="footer" padding="lg" class="pt-0 text-center">
-      <VTypography size="xs" class="text-slate-400">
+      <VTypography size="xs" variant="ghost">
         By logging in, you agree to our research workspace protocols.
       </VTypography>
     </VBox>
@@ -74,7 +74,7 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VForm from '@/components/molecules/forms/VForm.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VAlert from '@/components/molecules/feedback/VAlert.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 

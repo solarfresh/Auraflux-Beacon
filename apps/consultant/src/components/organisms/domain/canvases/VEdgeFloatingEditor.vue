@@ -95,7 +95,7 @@ import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vu
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 
 // Shared State Machine Action Component
 import VEntityStatusActionGroup from '@/components/molecules/domain/VEntityStatusActionGroup.vue';

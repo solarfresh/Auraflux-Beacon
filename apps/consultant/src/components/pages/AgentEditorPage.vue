@@ -210,8 +210,8 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 
 // Molecules
 import VForm from '@/components/molecules/forms/VForm.vue';
-import VFieldset from '@/components/molecules/forms/VFieldset.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VFieldset from '@auraflux/design-system/components/molecules/forms/VFieldset.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 
 // Atoms
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
