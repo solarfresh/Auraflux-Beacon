@@ -30,7 +30,7 @@ export const Variants: Story = {
   render: () => ({
     components: { VBadge, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VBadge variant="primary">Primary</VBadge>
           <VBadge variant="secondary">Secondary</VBadge>
@@ -51,7 +51,7 @@ export const Sizes: Story = {
   render: () => ({
     components: { VBadge, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VBadge size="xs" variant="secondary">xs</VBadge>
           <VBadge size="sm" variant="secondary">sm</VBadge>
@@ -69,7 +69,7 @@ export const UseCases: Story = {
   render: () => ({
     components: { VBadge, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VBadge variant="success" size="sm">v1.2.0 (Stable)</VBadge>
           <VBadge variant="warning" size="sm">In Progress</VBadge>

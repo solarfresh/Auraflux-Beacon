@@ -16,7 +16,7 @@
 import { computed } from 'vue';
 import * as SolidIconsType from '@heroicons/vue/24/solid';
 import * as OutlineIconsType from '@heroicons/vue/24/outline';
-import type { ComponentVariant, ComponentSize } from '@auraflux/design-system/interfaces/theme';
+import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
 const SolidIcons = SolidIconsType as Record<string, any>;
@@ -28,9 +28,9 @@ export interface VIconProps {
   /** Icon style variant */
   type?: 'solid' | 'outline';
   /** Icon size preset */
-  size?: ComponentSize;
+  size?: SizeToken;
   /** Tailwind text color class (e.g. 'text-indigo-600') */
-  variant?: ComponentVariant;
+  variant?: VariantToken;
 }
 
 const props = withDefaults(defineProps<VIconProps>(), {

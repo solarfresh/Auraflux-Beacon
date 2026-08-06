@@ -1,8 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-
-// 🎯 Extract exact props type from component to ensure TS auto-completion & type checking
-type VBoxProps = InstanceType<typeof VBox>['$props'];
+import VBox, {type VBoxProps} from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
 /**
  * `VBox` is the core skin/surface container for the Design System.
@@ -16,8 +13,8 @@ const meta = {
     tag: 'div',
     padding: 'md',
     border: 'all',
-    background: 'white',
-    rounded: true,
+    rounded: 'md',
+    surface: 'base',
     clickable: false,
   },
 } satisfies Meta<VBoxProps>;
@@ -36,7 +33,7 @@ export const Default: Story = {
     },
     template: `
       <VBox v-bind="args">
-        <p class="text-slate-700">Card container using default tokens.</p>
+        <VTypography size="md" color="slate-700" class="font-mono">Card container using default tokens.</VTypography>
       </VBox>
     `,
   }),

@@ -34,8 +34,8 @@ export const Variants: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster, VTypography },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="md">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="md" wrap="true">
           <VButton variant="primary">Primary</VButton>
           <VButton variant="secondary">Secondary</VButton>
           <VButton variant="tertiary">Tertiary</VButton>
@@ -55,7 +55,7 @@ export const Sizes: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VButton size="xs">xs</VButton>
           <VButton size="sm">sm</VButton>
@@ -73,7 +73,7 @@ export const WithIcons: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VButton iconName="Plus" variant="primary">Add Item</VButton>
           <VButton iconName="Trash" variant="danger">Delete</VButton>
@@ -88,7 +88,7 @@ export const States: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox surface="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VButton loading>Loading...</VButton>
           <VButton disabled>Disabled</VButton>

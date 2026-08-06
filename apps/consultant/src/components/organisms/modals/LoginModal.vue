@@ -2,7 +2,7 @@
   <VModal :is-open="isOpen" size="md" @close="emit('close')">
     <VBox tag="header" background="slate-50" padding="lg" border="bottom" class="text-center">
       <VStack align="center" gap="md">
-        <VBox background="white" padding="sm" rounded="2xl" border="all" class="shadow-sm inline-flex">
+        <VBox surface="base" padding="sm" rounded="2xl" border="all" class="shadow-sm inline-flex">
           <VIcon name="LockClosed" size="xs" class="text-indigo-600" />
         </VBox>
 

@@ -6,10 +6,14 @@
     :placeholder="placeholder"
     :disabled="disabled"
     :class="[
-      'block w-full transition duration-150 ease-in-out',
-      'border-slate-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600',
-      sizeClasses,
-      variantClasses,
+      'block w-full transition duration-150 ease-in-out border outline-none',
+      sizeStyles.control,
+      variantStyles.bg,
+      variantStyles.text,
+      variantStyles.border || 'border-slate-300',
+      variantStyles.hover ? variantStyles.hover : '',
+      'focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600',
+      roundedStyles,
       // Unified disabled styling
       disabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-200' : 'bg-white text-slate-900',
     ]"
@@ -18,66 +22,40 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { VariantToken, RoundedToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_ROUNDED_CLASS, SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
-/**
- * Input Atom
- * The primary text entry component.
- * Variants include 'default' for forms and 'search' for navigation/filtering.
- */
-const props = defineProps({
-  /** Used for v-model binding (supports strings and numbers) */
-  modelValue: {
-    type: [String, Number],
-    default: '',
-  },
-  /** HTML placeholder text */
-  placeholder: {
-    type: String,
-    default: undefined,
-  },
-  /** Native input type (text, password, email, number, etc.) */
-  type: {
-    type: String,
-    default: 'text',
-  },
-  /** Visual style variant */
-  variant: {
-    type: String,
-    default: 'default', // 'default', 'search'
-    validator: (value: string) => ['default', 'search'].includes(value),
-  },
-  /** Component size scale */
-  size: {
-    type: String,
-    default: 'md', // 'sm', 'md', 'lg'
-    validator: (value: string) => ['sm', 'md', 'lg'].includes(value),
-  },
-  /** Toggles the disabled state */
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+export interface VInputProps {
+  modelValue?: string | number;
+  placeholder?: string;
+  type?: string;
+  variant?: VariantToken;
+  size?: SizeToken;
+  rounded?: RoundedToken;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<VInputProps>(), {
+modelValue: '',
+  type: 'text',
+  variant: 'outline',
+  size: 'md',
+  rounded: 'md',
+  disabled: false,
 });
 
 // Emit v-model update event
 defineEmits(['update:modelValue']);
 
-// --- Tailwind Size Mapping ---
-// Shared values across Input, Select, and Textarea
-const sizeMap: Record<string, string> = {
-  sm: 'py-1.5 px-2 text-sm',
-  md: 'py-2 px-3 text-base',
-  lg: 'py-3 px-4 text-lg',
-};
+const roundedStyles = computed(() => {
+  return SHARED_ROUNDED_CLASS[props.rounded] || SHARED_ROUNDED_CLASS.md
+});
 
-// --- Tailwind Variant Mapping ---
-const variantMap: Record<string, string> = {
-  // Standard form style
-  default: 'rounded-md',
-  // Search style with pill-shape rounding
-  search: 'rounded-full',
-};
+const sizeStyles = computed(() => {
+  return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
+});
 
-const sizeClasses = computed(() => sizeMap[props.size] || sizeMap.md);
-const variantClasses = computed(() => variantMap[props.variant] || variantMap.default);
+const variantStyles = computed(() => {
+  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.primary;
+});
 </script>

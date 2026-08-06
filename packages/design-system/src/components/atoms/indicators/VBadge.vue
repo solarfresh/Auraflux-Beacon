@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { ComponentVariant, ComponentSize } from '@auraflux/design-system/interfaces/theme';
+import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
 /**
@@ -24,8 +24,8 @@ import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-sy
  */
 
 export interface VBadgeProps {
-  variant?: ComponentVariant;
-  size?: ComponentSize;
+  variant?: VariantToken;
+  size?: SizeToken;
 }
 
 const props = withDefaults(defineProps<VBadgeProps>(), {

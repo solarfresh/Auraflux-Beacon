@@ -8,7 +8,7 @@
       variantStyles.hover,
       variantStyles.border || '',
       // Size & Shape Mapping
-      iconOnly ? sizeStyles.iconButton : sizeStyles.button,
+      iconOnly ? sizeStyles.iconButton : sizeStyles.control,
       // Rounded logic
       iconOnly ? 'rounded-lg' : 'rounded-xl'
     ]"
@@ -44,12 +44,12 @@
 import { computed } from 'vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import type { ComponentVariant, ComponentSize } from '@auraflux/design-system/interfaces/theme';
+import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VButtonProps {
-  variant?: ComponentVariant;
-  size?: ComponentSize;
+  variant?: VariantToken;
+  size?: SizeToken;
   iconName?: string;
   iconOnly?: boolean;
   loading?: boolean;
