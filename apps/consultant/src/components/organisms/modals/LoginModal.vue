@@ -1,16 +1,16 @@
 <template>
   <VModal :is-open="isOpen" size="md" @close="emit('close')">
-    <VBox tag="header" theme="subtle" padding="lg" border="bottom" class="text-center">
+    <VBox tag="header" intent="brand" surface="solid" padding="lg" border="bottom" class="text-center">
       <VStack align="center" gap="md">
-        <VBox theme="base" padding="sm" rounded="2xl" border="all" :inline="true" class="shadow-sm">
-          <VIcon name="LockClosed" size="xs" theme="secondary" />
+        <VBox padding="sm" intent="brand" surface="solid" rounded="2xl" border="all" :inline="true" class="shadow-sm">
+          <VIcon name="LockClosed" size="xs" />
         </VBox>
 
         <VStack gap="xs">
           <VTypography tag="h2" size="2xl" weight="bold">
             User Login
           </VTypography>
-          <VTypography size="sm" theme="tertiary">
+          <VTypography size="sm">
             Access your research initiatives and strategic workspace.
           </VTypography>
         </VStack>
@@ -29,10 +29,10 @@
         </VFormField>
 
         <transition name="fade">
-          <VAlert v-if="error" theme="danger">
+          <VAlert v-if="error" intent="danger" surface="soft">
             <VCluster gap="xs">
-              <VIcon name="ExclamationCircle" size="sm" theme="danger" />
-              <VTypography size="xs" theme="danger">{{ error }}</VTypography>
+              <VIcon name="ExclamationCircle" size="sm" />
+              <VTypography size="xs" intent="danger" surface="soft">{{ error }}</VTypography>
             </VCluster>
           </VAlert>
         </transition>
@@ -40,7 +40,7 @@
         <VBox class="pt-2">
           <VButton
             type="submit"
-            theme="primary"
+            attention="primary"
             size="lg"
             class="w-full"
             :disabled="isSubmitting"
@@ -53,7 +53,7 @@
     </VBox>
 
     <VBox tag="footer" padding="lg" class="pt-0 text-center">
-      <VTypography size="xs" theme="ghost">
+      <VTypography size="xs" attention="secondary">
         By logging in, you agree to our research workspace protocols.
       </VTypography>
     </VBox>

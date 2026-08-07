@@ -47,13 +47,13 @@ export const Default: Story = {
     },
     template: `
       <VStack v-bind="args" class="max-w-md">
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography weight="semibold">Section One</VTypography>
         </VBox>
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography weight="semibold">Section Two</VTypography>
         </VBox>
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography weight="semibold">Section Three</VTypography>
         </VBox>
       </VStack>
@@ -118,7 +118,7 @@ export const ScrollableContent: Story = {
     template: `
       <VBox padding="md" border="all" rounded="lg" class="h-64 max-w-sm">
         <VStack v-bind="args">
-          <VBox v-for="i in 10" :key="i" padding="sm" attention="tertiary" border="all" rounded="sm">
+          <VBox v-for="i in 10" :key="i" padding="sm" border="all" rounded="sm">
             <VTypography size="sm">Scrollable Item #{{ i }}</VTypography>
           </VBox>
         </VStack>

@@ -8,7 +8,8 @@
       @click.self="$emit('close')"
     >
       <VBox
-        theme="base"
+        intent="neutral"
+        surface="soft"
         rounded="xl"
         border="none"
         :class="[
@@ -20,13 +21,14 @@
         <VBox
           v-if="$slots.header || title"
           tag="header"
-          theme="base"
+          intent="neutral"
+          surface="outline"
           padding="md"
           border="bottom"
           class="flex items-center justify-between"
         >
           <slot name="header">
-            <VTypography tag="h3" size="lg" weight="bold" theme="outline">
+            <VTypography tag="h3" size="lg" weight="bold" intent="neutral" surface="base">
               {{ title }}
             </VTypography>
           </slot>
@@ -50,7 +52,8 @@
         <VBox
           v-if="$slots.footer"
           tag="footer"
-          theme="subtle"
+          intent="neutral"
+          surface="outline"
           padding="md"
           border="top"
           class="flex justify-end space-x-3"

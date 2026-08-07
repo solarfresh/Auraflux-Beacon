@@ -37,7 +37,7 @@ export interface VBadgeProps {
 }
 
 const props = withDefaults(defineProps<VBadgeProps>(), {
-  attention: 'tertiary',
+  attention: 'secondary',
   size: 'sm'
 });
 

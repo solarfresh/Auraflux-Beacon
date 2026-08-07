@@ -8,10 +8,10 @@
 
 <script setup lang="ts">
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import type { SizeToken } from '@auraflux/design-system/interfaces/theme';
+import type { ComponentSizeToken } from '@auraflux/design-system/interfaces/theme';
 
 export interface VFormProps {
-  gap?: SizeToken;
+  gap?: ComponentSizeToken;
 };
 
 /**

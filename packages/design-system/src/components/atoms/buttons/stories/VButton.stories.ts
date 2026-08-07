@@ -129,7 +129,7 @@ export const WithIcons: Story = {
         <VCluster align="center" gap="md">
           <VButton iconName="Plus" attention="primary">Add Item</VButton>
           <VButton iconName="Trash" intent="danger">Delete</VButton>
-          <VButton iconName="ArrowPath" iconOnly attention="tertiary" aria-label="Refresh" />
+          <VButton iconName="ArrowPath" iconOnly attention="primary" aria-label="Refresh" />
         </VCluster>
       </VBox>
     `,

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import VFormField, {type VFormFieldProps} from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
+import VFormField, { type VFormFieldProps } from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
@@ -15,10 +15,17 @@ const meta = {
     required: false,
     disabled: false,
   },
+  argTypes: {
+    label: { control: 'text' },
+    description: { control: 'text' },
+    error: { control: 'text' },
+    required: { control: 'boolean' },
+    disabled: { control: 'boolean' },
+  },
 } satisfies Meta<VFormFieldProps>;
 
 export default meta;
-type Story = StoryObj<typeof VFormField>;
+type Story = StoryObj<typeof meta>;
 
 /**
  * Default usage: Standard form field with a text input slot.
@@ -31,8 +38,14 @@ export const Default: Story = {
     },
     template: `
       <VBox class="max-w-sm">
-        <VFormField v-bind="args" v-slot="{ id, isDisabled }">
-          <VInput :id="id" :disabled="isDisabled" placeholder="e.g. GPT-4o Strategy Agent" />
+        <VFormField v-bind="args" v-slot="{ id, isDisabled, isInvalid, ariaDescribedby }">
+          <VInput
+            :id="id"
+            :disabled="isDisabled"
+            :invalid="isInvalid"
+            :aria-describedby="ariaDescribedby"
+            placeholder="e.g. GPT-4o Strategy Agent"
+          />
         </VFormField>
       </VBox>
     `,
@@ -55,8 +68,15 @@ export const Required: Story = {
     },
     template: `
       <VBox class="max-w-sm">
-        <VFormField v-bind="args" v-slot="{ id, isDisabled }">
-          <VInput :id="id" :disabled="isDisabled" type="password" placeholder="sk-..." />
+        <VFormField v-bind="args" v-slot="{ id, isDisabled, isInvalid, ariaDescribedby }">
+          <VInput
+            :id="id"
+            :disabled="isDisabled"
+            :invalid="isInvalid"
+            :aria-describedby="ariaDescribedby"
+            type="password"
+            placeholder="sk-..."
+          />
         </VFormField>
       </VBox>
     `,
@@ -80,8 +100,14 @@ export const WithError: Story = {
     },
     template: `
       <VBox class="max-w-sm">
-        <VFormField v-bind="args" v-slot="{ id, isDisabled }">
-          <VInput :id="id" :disabled="isDisabled" value="2.5" />
+        <VFormField v-bind="args" v-slot="{ id, isDisabled, isInvalid, ariaDescribedby }">
+          <VInput
+            :id="id"
+            :disabled="isDisabled"
+            :invalid="isInvalid"
+            :aria-describedby="ariaDescribedby"
+            value="2.5"
+          />
         </VFormField>
       </VBox>
     `,
@@ -105,13 +131,19 @@ export const WithHintSlot: Story = {
       <VBox class="max-w-sm">
         <VFormField v-bind="args">
           <template #hint>
-            <VTypography tag="span" size="xs" variant="ghost" class="cursor-pointer hover:underline">
+            <VTypography tag="span" size="xs" intent="brand" class="cursor-pointer hover:underline font-medium">
               View Examples
             </VTypography>
           </template>
 
-          <template #default="{ id, isDisabled }">
-            <VInput :id="id" :disabled="isDisabled" placeholder="You are an expert strategic planner..." />
+          <template #default="{ id, isDisabled, isInvalid, ariaDescribedby }">
+            <VInput
+              :id="id"
+              :disabled="isDisabled"
+              :invalid="isInvalid"
+              :aria-describedby="ariaDescribedby"
+              placeholder="You are an expert strategic planner..."
+            />
           </template>
         </VFormField>
       </VBox>
@@ -135,8 +167,14 @@ export const Disabled: Story = {
     },
     template: `
       <VBox class="max-w-sm">
-        <VFormField v-bind="args" v-slot="{ id, isDisabled }">
-          <VInput :id="id" :disabled="isDisabled" value="org_auraflux_production_01" />
+        <VFormField v-bind="args" v-slot="{ id, isDisabled, isInvalid, ariaDescribedby }">
+          <VInput
+            :id="id"
+            :disabled="isDisabled"
+            :invalid="isInvalid"
+            :aria-describedby="ariaDescribedby"
+            value="org_auraflux_production_01"
+          />
         </VFormField>
       </VBox>
     `,

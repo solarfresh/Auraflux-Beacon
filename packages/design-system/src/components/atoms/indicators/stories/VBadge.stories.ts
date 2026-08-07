@@ -8,7 +8,7 @@ const meta = {
   component: VBadge,
   tags: ['autodocs'],
   args: {
-    attention: 'tertiary',
+    attention: 'secondary',
     size: 'sm',
   },
   argTypes: {
@@ -67,12 +67,12 @@ export const Intent: Story = {
     template: `
       <VBox border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md" :wrap="true">
-          <VBadge intent="neutral">Neutral</VBadge>
-          <VBadge intent="brand">Brand</VBadge>
-          <VBadge intent="success">Success</VBadge>
-          <VBadge intent="warning">Warning</VBadge>
-          <VBadge intent="danger">Danger</VBadge>
-          <VBadge intent="info">Info</VBadge>
+          <VBadge intent="neutral" surface="soft">Neutral</VBadge>
+          <VBadge intent="brand" surface="soft">Brand</VBadge>
+          <VBadge intent="success" surface="soft">Success</VBadge>
+          <VBadge intent="warning" surface="soft">Warning</VBadge>
+          <VBadge intent="danger" surface="soft">Danger</VBadge>
+          <VBadge intent="info" surface="soft">Info</VBadge>
         </VCluster>
       </VBox>
     `,

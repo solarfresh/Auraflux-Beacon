@@ -2,6 +2,7 @@
   <component
     :is="tag"
     :class="[
+      borderStyles,
       fontWeightStyles,
       sizeStyles.text,
       resolvedColorClass
@@ -13,12 +14,14 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { FontWeightToken, ComponentSizeToken, TagToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_FONT_WEIGHT_CLASSES, SHARED_COMPONENT_SIZE_CLASSES, SURFACE_STYLE_MAP } from '@auraflux/design-system/constants/theme';
+import type { BorderToken, FontWeightToken, ComponentSizeToken, TagToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_BORDER_CLASSES, SHARED_FONT_WEIGHT_CLASSES, SHARED_COMPONENT_SIZE_CLASSES, SURFACE_STYLE_MAP } from '@auraflux/design-system/constants/theme';
 
 export interface VTypographyProps {
   /** HTML tag element */
   tag?: TagToken;
+  /** Border position token */
+  border?: BorderToken;
   /** Text size preset */
   size?: ComponentSizeToken;
   /** Font weight preset */
@@ -31,9 +34,14 @@ export interface VTypographyProps {
 
 const props = withDefaults(defineProps<VTypographyProps>(), {
   tag: 'p',
+  border: 'none',
   size: 'md',
   weight: 'normal',
   surface: 'soft',
+});
+
+const borderStyles = computed(() => {
+  return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.none;
 });
 
 const fontWeightStyles = computed(() => {

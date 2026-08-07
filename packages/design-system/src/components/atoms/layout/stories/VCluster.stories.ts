@@ -71,11 +71,11 @@ export const Wrapped: Story = {
     template: `
       <VBox padding="md" border="all" rounded="md" class="max-w-xs">
         <VCluster v-bind="args">
-          <VButton attention="tertiary" size="xs">AI Logic</VButton>
-          <VButton attention="tertiary" size="xs">Sandbox</VButton>
-          <VButton attention="tertiary" size="xs">Fine-tune</VButton>
-          <VButton attention="tertiary" size="xs">System 2</VButton>
-          <VButton attention="tertiary" size="xs">Prompt Rules</VButton>
+          <VButton attention="secondary" size="xs">AI Logic</VButton>
+          <VButton attention="secondary" size="xs">Sandbox</VButton>
+          <VButton attention="secondary" size="xs">Fine-tune</VButton>
+          <VButton attention="secondary" size="xs">System 2</VButton>
+          <VButton attention="secondary" size="xs">Prompt Rules</VButton>
         </VCluster>
       </VBox>
     `,

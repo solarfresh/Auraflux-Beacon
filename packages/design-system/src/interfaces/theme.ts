@@ -57,6 +57,7 @@ export type SurfaceStyleMap = Record<SurfaceToken, SurfaceStyle>;
  * Controls the overall background fill, border presence, and contrast mode.
  */
 export type SurfaceToken =
+  | 'base'      // Default surface: standard background with neutral contrast
   | 'solid'     // High emphasis: fully filled background with strong contrast
   | 'soft'      // Medium emphasis: subtle background tint with semantic text
   | 'outline'   // Low emphasis: border-only frame with transparent background
@@ -72,4 +73,4 @@ export type FeedbackToken = 'success' | 'warning' | 'danger' | 'info';
 export type ComponentSizeToken = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type RoundedToken = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 export type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'label' | 'legend' | 'li';
+export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'fieldset' | 'footer' | 'header' | 'label' | 'li';

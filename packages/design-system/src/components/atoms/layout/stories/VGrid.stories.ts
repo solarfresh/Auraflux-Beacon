@@ -50,13 +50,13 @@ export const Default: Story = {
     },
     template: `
       <VGrid v-bind="args">
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography>Grid Item 1</VTypography>
         </VBox>
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography>Grid Item 2</VTypography>
         </VBox>
-        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+        <VBox padding="md" border="all" rounded="md">
           <VTypography>Grid Item 3</VTypography>
         </VBox>
       </VGrid>
@@ -81,17 +81,17 @@ export const MultiColumn: Story = {
       <VGrid v-bind="args">
         <VBox padding="md" border="all" rounded="lg">
           <VTypography tag="h4" weight="bold">Overview</VTypography>
-          <VTypography size="sm" intent="neutral" class="mt-1 mb-4">Monitor primary system operations and metrics.</VTypography>
+          <VTypography size="sm" intent="neutral" surface="base" class="mt-1 mb-4">Monitor primary system operations and metrics.</VTypography>
           <VButton attention="secondary" size="sm">Configure</VButton>
         </VBox>
         <VBox padding="md" border="all" rounded="lg">
           <VTypography tag="h4" weight="bold">Analytics</VTypography>
-          <VTypography size="sm" intent="neutral" class="mt-1 mb-4">Inspect traffic patterns and conversion trends.</VTypography>
+          <VTypography size="sm" intent="neutral" surface="base" class="mt-1 mb-4">Inspect traffic patterns and conversion trends.</VTypography>
           <VButton attention="secondary" size="sm">View Data</VButton>
         </VBox>
         <VBox padding="md" border="all" rounded="lg">
           <VTypography tag="h4" weight="bold">Security</VTypography>
-          <VTypography size="sm" intent="neutral" class="mt-1 mb-4">Review permission policies and audit logs.</VTypography>
+          <VTypography size="sm" intent="neutral" surface="base" class="mt-1 mb-4">Review permission policies and audit logs.</VTypography>
           <VButton attention="secondary" size="sm">Manage</VButton>
         </VBox>
       </VGrid>
@@ -114,19 +114,19 @@ export const Responsive: Story = {
       return { args };
     },
     template: `
-      <VBox attention="secondary" border="all" rounded="lg">
+      <VBox attention="tertiary" border="all" rounded="lg">
         <VGrid v-bind="args">
-          <VBox padding="md" attention="primary" border="all" rounded="md">
-            <VTypography weight="bold">Card One</VTypography>
-            <VTypography size="xs" class="opacity-80">Responsive scaling item</VTypography>
+          <VBox padding="md" intent="neutral" surface="soft" border="all" rounded="md">
+            <VTypography weight="bold" intent="neutral" surface="base">Card One</VTypography>
+            <VTypography size="xs" intent="neutral" surface="outline">Responsive scaling item</VTypography>
           </VBox>
-          <VBox padding="md" attention="primary" border="all" rounded="md">
-            <VTypography weight="bold">Card Two</VTypography>
-            <VTypography size="xs" class="opacity-80">Responsive scaling item</VTypography>
+          <VBox padding="md" intent="neutral" surface="soft" border="all" rounded="md">
+            <VTypography weight="bold" intent="neutral" surface="base">Card Two</VTypography>
+            <VTypography size="xs" surface="outline">Responsive scaling item</VTypography>
           </VBox>
-          <VBox padding="md" attention="primary" border="all" rounded="md">
-            <VTypography weight="bold">Card Three</VTypography>
-            <VTypography size="xs" class="opacity-80">Responsive scaling item</VTypography>
+          <VBox padding="md" intent="neutral" surface="soft" border="all" rounded="md">
+            <VTypography weight="bold" intent="neutral" surface="base">Card Three</VTypography>
+            <VTypography size="xs" surface="outline">Responsive scaling item</VTypography>
           </VBox>
         </VGrid>
       </VBox>
@@ -151,11 +151,11 @@ export const CustomSpacing: Story = {
     template: `
       <VBox border="all" rounded="lg">
         <VGrid v-bind="args">
-          <VBox padding="md" attention="tertiary" border="all" rounded="md">
-            <VTypography weight="bold">Padded Section A</VTypography>
+          <VBox padding="md" attention="secondary" border="all" rounded="md">
+            <VTypography weight="bold" surface="base">Padded Section A</VTypography>
           </VBox>
-          <VBox padding="md" attention="tertiary" border="all" rounded="md">
-            <VTypography weight="bold">Padded Section B</VTypography>
+          <VBox padding="md" attention="secondary" border="all" rounded="md">
+            <VTypography weight="bold" surface="base">Padded Section B</VTypography>
           </VBox>
         </VGrid>
       </VBox>

@@ -171,6 +171,13 @@ export const SHARED_LENGTH_CLASSES: Record<
 };
 
 export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-slate-700',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-slate-400',
+  },
   solid: {
     bg: 'bg-slate-900',
     text: 'text-white',
@@ -187,14 +194,14 @@ export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-slate-900',
-    border: 'border border-slate-300',
+    text: 'text-slate-600',
+    border: 'border-slate-300',
     hover: 'hover:bg-slate-100',
     focus: 'focus-visible:ring-slate-400',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-slate-900',
+    text: 'text-slate-400',
     border: 'border-transparent',
     hover: 'hover:bg-slate-100',
     focus: 'focus-visible:ring-slate-400',
@@ -202,10 +209,17 @@ export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
 };
 
 export const BRAND_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-indigo-600',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-indigo-500',
+  },
   solid: {
     bg: 'bg-indigo-600',
     text: 'text-white',
-    border: 'border-transparent',
+    border: '',
     hover: 'hover:bg-indigo-700',
     focus: 'focus-visible:ring-indigo-500',
   },
@@ -218,14 +232,14 @@ export const BRAND_SURFACE_MAP: SurfaceStyleMap = {
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-indigo-900',
-    border: 'border border-indigo-300',
+    text: 'text-indigo-600',
+    border: 'border-indigo-300',
     hover: 'hover:bg-indigo-50',
     focus: 'focus-visible:ring-indigo-500',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-indigo-900',
+    text: 'text-indigo-400',
     border: 'border-transparent',
     hover: 'hover:bg-indigo-50',
     focus: 'focus-visible:ring-indigo-500',
@@ -233,6 +247,13 @@ export const BRAND_SURFACE_MAP: SurfaceStyleMap = {
 };
 
 export const SUCCESS_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-emerald-600',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-emerald-500',
+  },
   solid: {
     bg: 'bg-emerald-600',
     text: 'text-white',
@@ -249,14 +270,14 @@ export const SUCCESS_SURFACE_MAP: SurfaceStyleMap = {
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-emerald-900',
-    border: 'border border-emerald-300',
+    text: 'text-emerald-600',
+    border: 'border-emerald-300',
     hover: 'hover:bg-emerald-50',
     focus: 'focus-visible:ring-emerald-500',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-emerald-900',
+    text: 'text-emerald-400',
     border: 'border-transparent',
     hover: 'hover:bg-emerald-50',
     focus: 'focus-visible:ring-emerald-500',
@@ -264,6 +285,13 @@ export const SUCCESS_SURFACE_MAP: SurfaceStyleMap = {
 };
 
 export const WARNING_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-amber-600',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-amber-500',
+  },
   solid: {
     bg: 'bg-amber-500',
     text: 'text-white',
@@ -273,21 +301,21 @@ export const WARNING_SURFACE_MAP: SurfaceStyleMap = {
   },
   soft: {
     bg: 'bg-amber-50',
-    text: 'text-amber-950',
+    text: 'text-amber-900',
     border: 'border-transparent',
     hover: 'hover:bg-amber-100',
     focus: 'focus-visible:ring-amber-500',
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-amber-950',
-    border: 'border border-amber-300',
+    text: 'text-amber-600',
+    border: 'border-amber-300',
     hover: 'hover:bg-amber-50',
     focus: 'focus-visible:ring-amber-500',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-amber-950',
+    text: 'text-amber-400',
     border: 'border-transparent',
     hover: 'hover:bg-amber-50',
     focus: 'focus-visible:ring-amber-500',
@@ -295,6 +323,13 @@ export const WARNING_SURFACE_MAP: SurfaceStyleMap = {
 };
 
 export const DANGER_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-rose-600',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-rose-500',
+  },
   solid: {
     bg: 'bg-rose-600',
     text: 'text-white',
@@ -311,14 +346,14 @@ export const DANGER_SURFACE_MAP: SurfaceStyleMap = {
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-rose-900',
-    border: 'border border-rose-300',
+    text: 'text-rose-600',
+    border: 'border-rose-300',
     hover: 'hover:bg-rose-50',
     focus: 'focus-visible:ring-rose-500',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-rose-900',
+    text: 'text-rose-400',
     border: 'border-transparent',
     hover: 'hover:bg-rose-50',
     focus: 'focus-visible:ring-rose-500',
@@ -326,6 +361,13 @@ export const DANGER_SURFACE_MAP: SurfaceStyleMap = {
 };
 
 export const INFO_SURFACE_MAP: SurfaceStyleMap = {
+  base: {
+    bg: 'bg-transparent',
+    text: 'text-sky-600',
+    border: 'border-transparent',
+    hover: 'hover:bg-transparent',
+    focus: 'focus-visible:ring-sky-500',
+  },
   solid: {
     bg: 'bg-sky-500',
     text: 'text-white',
@@ -342,14 +384,14 @@ export const INFO_SURFACE_MAP: SurfaceStyleMap = {
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-sky-900',
+    text: 'text-sky-600',
     border: 'border border-sky-300',
     hover: 'hover:bg-sky-50',
     focus: 'focus-visible:ring-sky-500',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-sky-900',
+    text: 'text-sky-400',
     border: 'border-transparent',
     hover: 'hover:bg-sky-50',
     focus: 'focus-visible:ring-sky-500',

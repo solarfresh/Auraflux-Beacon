@@ -10,7 +10,8 @@ const meta = {
   component: VAlert,
   tags: ['autodocs'],
   args: {
-    theme: 'info',
+    intent: 'info',
+    surface: 'soft',
     border: 'all',
     rounded: 'lg',
     padding: 'md',
@@ -35,12 +36,12 @@ export const Default: Story = {
           <VIcon name="InformationCircle" size="sm" />
           <VTypography weight="bold">System Update Available</VTypography>
         </template>
-        <VTypography size="sm" theme="tertiary">
+        <VTypography size="sm" intent="info" surface="base">
           A new governance protocol version 2.4.0 is now available for deployment across your workspace nodes. Please review the changelog before proceeding.
         </VTypography>
         <template #actions>
-          <VButton theme="outline" size="sm">Dismiss</VButton>
-          <VButton theme="primary" size="sm">Update Now</VButton>
+          <VButton attention="secondary" size="sm">Dismiss</VButton>
+          <VButton attention="primary" size="sm">Update Now</VButton>
         </template>
       </VAlert>
     `,
@@ -52,7 +53,7 @@ export const Default: Story = {
  */
 export const Warning: Story = {
   args: {
-    theme: 'warning',
+    intent: 'warning',
   },
   render: (args) => ({
     components: { VAlert, VStack, VTypography, VButton, VIcon },
@@ -62,10 +63,10 @@ export const Warning: Story = {
     template: `
       <VAlert v-bind="args">
         <template #header>
-          <VIcon name="ExclamationTriangle" v-bind="args" size="sm" />
+          <VIcon name="ExclamationTriangle" size="sm" />
           <VTypography weight="bold">Compliance Review Required</VTypography>
         </template>
-        <VTypography size="sm" theme="tertiary">
+        <VTypography size="sm" intent="warning" surface="base">
           Your workspace authentication tokens will expire in 3 days. Re-verify your organization credentials to avoid service interruption.
         </VTypography>
         <template #actions>
@@ -81,7 +82,7 @@ export const Warning: Story = {
  */
 export const ScrollableContent: Story = {
   args: {
-    theme: 'info',
+    intent: 'info',
   },
   render: (args) => ({
     components: { VAlert, VStack, VTypography, VButton, VIcon },
@@ -95,11 +96,11 @@ export const ScrollableContent: Story = {
           <VTypography weight="bold">Terms of Governance & Protocol Rules</VTypography>
         </template>
         <VStack gap="xs">
-          <VTypography size="sm" theme="tertiary">1. All automated node deployments must adhere to regional compliance laws.</VTypography>
-          <VTypography size="sm" theme="tertiary">2. System administrators are responsible for auditing security logs weekly.</VTypography>
-          <VTypography size="sm" theme="tertiary">3. Unauthorized configuration modifications will trigger an automatic rollback.</VTypography>
-          <VTypography size="sm" theme="tertiary">4. Data encryption standards must be maintained at AES-256 or higher levels.</VTypography>
-          <VTypography size="sm" theme="tertiary">5. Backup intervals should not exceed 24 hours under active production usage.</VTypography>
+          <VTypography size="sm" intent="info" surface="base">1. All automated node deployments must adhere to regional compliance laws.</VTypography>
+          <VTypography size="sm" intent="info" surface="base">2. System administrators are responsible for auditing security logs weekly.</VTypography>
+          <VTypography size="sm" intent="info" surface="base">3. Unauthorized configuration modifications will trigger an automatic rollback.</VTypography>
+          <VTypography size="sm" intent="info" surface="base">4. Data encryption standards must be maintained at AES-256 or higher levels.</VTypography>
+          <VTypography size="sm" intent="info" surface="base">5. Backup intervals should not exceed 24 hours under active production usage.</VTypography>
         </VStack>
         <template #actions>
           <VButton theme="primary" size="sm">I Understand</VButton>

@@ -46,10 +46,10 @@ export const DefaultVertical: Story = {
     template: `
       <VBox border="all" padding="md" rounded="lg" class="w-fit text-slate-800">
         <VCluster align="center" gap="sm">
-          <VButton attention="tertiary" size="sm">Edit</VButton>
-          <VButton attention="tertiary" size="sm">Duplicate</VButton>
+          <VButton intent="neutral" surface="base" size="sm">Edit</VButton>
+          <VButton intent="neutral" surface="base" size="sm">Duplicate</VButton>
           <VDivider v-bind="args" />
-          <VButton intent="danger" surface="ghost" size="sm">Delete</VButton>
+          <VButton intent="danger" surface="base" size="sm">Delete</VButton>
         </VCluster>
       </VBox>
     `,
@@ -113,8 +113,8 @@ export const Horizontal: Story = {
           <VDivider v-bind="args" class="my-2" />
 
           <VStack gap="xs">
-            <VButton attention="tertiary" size="sm" class="w-full justify-start">Profile Overview</VButton>
-            <VButton attention="tertiary" size="sm" class="w-full justify-start">API Tokens</VButton>
+            <VButton intent="neutral" surface="base" size="sm" class="w-full justify-start">Profile Overview</VButton>
+            <VButton intent="neutral" surface="base" size="sm" class="w-full justify-start">API Tokens</VButton>
           </VStack>
         </VStack>
       </VBox>

@@ -1,14 +1,16 @@
 <template>
   <VBox
     tag="div"
-    surface="subtle"
+    :intent="isDragging ? 'brand' : 'neutral'"
+    :surface="isDragging ? 'soft' : 'outline'"
     border="dashed"
     rounded="lg"
     padding="lg"
-    :clickable="!disabled"
+    role="button"
+    :tabindex="disabled ? -1 : 0"
+    :aria-disabled="disabled"
     :class="[
-      'flex flex-col items-center justify-center text-center transition-colors duration-200',
-      isDragging ? 'border-indigo-500 bg-indigo-50/50' : 'hover:border-slate-400',
+      'flex flex-col items-center justify-center text-center transition-colors duration-200 select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
       disabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
     ]"
     @dragenter.prevent="handleDragEnter"
@@ -16,27 +18,32 @@
     @dragleave.prevent="handleDragLeave"
     @drop.prevent="handleDrop"
     @click="triggerFileInput"
+    @keydown.enter.prevent="triggerFileInput"
+    @keydown.space.prevent="triggerFileInput"
   >
-    <VInput
+    <!-- Hidden Native File Input -->
+    <input
       ref="fileInputRef"
       type="file"
-      class="hidden"
+      class="sr-only"
       :accept="accept"
       :multiple="multiple"
       :disabled="disabled"
       @change="handleFileChange"
     />
 
-    <VStack align="center" gap="sm">
-      <VBox padding="sm" surface="base" rounded="full" border="all">
-        <VIcon name="arrow-up-tray" size="md" theme="secondary" />
+    <VStack align="center" gap="sm" class="pointer-events-none">
+      <!-- Icon Wrapper Container -->
+      <VBox padding="sm" intent="neutral" surface="soft" rounded="full" border="all">
+        <VIcon name="arrow-up-tray" size="md" intent="neutral" />
       </VBox>
 
+      <!-- Label & Description Text Hierarchy -->
       <VStack gap="xs" align="center">
         <VTypography weight="semibold" size="sm">
           <slot name="title" :disabled="disabled">Click to upload or drag and drop</slot>
         </VTypography>
-        <VTypography size="xs" theme="ghost">
+        <VTypography size="xs" intent="neutral">
           <slot name="description" :disabled="disabled">Supports PDF, Markdown, TXT, or JSON files</slot>
         </VTypography>
       </VStack>
@@ -46,16 +53,15 @@
 
 <script setup lang="ts">
 /**
- * FileUploadBox (Molecule)
+ * VFileUploadBox (Molecule)
  * A drag-and-drop file upload container with visual feedback states,
  * built on top of layout and atom components.
  */
-import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import { ref } from 'vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import { ref } from 'vue';
 
 export interface VFileUploadBoxProps {
   /** Accepted file types (e.g. '.pdf,.txt') */
@@ -76,14 +82,13 @@ const emit = defineEmits<{
   (e: 'change', files: File[]): void;
 }>();
 
-const fileInputRef = ref<InstanceType<typeof VInput> | null>(null);
+const fileInputRef = ref<HTMLInputElement | null>(null);
 const isDragging = ref(false);
+let dragCounter = 0;
 
 const triggerFileInput = () => {
   if (props.disabled) return;
-  // Access the underlying DOM element inside VInput
-  const $el = fileInputRef.value?.$el as HTMLInputElement | undefined;
-  $el?.click();
+  fileInputRef.value?.click();
 };
 
 const handleFileChange = (event: Event) => {
@@ -95,19 +100,28 @@ const handleFileChange = (event: Event) => {
 };
 
 const handleDragEnter = () => {
-  if (!props.disabled) isDragging.value = true;
+  if (props.disabled) return;
+  dragCounter++;
+  isDragging.value = true;
 };
 
 const handleDragOver = () => {
-  if (!props.disabled) isDragging.value = true;
+  if (props.disabled) return;
+  isDragging.value = true;
 };
 
 const handleDragLeave = () => {
-  isDragging.value = false;
+  if (props.disabled) return;
+  dragCounter--;
+  if (dragCounter <= 0) {
+    isDragging.value = false;
+    dragCounter = 0;
+  }
 };
 
 const handleDrop = (event: DragEvent) => {
   isDragging.value = false;
+  dragCounter = 0;
   if (props.disabled) return;
 
   const files = event.dataTransfer?.files;

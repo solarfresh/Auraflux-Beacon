@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import VFileUploadBox, {type VFileUploadBoxProps} from '@auraflux/design-system/components/molecules/forms/VFileUploadBox.vue';
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VFileUploadBox, { type VFileUploadBoxProps } from '@auraflux/design-system/components/molecules/forms/VFileUploadBox.vue';
 
 const meta = {
   title: 'Molecules/Forms/VFileUploadBox',
@@ -10,6 +9,11 @@ const meta = {
     accept: '.pdf,.txt,.md,.json',
     multiple: false,
     disabled: false,
+  },
+  argTypes: {
+    accept: { control: 'text' },
+    multiple: { control: 'boolean' },
+    disabled: { control: 'boolean' },
   },
 } satisfies Meta<VFileUploadBoxProps>;
 
@@ -21,17 +25,14 @@ type Story = StoryObj<typeof VFileUploadBox>;
  */
 export const Default: Story = {
   render: (args) => ({
-    components: { VFileUploadBox, VBox },
+    components: { VFileUploadBox },
     setup() {
-      const handleFileChange = (files: File[]) => {
-        console.log('Selected files:', files);
-      };
-      return { args, handleFileChange };
+      return { args };
     },
     template: `
-      <VBox class="max-w-md">
-        <VFileUploadBox v-bind="args" @change="handleFileChange" />
-      </VBox>
+      <div class="max-w-md">
+        <VFileUploadBox v-bind="args" />
+      </div>
     `,
   }),
 };
@@ -45,20 +46,17 @@ export const MultipleFiles: Story = {
     accept: 'image/*',
   },
   render: (args) => ({
-    components: { VFileUploadBox, VBox },
+    components: { VFileUploadBox },
     setup() {
-      const handleFileChange = (files: File[]) => {
-        console.log('Selected multiple files:', files);
-      };
-      return { args, handleFileChange };
+      return { args };
     },
     template: `
-      <VBox class="max-w-md">
-        <VFileUploadBox v-bind="args" @change="handleFileChange">
+      <div class="max-w-md">
+        <VFileUploadBox v-bind="args">
           <template #title>Upload multiple images</template>
           <template #description>PNG, JPG, SVG, or WEBP up to 10MB</template>
         </VFileUploadBox>
-      </VBox>
+      </div>
     `,
   }),
 };
@@ -71,17 +69,17 @@ export const CustomContent: Story = {
     accept: '.json,.yaml',
   },
   render: (args) => ({
-    components: { VFileUploadBox, VBox },
+    components: { VFileUploadBox },
     setup() {
       return { args };
     },
     template: `
-      <VBox class="max-w-md">
+      <div class="max-w-md">
         <VFileUploadBox v-bind="args">
           <template #title>Import Agent Configuration</template>
           <template #description>Drop your system prompt schema (.json or .yaml)</template>
         </VFileUploadBox>
-      </VBox>
+      </div>
     `,
   }),
 };
@@ -89,19 +87,19 @@ export const CustomContent: Story = {
 /**
  * Disabled State: Non-interactive upload area with lowered opacity.
  */
-export const Disabled: Story = {
+export const DisabledState: Story = {
   args: {
     disabled: true,
   },
   render: (args) => ({
-    components: { VFileUploadBox, VBox },
+    components: { VFileUploadBox },
     setup() {
       return { args };
     },
     template: `
-      <VBox class="max-w-md">
+      <div class="max-w-md">
         <VFileUploadBox v-bind="args" />
-      </VBox>
+      </div>
     `,
   }),
 };
