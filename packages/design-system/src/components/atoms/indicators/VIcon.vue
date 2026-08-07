@@ -5,7 +5,8 @@
     :class="[
       // Base styles: prevent shrinking in flex containers
       'shrink-0 inline-block align-middle transition-colors duration-150',
-      variantStyles.text,
+      themeStyles.text,
+      themeStyles.bg,
       sizeStyles.icon
     ]"
     aria-hidden="true"
@@ -16,8 +17,8 @@
 import { computed } from 'vue';
 import * as SolidIconsType from '@heroicons/vue/24/solid';
 import * as OutlineIconsType from '@heroicons/vue/24/outline';
-import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
+import type { SizeToken, ThemeToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_SIZE_CLASSES, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
 
 const SolidIcons = SolidIconsType as Record<string, any>;
 const OutlineIcons = OutlineIconsType as Record<string, any>;
@@ -29,21 +30,21 @@ export interface VIconProps {
   type?: 'solid' | 'outline';
   /** Icon size preset */
   size?: SizeToken;
-  variant?: VariantToken;
+  theme?: ThemeToken;
 }
 
 const props = withDefaults(defineProps<VIconProps>(), {
   type: 'solid',
   size: 'md',
-  variant: 'primary',
+  theme: 'info',
 });
 
 const sizeStyles = computed(() => {
   return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
 });
 
-const variantStyles = computed(() => {
-  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.primary;
+const themeStyles = computed(() => {
+  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.info;
 });
 
 // Normalize name string to Heroicons PascalCase convention (e.g., "check-circle" -> "CheckCircle")

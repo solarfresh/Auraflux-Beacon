@@ -8,9 +8,9 @@
       // Shape & Border
       roundedStyles,
       borderStyles,
-      surfaceStyles.bg,
-      surfaceStyles.text,
-      surfaceStyles.border || '',
+      themeStyles.bg,
+      themeStyles.text,
+      themeStyles.border || '',
       inline ? 'inline-flex' : '',
       // Interaction logic
       interactionStyles,
@@ -27,8 +27,8 @@
  * It strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed } from 'vue';
-import type {SpacingToken, RoundedToken, BorderToken, SurfaceToken} from '@auraflux/design-system/interfaces/theme';
-import { SHARED_BORDER_CLASSES, SHARED_PADDING_CLASS, SHARED_ROUNDED_CLASS, SHARED_SURFACE_CLASSES } from '@auraflux/design-system/constants/theme';
+import type {SpacingToken, RoundedToken, BorderToken, ThemeToken} from '@auraflux/design-system/interfaces/theme';
+import { SHARED_BORDER_CLASSES, SHARED_PADDING_CLASS, SHARED_ROUNDED_CLASS, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VBoxProps {
   /** HTML tag to render */
@@ -39,7 +39,7 @@ export interface VBoxProps {
   rounded?: RoundedToken;
   /** Border position token */
   border?: BorderToken;
-  surface?: SurfaceToken;
+  theme?: ThemeToken;
   /** Adds pointer cursor and active state */
   inline?: boolean;
   clickable?: boolean;
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<VBoxProps>(), {
   padding: 'none',
   rounded: 'none',
   border: 'none',
-  surface: 'base',
+  theme: 'base',
   inline: false,
   clickable: false
 });
@@ -72,7 +72,7 @@ const roundedStyles = computed(() => {
   return SHARED_ROUNDED_CLASS[props.rounded] || SHARED_ROUNDED_CLASS.md;
 });
 
-const surfaceStyles = computed(() => {
-  return SHARED_SURFACE_CLASSES[props.surface] || SHARED_SURFACE_CLASSES.base;
+const themeStyles = computed(() => {
+  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.base;
 });
 </script>

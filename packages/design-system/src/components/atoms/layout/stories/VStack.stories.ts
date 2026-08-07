@@ -33,14 +33,14 @@ export const Default: Story = {
     },
     template: `
       <VStack v-bind="args" class="max-w-md">
-        <VBox padding="md" surface="subtle" rounded="md">
-          <VTypography weight="semibold" variant="outline">Section One</VTypography>
+        <VBox padding="md" theme="subtle" rounded="md">
+          <VTypography weight="semibold" theme="outline">Section One</VTypography>
         </VBox>
-        <VBox padding="md" surface="subtle" rounded="md">
-          <VTypography weight="semibold" variant="outline">Section Two</VTypography>
+        <VBox padding="md" theme="subtle" rounded="md">
+          <VTypography weight="semibold" theme="outline">Section Two</VTypography>
         </VBox>
-        <VBox padding="md" surface="subtle" rounded="md">
-          <VTypography weight="semibold" variant="outline">Section Three</VTypography>
+        <VBox padding="md" theme="subtle" rounded="md">
+          <VTypography weight="semibold" theme="outline">Section Three</VTypography>
         </VBox>
       </VStack>
     `,
@@ -60,27 +60,27 @@ export const FormLayout: Story = {
       return { args };
     },
     template: `
-      <VBox padding="lg" surface="base" border="all" rounded="lg" class="max-w-md">
+      <VBox padding="lg" theme="base" border="all" rounded="lg" class="max-w-md">
         <VStack v-bind="args">
           <VStack gap="xs">
-            <VTypography tag="h3" size="lg" weight="bold" variant="outline">
+            <VTypography tag="h3" size="lg" weight="bold" theme="outline">
               Account Settings
             </VTypography>
-            <VTypography size="sm" variant="ghost">
+            <VTypography size="sm" theme="ghost">
               Manage your profile preferences and system configurations.
             </VTypography>
           </VStack>
 
           <VStack gap="sm">
-            <VBox padding="md" surface="sunken" rounded="md">
+            <VBox padding="md" theme="sunken" rounded="md">
               <VTypography size="sm">Form Field Placeholder A</VTypography>
             </VBox>
-            <VBox padding="md" surface="sunken" rounded="md">
+            <VBox padding="md" theme="sunken" rounded="md">
               <VTypography size="sm">Form Field Placeholder B</VTypography>
             </VBox>
           </VStack>
 
-          <VButton variant="primary" fullWidth>Save Changes</VButton>
+          <VButton theme="primary" fullWidth>Save Changes</VButton>
         </VStack>
       </VBox>
     `,
@@ -104,7 +104,7 @@ export const ScrollableContent: Story = {
     template: `
       <VBox padding="md" border="all" rounded="lg" class="h-64 max-w-sm">
         <VStack v-bind="args">
-          <VBox v-for="i in 10" :key="i" padding="sm" surface="subtle" rounded="sm">
+          <VBox v-for="i in 10" :key="i" padding="sm" theme="subtle" rounded="sm">
             <VTypography size="sm">Scrollable Item #{{ i }}</VTypography>
           </VBox>
         </VStack>
@@ -129,13 +129,13 @@ export const Centered: Story = {
     },
     template: `
       <VStack v-bind="args" class="py-8">
-        <VTypography tag="h2" size="xl" weight="bold" variant="outline">
+        <VTypography tag="h2" size="xl" weight="bold" theme="outline">
           No Data Available
         </VTypography>
-        <VTypography size="sm" variant="ghost">
+        <VTypography size="sm" theme="ghost">
           Get started by creating your first decision model.
         </VTypography>
-        <VButton variant="primary" size="sm">Create Model</VButton>
+        <VButton theme="primary" size="sm">Create Model</VButton>
       </VStack>
     `,
   }),

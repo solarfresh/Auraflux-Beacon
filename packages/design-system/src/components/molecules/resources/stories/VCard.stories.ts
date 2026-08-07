@@ -11,7 +11,7 @@ const meta = {
     tag: 'div',
     padding: 'sm',
     gap: 'sm',
-    surface: 'base',
+    theme: 'base',
     clickable: false,
     hoverable: true,
   },
@@ -32,7 +32,7 @@ export const Default: Story = {
     template: `
       <VCard v-bind="args">
         <VTypography tag="h4" weight="bold">Card Header</VTypography>
-        <VTypography size="sm" variant="tertiary">This is the main body content inside the VCard molecule.</VTypography>
+        <VTypography size="sm" theme="tertiary">This is the main body content inside the VCard molecule.</VTypography>
       </VCard>
     `,
   }),
@@ -55,7 +55,7 @@ export const Interactive: Story = {
     template: `
       <VCard v-bind="args">
         <VTypography tag="h4" weight="bold">Interactive Card</VTypography>
-        <VTypography size="sm" variant="tertiary">Hover over this card to observe the transition effect and shadow elevation.</VTypography>
+        <VTypography size="sm" theme="tertiary">Hover over this card to observe the transition effect and shadow elevation.</VTypography>
       </VCard>
     `,
   }),
@@ -77,10 +77,10 @@ export const WithActions: Story = {
     template: `
       <VCard v-bind="args">
         <VTypography tag="h4" weight="bold">Project Deployment</VTypography>
-        <VTypography size="sm" variant="tertiary">Ready to push current build artifacts to production environment.</VTypography>
+        <VTypography size="sm" theme="tertiary">Ready to push current build artifacts to production environment.</VTypography>
         <div class="flex gap-2 pt-2">
-          <VButton variant="primary" size="sm">Deploy Now</VButton>
-          <VButton variant="outline" size="sm">Dismiss</VButton>
+          <VButton theme="primary" size="sm">Deploy Now</VButton>
+          <VButton theme="outline" size="sm">Dismiss</VButton>
         </div>
       </VCard>
     `,

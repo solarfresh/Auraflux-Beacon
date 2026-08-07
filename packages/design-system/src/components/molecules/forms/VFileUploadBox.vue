@@ -29,14 +29,14 @@
 
     <VStack align="center" gap="sm">
       <VBox padding="sm" surface="base" rounded="full" border="all">
-        <VIcon name="arrow-up-tray" size="md" variant="secondary" />
+        <VIcon name="arrow-up-tray" size="md" theme="secondary" />
       </VBox>
 
       <VStack gap="xs" align="center">
         <VTypography weight="semibold" size="sm">
           <slot name="title" :disabled="disabled">Click to upload or drag and drop</slot>
         </VTypography>
-        <VTypography size="xs" variant="ghost">
+        <VTypography size="xs" theme="ghost">
           <slot name="description" :disabled="disabled">Supports PDF, Markdown, TXT, or JSON files</slot>
         </VTypography>
       </VStack>

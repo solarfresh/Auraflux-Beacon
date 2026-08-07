@@ -8,7 +8,7 @@
         weight="bold"
       >
         {{ label }}
-        <VTypography tag="span" v-if="required" variant="danger" class="ml-0.5">*</VTypography>
+        <VTypography tag="span" v-if="required" theme="danger" class="ml-0.5">*</VTypography>
       </VTypography>
 
       <slot name="hint" />
@@ -25,7 +25,7 @@
         <VTypography
           v-if="error"
           size="xs"
-          variant="danger"
+          theme="danger"
           class="mt-1 ml-1"
         >
           {{ error }}
@@ -36,7 +36,7 @@
     <VTypography
       v-if="description && !error"
       size="xs"
-      variant="ghost"
+      theme="ghost"
       class="ml-1"
     >
       {{ description }}

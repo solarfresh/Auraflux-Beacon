@@ -1,7 +1,7 @@
 <template>
   <VBox
     tag="nav"
-    :surface="surface"
+    :theme="theme"
     :border="border"
     :padding-x="paddingX"
     :padding-y="paddingY"
@@ -39,11 +39,11 @@
  */
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import type {SpacingToken, BorderToken, SurfaceToken} from '@auraflux/design-system/interfaces/theme';
+import type {SpacingToken, BorderToken, ThemeToken} from '@auraflux/design-system/interfaces/theme';
 
 withDefaults(defineProps<{
   /** Background color of the toolbar */
-  surface?: SurfaceToken;
+  theme?: ThemeToken;
   /** Border placement style */
   border?: BorderToken;
   /** Whether the toolbar should stick to the top of the viewport */

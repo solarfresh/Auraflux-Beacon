@@ -11,7 +11,7 @@
       :key="String(option.value)"
       role="tab"
       size="sm"
-      :variant="modelValue === option.value ? 'secondary' : 'ghost'"
+      :theme="modelValue === option.value ? 'outline' : 'ghost'"
       :icon-name="option.iconName"
       :disabled="option.disabled"
       :aria-selected="modelValue === option.value"

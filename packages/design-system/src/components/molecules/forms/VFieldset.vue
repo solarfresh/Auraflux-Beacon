@@ -14,7 +14,7 @@
           tag="h3"
           size="sm"
           weight="bold"
-          variant="outline"
+          theme="outline"
           class="uppercase tracking-wider"
         >
           {{ title }}
@@ -23,7 +23,7 @@
         <VTypography
           v-if="description"
           size="xs"
-          variant="tertiary"
+          theme="tertiary"
           class="leading-relaxed"
         >
           {{ description }}

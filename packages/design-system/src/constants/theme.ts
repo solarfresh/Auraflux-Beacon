@@ -6,8 +6,7 @@ import type {
   RoundedToken,
   SizeToken,
   SpacingToken,
-  SurfaceToken,
-  VariantToken
+  ThemeToken
 } from '@auraflux/design-system/interfaces/theme';
 
 export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
@@ -117,7 +116,7 @@ export const SHARED_SIZE_CLASSES: Record<SizeToken, { badge: string; control: st
   },
 };
 
-export const SHARED_SURFACE_CLASSES: Record<SurfaceToken, { bg: string; text: string; border: string }> = {
+export const SHARED_THEME_CLASSES: Record<ThemeToken, { bg: string; text: string; border?: string; hover?: string }> = {
   base: {
     bg: 'bg-white',
     text: 'text-slate-900',
@@ -138,9 +137,6 @@ export const SHARED_SURFACE_CLASSES: Record<SurfaceToken, { bg: string; text: st
     text: 'text-current',
     border: 'border-transparent',
   },
-};
-
-export const SHARED_VARIANT_CLASSES: Record<VariantToken, { bg: string; text: string; border?: string; hover?: string }> = {
   primary: {
     bg: 'bg-indigo-600',
     text: 'text-white',
@@ -187,9 +183,9 @@ export const SHARED_VARIANT_CLASSES: Record<VariantToken, { bg: string; text: st
     hover: 'hover:bg-rose-100',
   },
   info: {
-    bg: 'bg-blue-50',
-    text: 'text-blue-700',
-    border: 'border-blue-200/60',
-    hover: 'hover:bg-blue-100',
+    bg: 'bg-indigo-50',
+    text: 'text-indigo-700',
+    border: 'border-indigo-200/60',
+    hover: 'hover:bg-indigo-100',
   },
 };

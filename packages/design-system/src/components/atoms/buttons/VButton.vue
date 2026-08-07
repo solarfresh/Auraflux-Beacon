@@ -3,10 +3,10 @@
     :class="[
       'inline-flex items-center justify-center transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
       // Variant Mapping
-      variantStyles.bg,
-      variantStyles.text,
-      variantStyles.hover,
-      variantStyles.border || '',
+      themeStyles.bg,
+      themeStyles.text,
+      themeStyles.hover,
+      themeStyles.border || '',
       // Size & Shape Mapping
       iconOnly ? sizeStyles.iconButton : sizeStyles.control,
       // Rounded logic
@@ -21,7 +21,7 @@
       <VIcon
         v-if="iconName"
         :name="iconName"
-        :variant="variant"
+        :theme="theme"
         :size="size === 'lg' ? 'md' : 'sm'"
         :class="{ 'mr-2': !iconOnly }"
       />
@@ -32,7 +32,7 @@
         weight="semibold"
         class="whitespace-nowrap"
         :size="size"
-        :variant="variant"
+        :theme="theme"
       >
         <slot />
       </VTypography>
@@ -44,12 +44,12 @@
 import { computed } from 'vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
+import type { ThemeToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_SIZE_CLASSES, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  variant?: VariantToken;
+  theme?: ThemeToken;
   size?: SizeToken;
   iconName?: string;
   iconOnly?: boolean;
@@ -59,7 +59,7 @@ export interface VButtonProps {
 
 const props = withDefaults(defineProps<VButtonProps>(), {
   type: 'button',
-  variant: 'primary',
+  theme: 'primary',
   size: 'md',
   iconOnly: false
 });
@@ -68,7 +68,7 @@ const sizeStyles = computed(() => {
   return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
 });
 
-const variantStyles = computed(() => {
-  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.primary;
+const themeStyles = computed(() => {
+  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.primary;
 });
 </script>

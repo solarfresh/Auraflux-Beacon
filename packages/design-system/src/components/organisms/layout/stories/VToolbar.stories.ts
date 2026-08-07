@@ -19,7 +19,7 @@ const meta = {
   component: VToolbar,
   tags: ['autodocs'],
   args: {
-    surface: 'base',
+    theme: 'base',
     border: 'bottom',
     sticky: false, // Set to false by default in Storybook canvas for predictable layout preview
     paddingX: 'md',
@@ -47,7 +47,7 @@ export const Default: Story = {
           </VTypography>
         </template>
         <template #end>
-          <VButton variant="primary" size="sm">
+          <VButton theme="primary" size="sm">
             Create Project
           </VButton>
         </template>
@@ -85,7 +85,7 @@ export const WithSegmentedControlAndDivider: Story = {
               <option value="Date Created">Date Created</option>
             </VSelect>
             <VDivider orientation="vertical" size="sm" />
-            <VButton variant="primary" size="sm" icon-name="Plus">
+            <VButton theme="primary" size="sm" icon-name="Plus">
               New Project
             </VButton>
           </div>
@@ -116,7 +116,7 @@ export const WithCenterSlot: Story = {
           <div class="w-64">
             <VInput
               v-model="searchQuery"
-              variant="search"
+              theme="search"
               size="sm"
               placeholder="Search projects..."
             />

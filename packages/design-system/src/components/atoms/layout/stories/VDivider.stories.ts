@@ -37,10 +37,10 @@ export const DefaultVertical: Story = {
     template: `
       <VBox background="white" border="all" padding="md" rounded="lg" class="w-fit">
         <VCluster align="center" gap="sm">
-          <VButton variant="ghost" size="sm">Edit</VButton>
-          <VButton variant="ghost" size="sm">Duplicate</VButton>
+          <VButton theme="ghost" size="sm">Edit</VButton>
+          <VButton theme="ghost" size="sm">Duplicate</VButton>
           <VDivider v-bind="args" />
-          <VButton variant="ghost" size="sm" class="text-rose-600 hover:text-rose-700">Delete</VButton>
+          <VButton theme="ghost" size="sm" class="text-rose-600 hover:text-rose-700">Delete</VButton>
         </VCluster>
       </VBox>
     `,
@@ -57,22 +57,22 @@ export const VerticalSizes: Story = {
       <VBox background="white" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="lg">
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" variant="outline" class="font-mono">sm (h-4)</VTypography>
+            <VTypography size="xs" theme="outline" class="font-mono">sm (h-4)</VTypography>
             <VDivider orientation="vertical" size="sm" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" variant="outline" class="font-mono">md (h-6)</VTypography>
+            <VTypography size="xs" theme="outline" class="font-mono">md (h-6)</VTypography>
             <VDivider orientation="vertical" size="md" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" variant="outline" class="font-mono">lg (h-8)</VTypography>
+            <VTypography size="xs" theme="outline" class="font-mono">lg (h-8)</VTypography>
             <VDivider orientation="vertical" size="lg" />
           </VCluster>
 
           <VCluster align="center" gap="xs" class="h-12">
-            <VTypography size="xs" variant="outline" class="font-mono">full (h-full)</VTypography>
+            <VTypography size="xs" theme="outline" class="font-mono">full (h-full)</VTypography>
             <VDivider orientation="vertical" size="full" />
           </VCluster>
         </VCluster>
@@ -93,14 +93,14 @@ export const Horizontal: Story = {
     template: `
       <VBox background="white" border="all" padding="md" rounded="xl" class="w-80 shadow-sm">
         <VStack gap="xs">
-          <VTypography tag="h3" size="base" weight="semibold" variant="outline">Account Settings</VTypography>
-          <VTypography tag="p" size="xs" variant="ghost">Manage your profile and security settings.</VTypography>
+          <VTypography tag="h3" size="base" weight="semibold" theme="outline">Account Settings</VTypography>
+          <VTypography tag="p" size="xs" theme="ghost">Manage your profile and security settings.</VTypography>
 
           <VDivider v-bind="args" />
 
           <VStack gap="xs">
-            <VButton variant="ghost" size="sm" class="w-full justify-start variant="outline">Profile Overview</VButton>
-            <VButton variant="ghost" size="sm" class="w-full justify-start variant="outline">API Tokens</VButton>
+            <VButton theme="ghost" size="sm" class="w-full justify-start theme="outline">Profile Overview</VButton>
+            <VButton theme="ghost" size="sm" class="w-full justify-start theme="outline">API Tokens</VButton>
           </VStack>
         </VStack>
       </VBox>

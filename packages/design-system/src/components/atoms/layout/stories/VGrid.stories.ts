@@ -32,13 +32,13 @@ export const Default: Story = {
     },
     template: `
       <VGrid v-bind="args">
-        <VBox padding="md" surface="subtle" rounded="md">
+        <VBox padding="md" theme="subtle" rounded="md">
           <VTypography>Grid Item 1</VTypography>
         </VBox>
-        <VBox padding="md" surface="subtle" rounded="md">
+        <VBox padding="md" theme="subtle" rounded="md">
           <VTypography>Grid Item 2</VTypography>
         </VBox>
-        <VBox padding="md" surface="subtle" rounded="md">
+        <VBox padding="md" theme="subtle" rounded="md">
           <VTypography>Grid Item 3</VTypography>
         </VBox>
       </VGrid>
@@ -63,18 +63,18 @@ export const MultiColumn: Story = {
       <VGrid v-bind="args">
         <VBox padding="md" border="all" rounded="lg" gap="sm">
           <VTypography tag="h4" weight="bold">Overview</VTypography>
-          <VTypography size="sm" variant="tertiary">Monitor primary system operations and metrics.</VTypography>
-          <VButton variant="outline" size="sm">Configure</VButton>
+          <VTypography size="sm" theme="tertiary">Monitor primary system operations and metrics.</VTypography>
+          <VButton theme="outline" size="sm">Configure</VButton>
         </VBox>
         <VBox padding="md" border="all" rounded="lg" gap="sm">
           <VTypography tag="h4" weight="bold">Analytics</VTypography>
-          <VTypography size="sm" variant="tertiary">Inspect traffic patterns and conversion trends.</VTypography>
-          <VButton variant="outline" size="sm">View Data</VButton>
+          <VTypography size="sm" theme="tertiary">Inspect traffic patterns and conversion trends.</VTypography>
+          <VButton theme="outline" size="sm">View Data</VButton>
         </VBox>
         <VBox padding="md" border="all" rounded="lg" gap="sm">
           <VTypography tag="h4" weight="bold">Security</VTypography>
-          <VTypography size="sm" variant="tertiary">Review permission policies and audit logs.</VTypography>
-          <VButton variant="outline" size="sm">Manage</VButton>
+          <VTypography size="sm" theme="tertiary">Review permission policies and audit logs.</VTypography>
+          <VButton theme="outline" size="sm">Manage</VButton>
         </VBox>
       </VGrid>
     `,
@@ -100,19 +100,19 @@ export const Responsive: Story = {
       return { args };
     },
     template: `
-      <VBox surface="subtle" rounded="lg">
+      <VBox theme="subtle" rounded="lg">
         <VGrid v-bind="args">
-          <VBox padding="md" surface="default" rounded="md">
+          <VBox padding="md" theme="default" rounded="md">
             <VTypography weight="bold">Card One</VTypography>
-            <VTypography size="xs" variant="tertiary">Responsive scaling item</VTypography>
+            <VTypography size="xs" theme="tertiary">Responsive scaling item</VTypography>
           </VBox>
-          <VBox padding="md" surface="default" rounded="md">
+          <VBox padding="md" theme="default" rounded="md">
             <VTypography weight="bold">Card Two</VTypography>
-            <VTypography size="xs" variant="tertiary">Responsive scaling item</VTypography>
+            <VTypography size="xs" theme="tertiary">Responsive scaling item</VTypography>
           </VBox>
-          <VBox padding="md" surface="default" rounded="md">
+          <VBox padding="md" theme="default" rounded="md">
             <VTypography weight="bold">Card Three</VTypography>
-            <VTypography size="xs" variant="tertiary">Responsive scaling item</VTypography>
+            <VTypography size="xs" theme="tertiary">Responsive scaling item</VTypography>
           </VBox>
         </VGrid>
       </VBox>
@@ -137,10 +137,10 @@ export const CustomSpacing: Story = {
     template: `
       <VBox border="all" rounded="lg">
         <VGrid v-bind="args">
-          <VBox padding="md" surface="subtle" rounded="md">
+          <VBox padding="md" theme="subtle" rounded="md">
             <VTypography weight="bold">Padded Section A</VTypography>
           </VBox>
-          <VBox padding="md" surface="subtle" rounded="md">
+          <VBox padding="md" theme="subtle" rounded="md">
             <VTypography weight="bold">Padded Section B</VTypography>
           </VBox>
         </VGrid>

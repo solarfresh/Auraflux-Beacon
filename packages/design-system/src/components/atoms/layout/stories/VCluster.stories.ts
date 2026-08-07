@@ -33,9 +33,9 @@ export const Default: Story = {
     },
     template: `
       <VCluster v-bind="args">
-        <VButton variant="primary">Proceed</VButton>
-        <VButton variant="outline">Save Draft</VButton>
-        <VButton variant="ghost">Cancel</VButton>
+        <VButton theme="primary">Proceed</VButton>
+        <VButton theme="outline">Save Draft</VButton>
+        <VButton theme="ghost">Cancel</VButton>
       </VCluster>
     `,
   }),
@@ -57,11 +57,11 @@ export const Wrapped: Story = {
     template: `
       <VBox padding="md" border="all" rounded="md" class="max-w-xs">
         <VCluster v-bind="args">
-          <VButton variant="secondary" size="xs">AI Logic</VButton>
-          <VButton variant="secondary" size="xs">Sandbox</VButton>
-          <VButton variant="secondary" size="xs">Fine-tune</VButton>
-          <VButton variant="secondary" size="xs">System 2</VButton>
-          <VButton variant="secondary" size="xs">Prompt Rules</VButton>
+          <VButton theme="secondary" size="xs">AI Logic</VButton>
+          <VButton theme="secondary" size="xs">Sandbox</VButton>
+          <VButton theme="secondary" size="xs">Fine-tune</VButton>
+          <VButton theme="secondary" size="xs">System 2</VButton>
+          <VButton theme="secondary" size="xs">Prompt Rules</VButton>
         </VCluster>
       </VBox>
     `,
@@ -82,14 +82,14 @@ export const SpaceBetween: Story = {
       return { args };
     },
     template: `
-      <VBox padding="md" surface="subtle" rounded="lg">
+      <VBox padding="md" theme="subtle" rounded="lg">
         <VCluster v-bind="args">
           <VTypography tag="h3" weight="bold" size="md">
             AI Parameter Settings
           </VTypography>
           <VCluster gap="sm">
-            <VButton variant="outline" size="sm">Reset</VButton>
-            <VButton variant="primary" size="sm">Save Changes</VButton>
+            <VButton theme="outline" size="sm">Reset</VButton>
+            <VButton theme="primary" size="sm">Save Changes</VButton>
           </VCluster>
         </VCluster>
       </VBox>
@@ -115,7 +115,7 @@ export const BaselineAlignment: Story = {
         <VTypography tag="span" size="2xl" weight="bold">
           NT$ 12,800
         </VTypography>
-        <VTypography tag="span" size="xs" variant="tertiary">
+        <VTypography tag="span" size="xs" theme="tertiary">
           / month (tax incl.)
         </VTypography>
       </VCluster>

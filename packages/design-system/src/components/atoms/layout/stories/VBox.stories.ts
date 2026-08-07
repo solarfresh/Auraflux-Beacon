@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import VBox, {type VBoxProps} from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
 /**
- * `VBox` is the core skin/surface container for the Design System.
+ * `VBox` is the core skin/theme container for the Design System.
  * Strictly adheres to Design Tokens to manage padding, border, background, and clickable interactions.
  */
 const meta = {
@@ -14,7 +14,7 @@ const meta = {
     padding: 'md',
     border: 'all',
     rounded: 'md',
-    surface: 'base',
+    theme: 'base',
     clickable: false,
   },
 } satisfies Meta<VBoxProps>;
@@ -33,7 +33,7 @@ export const Default: Story = {
     },
     template: `
       <VBox v-bind="args">
-        <VTypography size="md" color="slate-700" class="font-mono">Card container using default tokens.</VTypography>
+        <VTypography size="md" theme="info" class="font-mono">Card container using default tokens.</VTypography>
       </VBox>
     `,
   }),

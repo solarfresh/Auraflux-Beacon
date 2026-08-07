@@ -9,7 +9,7 @@ const meta = {
   tags: ['autodocs'],
   args: {
     type: 'button',
-    variant: 'primary',
+    theme: 'primary',
     size: 'md',
     disabled: false,
     loading: false,
@@ -30,21 +30,21 @@ export const Default: Story = {
   }),
 };
 
-export const Variants: Story = {
+export const Theme: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md" wrap=true>
-          <VButton variant="primary">Primary</VButton>
-          <VButton variant="secondary">Secondary</VButton>
-          <VButton variant="tertiary">Tertiary</VButton>
-          <VButton variant="outline">Outline</VButton>
-          <VButton variant="danger">Danger</VButton>
-          <VButton variant="ghost">Ghost</VButton>
-          <VButton variant="success">Success</VButton>
-          <VButton variant="warning">Warning</VButton>
-          <VButton variant="info">Info</VButton>
+          <VButton theme="primary">Primary</VButton>
+          <VButton theme="secondary">Secondary</VButton>
+          <VButton theme="tertiary">Tertiary</VButton>
+          <VButton theme="outline">Outline</VButton>
+          <VButton theme="danger">Danger</VButton>
+          <VButton theme="ghost">Ghost</VButton>
+          <VButton theme="success">Success</VButton>
+          <VButton theme="warning">Warning</VButton>
+          <VButton theme="info">Info</VButton>
         </VCluster>
       </VBox>
     `,
@@ -55,7 +55,7 @@ export const Sizes: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VButton size="xs">xs</VButton>
           <VButton size="sm">sm</VButton>
@@ -73,10 +73,10 @@ export const WithIcons: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
-          <VButton iconName="Plus" variant="primary">Add Item</VButton>
-          <VButton iconName="Trash" variant="danger">Delete</VButton>
+          <VButton iconName="Plus" theme="primary">Add Item</VButton>
+          <VButton iconName="Trash" theme="danger">Delete</VButton>
           <VButton iconName="ArrowPath" iconOnly aria-label="Refresh" />
         </VCluster>
       </VBox>
@@ -88,7 +88,7 @@ export const States: Story = {
   render: () => ({
     components: { VButton, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VButton loading>Loading...</VButton>
           <VButton disabled>Disabled</VButton>

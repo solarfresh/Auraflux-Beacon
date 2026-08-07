@@ -1,16 +1,16 @@
 <template>
   <VModal :is-open="isOpen" size="md" @close="emit('close')">
-    <VBox tag="header" surface="subtle" padding="lg" border="bottom" class="text-center">
+    <VBox tag="header" theme="subtle" padding="lg" border="bottom" class="text-center">
       <VStack align="center" gap="md">
-        <VBox surface="base" padding="sm" rounded="2xl" border="all" :inline="true" class="shadow-sm">
-          <VIcon name="LockClosed" size="xs" variant="secondary" />
+        <VBox theme="base" padding="sm" rounded="2xl" border="all" :inline="true" class="shadow-sm">
+          <VIcon name="LockClosed" size="xs" theme="secondary" />
         </VBox>
 
         <VStack gap="xs">
           <VTypography tag="h2" size="2xl" weight="bold">
             User Login
           </VTypography>
-          <VTypography size="sm" variant="tertiary">
+          <VTypography size="sm" theme="tertiary">
             Access your research initiatives and strategic workspace.
           </VTypography>
         </VStack>
@@ -29,10 +29,10 @@
         </VFormField>
 
         <transition name="fade">
-          <VAlert v-if="error" variant="danger">
+          <VAlert v-if="error" theme="danger">
             <VCluster gap="xs">
-              <VIcon name="ExclamationCircle" size="sm" variant="danger" />
-              <VTypography size="xs" variant="danger">{{ error }}</VTypography>
+              <VIcon name="ExclamationCircle" size="sm" theme="danger" />
+              <VTypography size="xs" theme="danger">{{ error }}</VTypography>
             </VCluster>
           </VAlert>
         </transition>
@@ -40,7 +40,7 @@
         <VBox class="pt-2">
           <VButton
             type="submit"
-            variant="primary"
+            theme="primary"
             size="lg"
             class="w-full"
             :disabled="isSubmitting"
@@ -53,7 +53,7 @@
     </VBox>
 
     <VBox tag="footer" padding="lg" class="pt-0 text-center">
-      <VTypography size="xs" variant="ghost">
+      <VTypography size="xs" theme="ghost">
         By logging in, you agree to our research workspace protocols.
       </VTypography>
     </VBox>
@@ -75,7 +75,7 @@ import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.v
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
-import VAlert from '@/components/molecules/feedback/VAlert.vue';
+import VAlert from '@auraflux/design-system/components/molecules/indicators/VAlert.vue';
 import VModal from '@/components/molecules/feedback/VModal.vue';
 
 const props = defineProps<{

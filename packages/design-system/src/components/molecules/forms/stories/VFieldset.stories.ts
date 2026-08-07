@@ -31,11 +31,11 @@ export const Default: Story = {
     template: `
       <VFieldset v-bind="args">
         <VStack gap="md">
-          <VBox padding="sm" surface="default" border="all" rounded="md">
-            <VTypography size="xs" variant="tertiary">Workspace Name Input Field</VTypography>
+          <VBox padding="sm" theme="base" border="all" rounded="md">
+            <VTypography size="xs" theme="tertiary">Workspace Name Input Field</VTypography>
           </VBox>
-          <VBox padding="sm" surface="default" border="all" rounded="md">
-            <VTypography size="xs" variant="tertiary">Workspace Identifier (Slug)</VTypography>
+          <VBox padding="sm" theme="base" border="all" rounded="md">
+            <VTypography size="xs" theme="tertiary">Workspace Identifier (Slug)</VTypography>
           </VBox>
         </VStack>
       </VFieldset>
@@ -59,8 +59,8 @@ export const TitleOnly: Story = {
     template: `
       <VFieldset v-bind="args">
         <VStack gap="md">
-          <VBox padding="sm" surface="default" border="all" rounded="md">
-            <VTypography size="xs" variant="tertiary">Two-Factor Authentication Toggle</VTypography>
+          <VBox padding="sm" theme="base" border="all" rounded="md">
+            <VTypography size="xs" theme="tertiary">Two-Factor Authentication Toggle</VTypography>
           </VBox>
         </VStack>
       </VFieldset>
@@ -85,13 +85,13 @@ export const LargePadding: Story = {
     template: `
       <VFieldset v-bind="args">
         <VStack gap="md">
-          <VBox padding="sm" surface="default" border="all" rounded="md">
-            <VTypography size="xs" variant="tertiary">Temperature Slider Control (0.0 - 1.0)</VTypography>
+          <VBox padding="sm" theme="base" border="all" rounded="md">
+            <VTypography size="xs" theme="tertiary">Temperature Slider Control (0.0 - 1.0)</VTypography>
           </VBox>
-          <VBox padding="sm" surface="default" border="all" rounded="md">
-            <VTypography size="xs" variant="tertiary">Max Output Tokens Input</VTypography>
+          <VBox padding="sm" theme="base" border="all" rounded="md">
+            <VTypography size="xs" theme="tertiary">Max Output Tokens Input</VTypography>
           </VBox>
-          <VButton variant="primary" size="sm">Save Parameters</VButton>
+          <VButton theme="primary" size="sm">Save Parameters</VButton>
         </VStack>
       </VFieldset>
     `,

@@ -11,7 +11,7 @@ const meta = {
     modelValue: '',
     placeholder: 'Enter something...',
     type: 'text',
-    variant: 'outline',
+    theme: 'outline',
     size: 'md',
     rounded: 'md',
     disabled: false,
@@ -31,16 +31,16 @@ export const Default: Story = {
   }),
 };
 
-export const Variants: Story = {
+export const Theme: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
-          <VInput variant="outline" placeholder="Outline variant..." />
-          <VInput variant="success" placeholder="Success variant..." />
-          <VInput variant="warning" placeholder="Warning variant..." />
-          <VInput variant="danger" placeholder="Danger variant..." />
+          <VInput theme="outline" placeholder="Outline theme..." />
+          <VInput theme="success" placeholder="Success theme..." />
+          <VInput theme="warning" placeholder="Warning theme..." />
+          <VInput theme="danger" placeholder="Danger theme..." />
         </VCluster>
       </VBox>
     `,
@@ -51,7 +51,7 @@ export const Sizes: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VInput size="xs" placeholder="Extra small (xs)" />
           <VInput size="sm" placeholder="Small (sm)" />
@@ -69,7 +69,7 @@ export const RoundedStyles: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VInput rounded="none" placeholder="Rounded none" />
           <VInput rounded="sm" placeholder="Rounded sm" />
@@ -86,7 +86,7 @@ export const States: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox surface="base" border="all" padding="lg" rounded="lg">
+      <VBox theme="base" border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VInput modelValue="Pre-filled value" placeholder="Normal state" />
           <VInput disabled placeholder="Disabled state..." />

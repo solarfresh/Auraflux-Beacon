@@ -2,9 +2,9 @@
   <span
     :class="[
       'inline-flex items-center justify-center font-medium rounded-full transition-colors',
-      variantStyles.bg,
-      variantStyles.text,
-      variantStyles.border || '',
+      themeStyles.bg,
+      themeStyles.text,
+      themeStyles.border || '',
       sizeStyles.badge
     ]"
   >
@@ -14,22 +14,22 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { VariantToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_SIZE_CLASSES, SHARED_VARIANT_CLASSES } from '@auraflux/design-system/constants/theme';
+import type { ThemeToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_SIZE_CLASSES, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
 
 /**
  * Props for Badge atom
- * @property {string} variant - The color theme of the badge
+ * @property {string} theme - The color theme of the badge
  * @property {string} size - The physical scale of the badge
  */
 
 export interface VBadgeProps {
-  variant?: VariantToken;
+  theme?: ThemeToken;
   size?: SizeToken;
 }
 
 const props = withDefaults(defineProps<VBadgeProps>(), {
-  variant: 'primary',
+  theme: 'info',
   size: 'sm'
 });
 
@@ -37,8 +37,8 @@ const sizeStyles = computed(() => {
   return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
 });
 
-const variantStyles = computed(() => {
-  return SHARED_VARIANT_CLASSES[props.variant] || SHARED_VARIANT_CLASSES.primary;
+const themeStyles = computed(() => {
+  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.info;
 });
 
 </script>
