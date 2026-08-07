@@ -2,13 +2,16 @@
   <component
     :is="tag"
     :class="[
-      'flex flex-row',
+      // Base Flex Layout
+      inline ? 'inline-flex' : 'flex',
+      'flex-row',
       wrap ? 'flex-wrap' : 'flex-nowrap',
+      fullWidth ? 'w-full' : 'w-auto',
+
+      // Alignment, Justification & Gap Mapping
       alignStyles,
       justifyStyles,
-      gapStyles,
-      inline ? 'inline-flex' : 'flex',
-      fullWidth ? 'w-full' : 'w-auto'
+      gapStyles
     ]"
   >
     <slot />
@@ -17,19 +20,23 @@
 
 <script setup lang="ts">
 /**
- * Cluster Atom
+ * Cluster Atom (The "Layout" layer)
  * Manages horizontal layout (flex-direction: row).
- * Used for grouping elements side-by-side with consistent spacing.
+ * Handles grouping elements side-by-side with consistent spacing and alignment.
  */
 import { computed } from 'vue';
-import type {Alignment, Justification, SizeToken, TagToken} from '@auraflux/design-system/interfaces/theme';
-import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
+import type { Alignment, ComponentSizeToken, Justification, TagToken } from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_ALIGN_CLASSES,
+  SHARED_GAP_CLASSES,
+  SHARED_JUSTIFY_CLASSES
+} from '@auraflux/design-system/constants/theme';
 
 export interface VClusterProps {
   /** HTML element to render */
   tag?: TagToken;
   /** Horizontal gap between children */
-  gap?: SizeToken;
+  gap?: ComponentSizeToken;
   /** Vertical alignment of children */
   align?: Alignment;
   /** Horizontal distribution of children */
@@ -40,12 +47,12 @@ export interface VClusterProps {
   inline?: boolean;
   /** Force the cluster to take up full available width */
   fullWidth?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<VClusterProps>(), {
   tag: 'div',
   gap: 'md',
-  align: 'center', // Default to center for horizontal alignment
+  align: 'center',
   justify: 'start',
   wrap: false,
   inline: false,

@@ -2,18 +2,21 @@
   <component
     :is="tag"
     :class="[
-      // Spacing
-      paddingStyles,
+      // Layout & Display
+      inline ? 'inline-flex' : 'block',
 
-      // Shape & Border
+      // Spacing & Shape
+      paddingStyles,
       roundedStyles,
       borderStyles,
-      themeStyles.bg,
-      themeStyles.text,
-      themeStyles.border || '',
-      inline ? 'inline-flex' : '',
-      // Interaction logic
-      interactionStyles,
+
+      // Surface Styles (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+
+      // Interactive States (Only applied when clickable)
+      clickable ? [surfaceStyle.hover, surfaceStyle.focus, interactionStyles] : ''
     ]"
   >
     <slot />
@@ -23,34 +26,53 @@
 <script setup lang="ts">
 /**
  * Box Atom (The "Skin" layer)
- * A foundational container that manages padding, borders, and backgrounds.
- * It strictly adheres to Design Tokens to prevent "Magic Values".
+ * A foundational container that manages padding, borders, backgrounds, and interactive surfaces.
+ * Strictly adheres to Design Tokens to prevent "Magic Values".
  */
 import { computed } from 'vue';
-import type {SpacingToken, RoundedToken, BorderToken, ThemeToken} from '@auraflux/design-system/interfaces/theme';
-import { SHARED_BORDER_CLASSES, SHARED_PADDING_CLASS, SHARED_ROUNDED_CLASS, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
+import type {
+  TagToken,
+  SpacingToken,
+  RoundedToken,
+  BorderToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_BORDER_CLASSES,
+  SHARED_PADDING_CLASSES,
+  SHARED_ROUNDED_CLASSES
+} from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
 export interface VBoxProps {
   /** HTML tag to render */
-  tag?: string;
+  tag?: TagToken;
   /** Internal spacing token */
   padding?: SpacingToken;
-  /** Radius token. If true, uses 'md' (8px) as default */
+  /** Radius token */
   rounded?: RoundedToken;
   /** Border position token */
   border?: BorderToken;
-  theme?: ThemeToken;
-  /** Adds pointer cursor and active state */
+  /** Visual priority token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token */
+  intent?: IntentToken;
+  /** Explicit surface container model token */
+  surface?: SurfaceToken;
+  /** Render as inline-flex container */
   inline?: boolean;
+  /** Adds pointer cursor and interactive focus/active states */
   clickable?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<VBoxProps>(), {
   tag: 'div',
   padding: 'none',
   rounded: 'none',
   border: 'none',
-  theme: 'base',
+  attention: 'secondary',
   inline: false,
   clickable: false
 });
@@ -59,20 +81,19 @@ const borderStyles = computed(() => {
   return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.none;
 });
 
-const interactionStyles = computed(() => {
-  if (!props.clickable) return '';
-  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-500 outline-none';
-});
-
 const paddingStyles = computed(() => {
-  return SHARED_PADDING_CLASS[props.padding] || SHARED_PADDING_CLASS.none;
+  return SHARED_PADDING_CLASSES[props.padding] || SHARED_PADDING_CLASSES.none;
 });
 
 const roundedStyles = computed(() => {
-  return SHARED_ROUNDED_CLASS[props.rounded] || SHARED_ROUNDED_CLASS.md;
+  return SHARED_ROUNDED_CLASSES[props.rounded] || SHARED_ROUNDED_CLASSES.none;
 });
 
-const themeStyles = computed(() => {
-  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.base;
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
+});
+
+const interactionStyles = computed(() => {
+  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] outline-none';
 });
 </script>

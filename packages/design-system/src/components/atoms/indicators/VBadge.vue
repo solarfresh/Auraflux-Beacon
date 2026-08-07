@@ -2,9 +2,11 @@
   <span
     :class="[
       'inline-flex items-center justify-center font-medium rounded-full transition-colors',
-      themeStyles.bg,
-      themeStyles.text,
-      themeStyles.border || '',
+      // Surface Mapping (Visual Properties)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+      // Size Mapping
       sizeStyles.badge
     ]"
   >
@@ -13,32 +15,37 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import type { ThemeToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_SIZE_CLASSES, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
-
 /**
- * Props for Badge atom
- * @property {string} theme - The color theme of the badge
- * @property {string} size - The physical scale of the badge
+ * Badge Atom
+ * A small status descriptor for highlighting state, counts, or categories.
+ * Strictly adheres to Design Tokens and Attention/Intent/Surface architecture.
  */
+import { computed } from 'vue';
+import type { ComponentSizeToken, AttentionToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_COMPONENT_SIZE_CLASSES } from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
 export interface VBadgeProps {
-  theme?: ThemeToken;
-  size?: SizeToken;
+  /** Visual priority hierarchy token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token (e.g. 'success', 'danger') */
+  intent?: IntentToken;
+  /** Explicit surface container model token (e.g. 'soft', 'solid') */
+  surface?: SurfaceToken;
+  /** Physical scale of the badge */
+  size?: ComponentSizeToken;
 }
 
 const props = withDefaults(defineProps<VBadgeProps>(), {
-  theme: 'info',
+  attention: 'tertiary',
   size: 'sm'
 });
 
 const sizeStyles = computed(() => {
-  return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
+  return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.sm;
 });
 
-const themeStyles = computed(() => {
-  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.info;
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
 });
-
 </script>

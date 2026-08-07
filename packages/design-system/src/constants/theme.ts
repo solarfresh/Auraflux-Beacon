@@ -1,13 +1,35 @@
 import type {
   Alignment,
+  AttentionToken,
+  AttentionPreset,
   BorderToken,
+  ContainerSizeToken,
   FontWeightToken,
+  IntentToken,
   Justification,
   RoundedToken,
-  SizeToken,
+  ComponentSizeToken,
   SpacingToken,
-  ThemeToken
+  SurfaceStyleMap
 } from '@auraflux/design-system/interfaces/theme';
+
+/**
+ * Maps Attention Tokens to their default Intent and Surface combinations.
+ */
+export const ATTENTION_PRESET_MAP: Record<AttentionToken, AttentionPreset> = {
+  primary: {
+    intent: 'brand',
+    surface: 'solid',
+  },
+  secondary: {
+    intent: 'neutral',
+    surface: 'outline',
+  },
+  tertiary: {
+    intent: 'neutral',
+    surface: 'ghost',
+  },
+};
 
 export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
   start: 'items-start',
@@ -27,6 +49,27 @@ export const SHARED_BORDER_CLASSES: Record<BorderToken, string> = {
   none: 'border-none'
 };
 
+/**
+ * Shared Tailwind CSS class mappings for Container/Surface sizing.
+ * Ensures consistent width and layout dimensions across all layout components.
+ */
+export const SHARED_CONTAINER_SIZE_CLASSES: Record<ContainerSizeToken, string> = {
+  /** Small container (~384px) - Ideal for simple confirm dialogs and small popovers */
+  sm: 'max-w-md w-full',
+
+  /** Medium container (~672px) - Default size for standard forms and modal dialogs */
+  md: 'max-w-2xl w-full',
+
+  /** Large container (~896px) - Suitable for data tables or two-column forms */
+  lg: 'max-w-4xl w-full',
+
+  /** Extra-large container (~1152px) - Designed for dashboards and complex views */
+  xl: 'max-w-6xl w-full',
+
+  /** Full-screen container - Takes up near-viewport dimensions for immersive flows */
+  full: 'max-w-[95vw] w-full h-[90vh]'
+};
+
 export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {
   light: 'font-light',
   normal: 'font-normal',
@@ -35,7 +78,7 @@ export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {
   bold: 'font-bold',
 };
 
-export const SHARED_GAP_CLASSES: Record<SizeToken, string> = {
+export const SHARED_GAP_CLASSES: Record<ComponentSizeToken, string> = {
   xs: 'gap-1', // 4px
   sm: 'gap-2', // 8px
   md: 'gap-4', // 16px
@@ -52,7 +95,7 @@ export const SHARED_JUSTIFY_CLASSES: Record<Justification, string> = {
   around: 'justify-around',
 };
 
-export const SHARED_PADDING_CLASS: Record<SpacingToken, string> = {
+export const SHARED_PADDING_CLASSES: Record<SpacingToken, string> = {
   none: 'p-0',
   xs: 'p-2',   // 8px
   sm: 'p-3',   // 12px
@@ -61,7 +104,7 @@ export const SHARED_PADDING_CLASS: Record<SpacingToken, string> = {
   xl: 'p-8'    // 32px
 };
 
-export const SHARED_ROUNDED_CLASS: Record<RoundedToken, string> = {
+export const SHARED_ROUNDED_CLASSES: Record<RoundedToken, string> = {
   none: 'rounded-none',
   sm: 'rounded-sm',
   md: 'rounded-md',
@@ -71,7 +114,7 @@ export const SHARED_ROUNDED_CLASS: Record<RoundedToken, string> = {
   full: 'rounded-full',
 };
 
-export const SHARED_SIZE_CLASSES: Record<SizeToken, { badge: string; control: string; iconButton: string; icon: string; text: string; }> = {
+export const SHARED_COMPONENT_SIZE_CLASSES: Record<ComponentSizeToken, { badge: string; control: string; iconButton: string; icon: string; text: string; }> = {
   xs: {
     badge: 'px-1.5 py-0.5 text-[10px] leading-none',
     control: 'px-2.5 py-1.5 text-xs',
@@ -116,76 +159,208 @@ export const SHARED_SIZE_CLASSES: Record<SizeToken, { badge: string; control: st
   },
 };
 
-export const SHARED_THEME_CLASSES: Record<ThemeToken, { bg: string; text: string; border?: string; hover?: string }> = {
-  base: {
-    bg: 'bg-white',
-    text: 'text-slate-900',
-    border: 'border-slate-200/80',
-  },
-  subtle: {
-    bg: 'bg-slate-50/80',
-    text: 'text-slate-700',
-    border: 'border-slate-200/60',
-  },
-  sunken: {
-    bg: 'bg-slate-100',
-    text: 'text-slate-800',
-    border: 'border-slate-300/60',
-  },
-  transparent: {
-    bg: 'bg-transparent',
-    text: 'text-current',
-    border: 'border-transparent',
-  },
-  primary: {
-    bg: 'bg-indigo-600',
+export const SHARED_LENGTH_CLASSES: Record<
+  ContainerSizeToken,
+  { vertical: string; horizontal: string }
+> = {
+  sm: { vertical: 'h-4', horizontal: 'w-4' },
+  md: { vertical: 'h-8', horizontal: 'w-8' },
+  lg: { vertical: 'h-12', horizontal: 'w-12' },
+  xl: { vertical: 'h-16', horizontal: 'w-16' },
+  full: { vertical: 'h-full', horizontal: 'w-full' },
+};
+
+export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-slate-900',
     text: 'text-white',
-    hover: 'hover:bg-indigo-700',
+    border: 'border-transparent',
+    hover: 'hover:bg-slate-800',
+    focus: 'focus-visible:ring-slate-400',
   },
-  secondary: {
-    bg: 'bg-indigo-50',
-    text: 'text-indigo-700',
-    border: 'border-indigo-200/60',
-    hover: 'hover:bg-indigo-100',
-  },
-  tertiary: {
-    bg: 'bg-transparent',
-    text: 'text-slate-600',
-    hover: 'hover:bg-slate-100',
+  soft: {
+    bg: 'bg-slate-100',
+    text: 'text-slate-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-slate-200',
+    focus: 'focus-visible:ring-slate-400',
   },
   outline: {
     bg: 'bg-transparent',
-    text: 'text-slate-700',
-    border: 'border border-slate-200',
-    hover: 'hover:border-slate-300 hover:bg-slate-50',
+    text: 'text-slate-900',
+    border: 'border border-slate-300',
+    hover: 'hover:bg-slate-100',
+    focus: 'focus-visible:ring-slate-400',
   },
   ghost: {
     bg: 'bg-transparent',
-    text: 'text-slate-400',
-    hover: 'hover:text-slate-600 hover:bg-slate-100',
+    text: 'text-slate-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-slate-100',
+    focus: 'focus-visible:ring-slate-400',
   },
-  success: {
-    bg: 'bg-emerald-50',
-    text: 'text-emerald-700',
-    border: 'border border-emerald-200',
-    hover: 'hover:bg-emerald-100',
+};
+
+export const BRAND_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-indigo-600',
+    text: 'text-white',
+    border: 'border-transparent',
+    hover: 'hover:bg-indigo-700',
+    focus: 'focus-visible:ring-indigo-500',
   },
-  warning: {
-    bg: 'bg-amber-50',
-    text: 'text-amber-700',
-    border: 'border border-amber-200',
-    hover: 'hover:bg-amber-100',
-  },
-  danger: {
-    bg: 'bg-rose-50',
-    text: 'text-rose-700',
-    border: 'border-rose-200/60',
-    hover: 'hover:bg-rose-100',
-  },
-  info: {
+  soft: {
     bg: 'bg-indigo-50',
-    text: 'text-indigo-700',
-    border: 'border-indigo-200/60',
+    text: 'text-indigo-900',
+    border: 'border-transparent',
     hover: 'hover:bg-indigo-100',
+    focus: 'focus-visible:ring-indigo-500',
   },
+  outline: {
+    bg: 'bg-transparent',
+    text: 'text-indigo-900',
+    border: 'border border-indigo-300',
+    hover: 'hover:bg-indigo-50',
+    focus: 'focus-visible:ring-indigo-500',
+  },
+  ghost: {
+    bg: 'bg-transparent',
+    text: 'text-indigo-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-indigo-50',
+    focus: 'focus-visible:ring-indigo-500',
+  },
+};
+
+export const SUCCESS_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-emerald-600',
+    text: 'text-white',
+    border: 'border-transparent',
+    hover: 'hover:bg-emerald-700',
+    focus: 'focus-visible:ring-emerald-500',
+  },
+  soft: {
+    bg: 'bg-emerald-50',
+    text: 'text-emerald-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-emerald-100',
+    focus: 'focus-visible:ring-emerald-500',
+  },
+  outline: {
+    bg: 'bg-transparent',
+    text: 'text-emerald-900',
+    border: 'border border-emerald-300',
+    hover: 'hover:bg-emerald-50',
+    focus: 'focus-visible:ring-emerald-500',
+  },
+  ghost: {
+    bg: 'bg-transparent',
+    text: 'text-emerald-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-emerald-50',
+    focus: 'focus-visible:ring-emerald-500',
+  },
+};
+
+export const WARNING_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-amber-500',
+    text: 'text-white',
+    border: 'border-transparent',
+    hover: 'hover:bg-amber-600',
+    focus: 'focus-visible:ring-amber-500',
+  },
+  soft: {
+    bg: 'bg-amber-50',
+    text: 'text-amber-950',
+    border: 'border-transparent',
+    hover: 'hover:bg-amber-100',
+    focus: 'focus-visible:ring-amber-500',
+  },
+  outline: {
+    bg: 'bg-transparent',
+    text: 'text-amber-950',
+    border: 'border border-amber-300',
+    hover: 'hover:bg-amber-50',
+    focus: 'focus-visible:ring-amber-500',
+  },
+  ghost: {
+    bg: 'bg-transparent',
+    text: 'text-amber-950',
+    border: 'border-transparent',
+    hover: 'hover:bg-amber-50',
+    focus: 'focus-visible:ring-amber-500',
+  },
+};
+
+export const DANGER_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-rose-600',
+    text: 'text-white',
+    border: 'border-transparent',
+    hover: 'hover:bg-rose-700',
+    focus: 'focus-visible:ring-rose-500',
+  },
+  soft: {
+    bg: 'bg-rose-50',
+    text: 'text-rose-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-rose-100',
+    focus: 'focus-visible:ring-rose-500',
+  },
+  outline: {
+    bg: 'bg-transparent',
+    text: 'text-rose-900',
+    border: 'border border-rose-300',
+    hover: 'hover:bg-rose-50',
+    focus: 'focus-visible:ring-rose-500',
+  },
+  ghost: {
+    bg: 'bg-transparent',
+    text: 'text-rose-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-rose-50',
+    focus: 'focus-visible:ring-rose-500',
+  },
+};
+
+export const INFO_SURFACE_MAP: SurfaceStyleMap = {
+  solid: {
+    bg: 'bg-sky-500',
+    text: 'text-white',
+    border: 'border-transparent',
+    hover: 'hover:bg-sky-600',
+    focus: 'focus-visible:ring-sky-500',
+  },
+  soft: {
+    bg: 'bg-sky-50',
+    text: 'text-sky-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-sky-100',
+    focus: 'focus-visible:ring-sky-500',
+  },
+  outline: {
+    bg: 'bg-transparent',
+    text: 'text-sky-900',
+    border: 'border border-sky-300',
+    hover: 'hover:bg-sky-50',
+    focus: 'focus-visible:ring-sky-500',
+  },
+  ghost: {
+    bg: 'bg-transparent',
+    text: 'text-sky-900',
+    border: 'border-transparent',
+    hover: 'hover:bg-sky-50',
+    focus: 'focus-visible:ring-sky-500',
+  },
+};
+
+export const SURFACE_STYLE_MAP: Record<IntentToken, SurfaceStyleMap> = {
+  neutral: NEUTRAL_SURFACE_MAP,
+  brand: BRAND_SURFACE_MAP,
+  success: SUCCESS_SURFACE_MAP,
+  warning: WARNING_SURFACE_MAP,
+  danger: DANGER_SURFACE_MAP,
+  info: INFO_SURFACE_MAP,
 };

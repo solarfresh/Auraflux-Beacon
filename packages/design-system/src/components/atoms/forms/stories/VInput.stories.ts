@@ -9,12 +9,34 @@ const meta = {
   tags: ['autodocs'],
   args: {
     modelValue: '',
-    placeholder: 'Enter something...',
+    placeholder: 'Enter text...',
     type: 'text',
-    theme: 'outline',
+    attention: 'secondary',
     size: 'md',
     rounded: 'md',
     disabled: false,
+  },
+  argTypes: {
+    attention: {
+      control: 'select',
+      options: ['primary', 'secondary', 'tertiary'],
+    },
+    intent: {
+      control: 'select',
+      options: ['neutral', 'brand', 'success', 'warning', 'danger', 'info'],
+    },
+    surface: {
+      control: 'select',
+      options: ['solid', 'soft', 'outline', 'ghost'],
+    },
+    size: {
+      control: 'select',
+      options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    rounded: {
+      control: 'select',
+      options: ['none', 'sm', 'md', 'lg', 'full'],
+    },
   },
 } satisfies Meta<VInputProps>;
 
@@ -31,16 +53,33 @@ export const Default: Story = {
   }),
 };
 
-export const Theme: Story = {
+/** Form Validation States (Intent) */
+export const ValidationStates: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox theme="base" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="md">
-          <VInput theme="outline" placeholder="Outline theme..." />
-          <VInput theme="success" placeholder="Success theme..." />
-          <VInput theme="warning" placeholder="Warning theme..." />
-          <VInput theme="danger" placeholder="Danger theme..." />
+      <VBox border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="md" :wrap="true">
+          <VInput placeholder="Default state..." />
+          <VInput intent="success" placeholder="Valid input..." />
+          <VInput intent="warning" placeholder="Warning input..." />
+          <VInput intent="danger" placeholder="Invalid input (error)..." />
+        </VCluster>
+      </VBox>
+    `,
+  }),
+};
+
+/** Surface Variants */
+export const SurfaceVariants: Story = {
+  render: () => ({
+    components: { VInput, VBox, VCluster },
+    template: `
+      <VBox border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="md" :wrap="true">
+          <VInput surface="outline" placeholder="Outline surface..." />
+          <VInput surface="soft" placeholder="Soft surface..." />
+          <VInput surface="ghost" placeholder="Ghost surface..." />
         </VCluster>
       </VBox>
     `,
@@ -51,8 +90,8 @@ export const Sizes: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox theme="base" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="md">
+      <VBox border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="md" :wrap="true">
           <VInput size="xs" placeholder="Extra small (xs)" />
           <VInput size="sm" placeholder="Small (sm)" />
           <VInput size="md" placeholder="Medium (md)" />
@@ -69,8 +108,8 @@ export const RoundedStyles: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox theme="base" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="md">
+      <VBox border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="md" :wrap="true">
           <VInput rounded="none" placeholder="Rounded none" />
           <VInput rounded="sm" placeholder="Rounded sm" />
           <VInput rounded="md" placeholder="Rounded md" />
@@ -86,7 +125,7 @@ export const States: Story = {
   render: () => ({
     components: { VInput, VBox, VCluster },
     template: `
-      <VBox theme="base" border="all" padding="lg" rounded="lg">
+      <VBox border="all" padding="lg" rounded="lg">
         <VCluster align="center" gap="md">
           <VInput modelValue="Pre-filled value" placeholder="Normal state" />
           <VInput disabled placeholder="Disabled state..." />

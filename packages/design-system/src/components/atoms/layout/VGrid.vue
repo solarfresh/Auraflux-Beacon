@@ -3,13 +3,17 @@
     :is="tag"
     :class="[
       'grid',
-      // Grid Columns Logic
-      resolveGridCols(cols),
-      padding && paddingMap[padding],
-      // Spacing (Gap)
+
+      // Column Layout Class Map
+      colsClass,
+
+      // Spatial Padding
+      paddingStyles,
+
+      // Alignment, Distribution & Gap
       alignStyles,
       justifyStyles,
-      gapStyles,
+      gapStyles
     ]"
   >
     <slot />
@@ -20,30 +24,43 @@
 /**
  * Grid Atom (The "Coordinate" layer)
  * A 2D layout engine that manages responsive columns and spatial distribution.
- * Adheres to the 8px grid system via GapSize tokens.
- * * @category Atoms
+ * Adheres to Design System spacing and alignment tokens.
+ *
+ * @category Atoms
  * @subcategory Layout
  */
 import { computed } from 'vue';
-import type {Alignment, Justification, SizeToken, SpacingToken, TagToken} from '@auraflux/design-system/interfaces/theme';
-import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
+import type {
+  Alignment,
+  Justification,
+  ComponentSizeToken,
+  SpacingToken,
+  TagToken
+} from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_ALIGN_CLASSES,
+  SHARED_GAP_CLASSES,
+  SHARED_JUSTIFY_CLASSES,
+  SHARED_PADDING_CLASSES
+} from '@auraflux/design-system/constants/theme';
 
 export interface VGridProps {
   /** HTML tag to render */
   tag?: TagToken;
-
+  /** Internal container padding token */
   padding?: SpacingToken;
-  /** * Column configuration.
-   * Supports static numbers "3" or responsive strings "1 md:2 lg:3".
+  /**
+   * Column configuration.
+   * Supports numbers (e.g. 3) or responsive string definitions (e.g. "1 md:2 lg:4").
    */
   cols?: number | string;
   /** Spatial distribution token between cells */
-  gap?: SizeToken;
+  gap?: ComponentSizeToken;
   /** Vertical alignment of items (align-items) */
   align?: Alignment;
   /** Horizontal distribution of content (justify-content) */
   justify?: Justification;
-};
+}
 
 const props = withDefaults(defineProps<VGridProps>(), {
   tag: 'div',
@@ -51,37 +68,32 @@ const props = withDefaults(defineProps<VGridProps>(), {
   cols: 1,
   gap: 'md',
   align: 'stretch',
-  justify: 'start'
+  justify: 'start',
 });
 
-// --- Helper Logic ---
-const paddingMap: Record<SpacingToken, string> = {
-  none: 'p-0',
-  xs: 'p-2',          // 8px
-  sm: 'px-4 py-3',    // 16px horizontal, 12px vertical
-  md: 'px-6 py-4',    // 24px horizontal, 16px vertical
-  lg: 'px-8 py-6',    // 32px horizontal, 24px vertical
-  xl: 'px-12 py-10'   // 48px horizontal, 40px vertical
-};
+// Dynamic resolver for arbitrary column definitions (e.g., "1 md:2 lg:3 xl:4")
+const colsClass = computed(() => {
+  const raw = String(props.cols).trim();
+  if (!raw) return 'grid-cols-1';
 
-const gridColsMap: Record<string, string> = {
-  '1': 'grid-cols-1',
-  '2': 'grid-cols-2',
-  '3': 'grid-cols-3',
-  '4': 'grid-cols-4',
-  '12': 'grid-cols-12',
-  'md:2': 'md:grid-cols-2',
-  'lg:3': 'lg:grid-cols-3',
-  'xl:4': 'xl:grid-cols-4',
-};
+  return raw
+    .split(/\s+/)
+    .map((part) => {
+      if (part.includes(':')) {
+        const [breakpoint, num] = part.split(':');
+        return `${breakpoint}:grid-cols-${num}`;
+      }
+      return `grid-cols-${part}`;
+    })
+    .join(' ');
+});
 
-const resolveGridCols = (cols: number | string) => {
-  const colsStr = String(cols);
-  return colsStr.split(' ').map(part => gridColsMap[part] || '').join(' ');
-};
+const paddingStyles = computed(() => {
+  return SHARED_PADDING_CLASSES[props.padding] || SHARED_PADDING_CLASSES.none;
+});
 
 const alignStyles = computed(() => {
-  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.center;
+  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.stretch;
 });
 
 const gapStyles = computed(() => {

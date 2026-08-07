@@ -76,7 +76,7 @@ import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VAlert from '@auraflux/design-system/components/molecules/indicators/VAlert.vue';
-import VModal from '@/components/molecules/feedback/VModal.vue';
+import VModal from '@auraflux/design-system/components/molecules/indicators/VModal.vue';
 
 const props = defineProps<{
   isOpen: boolean;

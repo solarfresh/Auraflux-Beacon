@@ -2,11 +2,12 @@
   <button
     :class="[
       'inline-flex items-center justify-center transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none',
-      // Variant Mapping
-      themeStyles.bg,
-      themeStyles.text,
-      themeStyles.hover,
-      themeStyles.border || '',
+      // Surface Mapping (Visual Properties & Interactive States)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+      surfaceStyle.hover,
+      surfaceStyle.focus,
       // Size & Shape Mapping
       iconOnly ? sizeStyles.iconButton : sizeStyles.control,
       // Rounded logic
@@ -21,7 +22,6 @@
       <VIcon
         v-if="iconName"
         :name="iconName"
-        :theme="theme"
         :size="size === 'lg' ? 'md' : 'sm'"
         :class="{ 'mr-2': !iconOnly }"
       />
@@ -32,7 +32,6 @@
         weight="semibold"
         class="whitespace-nowrap"
         :size="size"
-        :theme="theme"
       >
         <slot />
       </VTypography>
@@ -44,13 +43,16 @@
 import { computed } from 'vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import type { ThemeToken, SizeToken } from '@auraflux/design-system/interfaces/theme';
-import { SHARED_SIZE_CLASSES, SHARED_THEME_CLASSES } from '@auraflux/design-system/constants/theme';
+import type { ComponentSizeToken, AttentionToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_COMPONENT_SIZE_CLASSES } from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
 export interface VButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  theme?: ThemeToken;
-  size?: SizeToken;
+  attention?: AttentionToken;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
+  size?: ComponentSizeToken;
   iconName?: string;
   iconOnly?: boolean;
   loading?: boolean;
@@ -59,16 +61,16 @@ export interface VButtonProps {
 
 const props = withDefaults(defineProps<VButtonProps>(), {
   type: 'button',
-  theme: 'primary',
+  attention: 'primary',
   size: 'md',
   iconOnly: false
 });
 
 const sizeStyles = computed(() => {
-  return SHARED_SIZE_CLASSES[props.size] || SHARED_SIZE_CLASSES.md;
+  return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.md;
 });
 
-const themeStyles = computed(() => {
-  return SHARED_THEME_CLASSES[props.theme] || SHARED_THEME_CLASSES.primary;
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
 });
 </script>

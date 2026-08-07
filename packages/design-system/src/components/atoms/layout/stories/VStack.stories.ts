@@ -17,10 +17,24 @@ const meta = {
     fullHeight: false,
     scrollable: false,
   },
+  argTypes: {
+    gap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'baseline', 'stretch'],
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'between', 'around', 'evenly'],
+    },
+  },
 } satisfies Meta<VStackProps>;
 
 export default meta;
-type Story = StoryObj<typeof VStack>;
+type Story = StoryObj<typeof meta>;
 
 /**
  * Default usage: Vertical stack layout with stretched item width.
@@ -33,14 +47,14 @@ export const Default: Story = {
     },
     template: `
       <VStack v-bind="args" class="max-w-md">
-        <VBox padding="md" theme="subtle" rounded="md">
-          <VTypography weight="semibold" theme="outline">Section One</VTypography>
+        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+          <VTypography weight="semibold">Section One</VTypography>
         </VBox>
-        <VBox padding="md" theme="subtle" rounded="md">
-          <VTypography weight="semibold" theme="outline">Section Two</VTypography>
+        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+          <VTypography weight="semibold">Section Two</VTypography>
         </VBox>
-        <VBox padding="md" theme="subtle" rounded="md">
-          <VTypography weight="semibold" theme="outline">Section Three</VTypography>
+        <VBox padding="md" attention="tertiary" border="all" rounded="md">
+          <VTypography weight="semibold">Section Three</VTypography>
         </VBox>
       </VStack>
     `,
@@ -60,27 +74,27 @@ export const FormLayout: Story = {
       return { args };
     },
     template: `
-      <VBox padding="lg" theme="base" border="all" rounded="lg" class="max-w-md">
+      <VBox padding="lg" attention="secondary" border="all" rounded="lg" class="max-w-md">
         <VStack v-bind="args">
           <VStack gap="xs">
-            <VTypography tag="h3" size="lg" weight="bold" theme="outline">
+            <VTypography tag="h3" size="lg" weight="bold">
               Account Settings
             </VTypography>
-            <VTypography size="sm" theme="ghost">
+            <VTypography size="sm" intent="neutral">
               Manage your profile preferences and system configurations.
             </VTypography>
           </VStack>
 
           <VStack gap="sm">
-            <VBox padding="md" theme="sunken" rounded="md">
-              <VTypography size="sm">Form Field Placeholder A</VTypography>
+            <VBox padding="md" attention="tertiary" border="all" rounded="md">
+              <VTypography size="sm" intent="neutral">Form Field Placeholder A</VTypography>
             </VBox>
-            <VBox padding="md" theme="sunken" rounded="md">
-              <VTypography size="sm">Form Field Placeholder B</VTypography>
+            <VBox padding="md" attention="tertiary" border="all" rounded="md">
+              <VTypography size="sm" intent="neutral">Form Field Placeholder B</VTypography>
             </VBox>
           </VStack>
 
-          <VButton theme="primary" fullWidth>Save Changes</VButton>
+          <VButton attention="primary" fullWidth>Save Changes</VButton>
         </VStack>
       </VBox>
     `,
@@ -104,7 +118,7 @@ export const ScrollableContent: Story = {
     template: `
       <VBox padding="md" border="all" rounded="lg" class="h-64 max-w-sm">
         <VStack v-bind="args">
-          <VBox v-for="i in 10" :key="i" padding="sm" theme="subtle" rounded="sm">
+          <VBox v-for="i in 10" :key="i" padding="sm" attention="tertiary" border="all" rounded="sm">
             <VTypography size="sm">Scrollable Item #{{ i }}</VTypography>
           </VBox>
         </VStack>
@@ -129,13 +143,13 @@ export const Centered: Story = {
     },
     template: `
       <VStack v-bind="args" class="py-8">
-        <VTypography tag="h2" size="xl" weight="bold" theme="outline">
+        <VTypography tag="h2" size="xl" weight="bold">
           No Data Available
         </VTypography>
-        <VTypography size="sm" theme="ghost">
+        <VTypography size="sm" intent="neutral">
           Get started by creating your first decision model.
         </VTypography>
-        <VButton theme="primary" size="sm">Create Model</VButton>
+        <VButton attention="primary" size="sm">Create Model</VButton>
       </VStack>
     `,
   }),

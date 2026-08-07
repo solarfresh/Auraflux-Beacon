@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import VCluster, {type VClusterProps} from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VCluster, { type VClusterProps } from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
@@ -17,10 +17,24 @@ const meta = {
     inline: false,
     fullWidth: false,
   },
+  argTypes: {
+    gap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'baseline', 'stretch'],
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'between', 'around', 'evenly'],
+    },
+  },
 } satisfies Meta<VClusterProps>;
 
 export default meta;
-type Story = StoryObj<typeof VCluster>;
+type Story = StoryObj<typeof meta>;
 
 /**
  * Default usage: Horizontal alignment with center item distribution.
@@ -33,9 +47,9 @@ export const Default: Story = {
     },
     template: `
       <VCluster v-bind="args">
-        <VButton theme="primary">Proceed</VButton>
-        <VButton theme="outline">Save Draft</VButton>
-        <VButton theme="ghost">Cancel</VButton>
+        <VButton attention="primary">Proceed</VButton>
+        <VButton attention="secondary">Save Draft</VButton>
+        <VButton attention="tertiary">Cancel</VButton>
       </VCluster>
     `,
   }),
@@ -57,11 +71,11 @@ export const Wrapped: Story = {
     template: `
       <VBox padding="md" border="all" rounded="md" class="max-w-xs">
         <VCluster v-bind="args">
-          <VButton theme="secondary" size="xs">AI Logic</VButton>
-          <VButton theme="secondary" size="xs">Sandbox</VButton>
-          <VButton theme="secondary" size="xs">Fine-tune</VButton>
-          <VButton theme="secondary" size="xs">System 2</VButton>
-          <VButton theme="secondary" size="xs">Prompt Rules</VButton>
+          <VButton attention="tertiary" size="xs">AI Logic</VButton>
+          <VButton attention="tertiary" size="xs">Sandbox</VButton>
+          <VButton attention="tertiary" size="xs">Fine-tune</VButton>
+          <VButton attention="tertiary" size="xs">System 2</VButton>
+          <VButton attention="tertiary" size="xs">Prompt Rules</VButton>
         </VCluster>
       </VBox>
     `,
@@ -82,14 +96,14 @@ export const SpaceBetween: Story = {
       return { args };
     },
     template: `
-      <VBox padding="md" theme="subtle" rounded="lg">
+      <VBox padding="md" attention="secondary" border="all" rounded="lg">
         <VCluster v-bind="args">
           <VTypography tag="h3" weight="bold" size="md">
             AI Parameter Settings
           </VTypography>
           <VCluster gap="sm">
-            <VButton theme="outline" size="sm">Reset</VButton>
-            <VButton theme="primary" size="sm">Save Changes</VButton>
+            <VButton attention="secondary" size="sm">Reset</VButton>
+            <VButton attention="primary" size="sm">Save Changes</VButton>
           </VCluster>
         </VCluster>
       </VBox>
@@ -115,7 +129,7 @@ export const BaselineAlignment: Story = {
         <VTypography tag="span" size="2xl" weight="bold">
           NT$ 12,800
         </VTypography>
-        <VTypography tag="span" size="xs" theme="tertiary">
+        <VTypography tag="span" size="xs" intent="neutral">
           / month (tax incl.)
         </VTypography>
       </VCluster>

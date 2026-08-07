@@ -3,25 +3,19 @@
     role="separator"
     :aria-orientation="orientation"
     :class="[
-      // Base styles - pure lightweight elements
-      'shrink-0 select-none bg-slate-200',
+      // Base styles
+      'shrink-0 select-none bg-current opacity-20 transition-colors duration-150',
 
       // Vertical Orientation
-      orientation === 'vertical' && [
-        'inline-block align-middle',
-        size === 'sm' && 'h-4 w-px my-auto',
-        size === 'md' && 'h-6 w-px my-auto',
-        size === 'lg' && 'h-8 w-px my-auto',
-        size === 'full' && 'h-full w-px'
+      isVertical && [
+        'inline-block align-middle w-px',
+        lengthStyle.vertical
       ],
 
       // Horizontal Orientation
-      orientation === 'horizontal' && [
-        'block w-full',
-        size === 'sm' && 'h-px my-2',
-        size === 'md' && 'h-px my-4',
-        size === 'lg' && 'h-px my-6',
-        size === 'full' && 'h-px my-0'
+      !isVertical && [
+        'block h-px',
+        lengthStyle.horizontal
       ]
     ]"
   />
@@ -29,17 +23,32 @@
 
 <script setup lang="ts">
 /**
- * VDivider
- * Pure Atom Indicator Component
+ * VDivider Atom
+ * Pure Atom Indicator Component aligned with Design Tokens.
  * Renders a lightweight, zero-dependency semantic divider.
  */
-withDefaults(defineProps<{
+import { computed } from 'vue';
+import type {
+  ContainerSizeToken
+} from '@auraflux/design-system/interfaces/theme';
+import { SHARED_LENGTH_CLASSES } from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
+
+export interface VDividerProps {
   /** Orientation of the divider */
   orientation?: 'horizontal' | 'vertical';
   /** Length/Height size constraint for the divider */
-  size?: 'sm' | 'md' | 'lg' | 'full';
-}>(), {
+  size?: ContainerSizeToken;
+}
+
+const props = withDefaults(defineProps<VDividerProps>(), {
   orientation: 'vertical',
   size: 'sm',
+});
+
+const isVertical = computed(() => props.orientation === 'vertical');
+
+const lengthStyle = computed(() => {
+  return SHARED_LENGTH_CLASSES[props.size] || SHARED_LENGTH_CLASSES.sm;
 });
 </script>

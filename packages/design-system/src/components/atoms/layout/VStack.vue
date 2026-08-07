@@ -18,28 +18,32 @@
 <script setup lang="ts">
 /**
  * Stack Atom
- * Manages vertical layout (flex-direction: column).
- * Responsible for consistent spacing (gap) between child elements.
+ * Manages 1D vertical layout (flex-direction: column).
+ * Responsible for consistent vertical spacing (gap) between child elements.
+ *
+ * @category Atoms
+ * @subcategory Layout
  */
 import { computed } from 'vue';
-import type {Alignment, Justification, SizeToken, TagToken} from '@auraflux/design-system/interfaces/theme';
+import type { Alignment, Justification, ComponentSizeToken, TagToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VStackProps {
   /** HTML element to render */
   tag?: TagToken;
-  /** Horizontal gap between children */
-  gap?: SizeToken;
-  /** Vertical alignment of children */
+  /** Vertical gap between child elements */
+  gap?: ComponentSizeToken;
+  /** Horizontal alignment of child elements (cross axis) */
   align?: Alignment;
-  /** Horizontal distribution of children */
+  /** Vertical distribution of child elements (main axis) */
   justify?: Justification;
-  /** Use inline-flex instead of flex */
+  /** Use inline-flex instead of block flex */
   inline?: boolean;
-  /** Force the cluster to take up full available width */
+  /** Force the stack to occupy full available height */
   fullHeight?: boolean;
+  /** Allow vertical scrolling with min-h-0 container constraint */
   scrollable?: boolean;
-};
+}
 
 const props = withDefaults(defineProps<VStackProps>(), {
   tag: 'div',
@@ -52,7 +56,7 @@ const props = withDefaults(defineProps<VStackProps>(), {
 });
 
 const alignStyles = computed(() => {
-  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.center;
+  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.stretch;
 });
 
 const gapStyles = computed(() => {
