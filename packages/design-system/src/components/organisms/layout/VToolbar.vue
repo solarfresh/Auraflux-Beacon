@@ -1,10 +1,10 @@
 <template>
   <VBox
     tag="nav"
-    :theme="theme"
+    :intent="intent"
+    :surface="surface"
     :border="border"
-    :padding-x="paddingX"
-    :padding-y="paddingY"
+    :padding="padding"
     :class="[
       'w-full z-20',
       sticky ? 'sticky top-0' : 'relative'
@@ -39,24 +39,31 @@
  */
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import type {SpacingToken, BorderToken, ThemeToken} from '@auraflux/design-system/interfaces/theme';
+import type {
+  AttentionToken,
+  BorderToken,
+  IntentToken,
+  RoundedToken,
+  SpacingToken,
+  SurfaceToken,
+} from '@auraflux/design-system/interfaces/theme';
 
-withDefaults(defineProps<{
-  /** Background color of the toolbar */
-  theme?: ThemeToken;
-  /** Border placement style */
+export interface VToolbarProps {
+  padding?: SpacingToken;
+  rounded?: RoundedToken;
   border?: BorderToken;
+  attention?: AttentionToken;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
   /** Whether the toolbar should stick to the top of the viewport */
   sticky?: boolean;
-  /** Horizontal padding size */
-  paddingX?: SpacingToken;
-  /** Vertical padding size */
-  paddingY?: SpacingToken;
-}>(), {
-  background: 'white',
-  border: 'bottom',
+};
+
+withDefaults(defineProps<VToolbarProps>(), {
+  intent: 'neutral',
+  surface: 'base',
+  padding: 'none',
+  border: 'none',
   sticky: true,
-  paddingX: 'md',
-  paddingY: 'sm',
 });
 </script>

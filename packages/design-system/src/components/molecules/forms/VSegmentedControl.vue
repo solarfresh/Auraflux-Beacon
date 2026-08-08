@@ -1,8 +1,8 @@
 <template>
   <VBox
-    surface="soft"
-    padding="xs"
-    rounded="lg"
+    :attention="attention"
+    :intent="intent"
+    :surface="surface"
     class="inline-flex items-center select-none"
     role="tablist"
     @keydown="handleKeyDown"
@@ -12,6 +12,9 @@
       :key="String(option.value)"
       role="tab"
       size="sm"
+      :padding="padding"
+      :rounded="rounded"
+      :border="border"
       :attention="modelValue === option.value ? 'primary' : 'tertiary'"
       :surface="modelValue === option.value ? 'solid' : 'ghost'"
       :icon="option.iconName"
@@ -34,6 +37,14 @@
  */
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import type {
+  SpacingToken,
+  RoundedToken,
+  BorderToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
 
 export interface SegmentedOption<TValue = string | number> {
   label: string;
@@ -43,11 +54,21 @@ export interface SegmentedOption<TValue = string | number> {
 }
 
 export interface VSegmentedControlProps<TValue> {
+  padding?: SpacingToken;
+  rounded?: RoundedToken;
+  border?: BorderToken;
+  attention?: AttentionToken;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
   modelValue: TValue;
   options: ReadonlyArray<SegmentedOption<TValue>>;
 }
 
-const props = defineProps<VSegmentedControlProps<T>>();
+const props = withDefaults(defineProps<VSegmentedControlProps<T>>(), {
+  padding: 'none',
+  rounded: 'sm',
+  border: 'none',
+});
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: T): void;

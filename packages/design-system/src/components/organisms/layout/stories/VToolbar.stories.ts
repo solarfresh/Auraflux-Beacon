@@ -1,14 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { ref } from 'vue';
-import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
+import VToolbar, { type VToolbarProps } from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
 import VDivider from '@auraflux/design-system/components/atoms/layout/VDivider.vue';
 import VSegmentedControl from '@auraflux/design-system/components/molecules/forms/VSegmentedControl.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-
-type VToolbarProps = InstanceType<typeof VToolbar>['$props'];
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
 /**
  * `VToolbar` is an organism-level layout component that provides a sticky or static
@@ -19,11 +18,11 @@ const meta = {
   component: VToolbar,
   tags: ['autodocs'],
   args: {
-    theme: 'base',
-    border: 'bottom',
+    intent: 'neutral',
+    surface: 'base',
+    padding: 'none',
+    border: 'none',
     sticky: false, // Set to false by default in Storybook canvas for predictable layout preview
-    paddingX: 'md',
-    paddingY: 'sm',
   },
 } satisfies Meta<VToolbarProps>;
 
@@ -47,7 +46,7 @@ export const Default: Story = {
           </VTypography>
         </template>
         <template #end>
-          <VButton theme="primary" size="sm">
+          <VButton attention="primary" size="sm">
             Create Project
           </VButton>
         </template>
@@ -62,7 +61,7 @@ export const Default: Story = {
  */
 export const WithSegmentedControlAndDivider: Story = {
   render: (args) => ({
-    components: { VToolbar, VSegmentedControl, VDivider, VSelect, VButton },
+    components: { VToolbar, VSegmentedControl, VDivider, VSelect, VButton, VBox },
     setup() {
       const activeFilter = ref('all');
       const sortValue = ref('Recently Edited');
@@ -79,16 +78,16 @@ export const WithSegmentedControlAndDivider: Story = {
           <VSegmentedControl v-model="activeFilter" :options="filterOptions" />
         </template>
         <template #end>
-          <div class="flex items-center gap-3">
+          <VBox class="flex items-center gap-3">
             <VSelect v-model="sortValue" size="sm" class="w-40">
               <option value="Recently Edited">Recently Edited</option>
               <option value="Date Created">Date Created</option>
             </VSelect>
             <VDivider orientation="vertical" size="sm" />
-            <VButton theme="primary" size="sm" icon-name="Plus">
+            <VButton attention="primary" size="sm" icon-name="Plus">
               New Project
             </VButton>
-          </div>
+          </VBox>
         </template>
       </VToolbar>
     `,
@@ -100,7 +99,7 @@ export const WithSegmentedControlAndDivider: Story = {
  */
 export const WithCenterSlot: Story = {
   render: (args) => ({
-    components: { VToolbar, VTypography, VInput },
+    components: { VToolbar, VTypography, VInput, VBox },
     setup() {
       const searchQuery = ref('');
       return { args, searchQuery };
@@ -113,14 +112,13 @@ export const WithCenterSlot: Story = {
           </VTypography>
         </template>
         <template #center>
-          <div class="w-64">
+          <VBox class="w-64">
             <VInput
               v-model="searchQuery"
-              theme="search"
               size="sm"
               placeholder="Search projects..."
             />
-          </div>
+          </VBox>
         </template>
         <template #end>
           <VTypography tag="span" size="xs" color="slate-400">

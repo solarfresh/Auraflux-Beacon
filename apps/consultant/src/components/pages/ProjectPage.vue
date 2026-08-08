@@ -60,15 +60,14 @@ import { useProjectStore } from '@/stores/project';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
-import VProjectToolbar from '@/components/molecules/resources/VProjectToolbar.vue';
+import VProjectToolbar from '@/components/organisms/layout/VProjectToolbar.vue';
 import VProjectCard from '@/components/molecules/resources/VProjectCard.vue';
 import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import ProjectModal from '@/components/organisms/modals/ProjectModal.vue';
-
 import type { ID } from '@/interfaces/core';
 import type { ISPStage, Project } from '@/interfaces/project';
-import type { BaseSelectorState } from '@auraflux/design-system/interfaces/indicators';
+import type { ProjectSelectorState } from '@/interfaces/project';
 
 const router = useRouter();
 const projectStore = useProjectStore();
@@ -88,7 +87,7 @@ const localProject = ref<Project>({
   updatedAt: new Date().toISOString()
 });
 
-const selectorState = ref<BaseSelectorState>({
+const selectorState = ref<ProjectSelectorState>({
   filter: 'LOCKED',
   sorter: 'EDITED'
 });
