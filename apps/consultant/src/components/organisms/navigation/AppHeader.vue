@@ -13,7 +13,7 @@
       <VHeaderIdentity />
 
       <VBox class="hidden md:flex grow justify-center px-8 max-w-2xl">
-        <VWorkspaceBar v-if="isWorkingContext" />
+        <!-- <VWorkspaceBar v-if="isWorkingContext" /> -->
         <!-- <VGlobalSearch v-else /> -->
       </VBox>
 

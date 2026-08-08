@@ -10,6 +10,7 @@
       surfaceStyle.bg,
       surfaceStyle.text,
       surfaceStyle.border,
+      surfaceStyle.hover,
     ]"
   >
     <slot />
