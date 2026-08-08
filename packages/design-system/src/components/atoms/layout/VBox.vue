@@ -2,25 +2,22 @@
   <component
     :is="tag"
     :class="[
-      // Spacing
-      padding && paddingMap[padding],
+      // Layout & Display
+      inline ? 'inline-flex' : 'block',
 
-      // Shape & Border
-      roundedClass,
-      border && borderMap[border],
+      // Spacing & Shape
+      paddingStyles,
+      roundedStyles,
+      borderStyles,
 
-      // Color & Interaction
-      background && backgroundMap[background],
-      hoverBackground && `hover:${backgroundMap[hoverBackground]}`,
-      { 'cursor-pointer select-none active:opacity-80 transition-opacity': clickable },
+      // Surface Styles (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
 
-      // Interaction logic
-      interactionClasses,
-
-      // Custom overrides from parent
-      $attrs.class
+      // Interactive States (Only applied when clickable)
+      clickable ? [surfaceStyle.hover, surfaceStyle.focus, interactionStyles] : ''
     ]"
-    v-bind="filteredAttrs"
   >
     <slot />
   </component>
@@ -29,93 +26,73 @@
 <script setup lang="ts">
 /**
  * Box Atom (The "Skin" layer)
- * A foundational container that manages padding, borders, and backgrounds.
- * It strictly adheres to Design Tokens to prevent "Magic Values".
+ * A foundational container that manages padding, borders, backgrounds, and interactive surfaces.
+ * Strictly adheres to Design Tokens to prevent "Magic Values".
  */
-import { computed, useAttrs } from 'vue';
-import type {SpacingToken, RoundedToken, BorderToken, BackgroundToken} from '@auraflux/design-system/interfaces/layout';
+import { computed } from 'vue';
+import type {
+  TagToken,
+  SpacingToken,
+  RoundedToken,
+  BorderToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_BORDER_CLASSES,
+  SHARED_PADDING_CLASSES,
+  SHARED_ROUNDED_CLASSES
+} from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
-const props = withDefaults(defineProps<{
+export interface VBoxProps {
   /** HTML tag to render */
-  tag?: string;
+  tag?: TagToken;
   /** Internal spacing token */
   padding?: SpacingToken;
-  /** Radius token. If true, uses 'md' (8px) as default */
+  /** Radius token */
   rounded?: RoundedToken;
   /** Border position token */
   border?: BorderToken;
-  /** Semantic background token */
-  background?: BackgroundToken;
-  /** Background color on hover */
-  hoverBackground?: BackgroundToken;
-  /** Adds pointer cursor and active state */
+  /** Visual priority token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token */
+  intent?: IntentToken;
+  /** Explicit surface container model token */
+  surface?: SurfaceToken;
+  /** Render as inline-flex container */
+  inline?: boolean;
+  /** Adds pointer cursor and interactive focus/active states */
   clickable?: boolean;
-}>(), {
+}
+
+const props = withDefaults(defineProps<VBoxProps>(), {
   tag: 'div',
   padding: 'none',
-  rounded: false,
+  rounded: 'none',
   border: 'none',
-  background: 'transparent',
+  inline: false,
   clickable: false
 });
 
-// --- Token Mapping ---
-
-const paddingMap: Record<SpacingToken, string> = {
-  none: 'p-0',
-  xs: 'p-2',   // 8px
-  sm: 'p-3',   // 12px
-  md: 'p-4',   // 16px
-  lg: 'p-6',   // 24px
-  xl: 'p-8'    // 32px
-};
-
-const borderMap: Record<BorderToken, string> = {
-  all: 'border border-slate-100',
-  top: 'border-t border-slate-100',
-  bottom: 'border-b border-slate-100',
-  left: 'border-l border-slate-100',
-  right: 'border-r border-slate-100',
-  dashed: 'border-2 border-dashed border-slate-200',
-  none: 'border-none'
-};
-
-const backgroundMap: Record<BackgroundToken, string> = {
-  white: 'bg-white',
-  'slate-50': 'bg-slate-50',
-  'indigo-50': 'bg-indigo-50',
-  'amber-50': 'bg-amber-50',
-  'rose-50': 'bg-rose-50',
-  'emerald-50': 'bg-emerald-50',
-  transparent: 'bg-transparent'
-};
-
-// --- Computed Logic ---
-/**
- * Generates the interaction classes for clickable elements.
- */
-const interactionClasses = computed(() => {
-  if (!props.clickable) return '';
-  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] hover:shadow-sm focus-visible:ring-2 focus-visible:ring-indigo-500 outline-none';
+const borderStyles = computed(() => {
+  return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.none;
 });
 
-/**
- * Resolves the rounding class based on boolean or token input.
- * Fixed the type issue where rounded="xl" was previously invalid.
- */
-const roundedClass = computed(() => {
-  if (props.rounded === true) return 'rounded-md';
-  if (props.rounded === false || props.rounded === 'none') return 'rounded-none';
-  return `rounded-${props.rounded}`;
+const paddingStyles = computed(() => {
+  return SHARED_PADDING_CLASSES[props.padding] || SHARED_PADDING_CLASSES.none;
 });
 
-/**
- * Ensure attributes (like @click) are passed down correctly
- * while we manually handle 'class'.
- */
-const attrs = useAttrs();
-const filteredAttrs = computed(() => {
-  const { class: _, ...rest } = attrs;
-  return rest;
+const roundedStyles = computed(() => {
+  return SHARED_ROUNDED_CLASSES[props.rounded] || SHARED_ROUNDED_CLASSES.none;
+});
+
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
+});
+
+const interactionStyles = computed(() => {
+  return 'cursor-pointer select-none transition-all duration-200 active:scale-[0.98] outline-none';
 });
 </script>

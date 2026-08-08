@@ -2,12 +2,13 @@
   <VBox
     :tag="tag"
     :padding="padding"
-    :rounded="true"
-    border="none"
-    :background="background"
-    :hover-background="hoverBackground"
+    :rounded="rounded"
+    :border="border"
+    :attention="attention"
+    :intent="intent"
+    :surface="surface"
     :clickable="clickable"
-    class="w-full min-w-0 border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200"
+    class="w-full min-w-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200"
     :class="{
       'hover:shadow-[0_3px_6px_rgba(0,0,0,0.04)] hover:translate-y-[-0.5px]': hoverable && clickable
     }"
@@ -29,25 +30,40 @@
  * Marries VBox (Skin layer) and VStack (Flow layer).
  * Aligned with atomic tokens to prevent visual regression in sidebars.
  */
-import type { SpacingToken, BackgroundToken, GapSize } from '@auraflux/design-system/interfaces/layout';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import type {
+  AttentionToken,
+  BorderToken,
+  GapSizeToken,
+  IntentToken,
+  RoundedToken,
+  SpacingToken,
+  SurfaceToken,
+  TagToken
+} from '@auraflux/design-system/interfaces/theme';
+
+export interface VCardProps {
+  tag?: TagToken;
+  padding?: SpacingToken;
+  rounded?: RoundedToken;
+  border?: BorderToken;
+  attention?: AttentionToken;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
+  gap?: GapSizeToken;
+  clickable?: boolean;
+  hoverable?: boolean;
+};
 
 withDefaults(
-  defineProps<{
-    tag?: string;
-    padding?: SpacingToken;
-    gap?: GapSize;
-    background?: BackgroundToken;
-    hoverBackground?: BackgroundToken;
-    clickable?: boolean;
-    hoverable?: boolean;
-  }>(),
+  defineProps<VCardProps>(),
   {
     tag: 'div',
-    padding: 'sm',        // Matches p-3 (12px) spacing in VBox token map
-    gap: 'sm',            // Matches gap-sm vertical grid spacing
-    background: 'white',  // Binds onto 'bg-white' token map
+    padding: 'none',
+    rounded: 'md',
+    border: 'all',
+    gap: 'sm',
     clickable: false,
     hoverable: true
   }

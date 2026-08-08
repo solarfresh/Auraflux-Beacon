@@ -10,7 +10,7 @@
       </VTypography>
     </template>
 
-    <VBox background="white" padding="sm" rounded="sm" border="all" class="border-rose-100/50">
+    <VBox surface="base" padding="sm" rounded="sm" border="all" class="border-rose-100/50">
       <VStack gap="xs">
         <VTypography size="xs" weight="bold" color="slate-900">{{ title }}</VTypography>
 

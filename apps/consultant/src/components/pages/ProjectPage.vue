@@ -1,12 +1,11 @@
 <template>
-  <VBox tag="main" class="w-full min-h-screen bg-slate-50">
-    <VBox class="max-w-7xl mx-auto w-full">
+  <VBox tag="main" class="w-full min-h-screen">
+    <VBox intent="neutral" surface="base" class="max-w-7xl mx-auto w-full">
       <VStack gap="lg">
         <VBox
-          background="white"
           padding="md"
           rounded="lg"
-          class="border border-slate-200/60 shadow-sm"
+          class="shadow-sm"
         >
           <VProjectToolbar
             v-model="selectorState"
@@ -17,6 +16,9 @@
         <VBox v-if="hasProjects || isFiltering" class="max-w-7xl mx-auto w-full px-6">
           <VGrid cols="1 sm:2 lg:3 xl:4" gap="lg">
             <VInteractivePlaceholder
+              intent="neutral"
+              surface="soft"
+              border="dashed"
               label="Start New Project"
               icon-name="Plus"
               class="h-48"
@@ -61,15 +63,14 @@ import { useProjectStore } from '@/stores/project';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
-import VProjectToolbar from '@/components/molecules/resources/VProjectToolbar.vue';
+import VProjectToolbar from '@/components/organisms/layout/VProjectToolbar.vue';
 import VProjectCard from '@/components/molecules/resources/VProjectCard.vue';
-import VInteractivePlaceholder from '@/components/molecules/resources/VInteractivePlaceholder.vue';
+import VInteractivePlaceholder from '@auraflux/design-system/components/molecules/resources/VInteractivePlaceholder.vue';
 import VEmptyState from '@/components/molecules/feedback/VEmptyState.vue';
 import ProjectModal from '@/components/organisms/modals/ProjectModal.vue';
-
 import type { ID } from '@/interfaces/core';
 import type { ISPStage, Project } from '@/interfaces/project';
-import type { BaseSelectorState } from '@auraflux/design-system/interfaces/indicators';
+import type { ProjectSelectorState } from '@/interfaces/project';
 
 const router = useRouter();
 const projectStore = useProjectStore();
@@ -89,7 +90,7 @@ const localProject = ref<Project>({
   updatedAt: new Date().toISOString()
 });
 
-const selectorState = ref<BaseSelectorState>({
+const selectorState = ref<ProjectSelectorState>({
   filter: 'LOCKED',
   sorter: 'EDITED'
 });

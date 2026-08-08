@@ -116,7 +116,7 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import { PROVIDER_OPTIONS } from '@/constants/agents';
 import { ConnectStatus } from '@/interfaces/core';
 

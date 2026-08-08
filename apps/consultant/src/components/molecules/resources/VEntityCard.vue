@@ -2,7 +2,7 @@
   <VCard
     :padding="padding"
     :clickable="clickable || isActive"
-    :background="isActive ? 'indigo-50' : 'white'"
+    :surface="isActive ? 'base' : 'subtle'"
     class="border-l-4 group relative transition-all duration-200"
     :class="[
       safeStatusStyle,
@@ -96,10 +96,11 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VTooltip from '@/components/molecules/feedback/VTooltip.vue';
-import VCard from '@/components/molecules/resources/VCard.vue';
+import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 import { ICON_MAP, NODE_THEMES } from '@/constants/canvases';
 import type { ConceptualNode } from '@/interfaces/conceptual-map';
-import type { SpacingToken } from '@auraflux/design-system/interfaces/layout';
+import type { SpacingToken } from '@auraflux/design-system/interfaces/theme';
+
 import { computed } from 'vue';
 
 const props = withDefaults(

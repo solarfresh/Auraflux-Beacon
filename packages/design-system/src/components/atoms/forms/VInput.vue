@@ -1,83 +1,94 @@
 <template>
   <input
+    :id="id"
     :type="type"
     :value="modelValue"
-    @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     :placeholder="placeholder"
     :disabled="disabled"
     :class="[
-      'block w-full transition duration-150 ease-in-out',
-      'border-slate-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600',
-      sizeClasses,
-      variantClasses,
-      // Unified disabled styling
-      disabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-200' : 'bg-white text-slate-900',
+      // Base Form Control Styles
+      'block w-full transition duration-150 ease-in-out outline-none border',
+
+      // Shape & Size
+      roundedStyles,
+      sizeStyles.control,
+
+      // Surface Mapping (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+      surfaceStyle.hover,
+
+      // Dynamic Interactive Focus Ring
+      surfaceStyle.focus,
+
+      // Disabled State Override
+      disabled ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed pointer-events-none' : ''
     ]"
+    @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
   />
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-
 /**
  * Input Atom
- * The primary text entry component.
- * Variants include 'default' for forms and 'search' for navigation/filtering.
+ * Form input component integrated with Attention/Intent/Surface architecture.
+ * Manages form state, validation color intent (e.g., danger for errors), and standard sizes.
  */
-const props = defineProps({
-  /** Used for v-model binding (supports strings and numbers) */
-  modelValue: {
-    type: [String, Number],
-    default: '',
-  },
-  /** HTML placeholder text */
-  placeholder: {
-    type: String,
-    default: undefined,
-  },
-  /** Native input type (text, password, email, number, etc.) */
-  type: {
-    type: String,
-    default: 'text',
-  },
-  /** Visual style variant */
-  variant: {
-    type: String,
-    default: 'default', // 'default', 'search'
-    validator: (value: string) => ['default', 'search'].includes(value),
-  },
-  /** Component size scale */
-  size: {
-    type: String,
-    default: 'md', // 'sm', 'md', 'lg'
-    validator: (value: string) => ['sm', 'md', 'lg'].includes(value),
-  },
-  /** Toggles the disabled state */
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
+import { computed } from 'vue';
+import type {
+  RoundedToken,
+  ComponentSizeToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_ROUNDED_CLASSES,
+  SHARED_COMPONENT_SIZE_CLASSES
+} from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
+
+export interface VInputProps {
+  /** HTML input id for label association */
+  id?: string;
+  modelValue?: string | number;
+  placeholder?: string;
+  type?: string;
+  /** Visual priority hierarchy token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token (e.g. 'danger' for error state) */
+  intent?: IntentToken;
+  /** Explicit surface container model token */
+  surface?: SurfaceToken;
+  size?: ComponentSizeToken;
+  rounded?: RoundedToken;
+  disabled?: boolean;
+}
+
+const props = withDefaults(defineProps<VInputProps>(), {
+  id: undefined,
+  modelValue: '',
+  type: 'text',
+  attention: 'secondary',
+  size: 'md',
+  rounded: 'md',
+  disabled: false,
 });
 
-// Emit v-model update event
-defineEmits(['update:modelValue']);
+defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
 
-// --- Tailwind Size Mapping ---
-// Shared values across Input, Select, and Textarea
-const sizeMap: Record<string, string> = {
-  sm: 'py-1.5 px-2 text-sm',
-  md: 'py-2 px-3 text-base',
-  lg: 'py-3 px-4 text-lg',
-};
+const roundedStyles = computed(() => {
+  return SHARED_ROUNDED_CLASSES[props.rounded] || SHARED_ROUNDED_CLASSES.md;
+});
 
-// --- Tailwind Variant Mapping ---
-const variantMap: Record<string, string> = {
-  // Standard form style
-  default: 'rounded-md',
-  // Search style with pill-shape rounding
-  search: 'rounded-full',
-};
+const sizeStyles = computed(() => {
+  return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.md;
+});
 
-const sizeClasses = computed(() => sizeMap[props.size] || sizeMap.md);
-const variantClasses = computed(() => variantMap[props.variant] || variantMap.default);
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
+});
 </script>

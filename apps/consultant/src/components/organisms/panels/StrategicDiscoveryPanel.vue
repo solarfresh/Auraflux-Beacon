@@ -2,7 +2,7 @@
   <BaseSidebarLayout class="w-[384px] h-full border-l border-slate-100 shadow-xl">
 
     <template #header>
-      <VBox background="white" padding="none">
+      <VBox surface="base" padding="none">
         <VStack gap="none">
           <VBox padding="md" border="bottom">
             <VCluster justify="between" align="center">

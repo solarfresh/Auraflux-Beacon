@@ -1,64 +1,65 @@
 <template>
-  <component :is="tag" :class="textClasses">
-    <slot></slot>
+  <component
+    :is="tag"
+    :class="[
+      borderStyles,
+      fontWeightStyles,
+      sizeStyles.text,
+
+      // Surface Styles (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+      surfaceStyle.hover,
+    ]"
+  >
+    <slot />
   </component>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { AttentionToken, BorderToken, FontWeightToken, ComponentSizeToken, TagToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import { SHARED_BORDER_CLASSES, SHARED_FONT_WEIGHT_CLASSES, SHARED_COMPONENT_SIZE_CLASSES, SURFACE_STYLE_MAP } from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
-const props = defineProps({
-  tag: {
-    type: String,
-    default: 'p',
-    validator: (value: string) => ['p', 'span', 'strong', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label', 'li'].includes(value),
-  },
-  size: {
-    type: String,
-    default: 'base', // 'xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'
-    validator: (value: string) => ['xs', 'sm', 'base', 'md', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl'].includes(value),
-  },
-  weight: {
-    type: String,
-    default: 'normal', // 'light', 'normal', 'medium', 'semibold', 'bold'
-    validator: (value: string) => ['light', 'normal', 'medium', 'semibold', 'bold'].includes(value),
-  },
-  color: {
-    type: String,
-    default: 'slate-900', // e.g., 'slate-900', 'blue-500', 'white'
-  },
+export interface VTypographyProps {
+  /** HTML tag element */
+  tag?: TagToken;
+  /** Border position token */
+  border?: BorderToken;
+  /** Text size preset */
+  size?: ComponentSizeToken;
+  /** Font weight preset */
+  weight?: FontWeightToken;
+  /** Visual priority token */
+  attention?: AttentionToken;
+  /** Optional semantic intent color override */
+  intent?: IntentToken;
+  /** Optional surface type (determines text contrast vs semantic shade) */
+  surface?: SurfaceToken;
+}
+
+const props = withDefaults(defineProps<VTypographyProps>(), {
+  tag: 'p',
+  border: 'none',
+  size: 'md',
+  weight: 'normal',
 });
 
-const sizeMap: { [key: string]: string } = {
-  xs: 'text-xs',
-  sm: 'text-sm',
-  base: 'text-base',
-  md: 'text-base',
-  lg: 'text-lg',
-  xl: 'text-xl',
-  '2xl': 'text-2xl',
-  '3xl': 'text-3xl',
-  '4xl': 'text-4xl',
-  '5xl': 'text-5xl',
-};
+const borderStyles = computed(() => {
+  return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.none;
+});
 
-const weightMap: { [key: string]: string } = {
-  light: 'font-light',
-  normal: 'font-normal',
-  medium: 'font-medium',
-  semibold: 'font-semibold',
-  bold: 'font-bold',
-};
+const fontWeightStyles = computed(() => {
+  return SHARED_FONT_WEIGHT_CLASSES[props.weight] || SHARED_FONT_WEIGHT_CLASSES.normal;
+});
 
-const textClasses = computed(() => {
-  return [
-    sizeMap[props.size],
-    weightMap[props.weight],
-    `text-${props.color}`
-  ];
+const sizeStyles = computed(() => {
+  return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.md;
+});
+
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
 });
 </script>
-
-<style scoped>
-/* Scoped styles can be added here if needed, but Tailwind handles most of the styling. */
-</style>

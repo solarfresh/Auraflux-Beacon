@@ -1,13 +1,9 @@
-import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import VSegmentedControl, {type VSegmentedControlProps} from '@auraflux/design-system/components/molecules/forms/VSegmentedControl.vue';
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { ref } from 'vue';
+import VSegmentedControl, { type VSegmentedControlProps } from '@auraflux/design-system/components/molecules/forms/VSegmentedControl.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
-/**
- * `VSegmentedControl` is a Molecule component built with `VBox` and `VButton` Atoms.
- * It provides a type-safe segmented control to toggle between exclusive views or options.
- */
 const meta = {
   title: 'Molecules/Forms/VSegmentedControl',
   component: VSegmentedControl as any,
@@ -33,13 +29,16 @@ export const Default: Story = {
       return { args, selected, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="space-y-4 w-fit">
+      <VBox intent="neutral" surface="outline" padding="lg" rounded="xl" class="space-y-4 w-fit">
         <VSegmentedControl
           v-model="selected"
           :options="options"
         />
-        <VTypography size="sm" color="slate-500">
-          Selected View: <span class="font-semibold text-slate-800">{{ selected }}</span>
+        <VTypography size="sm" intent="neutral">
+          Selected View:
+          <VTypography tag="span" size="sm" weight="semibold">
+            {{ selected }}
+          </VTypography>
         </VTypography>
       </VBox>
     `,
@@ -50,7 +49,7 @@ export const Default: Story = {
  * Segmented control featuring icons for each tab option.
  */
 export const WithIcons: Story = {
-  render: () => ({
+  render: (args) => ({
     components: { VSegmentedControl, VBox },
     setup() {
       const activeTab = ref('analytics');
@@ -59,10 +58,10 @@ export const WithIcons: Story = {
         { label: 'Reports', value: 'reports', iconName: 'DocumentText' },
         { label: 'Settings', value: 'settings', iconName: 'Cog6Tooth' },
       ];
-      return { activeTab, options };
+      return { args, activeTab, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="w-fit">
+      <VBox intent="neutral" surface="outline" padding="lg" rounded="xl" class="w-fit">
         <VSegmentedControl
           v-model="activeTab"
           :options="options"
@@ -75,8 +74,8 @@ export const WithIcons: Story = {
 /**
  * Example showcasing options with a disabled state.
  */
-export const WithDisabledOption: Story = {
-  render: () => ({
+export const WithDisabledState: Story = {
+  render: (args) => ({
     components: { VSegmentedControl, VBox },
     setup() {
       const activeState = ref('published');
@@ -85,10 +84,10 @@ export const WithDisabledOption: Story = {
         { label: 'Drafts', value: 'drafts' },
         { label: 'Archived (Locked)', value: 'archived', disabled: true },
       ];
-      return { activeState, options };
+      return { args, activeState, options };
     },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="xl" class="w-fit">
+      <VBox intent="neutral" surface="outline" padding="lg" rounded="xl" class="w-fit">
         <VSegmentedControl
           v-model="activeState"
           :options="options"

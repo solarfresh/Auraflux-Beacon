@@ -12,19 +12,15 @@ const meta = {
     name: 'CheckCircle',
     type: 'solid',
     size: 'md',
-    color: 'text-indigo-600',
   },
   argTypes: {
     type: {
-      control: 'inline-radio',
+      control: 'radio',
       options: ['solid', 'outline'],
     },
     size: {
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg', 'xl', '2xl'],
-    },
-    color: {
-      control: 'text',
     },
   },
 } satisfies Meta<VIconProps>;
@@ -42,40 +38,97 @@ export const Default: Story = {
   }),
 };
 
+/**
+ * Icons inherit text color from parent elements (via CSS `currentColor`).
+ * You can combine them with VTypography or intent classes.
+ */
+export const ColorInheritance: Story = {
+  render: () => ({
+    components: { VIcon, VBox, VCluster, VTypography },
+    template: `
+      <VBox border="all" padding="lg" rounded="lg">
+        <VCluster align="center" gap="lg" :wrap="true">
+          <VCluster align="center" gap="xs">
+            <VTypography intent="brand" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Brand
+            </VTypography>
+          </VCluster>
+
+          <VCluster align="center" gap="xs">
+            <VTypography intent="neutral" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Neutral
+            </VTypography>
+          </VCluster>
+
+          <VCluster align="center" gap="xs">
+            <VTypography intent="success" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Success
+            </VTypography>
+          </VCluster>
+
+          <VCluster align="center" gap="xs">
+            <VTypography intent="warning" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Warning
+            </VTypography>
+          </VCluster>
+
+          <VCluster align="center" gap="xs">
+            <VTypography intent="danger" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Danger
+            </VTypography>
+          </VCluster>
+
+          <VCluster align="center" gap="xs">
+            <VTypography intent="info" class="inline-flex items-center gap-1 font-mono" size="xs">
+              <VIcon name="Star" size="md" />
+              Info
+            </VTypography>
+          </VCluster>
+        </VCluster>
+      </VBox>
+    `,
+  }),
+};
+
 export const Sizes: Story = {
   render: () => ({
     components: { VIcon, VBox, VCluster, VTypography },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="lg">
+      <VBox border="all" intent="neutral" padding="lg" rounded="lg">
+        <VCluster align="center" gap="lg" :wrap="true">
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="xs" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">xs (w-3 h-3)</VTypography>
+            <VIcon name="Star" size="xs" />
+            <VTypography size="xs" class="font-mono">xs</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="sm" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">sm (w-4 h-4)</VTypography>
+            <VIcon name="Star" size="sm" />
+            <VTypography size="xs" class="font-mono">sm</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="md" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">md (w-6 h-6)</VTypography>
+            <VIcon name="Star" size="md" />
+            <VTypography size="xs" class="font-mono">md</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="lg" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">lg (w-8 h-8)</VTypography>
+            <VIcon name="Star" size="lg" />
+            <VTypography size="xs" class="font-mono">lg</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="xl" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">xl (w-10 h-10)</VTypography>
+            <VIcon name="Star" size="xl" />
+            <VTypography size="xs" class="font-mono">xl</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VIcon name="Star" size="2xl" color="text-amber-500" />
-            <VTypography size="xs" color="slate-400" class="font-mono">2xl (w-12 h-12)</VTypography>
+            <VIcon name="Star" size="2xl" />
+            <VTypography size="xs" class="font-mono">2xl</VTypography>
           </VCluster>
         </VCluster>
       </VBox>
@@ -87,16 +140,16 @@ export const StyleVariants: Story = {
   render: () => ({
     components: { VIcon, VBox, VCluster, VTypography },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
+      <VBox border="all" intent="neutral" padding="lg" rounded="lg">
         <VCluster align="center" gap="xl">
           <VCluster align="center" gap="sm">
-            <VIcon name="Heart" type="solid" size="lg" color="text-rose-500" />
-            <VTypography size="sm" color="slate-700">Solid</VTypography>
+            <VIcon name="Heart" type="solid" size="lg" />
+            <VTypography size="sm">Solid</VTypography>
           </VCluster>
 
           <VCluster align="center" gap="sm">
-            <VIcon name="Heart" type="outline" size="lg" color="text-rose-500" />
-            <VTypography size="sm" color="slate-700">Outline</VTypography>
+            <VIcon name="Heart" type="outline" size="lg" />
+            <VTypography size="sm">Outline</VTypography>
           </VCluster>
         </VCluster>
       </VBox>

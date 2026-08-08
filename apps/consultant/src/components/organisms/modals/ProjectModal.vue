@@ -77,8 +77,8 @@ import { useProjectStore } from '@/stores/project';
 
 // Components
 import VModal from '@/components/molecules/feedback/VModal.vue';
-import VForm from '@/components/molecules/forms/VForm.vue';
-import VFormField from '@/components/molecules/forms/VFormField.vue';
+import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';

@@ -1,21 +1,21 @@
 <template>
   <VBox
     tag="fieldset"
-    background="white"
+    intent="neutral"
+    surface="outline"
     border="all"
     rounded="lg"
     :padding="padding"
-    class="v-fieldset border-slate-200/60 shadow-sm"
+    class="v-fieldset shadow-sm"
   >
-    <VStack gap="md">
-      <VStack v-if="title || description" gap="xs" tag="legend" class="px-1">
+    <!-- HTML Native <legend> must be a direct child of <fieldset> -->
+    <legend v-if="title || description" class="w-full float-left mb-3 px-1">
+      <VStack gap="xs">
         <VTypography
           v-if="title"
           tag="h3"
           size="sm"
           weight="bold"
-          color="slate-900"
-          class="uppercase tracking-wider"
         >
           {{ title }}
         </VTypography>
@@ -23,16 +23,17 @@
         <VTypography
           v-if="description"
           size="xs"
-          color="slate-500"
+          intent="neutral"
           class="leading-relaxed"
         >
           {{ description }}
         </VTypography>
       </VStack>
+    </legend>
 
-      <VBox tag="div" class="w-full">
-        <slot></slot>
-      </VBox>
+    <!-- Fieldset Form Controls Slot -->
+    <VStack gap="md" class="w-full">
+      <slot />
     </VStack>
   </VBox>
 </template>
@@ -46,17 +47,20 @@
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-import type { SpacingToken } from '@auraflux/design-system/interfaces/layout';
+import type { SpacingToken } from '@auraflux/design-system/interfaces/theme';
 
-const props = withDefaults(defineProps<{
+export interface VFieldsetProps {
   /** The primary heading for this configuration group */
   title?: string;
+  /** Inner padding for the fieldset container */
   padding?: SpacingToken;
   /** Optional sub-text to guide the user on how to configure these fields */
   description?: string;
-}>(), {
+}
+
+withDefaults(defineProps<VFieldsetProps>(), {
   padding: 'md',
-})
+});
 </script>
 
 <style scoped>
@@ -66,7 +70,7 @@ fieldset {
 }
 
 legend {
-  float: left;
-  width: 100%;
+  display: block;
+  padding: 0;
 }
 </style>

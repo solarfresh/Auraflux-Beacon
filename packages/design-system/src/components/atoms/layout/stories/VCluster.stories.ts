@@ -1,0 +1,138 @@
+import type { Meta, StoryObj } from '@storybook/vue3';
+import VCluster, { type VClusterProps } from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+
+const meta = {
+  title: 'Atoms/Layout/VCluster',
+  component: VCluster,
+  tags: ['autodocs'],
+  args: {
+    tag: 'div',
+    gap: 'md',
+    align: 'center',
+    justify: 'start',
+    wrap: false,
+    inline: false,
+    fullWidth: false,
+  },
+  argTypes: {
+    gap: {
+      control: 'select',
+      options: ['none', 'xs', 'sm', 'md', 'lg', 'xl', '2xl'],
+    },
+    align: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'baseline', 'stretch'],
+    },
+    justify: {
+      control: 'select',
+      options: ['start', 'center', 'end', 'between', 'around', 'evenly'],
+    },
+  },
+} satisfies Meta<VClusterProps>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/**
+ * Default usage: Horizontal alignment with center item distribution.
+ */
+export const Default: Story = {
+  render: (args) => ({
+    components: { VCluster, VButton },
+    setup() {
+      return { args };
+    },
+    template: `
+      <VCluster v-bind="args">
+        <VButton attention="primary">Proceed</VButton>
+        <VButton attention="secondary">Save Draft</VButton>
+        <VButton attention="tertiary">Cancel</VButton>
+      </VCluster>
+    `,
+  }),
+};
+
+/**
+ * Wrapped layout: Suitable for tag clouds or dense action buttons.
+ */
+export const Wrapped: Story = {
+  args: {
+    wrap: true,
+    gap: 'sm',
+  },
+  render: (args) => ({
+    components: { VCluster, VBox, VButton },
+    setup() {
+      return { args };
+    },
+    template: `
+      <VBox padding="md" border="all" rounded="md" class="max-w-xs">
+        <VCluster v-bind="args">
+          <VButton attention="secondary" size="xs">AI Logic</VButton>
+          <VButton attention="secondary" size="xs">Sandbox</VButton>
+          <VButton attention="secondary" size="xs">Fine-tune</VButton>
+          <VButton attention="secondary" size="xs">System 2</VButton>
+          <VButton attention="secondary" size="xs">Prompt Rules</VButton>
+        </VCluster>
+      </VBox>
+    `,
+  }),
+};
+
+/**
+ * Space Between layout: Common pattern for headers, card titles, and toolbars.
+ */
+export const SpaceBetween: Story = {
+  args: {
+    justify: 'between',
+    fullWidth: true,
+  },
+  render: (args) => ({
+    components: { VCluster, VBox, VTypography, VButton },
+    setup() {
+      return { args };
+    },
+    template: `
+      <VBox padding="md" attention="secondary" border="all" rounded="lg">
+        <VCluster v-bind="args">
+          <VTypography tag="h3" weight="bold" size="md">
+            AI Parameter Settings
+          </VTypography>
+          <VCluster gap="sm">
+            <VButton attention="secondary" size="sm">Reset</VButton>
+            <VButton attention="primary" size="sm">Save Changes</VButton>
+          </VCluster>
+        </VCluster>
+      </VBox>
+    `,
+  }),
+};
+
+/**
+ * Baseline Alignment: Maintains optical balance when child typography sizes vary.
+ */
+export const BaselineAlignment: Story = {
+  args: {
+    align: 'baseline',
+    gap: 'sm',
+  },
+  render: (args) => ({
+    components: { VCluster, VTypography },
+    setup() {
+      return { args };
+    },
+    template: `
+      <VCluster v-bind="args">
+        <VTypography tag="span" size="2xl" weight="bold">
+          NT$ 12,800
+        </VTypography>
+        <VTypography tag="span" size="xs" intent="neutral">
+          / month (tax incl.)
+        </VTypography>
+      </VCluster>
+    `,
+  }),
+};

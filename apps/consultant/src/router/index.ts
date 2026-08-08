@@ -1,7 +1,7 @@
 import AgentEditorPage from '@/components/pages/AgentEditorPage.vue';
 import AgentSettingsPage from '@/components/pages/AgentSettingsPage.vue';
-import ExplorationPage from '@/components/pages/ExplorationPage.vue';
-import ConsultationPage from '@/components/pages/ConsultationPage.vue';
+// import ExplorationPage from '@/components/pages/ExplorationPage.vue';
+// import ConsultationPage from '@/components/pages/ConsultationPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import MainPage from '@/components/pages/MainPage.vue';
 import ModelProviderSettingsPage from '@/components/pages/ModelProviderSettingsPage.vue';
@@ -25,16 +25,16 @@ export const routes: Array<RouteRecordRaw> = [
         name: 'ProjectPage',
         component: ProjectPage
       },
-      {
-        path: ':id/consultation/',
-        name: 'ConsultationPage',
-        component: ConsultationPage
-      },
-      {
-        path: ':id/exploration/',
-        name: 'ExplorationPage',
-        component: ExplorationPage
-      },
+      // {
+      //   path: ':id/consultation/',
+      //   name: 'ConsultationPage',
+      //   component: ConsultationPage
+      // },
+      // {
+      //   path: ':id/exploration/',
+      //   name: 'ExplorationPage',
+      //   component: ExplorationPage
+      // },
     ]
   },
   {

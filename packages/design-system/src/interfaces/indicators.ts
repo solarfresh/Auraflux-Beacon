@@ -1,19 +1,43 @@
-import { ConnectStatus, EntityStatus } from "./core";
-import { ProviderType } from "@/interfaces/agents";
+/**
+ * Generic filter state type.
+ * @template T Specific filter value type (defaults to string).
+ */
+export type FilterState<T extends string = string> = T;
 
-export type BadgeColor = 'indigo' | 'amber' | 'emerald' | 'red' | 'gray' | 'purple' | 'blue' | 'slate';
-export type FilterState = 'ALL' | ConnectStatus | EntityStatus | ProviderType
-export type SorterState = 'EDITED' | 'CREATED' | 'HEALTH' | 'LATENCY' | 'NAME' | 'VERSION'
+/**
+ * Generic sorter field type.
+ * @template T Specific sorter field type (defaults to string).
+ */
+export type SorterState<T extends string = string> = T;
 
-export interface BaseSelectorState {
-  filter: FilterState;
-  sorter: SorterState;
-};
+/**
+ * Sort direction orientation type.
+ */
+export type SortOrder = 'asc' | 'desc';
 
-export interface ModelSelectorState extends BaseSelectorState {
-  modelFamily: FilterState;
-};
+/**
+ * Generic sort option object structure.
+ */
+export interface SortOption<TSorter extends string = string> {
+  /** Sort key or field identifier */
+  field: SorterState<TSorter>;
+  /** Sort order direction */
+  order?: SortOrder;
+}
 
-export interface ModelProviderSelectorState extends BaseSelectorState {
-  providerType: FilterState;
+/**
+ * Base selector state interface for toolbars and control panels.
+ * @template TFilter Enum/Union type for filter option values.
+ * @template TSorter Enum/Union type for sorter field values.
+ */
+export interface BaseSelectorState<
+  TFilter extends string = string,
+  TSorter extends string = string
+> {
+  /** Currently selected filter value */
+  filter: FilterState<TFilter>;
+  /** Currently selected sorter state (supports simple key or option object) */
+  sorter: SorterState<TSorter> | SortOption<TSorter>;
+  /** Optional search query keyword */
+  search?: string;
 }

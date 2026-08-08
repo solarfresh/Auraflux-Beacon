@@ -8,14 +8,17 @@
 
 <script setup lang="ts">
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import type { ComponentSizeToken } from '@auraflux/design-system/interfaces/theme';
+
+export interface VFormProps {
+  gap?: ComponentSizeToken;
+};
 
 /**
  * Props:
  * @param gap - Controls the vertical spacing between form fields (default: md/16px)
  */
-const props = withDefaults(defineProps<{
-  gap?: 'xs' | 'sm' | 'md' | 'lg';
-}>(), {
+const props = withDefaults(defineProps<VFormProps>(), {
   gap: 'md'
 });
 

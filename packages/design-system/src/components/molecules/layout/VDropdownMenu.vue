@@ -1,17 +1,18 @@
 <template>
   <VBox
     tag="div"
-    rounded="md"
-    background="white"
+    :padding="padding"
+    :rounded="rounded"
+    :border="border"
+    :attention="attention"
+    :intent="intent"
+    :surface="surface"
     :class="[
       // Positioning & Z-Index (Z-60 to sit above Floating Controls)
-      'absolute top-[calc(100%+8px)] right-0 z-60',
+      'z-60',
 
       // Layout & Sizing
       'min-w-40 py-1 flex flex-col',
-
-      // Visual Surface (Level 3 Elevation)
-      'border border-slate-200 shadow-lg',
 
       // Flow Independence: Ensures it doesn't shift adjacent elements
       'pointer-events-auto'
@@ -28,7 +29,36 @@
  * Following the Layout Principles, it utilizes Level 3 Elevation (shadow-lg)
  * and maintains Flow Independence through absolute positioning.
  */
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import type {
+  SpacingToken,
+  RoundedToken,
+  BorderToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
+
+ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+
+export interface VDropdownMenuProps {
+  /** Internal spacing token */
+  padding?: SpacingToken;
+  /** Radius token */
+  rounded?: RoundedToken;
+  /** Border position token */
+  border?: BorderToken;
+  /** Visual priority token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token */
+  intent?: IntentToken;
+  /** Explicit surface container model token */
+  surface?: SurfaceToken;
+};
+const props = withDefaults(defineProps<VDropdownMenuProps>(), {
+  padding: 'none',
+  rounded: 'md',
+  border: 'all',
+});
 
  // Props can be expanded here for 'placement' logic (e.g., left, right, bottom)
 </script>

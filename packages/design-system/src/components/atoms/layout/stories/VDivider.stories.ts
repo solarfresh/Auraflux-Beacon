@@ -2,15 +2,14 @@ import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vu
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VDivider from '@auraflux/design-system/components/atoms/layout/VDivider.vue';
+import VDivider, { type VDividerProps } from '@auraflux/design-system/components/atoms/layout/VDivider.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import type { Meta, StoryObj } from '@storybook/vue3';
-
-type VDividerProps = InstanceType<typeof VDivider>['$props'];
 
 /**
  * `VDivider` is a pure Atom indicator component that renders a lightweight,
  * zero-dependency semantic divider line for separating layout content or control groups.
+ * It automatically inherits the parent container's text color (`bg-current`).
  */
 const meta = {
   title: 'Atoms/Layout/VDivider',
@@ -20,13 +19,23 @@ const meta = {
     orientation: 'vertical',
     size: 'sm',
   },
+  argTypes: {
+    orientation: {
+      control: 'radio',
+      options: ['horizontal', 'vertical'],
+    },
+    size: {
+      control: 'select',
+      options: ['sm', 'md', 'lg', 'xl', 'full'],
+    },
+  },
 } satisfies Meta<VDividerProps>;
 
 export default meta;
 type Story = StoryObj<typeof VDivider>;
 
 /**
- * Default vertical divider inside a toolbar-like button group using VBox & VCluster.
+ * Default vertical divider inside a toolbar-like button group.
  */
 export const DefaultVertical: Story = {
   render: (args) => ({
@@ -35,12 +44,12 @@ export const DefaultVertical: Story = {
       return { args };
     },
     template: `
-      <VBox background="white" border="all" padding="md" rounded="lg" class="w-fit">
+      <VBox border="all" padding="md" rounded="lg" class="w-fit text-slate-800">
         <VCluster align="center" gap="sm">
-          <VButton variant="ghost" size="sm">Edit</VButton>
-          <VButton variant="ghost" size="sm">Duplicate</VButton>
+          <VButton intent="neutral" surface="base" size="sm">Edit</VButton>
+          <VButton intent="neutral" surface="base" size="sm">Duplicate</VButton>
           <VDivider v-bind="args" />
-          <VButton variant="ghost" size="sm" class="text-rose-600 hover:text-rose-700">Delete</VButton>
+          <VButton intent="danger" surface="base" size="sm">Delete</VButton>
         </VCluster>
       </VBox>
     `,
@@ -48,31 +57,36 @@ export const DefaultVertical: Story = {
 };
 
 /**
- * Showcase of all vertical divider sizes (`sm`, `md`, `lg`, `full`) using VBox & VCluster.
+ * Showcase of all vertical divider sizes (`sm`, `md`, `lg`, `xl`, `full`).
  */
 export const VerticalSizes: Story = {
   render: () => ({
     components: { VDivider, VTypography, VBox, VCluster },
     template: `
-      <VBox background="white" border="all" padding="lg" rounded="lg">
-        <VCluster align="center" gap="lg">
+      <VBox border="all" padding="lg" rounded="lg" class="text-slate-800">
+        <VCluster align="center" gap="lg" :wrap="true">
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">sm (h-4)</VTypography>
+            <VTypography size="xs" intent="neutral" class="font-mono">sm</VTypography>
             <VDivider orientation="vertical" size="sm" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">md (h-6)</VTypography>
+            <VTypography size="xs" intent="neutral" class="font-mono">md</VTypography>
             <VDivider orientation="vertical" size="md" />
           </VCluster>
 
           <VCluster align="center" gap="xs">
-            <VTypography size="xs" color="slate-400" class="font-mono">lg (h-8)</VTypography>
+            <VTypography size="xs" intent="neutral" class="font-mono">lg</VTypography>
             <VDivider orientation="vertical" size="lg" />
           </VCluster>
 
-          <VCluster align="center" gap="xs" class="h-12">
-            <VTypography size="xs" color="slate-400" class="font-mono">full (h-full)</VTypography>
+          <VCluster align="center" gap="xs">
+            <VTypography size="xs" intent="neutral" class="font-mono">xl</VTypography>
+            <VDivider orientation="vertical" size="xl" />
+          </VCluster>
+
+          <VCluster align="center" gap="xs" class="h-16">
+            <VTypography size="xs" intent="neutral" class="font-mono">full (parent h-16)</VTypography>
             <VDivider orientation="vertical" size="full" />
           </VCluster>
         </VCluster>
@@ -82,7 +96,7 @@ export const VerticalSizes: Story = {
 };
 
 /**
- * Horizontal divider used inside a Card container using VBox & VStack.
+ * Horizontal divider used inside a Card container.
  */
 export const Horizontal: Story = {
   render: (args) => ({
@@ -91,16 +105,16 @@ export const Horizontal: Story = {
       return { args };
     },
     template: `
-      <VBox background="white" border="all" padding="md" rounded="xl" class="w-80 shadow-sm">
+      <VBox border="all" padding="md" rounded="xl" class="w-80 shadow-sm text-slate-800">
         <VStack gap="xs">
-          <VTypography tag="h3" size="base" weight="semibold" color="slate-800">Account Settings</VTypography>
-          <VTypography tag="p" size="xs" color="slate-500">Manage your profile and security settings.</VTypography>
+          <VTypography tag="h3" size="base" weight="semibold">Account Settings</VTypography>
+          <VTypography tag="p" size="xs" intent="neutral">Manage your profile and security settings.</VTypography>
 
-          <VDivider v-bind="args" />
+          <VDivider v-bind="args" class="my-2" />
 
           <VStack gap="xs">
-            <VButton variant="ghost" size="sm" class="w-full justify-start text-slate-700">Profile Overview</VButton>
-            <VButton variant="ghost" size="sm" class="w-full justify-start text-slate-700">API Tokens</VButton>
+            <VButton intent="neutral" surface="base" size="sm" class="w-full justify-start">Profile Overview</VButton>
+            <VButton intent="neutral" surface="base" size="sm" class="w-full justify-start">API Tokens</VButton>
           </VStack>
         </VStack>
       </VBox>
@@ -108,6 +122,6 @@ export const Horizontal: Story = {
   }),
   args: {
     orientation: 'horizontal',
-    size: 'md',
+    size: 'full',
   },
 };
