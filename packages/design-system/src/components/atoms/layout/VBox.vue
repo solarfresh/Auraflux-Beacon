@@ -72,7 +72,6 @@ const props = withDefaults(defineProps<VBoxProps>(), {
   padding: 'none',
   rounded: 'none',
   border: 'none',
-  attention: 'secondary',
   inline: false,
   clickable: false
 });

@@ -99,7 +99,7 @@ export const Sizes: Story = {
   render: () => ({
     components: { VIcon, VBox, VCluster, VTypography },
     template: `
-      <VBox border="all" padding="lg" rounded="lg">
+      <VBox border="all" intent="neutral" padding="lg" rounded="lg">
         <VCluster align="center" gap="lg" :wrap="true">
           <VCluster align="center" gap="xs">
             <VIcon name="Star" size="xs" />
@@ -140,7 +140,7 @@ export const StyleVariants: Story = {
   render: () => ({
     components: { VIcon, VBox, VCluster, VTypography },
     template: `
-      <VBox border="all" padding="lg" rounded="lg">
+      <VBox border="all" intent="neutral" padding="lg" rounded="lg">
         <VCluster align="center" gap="xl">
           <VCluster align="center" gap="sm">
             <VIcon name="Heart" type="solid" size="lg" />

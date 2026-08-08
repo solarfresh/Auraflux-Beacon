@@ -2,31 +2,23 @@
   <VCluster gap="md" align="center" justify="end" class="flex-none min-w-40">
     <VBox class="relative group">
       <VButton
-        variant="tertiary"
+        attention="primary"
+        border="none"
         size="sm"
         icon-name="Bell"
         icon-only
         @click="toggleNotifications"
       />
-      <VBox
-        top="1"
-        right="1"
-        width="2"
-        height="2"
-        background="rose-50"
-        rounded="full"
-        class="absolute border-2 border-white"
-      />
     </VBox>
 
     <VBox
-      tag="div"
       class="relative group"
       @mouseenter="openSettingsMenu"
       @mouseleave="closeSettingsMenu"
     >
       <VButton
-        variant="tertiary"
+        attention="primary"
+        border="none"
         size="sm"
         icon-name="Cog6Tooth"
         icon-only
@@ -46,7 +38,7 @@
       </VDropdownMenu>
     </VBox>
 
-    <VBox width="px" height="4" background="slate-50" />
+    <VBox width="px" height="4" />
 
     <VBox tag="div" class="relative group">
       <VUserAvatar
@@ -59,7 +51,7 @@
         <VDropdownItem icon-name="UserCircle" @click="openProfile">
           Account Profile
         </VDropdownItem>
-        <VBox width="full" height="px" background="slate-50" class="my-1" />
+        <VBox width="full" height="px" intent="brand" surface="solid" class="my-1" />
         <VDropdownItem icon-name="ArrowRightOnRectangle" @click="logout">
           Sign Out
         </VDropdownItem>
@@ -87,7 +79,6 @@ const showSettingsMenu = ref(false);
 let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
 const settingItems = [
-  { label: 'Agent Settings', iconName: 'AdjustmentsVertical', route: '/settings/agents' },
   { label: 'Model Providers', iconName: 'CpuChip', route: '/settings/models' },
   { label: 'System Preferences', iconName: 'Cog8Tooth', route: '' }
 ];

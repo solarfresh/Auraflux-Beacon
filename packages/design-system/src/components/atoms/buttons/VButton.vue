@@ -65,7 +65,7 @@ const props = withDefaults(defineProps<VButtonProps>(), {
   type: 'button',
   rounded: 'xl',
   border: 'all',
-  attention: 'primary',
+  attention: 'secondary',
   size: 'md',
   iconOnly: false
 });

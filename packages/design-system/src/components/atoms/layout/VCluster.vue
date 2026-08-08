@@ -25,7 +25,7 @@
  * Handles grouping elements side-by-side with consistent spacing and alignment.
  */
 import { computed } from 'vue';
-import type { Alignment, ComponentSizeToken, Justification, TagToken } from '@auraflux/design-system/interfaces/theme';
+import type { Alignment, ComponentSizeToken, GapSizeToken, Justification, TagToken } from '@auraflux/design-system/interfaces/theme';
 import {
   SHARED_ALIGN_CLASSES,
   SHARED_GAP_CLASSES,
@@ -36,7 +36,7 @@ export interface VClusterProps {
   /** HTML element to render */
   tag?: TagToken;
   /** Horizontal gap between children */
-  gap?: ComponentSizeToken;
+  gap?: GapSizeToken;
   /** Vertical alignment of children */
   align?: Alignment;
   /** Horizontal distribution of children */

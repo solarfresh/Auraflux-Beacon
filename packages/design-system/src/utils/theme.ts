@@ -6,16 +6,26 @@ import { ATTENTION_PRESET_MAP, SURFACE_STYLE_MAP} from '@auraflux/design-system/
  * over the defaulted Attention presets.
  */
 export function resolveSurfaceStyle(
-  attention: AttentionToken = 'primary',
+  attention?: AttentionToken,
   intent?: IntentToken,
   surface?: SurfaceToken
 ): SurfaceStyle {
-// Get default fallback preset based on attention level
-  const preset = ATTENTION_PRESET_MAP[attention] || ATTENTION_PRESET_MAP.primary;
+  // Get default fallback preset based on attention level
+  const preset = attention ? ATTENTION_PRESET_MAP[attention] : {intent: null, surface: null};
 
   // Determine final Intent & Surface (explicit arguments override preset fallbacks)
   const finalIntent = intent ?? preset.intent;
-  const finalSurface = surface ?? preset.surface;
+  const finalSurface = surface ?? preset.surface ?? 'base';
+
+  if (!finalIntent) {
+    return {
+      bg: 'bg-transparent',
+      text: '',
+      border: 'border-transparent',
+      hover: 'hover:bg-transparent',
+      focus: 'focus-visible:ring-slate-400',
+    }
+  }
 
   // Direct O(1) lookup from static mapping table
   return SURFACE_STYLE_MAP[finalIntent][finalSurface];

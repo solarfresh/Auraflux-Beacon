@@ -25,14 +25,14 @@
  * @subcategory Layout
  */
 import { computed } from 'vue';
-import type { Alignment, Justification, ComponentSizeToken, TagToken } from '@auraflux/design-system/interfaces/theme';
+import type { Alignment, Justification, ComponentSizeToken, GapSizeToken, TagToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_ALIGN_CLASSES, SHARED_GAP_CLASSES, SHARED_JUSTIFY_CLASSES } from '@auraflux/design-system/constants/theme';
 
 export interface VStackProps {
   /** HTML element to render */
   tag?: TagToken;
   /** Vertical gap between child elements */
-  gap?: ComponentSizeToken;
+  gap?: GapSizeToken;
   /** Horizontal alignment of child elements (cross axis) */
   align?: Alignment;
   /** Vertical distribution of child elements (main axis) */

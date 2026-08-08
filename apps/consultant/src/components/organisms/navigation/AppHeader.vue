@@ -1,13 +1,9 @@
 <template>
   <VBox
     tag="header"
-    :class="[
-      'w-full sticky top-0 z-50 transition-all duration-300',
-      variant === 'glass' ? 'backdrop-blur-md bg-white/80' : 'bg-white',
-      hasShadow ? 'shadow-sm' : '',
-      hasBorder ? 'border-b border-slate-200' : ''
-    ]"
-    class="min-h-16 flex items-center"
+    intent="brand",
+    surface="solid"
+    class="min-h-16 w-full sticky top-0 z-50 flex items-center"
   >
     <VCluster
       justify="between"
@@ -18,7 +14,7 @@
 
       <VBox class="hidden md:flex grow justify-center px-8 max-w-2xl">
         <VWorkspaceBar v-if="isWorkingContext" />
-        <VGlobalSearch v-else />
+        <!-- <VGlobalSearch v-else /> -->
       </VBox>
 
       <VHeaderActions />
@@ -38,15 +34,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-withDefaults(defineProps<{
-  variant?: 'solid' | 'glass';
-  hasShadow?: boolean;
-  hasBorder?: boolean;
-}>(), {
-  variant: 'solid',
-  hasShadow: false,
-  hasBorder: true
-});
+withDefaults(defineProps<{}>(), {});
 
 // Check if we are in a project-specific workspace
 const isWorkingContext = computed(() =>

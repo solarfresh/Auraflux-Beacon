@@ -5,7 +5,11 @@
       borderStyles,
       fontWeightStyles,
       sizeStyles.text,
-      resolvedColorClass
+
+      // Surface Styles (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
     ]"
   >
     <slot />
@@ -14,8 +18,9 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { BorderToken, FontWeightToken, ComponentSizeToken, TagToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import type { AttentionToken, BorderToken, FontWeightToken, ComponentSizeToken, TagToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_BORDER_CLASSES, SHARED_FONT_WEIGHT_CLASSES, SHARED_COMPONENT_SIZE_CLASSES, SURFACE_STYLE_MAP } from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
 export interface VTypographyProps {
   /** HTML tag element */
@@ -26,6 +31,8 @@ export interface VTypographyProps {
   size?: ComponentSizeToken;
   /** Font weight preset */
   weight?: FontWeightToken;
+  /** Visual priority token */
+  attention?: AttentionToken;
   /** Optional semantic intent color override */
   intent?: IntentToken;
   /** Optional surface type (determines text contrast vs semantic shade) */
@@ -37,7 +44,6 @@ const props = withDefaults(defineProps<VTypographyProps>(), {
   border: 'none',
   size: 'md',
   weight: 'normal',
-  surface: 'soft',
 });
 
 const borderStyles = computed(() => {
@@ -52,10 +58,7 @@ const sizeStyles = computed(() => {
   return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.md;
 });
 
-// If intent is specified, derive the exact text color utility from SURFACE_STYLE_MAP.
-// Otherwise, leave empty to naturally inherit foreground color from parent containers (e.g. VButton).
-const resolvedColorClass = computed(() => {
-  if (!props.intent) return '';
-  return SURFACE_STYLE_MAP[props.intent][props.surface].text;
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
 });
 </script>

@@ -34,6 +34,7 @@ import type {
   Alignment,
   Justification,
   ComponentSizeToken,
+  GapSizeToken,
   SpacingToken,
   TagToken
 } from '@auraflux/design-system/interfaces/theme';
@@ -55,7 +56,7 @@ export interface VGridProps {
    */
   cols?: number | string;
   /** Spatial distribution token between cells */
-  gap?: ComponentSizeToken;
+  gap?: GapSizeToken;
   /** Vertical alignment of items (align-items) */
   align?: Alignment;
   /** Horizontal distribution of content (justify-content) */

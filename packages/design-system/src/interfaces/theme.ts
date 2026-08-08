@@ -66,11 +66,11 @@ export type SurfaceToken =
 
 export type Alignment = 'start' | 'center' | 'end' | 'baseline' | 'stretch';
 export type BorderToken = 'all' | 'top' | 'bottom' | 'left' | 'right' | 'dashed' | 'none';
+export type ComponentSizeToken = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 export type ContainerSizeToken = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 export type FontWeightToken = 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
 export type Justification = 'start' | 'center' | 'end' | 'between' | 'around';
-export type FeedbackToken = 'success' | 'warning' | 'danger' | 'info';
-export type ComponentSizeToken = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type GapSizeToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type RoundedToken = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 export type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'fieldset' | 'footer' | 'header' | 'label' | 'li';

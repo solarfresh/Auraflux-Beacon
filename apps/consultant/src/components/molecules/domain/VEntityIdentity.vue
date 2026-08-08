@@ -2,18 +2,18 @@
   <VCluster gap="sm" align="center">
     <VButton
       v-if="showBack"
-      variant="tertiary"
+      attention="primary"
       size="sm"
       icon-name="ArrowLeft"
       icon-only
       @click="emit('back')"
     />
-    <VBox width="px" height="4" background="slate-50" />
+    <VBox width="px" height="4"/>
     <VStack gap="none">
-      <VTypography size="xs" weight="bold" color="indigo-600" class="uppercase">
+      <VTypography size="xs" weight="bold" class="uppercase">
         Mission
       </VTypography>
-      <VTypography size="sm" weight="semibold" color="slate-900">
+      <VTypography size="sm" weight="semibold">
         {{ title }}
       </VTypography>
     </VStack>
