@@ -2,9 +2,11 @@
   <VBox
     :tag="tag"
     :padding="padding"
-    rounded="md"
-    border="all"
-    :theme="theme"
+    :rounded="rounded"
+    :border="border"
+    :attention="attention"
+    :intent="intent"
+    :surface="surface"
     :clickable="clickable"
     class="w-full min-w-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all duration-200"
     :class="{
@@ -30,13 +32,26 @@
  */
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import type { SizeToken, SpacingToken, ThemeToken, TagToken } from '@auraflux/design-system/interfaces/theme';
+import type {
+  AttentionToken,
+  BorderToken,
+  GapSizeToken,
+  IntentToken,
+  RoundedToken,
+  SpacingToken,
+  SurfaceToken,
+  TagToken
+} from '@auraflux/design-system/interfaces/theme';
 
 export interface VCardProps {
   tag?: TagToken;
   padding?: SpacingToken;
-  gap?: SizeToken;
-  theme?: ThemeToken;
+  rounded?: RoundedToken;
+  border?: BorderToken;
+  attention?: AttentionToken;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
+  gap?: GapSizeToken;
   clickable?: boolean;
   hoverable?: boolean;
 };
@@ -45,9 +60,10 @@ withDefaults(
   defineProps<VCardProps>(),
   {
     tag: 'div',
-    padding: 'sm',
+    padding: 'none',
+    rounded: 'md',
+    border: 'all',
     gap: 'sm',
-    theme: 'base',
     clickable: false,
     hoverable: true
   }

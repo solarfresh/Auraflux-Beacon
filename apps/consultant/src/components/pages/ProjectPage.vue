@@ -1,12 +1,11 @@
 <template>
-  <VBox tag="main" class="w-full min-h-screen bg-slate-50">
-    <VBox class="max-w-7xl mx-auto w-full">
+  <VBox tag="main" class="w-full min-h-screen">
+    <VBox intent="neutral" surface="base" class="max-w-7xl mx-auto w-full">
       <VStack gap="lg">
         <VBox
-          background="white"
           padding="md"
           rounded="lg"
-          class="border border-slate-200/60 shadow-sm"
+          class="shadow-sm"
         >
           <VProjectToolbar
             v-model="selectorState"

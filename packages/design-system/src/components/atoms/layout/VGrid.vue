@@ -33,7 +33,6 @@ import { computed } from 'vue';
 import type {
   Alignment,
   Justification,
-  ComponentSizeToken,
   GapSizeToken,
   SpacingToken,
   TagToken
@@ -72,6 +71,40 @@ const props = withDefaults(defineProps<VGridProps>(), {
   justify: 'start',
 });
 
+const GRID_COLS_MAP: Record<string | number, string> = {
+  '1': 'grid-cols-1',
+  '2': 'grid-cols-2',
+  '3': 'grid-cols-3',
+  '4': 'grid-cols-4',
+  '5': 'grid-cols-5',
+  '6': 'grid-cols-6',
+  '12': 'grid-cols-12',
+
+  'sm:1': 'sm:grid-cols-1',
+  'sm:2': 'sm:grid-cols-2',
+  'sm:3': 'sm:grid-cols-3',
+  'sm:4': 'sm:grid-cols-4',
+  'sm:6': 'sm:grid-cols-6',
+
+  'md:1': 'md:grid-cols-1',
+  'md:2': 'md:grid-cols-2',
+  'md:3': 'md:grid-cols-3',
+  'md:4': 'md:grid-cols-4',
+  'md:6': 'md:grid-cols-6',
+
+  'lg:1': 'lg:grid-cols-1',
+  'lg:2': 'lg:grid-cols-2',
+  'lg:3': 'lg:grid-cols-3',
+  'lg:4': 'lg:grid-cols-4',
+  'lg:6': 'lg:grid-cols-6',
+
+  'xl:1': 'xl:grid-cols-1',
+  'xl:2': 'xl:grid-cols-2',
+  'xl:3': 'xl:grid-cols-3',
+  'xl:4': 'xl:grid-cols-4',
+  'xl:6': 'xl:grid-cols-6',
+};
+
 // Dynamic resolver for arbitrary column definitions (e.g., "1 md:2 lg:3 xl:4")
 const colsClass = computed(() => {
   const raw = String(props.cols).trim();
@@ -79,13 +112,8 @@ const colsClass = computed(() => {
 
   return raw
     .split(/\s+/)
-    .map((part) => {
-      if (part.includes(':')) {
-        const [breakpoint, num] = part.split(':');
-        return `${breakpoint}:grid-cols-${num}`;
-      }
-      return `grid-cols-${part}`;
-    })
+    .map((part) => GRID_COLS_MAP[part] || '')
+    .filter(Boolean)
     .join(' ');
 });
 
