@@ -2,84 +2,110 @@
   <textarea
     :id="id"
     :value="modelValue"
-    @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
     :rows="rows"
     :placeholder="placeholder"
     :disabled="disabled"
     :class="[
-      'block w-full transition duration-150 ease-in-out',
-      // Consistent focus and border states
-      'border-slate-300 shadow-sm focus:ring-indigo-600 focus:border-indigo-600',
-      // Normalized corner radius
-      'rounded-md',
-      sizeClasses,
-      // Unified disabled styling
-      disabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-200' : 'bg-white text-slate-900',
+      // Base Form Control Styles
+      'block w-full transition duration-150 ease-in-out outline-none border',
+
+      // Shape & Size
+      roundedStyles,
+      sizeStyles.control,
+
+      // Surface Mapping (Dynamic Intent/Surface resolution)
+      surfaceStyle.bg,
+      surfaceStyle.text,
+      surfaceStyle.border,
+      surfaceStyle.hover,
+
+      // Dynamic Interactive Focus Ring
+      surfaceStyle.focus,
+
+      // Textarea Resize Control
+      resizeClasses,
+
+      // Disabled State Override
+      disabled ? 'bg-slate-50 text-slate-400 border-slate-200 cursor-not-allowed pointer-events-none' : ''
     ]"
+    @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
   ></textarea>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-
 /**
  * Textarea Atom
- * Used for multi-line text input.
- * Styled to match Input.vue for visual consistency.
+ * Multi-line text input component integrated with Attention/Intent/Surface architecture.
+ * Aligned with VInput.vue for design system consistency.
  */
-const props = defineProps({
-  /** Used for v-model binding */
-  modelValue: {
-    type: String,
-    default: '',
-  },
-  /** Unique identifier for accessibility and label association */
-  id: {
-    type: String,
-    default: undefined,
-  },
+import { computed } from 'vue';
+import type {
+  RoundedToken,
+  ComponentSizeToken,
+  AttentionToken,
+  IntentToken,
+  SurfaceToken
+} from '@auraflux/design-system/interfaces/theme';
+import {
+  SHARED_ROUNDED_CLASSES,
+  SHARED_COMPONENT_SIZE_CLASSES
+} from '@auraflux/design-system/constants/theme';
+import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
+
+export interface VTextareaProps {
+  /** HTML textarea id for label association */
+  id?: string;
+  modelValue?: string;
+  placeholder?: string;
   /** Number of visible text lines */
-  rows: {
-    type: [String, Number],
-    default: 3,
-  },
-  /** Input placeholder text */
-  placeholder: {
-    type: String,
-    default: '',
-  },
-  /** Toggles the disabled state and styling */
-  disabled: {
-    type: Boolean,
-    default: false,
-  },
-  /** Defines vertical padding and font size scale */
-  size: {
-    type: String,
-    default: 'md', // 'sm', 'md', 'lg'
-    validator: (value: string) => ['sm', 'md', 'lg'].includes(value),
-  },
+  rows?: number | string;
+  /** Visual priority hierarchy token */
+  attention?: AttentionToken;
+  /** Explicit semantic intent token (e.g. 'danger' for error state) */
+  intent?: IntentToken;
+  /** Explicit surface container model token */
+  surface?: SurfaceToken;
+  size?: ComponentSizeToken;
+  rounded?: RoundedToken;
+  disabled?: boolean;
+  /** Controls textarea resizability */
+  resize?: 'none' | 'vertical' | 'horizontal' | 'both';
+}
+
+const props = withDefaults(defineProps<VTextareaProps>(), {
+  id: undefined,
+  modelValue: '',
+  rows: 3,
+  attention: 'secondary',
+  size: 'md',
+  rounded: 'md',
+  disabled: false,
+  resize: 'vertical',
 });
 
-// Define emits for v-model support
-defineEmits(['update:modelValue']);
+defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
 
-// --- Tailwind Size Mapping ---
-// Mirrored from Input.vue to ensure vertical alignment in forms
-const sizeMap: Record<string, string> = {
-  sm: 'py-1.5 px-2 text-sm',
-  md: 'py-2 px-3 text-base',
-  lg: 'py-3 px-4 text-lg',
-};
+const roundedStyles = computed(() => {
+  return SHARED_ROUNDED_CLASSES[props.rounded] || SHARED_ROUNDED_CLASSES.md;
+});
 
-const sizeClasses = computed(() => {
-  return sizeMap[props.size] || sizeMap.md;
+const sizeStyles = computed(() => {
+  return SHARED_COMPONENT_SIZE_CLASSES[props.size] || SHARED_COMPONENT_SIZE_CLASSES.md;
+});
+
+const surfaceStyle = computed(() => {
+  return resolveSurfaceStyle(props.attention, props.intent, props.surface);
+});
+
+const resizeClasses = computed(() => {
+  const map: Record<string, string> = {
+    none: 'resize-none',
+    vertical: 'resize-y',
+    horizontal: 'resize-x',
+    both: 'resize',
+  };
+  return map[props.resize] || 'resize-y';
 });
 </script>
-
-<style scoped>
-/* Resizing can be restricted here if design dictates fixed widths */
-textarea {
-  resize: vertical;
-}
-</style>

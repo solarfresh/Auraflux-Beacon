@@ -1,4 +1,5 @@
 import RoutePage from '@/components/pages/RoutePage.vue';
+import MainPage from '@/components/pages/MainPage.vue';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 export const routes: Array<RouteRecordRaw> = [
@@ -7,11 +8,11 @@ export const routes: Array<RouteRecordRaw> = [
     name: 'RoutePage',
     component: RoutePage,
     children: [
-      // {
-      //   path: '',
-      //   name: 'ProjectPage',
-      //   component: ProjectPage
-      // },
+      {
+        path: '',
+        name: 'MainPage',
+        component: MainPage
+      },
     ]
   },
 ]

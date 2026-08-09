@@ -22,7 +22,7 @@
     @keydown.space.prevent="triggerFileInput"
   >
     <!-- Hidden Native File Input -->
-    <input
+    <VInput
       ref="fileInputRef"
       type="file"
       class="sr-only"
@@ -62,6 +62,7 @@ import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 
 export interface VFileUploadBoxProps {
   /** Accepted file types (e.g. '.pdf,.txt') */
