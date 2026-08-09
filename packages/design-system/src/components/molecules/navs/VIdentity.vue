@@ -3,6 +3,7 @@
     <VButton
       v-if="showBack"
       attention="primary"
+      border="none"
       size="sm"
       icon-name="ArrowLeft"
       icon-only
@@ -11,10 +12,10 @@
     <VBox width="px" height="4"/>
     <VStack gap="none">
       <VTypography size="xs" weight="bold" class="uppercase">
-        Mission
+        {{ title }}
       </VTypography>
       <VTypography size="sm" weight="semibold">
-        {{ title }}
+        {{ section }}
       </VTypography>
     </VStack>
   </VCluster>
@@ -27,10 +28,13 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 
-withDefaults(defineProps<{
+export interface VIdentityProps {
   showBack: boolean;
-  title?: string;
-}>(), {
+  title: string;
+  section?: string;
+};
+
+withDefaults(defineProps<VIdentityProps>(), {
   showBack: false
 });
 
