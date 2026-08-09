@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@source "../../../../packages//design-system/src/**/*.vue";
+@source "../../../../packages/design-system/src/**/*.ts";
+
+/* --- Global Scrollbar Styling --- */
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: theme('colors.gray.200');
+    border-radius: 10px;
+    border: 1px solid transparent;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: theme('colors.gray.300');
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.200') transparent;
+  }
+
+  .stable-gutter {
+    scrollbar-gutter: stable;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  .scrollbar-none::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+}
