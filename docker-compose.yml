@@ -27,7 +27,10 @@ services:
       - ./.env.development:/auraflux/.env.development
       - ./apps:/auraflux/apps
       - ./packages:/auraflux/packages
+      - /auraflux/node_modules
       - /auraflux/apps/consultant/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
     networks:
       - auraflux_network
 
@@ -46,7 +49,10 @@ services:
       - ./.env.development:/auraflux/.env.development
       - ./apps:/auraflux/apps
       - ./packages:/auraflux/packages
+      - /auraflux/node_modules
       - /auraflux/apps/mull/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
     networks:
       - auraflux_network
 
