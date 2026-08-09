@@ -12,7 +12,7 @@
 import AppHeader from '@/components/organisms/navigation/AppHeader.vue';
 import AppTemplate from '@/components/templates/AppTemplate.vue';
 
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 

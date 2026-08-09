@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { useLoginStore } from '@/stores/login';
 
 export function useProjectAuth() {

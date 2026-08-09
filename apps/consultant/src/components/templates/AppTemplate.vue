@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import VOverlayLoader from '@/components/molecules/feedback/VOverlayLoader.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { useLoginStore } from '@/stores/login';
 
 const authStore = useAuthStore();

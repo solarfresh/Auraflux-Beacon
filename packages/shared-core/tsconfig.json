@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@auraflux/design-system/*": ["src/*"],
-      "@auraflux/shared-core/*": ["../shared-core/src/*"]
+      "@auraflux/design-system/*": ["../design-system/src/*"],
+      "@auraflux/shared-core/*": ["src/*"]
     }
   },
   "include": [

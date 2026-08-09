@@ -6,7 +6,13 @@
     @back="handleBack"
   >
     <template #actions>
-      <VHeaderActions />
+      <VHeaderActions
+        :setting-items="settingItems"
+        @toggle-notifications="toggleNotifications"
+        @click-setting="clickSettings"
+        @open-profile="openProfile"
+        @logout="logout"
+      />
     </template>
   </VHeader>
 </template>
@@ -14,15 +20,23 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VHeaderActions from '@/components/organisms/navigation/VHeaderActions.vue';
+import VHeaderActions from '@auraflux/design-system/components/organisms/navs/VHeaderActions.vue';
 import VHeader from '@auraflux/design-system/components/organisms/navs/VHeader.vue';
 
 import { useRoute, useRouter } from 'vue-router';
+import { useHeaderActions } from '@auraflux/shared-core/composables/useHeaderActions';
 import { useAgentStore } from '@/stores/agent';
 import { useProjectStore } from '@/stores/project';
 
 const route = useRoute();
 const router = useRouter();
+const {
+  settingItems,
+  toggleNotifications,
+  openProfile,
+  logout,
+  clickSettings,
+} = useHeaderActions();
 const agentStore = useAgentStore();
 const projectStore = useProjectStore();
 
