@@ -11,6 +11,6 @@
 <script setup lang="ts">
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import PropositionInitializerCard from '@/components/organisms/proposition/PropositionInitializerCard.vue';
+import PropositionInitializerCard from '@/components/organisms/propositions/PropositionInitializerCard.vue';
 
 </script>

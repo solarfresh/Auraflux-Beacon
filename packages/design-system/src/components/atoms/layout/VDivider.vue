@@ -32,7 +32,6 @@ import type {
   ContainerSizeToken
 } from '@auraflux/design-system/interfaces/theme';
 import { SHARED_LENGTH_CLASSES } from '@auraflux/design-system/constants/theme';
-import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
 export interface VDividerProps {
   /** Orientation of the divider */

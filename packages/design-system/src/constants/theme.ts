@@ -180,10 +180,10 @@ export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
     focus: 'focus-visible:ring-slate-400',
   },
   solid: {
-    bg: 'bg-slate-800',
-    text: 'text-white',
-    border: 'border-slate-800',
-    hover: 'hover:bg-slate-800',
+    bg: 'bg-white',
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    hover: 'hover:bg-slate-400',
     focus: 'focus-visible:ring-slate-400',
   },
   soft: {
