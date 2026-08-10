@@ -75,7 +75,7 @@ const { activeTool, selectTool, nextTool, prevTool } = useWorkspaceBar<AppTool>(
 const showMenu = ref(false);
 
 // Logic derived from your original Header
-const showBack = computed(() => route.name !== 'ProjectPage');
+const showBack = computed(() => route.name !== 'MainPage');
 
 const section = computed(() => {
   // if (route.name === 'ProjectPage') return 'MISSION CONTROL';
@@ -87,9 +87,13 @@ const section = computed(() => {
 });
 
 const handleBack = () => {
-  // if (route.name === 'AgentEditorPage') {
-  //   router.push({ name: 'AgentSettingsPage' });
-  // } else {
+  if (route.name === 'RepositoryPage') {
+    router.push({
+      name: 'MainPage',
+      params: { id: 'test' },
+    });
+  }
+  // else {
   //   router.push({ name: 'ProjectPage' });
   // }
 };

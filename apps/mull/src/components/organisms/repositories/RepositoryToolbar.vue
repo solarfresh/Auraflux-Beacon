@@ -12,7 +12,7 @@
         </VTypography>
 
         <VBadge attention="tertiary" size="sm">
-          24 Chunks / 3 Files
+          {{ totalChunks }} Chunks / {{ fileCount }} Files
         </VBadge>
       </VCluster>
     </template>
@@ -21,10 +21,11 @@
     <template #center>
       <VBox padding="none" class="w-80">
         <VInput
-          v-model="searchQuery"
+          :model-value="searchQuery"
           placeholder="Search questions, tags, or evidence..."
           size="sm"
           rounded="md"
+          @update:model-value="emit('update:searchQuery', $event)"
         />
       </VBox>
     </template>
@@ -32,10 +33,21 @@
     <!-- End Slot: Filter Controls, Divider & Action Buttons -->
     <template #end>
       <VCluster align="center" gap="xs">
-        <VSelect v-model="selectedDomain" size="sm" rounded="md" class="w-44">
+        <VSelect
+          :model-value="selectedDomain"
+          size="sm"
+          rounded="md"
+          class="w-44"
+          @update:model-value="emit('update:selectedDomain', $event)"
+        >
           <option value="">All Domains</option>
-          <option value="it">IT Architecture</option>
-          <option value="finance">Financial Risk</option>
+          <option
+            v-for="domain in domains"
+            :key="domain"
+            :value="domain"
+          >
+            {{ domain }}
+          </option>
         </VSelect>
 
         <VDivider orientation="vertical" size="sm" />
@@ -66,8 +78,6 @@
  * Toolbar control header for searching, filtering, and managing repository chunks.
  * Fully refactored using VCluster, VBox, VTypography, VBadge, and Atomic Form controls.
  */
-import { ref } from 'vue';
-
 // Design System Components
 import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
@@ -79,6 +89,25 @@ import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue'
 import VDivider from '@auraflux/design-system/components/atoms/layout/VDivider.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 
-const searchQuery = ref('');
-const selectedDomain = ref('');
+export interface RepositoryToolbarProps {
+  searchQuery?: string;
+  selectedDomain?: string;
+  totalChunks?: number;
+  fileCount?: number;
+  domains?: string[];
+}
+
+const props = withDefaults(defineProps<RepositoryToolbarProps>(), {
+  searchQuery: '',
+  selectedDomain: '',
+  totalChunks: 0,
+  fileCount: 0,
+  domains: () => [],
+});
+
+const emit = defineEmits<{
+  (e: 'update:searchQuery', value: string): void;
+  (e: 'update:selectedDomain', value: string): void;
+  (e: 'refresh'): void;
+}>();
 </script>

@@ -22,7 +22,7 @@
             weight="bold"
           >
             <template #extra>
-              <VBadge intent="neutral" surface="base" size="sm" class="font-mono">
+              <VBadge intent="neutral" surface="soft" size="sm" class="font-mono">
                 {{ files.length }}
               </VBadge>
             </template>
@@ -140,6 +140,8 @@
  */
 import { ref, computed } from 'vue';
 import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
+import type { ID } from '@auraflux/shared-core/interfaces/core';
+import type { FileItem } from '@/interfaces/repository';
 
 // Design System Components
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -152,18 +154,9 @@ import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.v
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 
-export interface FileItem {
-  id: string | number;
-  name: string;
-  type?: 'pdf' | 'doc' | 'code' | 'default';
-  chunkCount: number;
-  size: string;
-  status?: 'ready' | 'processing' | 'error';
-}
-
 export interface MasterFileListProps {
   files: FileItem[];
-  selectedId?: string | number;
+  selectedId?: ID;
 }
 
 const props = withDefaults(defineProps<MasterFileListProps>(), {
@@ -172,7 +165,7 @@ const props = withDefaults(defineProps<MasterFileListProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: 'select', id: string | number): void;
+  (e: 'select', id: ID): void;
 }>();
 
 const searchQuery = ref('');
@@ -183,7 +176,7 @@ const filteredFiles = computed(() => {
   return props.files.filter((f) => f.name.toLowerCase().includes(q));
 });
 
-const selectFile = (id: string | number) => {
+const selectFile = (id: ID) => {
   emit('select', id);
 };
 

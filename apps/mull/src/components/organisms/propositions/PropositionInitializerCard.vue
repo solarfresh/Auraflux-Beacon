@@ -12,11 +12,17 @@
 
       <!-- Right Header Indicators -->
       <VCluster align="center" gap="sm">
-        <VBadge intent="neutral" surface="base" size="md">
+        <VBadge
+          intent="neutral"
+          surface="base"
+          size="md"
+          class="cursor-pointer"
+          @click="goToRepository(repositoryId)"
+        >
           <VCluster align="center" gap="xs">
             <VIcon name="CircleStack" size="xs" />
             <VTypography tag="span" size="xs">
-              Repository ({{ infoCount }})
+              Repository ({{ fileCount }})
             </VTypography>
           </VCluster>
         </VBadge>
@@ -112,7 +118,7 @@
  * The primary entry card component for initiating a core proposition.
  * Handles problem description input, initial context file upload, and alignment trigger.
  */
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
@@ -126,15 +132,20 @@ import VFormField from '@auraflux/design-system/components/molecules/forms/VForm
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
 import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 
-export interface CorePropositionInitializerCardProps {
-  /** Count of knowledge base items in current page context */
-  infoCount?: number;
+import type { ID } from '@auraflux/shared-core/interfaces/core';
+
+import { useRepositoryStore } from '@/stores/repository';
+import { useRouter } from 'vue-router';
+
+const repositoryStore = useRepositoryStore();
+const router = useRouter();
+
+export interface PropositionInitializerCardProps {
   /** Disable interactions across all fields */
   disabled?: boolean;
 }
 
-withDefaults(defineProps<CorePropositionInitializerCardProps>(), {
-  infoCount: 0,
+withDefaults(defineProps<PropositionInitializerCardProps>(), {
   disabled: false
 });
 
@@ -145,9 +156,21 @@ const emit = defineEmits<{
   (e: 'clear'): void;
 }>();
 
+// Mock
+const repositoryId = ref<ID>('test');
+
 // Form State
 const propositionText = ref('');
 const uploadedFiles = ref<File[]>([]);
+
+const fileCount = computed(() => repositoryStore.files.length);
+
+const goToRepository = (id: ID) => {
+  router.push({
+    name: 'RepositoryPage',
+    params: { id },
+  });
+};
 
 const handleFileChange = (files: File[]) => {
   uploadedFiles.value = files;

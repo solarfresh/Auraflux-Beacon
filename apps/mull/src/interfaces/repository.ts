@@ -149,6 +149,15 @@ export interface RepositoryFile {
   chunks: ChunkData[];
 }
 
+export interface FileItem {
+  id: ID;
+  name: string;
+  type?: 'pdf' | 'doc' | 'code' | 'default';
+  chunkCount: number;
+  size: string;
+  status?: 'ready' | 'processing' | 'error';
+}
+
 /**
  * Aggregate Page Repository View Data
  */

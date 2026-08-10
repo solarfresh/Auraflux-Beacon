@@ -17,7 +17,7 @@
       </VCluster>
 
       <!-- Center area (optional): For search inputs or centered page titles -->
-      <template if="$slots.center">
+      <template v-if="$slots.center">
         <VCluster gap="sm" align="center">
           <slot name="center" />
         </VCluster>

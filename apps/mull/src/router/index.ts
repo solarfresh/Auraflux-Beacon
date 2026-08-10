@@ -5,7 +5,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 export const routes: Array<RouteRecordRaw> = [
   {
-    path: '/projects/:id/',
+    path: '/projects/:id/mull',
     name: 'RoutePage',
     component: RoutePage,
     children: [
