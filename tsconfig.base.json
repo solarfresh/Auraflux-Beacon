@@ -12,7 +12,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@auraflux/design-system/*": ["@auraflux/design-system/*"],
+      "@auraflux/design-system/*": ["@auraflux/design-system/src/*"],
       "@auraflux/shared-core/*": ["packages/shared-core/src/*"]
     },
     "lib": ["esnext", "dom"],

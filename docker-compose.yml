@@ -27,7 +27,32 @@ services:
       - ./.env.development:/auraflux/.env.development
       - ./apps:/auraflux/apps
       - ./packages:/auraflux/packages
+      - /auraflux/node_modules
       - /auraflux/apps/consultant/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
+    networks:
+      - auraflux_network
+
+  mull:
+    build:
+      context: .
+      dockerfile: apps/mull/Dockerfile
+    image: auraflux-mull:latest
+    container_name: auraflux_mull
+    ports:
+      - "5174:5173"
+    # env_file:
+    #   - ./docker-var.env
+    volumes:
+      - ./tsconfig.base.json:/auraflux/tsconfig.base.json
+      - ./.env.development:/auraflux/.env.development
+      - ./apps:/auraflux/apps
+      - ./packages:/auraflux/packages
+      - /auraflux/node_modules
+      - /auraflux/apps/mull/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
     networks:
       - auraflux_network
 

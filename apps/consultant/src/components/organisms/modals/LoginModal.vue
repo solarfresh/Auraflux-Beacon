@@ -61,7 +61,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 

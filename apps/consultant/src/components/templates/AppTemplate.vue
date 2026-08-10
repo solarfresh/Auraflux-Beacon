@@ -1,13 +1,9 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <VBox class="min-h-screen flex flex-col">
 
-    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 w-full border-b border-slate-100 shadow-sm">
-      <slot name="header"></slot>
-    </header>
+    <slot name="header"></slot>
 
-    <main class="grow">
-      <slot></slot>
-    </main>
+    <slot></slot>
 
     <LoginModal
       :isOpen="loginStore.isOpen"
@@ -19,13 +15,14 @@
       message="Loading application..."
       detail="Please wait while we initialize the research canvas."
     />
-  </div>
+  </VBox>
 </template>
 
 <script setup lang="ts">
-import VOverlayLoader from '@/components/molecules/feedback/VOverlayLoader.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VOverlayLoader from '@auraflux/design-system/components/molecules/indicators/VOverlayLoader.vue';
 import LoginModal from '@/components/organisms/modals/LoginModal.vue';
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { useLoginStore } from '@/stores/login';
 
 const authStore = useAuthStore();

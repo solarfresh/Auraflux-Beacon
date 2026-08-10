@@ -1,6 +1,7 @@
 import config from '@auraflux/shared-core/config';
-import { ID } from '@/interfaces/core';
+import { ID } from '@auraflux/shared-core/interfaces/core';
 
+const AURAFLUX_AUTH_URL = config.AURAFLUX_AUTH_URL;
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;
 
 export const AgentsEndpoints = {
@@ -50,15 +51,15 @@ export const CanvasesEndpoints = {
 export const UsersEndpoints = {
   check: {
     get: () =>
-      `${AURAFLUX_NEXUS_URL}/users/status/`,
+      `${AURAFLUX_AUTH_URL}/users/status/`,
   },
   login: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/users/login/`,
+      `${AURAFLUX_AUTH_URL}/users/login/`,
   },
   refreshToken: {
     create: () =>
-      `${AURAFLUX_NEXUS_URL}/users/token/refresh/`,
+      `${AURAFLUX_AUTH_URL}/users/token/refresh/`,
   },
 }
 

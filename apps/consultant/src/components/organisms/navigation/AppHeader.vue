@@ -1,49 +1,61 @@
 <template>
-  <VBox
-    tag="header"
-    intent="brand",
-    surface="solid"
-    class="min-h-16 w-full sticky top-0 z-50 flex items-center"
+  <VHeader
+    title="Auraflux"
+    :section="section"
+    :show-back="showBack"
+    @back="handleBack"
   >
-    <VCluster
-      justify="between"
-      align="center"
-      class="w-full px-6 max-w-7xl mx-auto h-full"
-    >
-      <VHeaderIdentity />
-
-      <VBox class="hidden md:flex grow justify-center px-8 max-w-2xl">
-        <!-- <VWorkspaceBar v-if="isWorkingContext" /> -->
-        <!-- <VGlobalSearch v-else /> -->
-      </VBox>
-
-      <VHeaderActions />
-    </VCluster>
-  </VBox>
+    <template #actions>
+      <VHeaderActions
+        :setting-items="settingItems"
+        @toggle-notifications="toggleNotifications"
+        @click-setting="clickSettings"
+        @open-profile="openProfile"
+        @logout="logout"
+      />
+    </template>
+  </VHeader>
 </template>
 
 <script setup lang="ts">
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VGlobalSearch from '@/components/molecules/forms/VGlobalSearch.vue';
-import VHeaderActions from '@/components/organisms/navigation/VHeaderActions.vue';
-import VHeaderIdentity from '@/components/organisms/navigation/VHeaderIdentity.vue';
-import VWorkspaceBar from '@/components/organisms/navigation/VWorkspaceBar.vue';
 import { computed } from 'vue';
-import { useRoute } from 'vue-router';
+
+import VHeaderActions from '@auraflux/design-system/components/organisms/navs/VHeaderActions.vue';
+import VHeader from '@auraflux/design-system/components/organisms/navs/VHeader.vue';
+
+import { useRoute, useRouter } from 'vue-router';
+import { useHeaderActions } from '@auraflux/shared-core/composables/useHeaderActions';
+import { useAgentStore } from '@/stores/agent';
+import { useProjectStore } from '@/stores/project';
 
 const route = useRoute();
+const router = useRouter();
+const {
+  settingItems,
+  toggleNotifications,
+  openProfile,
+  logout,
+  clickSettings,
+} = useHeaderActions();
+const agentStore = useAgentStore();
+const projectStore = useProjectStore();
 
-withDefaults(defineProps<{}>(), {});
+// Logic derived from your original Header
+const showBack = computed(() => route.name !== 'ProjectPage');
 
-// Check if we are in a project-specific workspace
-const isWorkingContext = computed(() =>
-  ['ConsultationPage', 'ExplorationPage'].includes(route.name as string)
-);
+const section = computed(() => {
+  if (route.name === 'ProjectPage') return 'MISSION CONTROL';
+  if (route.name === 'AgentSettingsPage') return 'Agent Settings';
+  if (route.name === 'ModelProviderSettingsPage') return 'Model Providers';
+  if (route.name === 'AgentEditorPage') return agentStore.currentAgent?.name || '';
+  return projectStore.projectName;
+});
+
+const handleBack = () => {
+  if (route.name === 'AgentEditorPage') {
+    router.push({ name: 'AgentSettingsPage' });
+  } else {
+    router.push({ name: 'ProjectPage' });
+  }
+};
 </script>
-
-<style scoped>
-header :deep(.v-header-content-move) {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-</style>

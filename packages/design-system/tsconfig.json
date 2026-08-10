@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@auraflux/design-system/*": ["src/*"],
-      "@auraflux/shared-core/*": ["../packages/shared-core/src/*"]
+      "@auraflux/shared-core/*": ["../shared-core/src/*"]
     }
   },
   "include": [

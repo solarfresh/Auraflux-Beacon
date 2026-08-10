@@ -7,7 +7,7 @@
         size="sm"
         icon-name="Bell"
         icon-only
-        @click="toggleNotifications"
+        @click="emit('toggle-notifications')"
       />
     </VBox>
 
@@ -30,7 +30,7 @@
           v-for="item in settingItems"
           :key="item.label"
           :icon-name="item.iconName"
-          @click="clickSettings(item.label, item.route)"
+          @click="emit('click-setting', item)"
         >
           {{ item.label }}
         </VDropdownItem>
@@ -60,11 +60,11 @@
         class="hidden group-hover:block absolute top-full right-0"
         attention="primary"
       >
-        <VDropdownItem attention="primary" icon-name="UserCircle" @click="openProfile">
+        <VDropdownItem attention="primary" icon-name="UserCircle" @click="emit('open-profile')">
           Account Profile
         </VDropdownItem>
         <VBox width="full" height="px" intent="brand" surface="solid" class="my-1" />
-        <VDropdownItem attention="primary" icon-name="ArrowRightOnRectangle" @click="logout">
+        <VDropdownItem attention="primary" icon-name="ArrowRightOnRectangle" @click="emit('logout')">
           Sign Out
         </VDropdownItem>
       </VDropdownMenu>
@@ -73,9 +73,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -83,20 +80,16 @@ import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.v
 import VDropdownMenu from '@auraflux/design-system/components/molecules/layout/VDropdownMenu.vue';
 // import VUserAvatar from '@/components/molecules/feedback/VUserAvatar.vue';
 
-const router = useRouter();
-const authStore = useAuthStore();
-const user = computed(() => authStore.user);
+import type { LinkItem } from '@auraflux/design-system/interfaces/navs';
 
-const settingItems = [
-  { label: 'Model Providers', iconName: 'CpuChip', route: '/settings/models' },
-  { label: 'System Preferences', iconName: 'Cog8Tooth', route: '' }
-];
+defineProps<{
+  settingItems?: LinkItem[];
+}>();
 
-const toggleNotifications = () => console.log('Toggle Notifications');
-const openProfile = () => console.log('Toggle User Profile');
-const logout = () => console.log('User logout');
-
-const clickSettings = (label: string, route: string) => {
-  if (route) router.push(route);
-};
+const emit = defineEmits<{
+  (e: 'toggle-notifications'): void;
+  (e: 'click-setting', item: LinkItem): void;
+  (e: 'open-profile'): void;
+  (e: 'logout'): void;
+}>();
 </script>
