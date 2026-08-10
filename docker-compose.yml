@@ -12,6 +12,28 @@ services:
     networks:
       - auraflux_network
 
+  auth:
+    build:
+      context: .
+      dockerfile: apps/auth/Dockerfile
+    image: auraflux-auth-frontend:latest
+    container_name: auraflux_auth_frontend
+    ports:
+      - "5172:5173"
+    # env_file:
+    #   - ./docker-var.env
+    volumes:
+      - ./tsconfig.base.json:/auraflux/tsconfig.base.json
+      - ./.env.development:/auraflux/.env.development
+      - ./apps:/auraflux/apps
+      - ./packages:/auraflux/packages
+      - /auraflux/node_modules
+      - /auraflux/apps/auth/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
+    networks:
+      - auraflux_network
+
   consultant:
     build:
       context: .
