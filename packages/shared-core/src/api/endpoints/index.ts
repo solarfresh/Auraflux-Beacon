@@ -1,5 +1,5 @@
 import config from '@auraflux/shared-core/config';
-import { ID } from '@auraflux/shared-core/interfaces/core';
+import { ID } from '@auraflux/design-system/interfaces/core';
 
 const AURAFLUX_AUTH_URL = config.AURAFLUX_AUTH_URL;
 const AURAFLUX_NEXUS_URL = config.AURAFLUX_NEXUS_URL;

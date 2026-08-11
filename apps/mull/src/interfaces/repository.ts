@@ -1,4 +1,4 @@
-import { DateTimeString, ID } from "@auraflux/shared-core/interfaces/core";
+import { DateTimeString, ID } from "@auraflux/design-system/interfaces/core";
 
 /**
  * Impact level classification for strategy scope.

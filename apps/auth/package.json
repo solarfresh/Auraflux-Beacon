@@ -1,6 +1,6 @@
 {
-  "name": "auraflux_consultant",
-  "version": "0.4.0",
+  "name": "auraflux_auth",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {

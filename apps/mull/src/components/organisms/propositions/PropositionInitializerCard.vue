@@ -132,7 +132,7 @@ import VFormField from '@auraflux/design-system/components/molecules/forms/VForm
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
 import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 
-import type { ID } from '@auraflux/shared-core/interfaces/core';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 
 import { useRepositoryStore } from '@/stores/repository';
 import { useRouter } from 'vue-router';
