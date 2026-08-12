@@ -8,7 +8,7 @@ export interface RepositoryState {
   selectedFileId: ID;
   searchQuery: string;
   selectedDomain: string;
-}
+};
 
 export const useRepositoryStore = defineStore('repository', {
   state: (): RepositoryState => ({

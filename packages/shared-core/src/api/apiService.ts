@@ -1,214 +1,27 @@
-import { AgentsEndpoints, CanvasesEndpoints, ProjectsEndpoints, UsersEndpoints } from '@auraflux/shared-core/api/endpoints';
-import type { Agent, ModelProvider } from '@/interfaces/agents';
-import type { FailedRequestQueueItem, ProcessQueueItem } from '@/interfaces/api';
-import type { ConceptualEdge, ConceptualGraph, ConceptualNode } from '@/interfaces/conceptual-map';
-import type { ChatMessage } from '@/interfaces/core';
-import { ID } from '@/interfaces/core';
-import type { Project } from '@/interfaces/project';
-import type { User } from '@/interfaces/user';
-import axios, { AxiosResponse } from 'axios';
-
-const apiClient = axios.create({
-  // **Crucial for JWT Cookie Auth**
-  withCredentials: true,
-
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-let isRefreshing = false; // Flag to prevent multiple simultaneous refresh calls
-let failedQueue: FailedRequestQueueItem[] = [];   // Queue for failed requests
-
-// Helper function to process the queue of failed requests
-const processQueue = (error: Error | null, token: string | null = null): void => {
-  (failedQueue as ProcessQueueItem[]).forEach(prom => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token as string);
-    }
-  });
-  failedQueue = [];
-};
-
-apiClient.interceptors.response.use(
-  (response) => {
-    // If the response is successful, just return it
-    return response;
-  },
-  async (error) => {
-    const originalRequest = error.config;
-
-    // Check if the error is 401 and the request hasn't been retried yet
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      // Mark the original request for retry
-      originalRequest._retry = true;
-
-      // If a refresh is already in progress, queue the request
-      if (isRefreshing) {
-        return new Promise(function(resolve, reject) {
-          failedQueue.push({ resolve, reject });
-        })
-        .then(() => {
-          // Re-issue the original request (it will now carry the new cookie)
-          return apiClient(originalRequest);
-        })
-        .catch(err => {
-          return Promise.reject(err);
-        });
-      }
-
-      // 🚨 Start the token refresh process
-      isRefreshing = true;
-
-      try {
-        // Send a request to the server's refresh endpoint.
-        // The HTTP-only Refresh Token cookie is sent automatically.
-        const response = await axios.post(UsersEndpoints.refreshToken.create(), null, {
-          withCredentials: true,
-        });
-
-        // Backend should respond with 200 and set new HTTP-only cookies
-        // (New Access Token and optionally a new Refresh Token)
-
-        isRefreshing = false;
-        processQueue(null); // Process all queued requests
-
-        // Re-issue the original request with the new Access Token cookie
-        return apiClient(originalRequest);
-
-      } catch (refreshError) {
-        isRefreshing = false;
-        processQueue(refreshError as Error); // Reject all queued requests
-
-        // Log out the user or redirect to the login page
-        // You would typically use a Vue Router/State/Pinia action here
-        console.error("Token refresh failed. Redirecting to login.");
-        // Example: router.push('/login');
-
-        return Promise.reject(refreshError);
-      }
-    }
-
-    // For all other errors (400, 403, 500, etc.), reject the promise
-    return Promise.reject(error);
-  }
-);
+import { AuthEndpoints } from '@auraflux/shared-core/api/endpoints';
+import { apiClient } from '@auraflux/shared-core/api/apiClient';
+// import type { ID } from '@auraflux/design-system/interfaces/core';
+import type { TokenInfo, User } from '@auraflux/shared-core/interfaces/user';
+import { AxiosResponse } from 'axios';
 
 export const apiService = {
-  agents: {
-    createConfig: (): Promise<AxiosResponse<Agent>> => {
-      return apiClient.post(AgentsEndpoints.createConfig(), {});
-    },
-    createModelProvider: (provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
-      return apiClient.post(AgentsEndpoints.createModelProvider(), provider);
-    },
-    getAgents: (): Promise<AxiosResponse<Agent[]>> => {
-      return apiClient.get(AgentsEndpoints.getAgents());
-    },
-    getAgentDetail: (agentId: ID): Promise<AxiosResponse<Agent>> => {
-      return apiClient.get(AgentsEndpoints.getAgentDetail(agentId));
-    },
-    getAvailableModels: (providerType: string, apiKey: string, providerId?: ID): Promise<AxiosResponse<any>> => {
-      return apiClient.post(AgentsEndpoints.getAvailableModels(), {providerType: providerType, apiKey:apiKey, providerId: providerId})
-    },
-    getModelProviders: (): Promise<AxiosResponse<ModelProvider[]>> => {
-      return apiClient.get(AgentsEndpoints.getModelProviders());
-    },
-    updateAgentDetail: (agentId: ID, agent: Partial<Agent>): Promise<AxiosResponse<ModelProvider>> => {
-      return apiClient.put(AgentsEndpoints.updateAgentDetail(agentId), agent);
-    },
-    updateModelProvider: (providerId: ID, provider: Partial<ModelProvider>): Promise<AxiosResponse<ModelProvider>> => {
-      return apiClient.put(AgentsEndpoints.updateModelProvider(providerId), provider);
-    }
-  },
-  canvases: {
-    graphs: {
-      get: (canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
-        return apiClient.get(CanvasesEndpoints.graphs.get(canvasId));
+  auth: {
+    users: {
+      check: {
+        get: (): Promise<AxiosResponse<User>> => {
+          return apiClient.get(AuthEndpoints.users.check());
+        }
+      },
+      login: {
+        create: (username: string, password: string): Promise<AxiosResponse<User>> => {
+          return apiClient.post(AuthEndpoints.users.login(), {username: username, password: password});
+        },
+      },
+      tokens: {
+        exchange: (serviceName: string): Promise<AxiosResponse<TokenInfo>> => {
+          return apiClient.post(AuthEndpoints.users.exchangeServiceToken(), {service: serviceName});
+        }
       }
     },
-    edges: {
-      create: (canvasId: ID, data: ConceptualEdge): Promise<AxiosResponse<ConceptualEdge>> => {
-        return apiClient.post(CanvasesEndpoints.edges.create(canvasId), data);
-      },
-      recommendConceptualEdges: (canvasId: ID, nodes: ConceptualNode[]): Promise<AxiosResponse<any>> => {
-        return apiClient.post(CanvasesEndpoints.edges.recommendConceptualEdges(canvasId), {'newlyOnboardedNodes': nodes})
-      },
-      delete: (canvasId: ID, edgeId: ID) => {
-        apiClient.delete(CanvasesEndpoints.edges.delete(canvasId, edgeId));
-      },
-      update: (canvasId: ID, edgeId: ID, data: Partial<ConceptualEdge>): Promise<AxiosResponse<ConceptualEdge>> => {
-        return apiClient.put(CanvasesEndpoints.edges.delete(canvasId, edgeId), data);
-      },
-    },
-    nodes: {
-      create: (canvasId: ID, data: Partial<ConceptualNode>) => {
-        return apiClient.post(CanvasesEndpoints.nodes.create(canvasId), data);
-      },
-      delete: (canvasId: ID, nodeId: ID) => {
-        apiClient.delete(CanvasesEndpoints.nodes.delete(canvasId, nodeId));
-      },
-      update: (canvasId: ID, nodeId: ID, data: Partial<ConceptualNode>): Promise<AxiosResponse<ConceptualNode>> => {
-        return apiClient.put(CanvasesEndpoints.nodes.delete(canvasId, nodeId), data);
-      },
-    }
-  },
-  users: {
-    check: {
-      get: (): Promise<AxiosResponse<User>> => {
-        return apiClient.get(UsersEndpoints.check.get());
-      }
-    },
-    login: {
-      create: (username: string, password: string): Promise<AxiosResponse<User>> => {
-        return apiClient.post(UsersEndpoints.login.create(), {username: username, password: password});
-      },
-    },
-  },
-  projects: {
-    base: {
-      getProject: (): Promise<AxiosResponse<Project[]>> => {
-        return apiClient.get(ProjectsEndpoints.base.getProject())
-      },
-      createProject: (data: Project): Promise<AxiosResponse<Project>> => {
-        return apiClient.post(ProjectsEndpoints.base.createProject(), data);
-      },
-      getProjectDetail: (projectId: ID): Promise<AxiosResponse<Project>> => {
-        return apiClient.get(ProjectsEndpoints.base.getProjectDetail(projectId))
-      },
-      updateProjectDetail: (projectId: ID, data: Partial<Project>): Promise<AxiosResponse<Project>> => {
-        return apiClient.put(ProjectsEndpoints.base.updateProjectDetail(projectId), data);
-      },
-      createConceptualNodes: (projectId: ID, data: ConceptualNode): Promise<AxiosResponse<ConceptualNode>> => {
-        return apiClient.post(ProjectsEndpoints.base.createConceptualNodes(projectId), data);
-      },
-      getConceptualNodes: (projectId: ID): Promise<AxiosResponse<ConceptualNode[]>> => {
-        return apiClient.get(ProjectsEndpoints.base.getConceptualNodes(projectId));
-      },
-      updateConceptualNodes: (projectId: ID, nodeId: ID, data: Partial<ConceptualNode>): Promise<AxiosResponse<ConceptualNode>> => {
-        return apiClient.put(ProjectsEndpoints.base.updateConceptualNodes(projectId, nodeId), data);
-      },
-    },
-    consultation: {
-      chat: (projectId: ID, messageContent: string, agentName: string): Promise<AxiosResponse> => {
-        return apiClient.post(ProjectsEndpoints.consultation.chat(projectId), {user_message: messageContent, ea_agent_role_name: agentName})
-      },
-      getChatHistory: (projectId: ID): Promise<AxiosResponse<ChatMessage[]>> => {
-        return apiClient.get(ProjectsEndpoints.consultation.getChatHistory(projectId))
-      },
-    },
-    exploration: {
-      createSession: (projectId: ID): Promise<AxiosResponse> => {
-        return apiClient.post(ProjectsEndpoints.exploration.createSession(projectId))
-      },
-      getSessionInfo: (projectId: ID): Promise<AxiosResponse> => {
-        return apiClient.get(ProjectsEndpoints.exploration.getSessionInfo(projectId))
-      },
-      recommendConceptualNodes: (projectId: ID, canvasId: ID): Promise<AxiosResponse<ConceptualGraph>> => {
-        return apiClient.post(ProjectsEndpoints.exploration.recommendConceptualNodes(projectId, canvasId))
-      }
-    },
-  },
+  }
 }

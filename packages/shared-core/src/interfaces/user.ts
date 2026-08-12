@@ -1,3 +1,9 @@
+
+export interface TokenInfo {
+  token: string;
+  expiresAt: number;
+}
+
 export interface User {
   id: number;
   username: string;

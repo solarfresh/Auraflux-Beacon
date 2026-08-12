@@ -10,7 +10,7 @@ export type ID = string;
 export type DateTimeString = string;
 
 export type EntityAttribute =
-  | 'Name'      // The name of the entity, used for display and identification.
+  | 'NAME'      // The name of the entity, used for display and identification.
   | 'CREATED'   // The timestamp when the entity was created.
   | 'EDITED'    // The timestamp when the entity was last edited.
 

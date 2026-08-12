@@ -1,6 +1,7 @@
 interface RuntimeConfig {
   NODE_ENV: 'development' | 'production' | 'test';
   AURAFLUX_AUTH_URL: string;
+  AURAFLUX_MULL_URL: string;
   AURAFLUX_NEXUS_URL: string;
   AURAFLUX_WS_URL: string;
   DEBOUNCE_TIME: number;
@@ -13,6 +14,7 @@ interface RuntimeConfig {
 const config: RuntimeConfig = {
   NODE_ENV: import.meta.env.VITE_NODE_ENV as RuntimeConfig['NODE_ENV'],
   AURAFLUX_AUTH_URL: import.meta.env.VITE_AURAFLUX_AUTH_URL as string,
+  AURAFLUX_MULL_URL: import.meta.env.VITE_AURAFLUX_MULL_URL as string,
   AURAFLUX_NEXUS_URL: import.meta.env.VITE_AURAFLUX_NEXUS_URL as string,
   AURAFLUX_WS_URL: import.meta.env.VITE_AURAFLUX_WS_URL as string,
   DEBOUNCE_TIME: import.meta.env.VITE_DEBOUNCE_TIME as number,
