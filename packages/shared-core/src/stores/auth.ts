@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const response = await apiService.auth.users.tokens.exchange(serviceName);
         if (response.data) {
-          this.setServiceToken(serviceName, response.data.token, response.data.expiresAt);
+          this.setServiceToken(serviceName, response.data);
         }
       } catch (error) {
 
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', {
       if (!serviceName) return true;
 
       const info = this.accessTokens[serviceName];
-      if (!info) return true;
+      if (!info || !info.expiresAt) return true;
 
       return Date.now() >= info.expiresAt;
     },
@@ -99,13 +99,15 @@ export const useAuthStore = defineStore('auth', {
     async logoutUser(): Promise<void> {
     },
 
-    async setServiceToken(serviceName: string, accessToken: string, expiresInSeconds: number): Promise<void> {
+    async setServiceToken(serviceName: string, token: TokenInfo): Promise<void> {
       const bufferSeconds = 60;
+      const expiresInSeconds = token.expiresIn || 0;
+
       const expiresAt = Date.now() + (expiresInSeconds - bufferSeconds) * 1000;
 
       this.accessTokens[serviceName] = {
-        token: accessToken,
-        expiresAt,
+        ...token,
+        expiresAt: expiresAt,
       };
     }
 

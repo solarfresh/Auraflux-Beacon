@@ -1,7 +1,14 @@
 import { AuthEndpoints } from '@auraflux/shared-core/api/endpoints';
-import type { FailedRequestQueueItem, ProcessQueueItem } from '@auraflux/shared-core/interfaces/api';
 import axios from 'axios';
 import { useAuthStore } from '@auraflux/shared-core/stores/auth';
+
+import type { FailedRequestQueueItem, ProcessQueueItem } from '@auraflux/shared-core/interfaces/api';
+import type { TokenInfo } from '@auraflux/shared-core/interfaces/user';
+
+/**
+ * This module sets up an Axios instance (`apiClient`) with interceptors to handle:
+ * 1. Attaching the appropriate Authorization header for service requests.
+ */
 
 export const apiClient = axios.create({
   // **Crucial for JWT Cookie Auth**
@@ -12,7 +19,15 @@ export const apiClient = axios.create({
   },
 });
 
-async function checkOrRefreshTokenBeforeRequest(scope?: string): Promise<string> {
+/**
+ * The request interceptor's role is to intercept outgoing HTTP requests before they are sent.
+ * It checks if the request requires a service token (based on the `serviceScope` property).
+ * If a service token is needed, it ensures that the token is valid and not expired.
+ * If the token is expired or missing, it fetches a new token from the server.
+ * Once a valid token is obtained, it attaches the token to the request's Authorization header.
+ */
+
+async function checkOrRefreshTokenBeforeRequest(scope?: string): Promise<TokenInfo> {
   const authStore = useAuthStore();
 
   if (!scope) {
@@ -23,7 +38,7 @@ async function checkOrRefreshTokenBeforeRequest(scope?: string): Promise<string>
     await authStore.fetchServiceToken(scope);
   }
 
-  return authStore.accessTokens[scope].token;
+  return authStore.accessTokens[scope];
 }
 
 apiClient.interceptors.request.use(
@@ -34,7 +49,7 @@ apiClient.interceptors.request.use(
     const token = await checkOrRefreshTokenBeforeRequest(scope);
 
     if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers['Authorization'] = `${token.tokenType} ${token.token}`;
     }
 
     return config;
@@ -43,6 +58,14 @@ apiClient.interceptors.request.use(
     return Promise.reject(error);
   }
 );
+
+/**
+ * The response interceptor's role is to handle incoming HTTP responses.
+ * It checks for 401 Unauthorized errors, which indicate that the Access Token has expired.
+ * If a 401 error is detected, it attempts to refresh the Access Token using the Refresh Token (stored in an HTTP-only cookie).
+ * If the refresh is successful, it retries the original request with the new Access Token.
+ * If the refresh fails (e.g., the Refresh Token is also expired), it logs out the user or redirects them to the login page.
+ */
 
 let isRefreshing = false; // Flag to prevent multiple simultaneous refresh calls
 let failedQueue: FailedRequestQueueItem[] = [];   // Queue for failed requests
