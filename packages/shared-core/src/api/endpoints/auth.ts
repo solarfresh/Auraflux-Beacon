@@ -8,9 +8,9 @@ const UsersEndpoints = {
   login: () =>
     `${AURAFLUX_AUTH_URL}/users/login/`,
   refreshToken: () =>
-    `${AURAFLUX_AUTH_URL}/users/tokens/refresh/`,
+    `${AURAFLUX_AUTH_URL}/iam/tokens/refresh/`,
   exchangeServiceToken: () =>
-    `${AURAFLUX_AUTH_URL}/auth/tokens/exchange/`,
+    `${AURAFLUX_AUTH_URL}/iam/tokens/exchange/`,
 };
 
 export const AuthEndpoints = {

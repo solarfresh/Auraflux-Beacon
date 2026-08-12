@@ -34,7 +34,7 @@ async function checkOrRefreshTokenBeforeRequest(scope?: string): Promise<TokenIn
     throw new Error('Service name is required for token management');
   }
 
-  if (!authStore.isServiceTokenExpired(scope)) {
+  if (await authStore.isServiceTokenExpired(scope)) {
     await authStore.fetchServiceToken(scope);
   }
 
@@ -48,8 +48,8 @@ apiClient.interceptors.request.use(
 
     const token = await checkOrRefreshTokenBeforeRequest(scope);
 
-    if (token) {
-      config.headers['Authorization'] = `${token.tokenType} ${token.token}`;
+    if (token?.token) {
+      config.headers['Authorization'] = `${token.token_type} ${token.token}`.trim();
     }
 
     return config;

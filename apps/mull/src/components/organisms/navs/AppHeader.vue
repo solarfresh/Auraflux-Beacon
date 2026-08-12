@@ -37,7 +37,7 @@ const {
 } = useHeaderActions();
 
 // Logic derived from your original Header
-const showBack = computed(() => route.name !== 'MainPage');
+const showBack = computed(() => route.name !== 'ProjectPage');
 
 const section = computed(() => {
   // if (route.name === 'ProjectPage') return 'MISSION CONTROL';

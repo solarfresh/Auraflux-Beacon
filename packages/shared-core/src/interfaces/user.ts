@@ -1,9 +1,9 @@
 
 export interface TokenInfo {
   token: string;
-  tokenType: string;
-  expiresIn: number;
-  expiresAt?: number;
+  token_type?: string;
+  exp?: number;
+  iat?: number;
 }
 
 export interface User {

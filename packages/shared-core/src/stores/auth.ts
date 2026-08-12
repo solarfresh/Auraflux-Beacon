@@ -54,19 +54,19 @@ export const useAuthStore = defineStore('auth', {
           this.setServiceToken(serviceName, response.data);
         }
       } catch (error) {
-
+        console.error(`Error fetching service token for ${serviceName}:`, error);
       } finally {
         this.isLoading = false;
       }
     },
 
     async isServiceTokenExpired(serviceName?: string): Promise<boolean> {
-      if (!serviceName) return true;
+      if (!serviceName) return false;
 
       const info = this.accessTokens[serviceName];
-      if (!info || !info.expiresAt) return true;
+      if (!info || !info.exp) return true;
 
-      return Date.now() >= info.expiresAt;
+      return Date.now() >= info.exp;
     },
 
     /**
@@ -99,15 +99,32 @@ export const useAuthStore = defineStore('auth', {
     async logoutUser(): Promise<void> {
     },
 
+    async parseJwt(token: string): Promise<TokenInfo | null> {
+      try {
+        const base64Url = token.split('.')[1];
+        if (!base64Url) return null;
+
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+
+        return JSON.parse(jsonPayload) as TokenInfo;
+      } catch (error) {
+        console.error('Failed to parse JWT:', error);
+        return null;
+      }
+    },
+
     async setServiceToken(serviceName: string, token: TokenInfo): Promise<void> {
-      const bufferSeconds = 60;
-      const expiresInSeconds = token.expiresIn || 0;
-
-      const expiresAt = Date.now() + (expiresInSeconds - bufferSeconds) * 1000;
-
+      const decodedToken = await this.parseJwt(token.token);
       this.accessTokens[serviceName] = {
         ...token,
-        expiresAt: expiresAt,
+        ...decodedToken
       };
     }
 
