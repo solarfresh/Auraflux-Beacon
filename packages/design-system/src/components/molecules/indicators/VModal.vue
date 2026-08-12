@@ -21,20 +21,19 @@
         <VBox
           v-if="$slots.header || title"
           tag="header"
-          intent="neutral"
-          surface="outline"
+          intent="brand"
+          surface="solid"
           padding="md"
-          border="bottom"
+          border="none"
           class="flex items-center justify-between"
         >
           <slot name="header">
-            <VTypography tag="h3" size="lg" weight="bold" intent="neutral" surface="base">
+            <VTypography tag="h3" size="lg" weight="bold">
               {{ title }}
             </VTypography>
           </slot>
 
           <VButton
-            theme="ghost"
             iconOnly
             iconName="XMark"
             size="sm"

@@ -8,13 +8,16 @@ export const apiService = {
   projects: {
     get: (tag?: string): Promise<AxiosResponse<Project[]>> => {
       return apiClient.get(MullEndpoints.projects.base(), {
+        serviceScope: 'mull',
         params: {
           ...(tag && { tag })
         }
       });
     },
     create: (payload: Partial<Project>): Promise<AxiosResponse<Project>> => {
-      return apiClient.post(MullEndpoints.projects.base(), payload);
+      return apiClient.post(MullEndpoints.projects.base(), payload, {
+        serviceScope: 'mull',
+      });
     }
   }
 }

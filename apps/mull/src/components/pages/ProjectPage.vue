@@ -24,14 +24,12 @@
               class="h-48"
               @click="isEditModalOpen = true"
             />
-<!--
-            <VProjectCard
+            <ProjectCard
               v-for="project in filteredProjects"
               :key="project.id"
               :project="project"
-              @click="navigateToProject(project.id, project.currentStage)"
+              @click="navigateToProject(project.id)"
             />
-             -->
           </VGrid>
         </VBox>
 
@@ -49,7 +47,7 @@
       </VStack>
     </VBox>
   </VBox>
-<!--
+
   <VBox tag="main" class="w-full min-h-screen bg-slate-50">
     <ProjectModal
       :is-open="isEditModalOpen"
@@ -59,23 +57,37 @@
       @confirm="handleProjectEditting"
     />
   </VBox>
- -->
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-// import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useProjectStore } from '@/stores/project';
 
 // Layout Atoms
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
 import VProjectToolbar, {type ProjectSelectorState} from '@auraflux/design-system/components/organisms/navs/VProjectToolbar.vue';
-// import VProjectCard from '@/components/organisms/projects/VProjectCard.vue';
+import ProjectCard from '@/components/organisms/projects/ProjectCard.vue';
 import VInteractivePlaceholder from '@auraflux/design-system/components/molecules/resources/VInteractivePlaceholder.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
-// import ProjectModal from '@/components/organisms/projects/ProjectModal.vue';
-// import type { ID } from '@auraflux/design-system/interfaces/core';
+import ProjectModal from '@/components/organisms/projects/ProjectModal.vue';
+
+import type { ID } from '@auraflux/design-system/interfaces/core';
+import type { Project } from '@/interfaces/project';
+
+const router = useRouter();
+const projectStore = useProjectStore();
+const localProject = ref<Project>({
+  id: '',
+  name: '',
+  description: '',
+  status: 'LOCKED',
+  tags: [],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString()
+});
 
 // --- State Management ---
 const isFiltering = ref(false);
@@ -85,6 +97,47 @@ const selectorState = ref<ProjectSelectorState>({
   sorter: 'EDITED'
 });
 
-const hasProjects = computed(() => 0);
+const filteredProjects = computed((): Project[] => {
+  let list = projectStore.projects;
 
+  isFiltering.value = false;
+  // Filter Logic
+  if (selectorState.value.filter !== 'ALL') {
+    isFiltering.value = true;
+    list = list.filter(p => p.status === selectorState.value.filter);
+  }
+
+  // Sort Logic
+  return [...list].sort((a, b) => {
+    return selectorState.value.sorter === 'EDITED'
+      ? new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+});
+
+const hasProjects = computed(() => projectStore.projects.length > 0);
+
+onMounted(async () => {
+  await projectStore.fetchProjects();
+});
+
+const handleProjectEditting = async () => {
+  localProject.value = {
+    id: '',
+    name: '',
+    description: '',
+    status: 'LOCKED',
+    tags: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+  projectStore.createProject(localProject.value);
+};
+
+const navigateToProject = (projectId: ID) => {
+  router.push({
+    name: 'MainPage',
+    params: { id: projectId },
+  });
+};
 </script>
