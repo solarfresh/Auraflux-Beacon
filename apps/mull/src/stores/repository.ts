@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
-import type { ChunkData, FileItem } from '@/interfaces/repository';
+import type { ChunkData, RepositoryFile } from '@/interfaces/repository';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 
 export interface RepositoryState {
-  files: FileItem[];
+  files: RepositoryFile[];
   chunks: ChunkData[];
   selectedFileId: ID;
   searchQuery: string;
@@ -14,9 +14,9 @@ export const useRepositoryStore = defineStore('repository', {
   state: (): RepositoryState => ({
     // --- Master Files Data ---
     files: [
-      { id: 'f1', name: 'architecture_spec.pdf', type: 'pdf', chunkCount: 2, size: '2.4 MB', status: 'ready' },
-      { id: 'f2', name: 'security_policy_v2.docx', type: 'doc', chunkCount: 1, size: '1.1 MB', status: 'ready' },
-      { id: 'f3', name: 'data_pipeline.py', type: 'code', chunkCount: 1, size: '340 KB', status: 'processing' },
+      { id: 'f1', fileName: 'architecture_spec.pdf', fileType: 'pdf', chunkCount: 2, fileSize: '2.4 MB', status: 'SUCCESS', createdAt: '', updatedAt: '', chunks: []},
+      { id: 'f2', fileName: 'security_policy_v2.docx', fileType: 'doc', chunkCount: 1, fileSize: '1.1 MB', status: 'SUCCESS', createdAt: '', updatedAt: '', chunks: [] },
+      { id: 'f3', fileName: 'data_pipeline.py', fileType: 'code', chunkCount: 1, fileSize: '340 KB', status: 'PROCESSING', createdAt: '', updatedAt: '', chunks: []},
     ],
 
     // --- Chunks Data compliant with repository.ts ---
@@ -193,7 +193,7 @@ export const useRepositoryStore = defineStore('repository', {
       });
     },
 
-    filteredFiles(): FileItem[] {
+    filteredFiles(): RepositoryFile[] {
       if (!this.searchQuery.trim() && !this.selectedDomain) {
         return this.files;
       }
@@ -219,6 +219,10 @@ export const useRepositoryStore = defineStore('repository', {
   },
 
   actions: {
+    async refreshData() {
+      console.log('Fetching fresh repository data from API...');
+    },
+
     selectFile(fileId: ID) {
       this.selectedFileId = fileId;
     },
@@ -229,10 +233,6 @@ export const useRepositoryStore = defineStore('repository', {
 
     setSelectedDomain(domain: string) {
       this.selectedDomain = domain;
-    },
-
-    async refreshData() {
-      console.log('Fetching fresh repository data from API...');
     },
   },
 });

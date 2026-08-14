@@ -143,20 +143,17 @@ export interface RepositoryFile {
   /** File format extension */
   fileType: SupportedFileType | string;
 
+  chunkCount: number;
+
+  status?: ProcessStatus;
+
   /** ISO 8601 UTC timestamp of upload */
-  uploadTime: DateTimeString;
+  createdAt: DateTimeString;
+
+  updatedAt: DateTimeString;
 
   /** List of extracted chunks from this document */
   chunks: ChunkData[];
-}
-
-export interface FileItem {
-  id: ID;
-  name: string;
-  type?: 'pdf' | 'doc' | 'code' | 'default';
-  chunkCount: number;
-  size: string;
-  status?: ProcessStatus;
 }
 
 /**

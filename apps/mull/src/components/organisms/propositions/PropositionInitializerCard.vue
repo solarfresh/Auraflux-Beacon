@@ -134,9 +134,11 @@ import VCard from '@auraflux/design-system/components/molecules/resources/VCard.
 
 import type { ID } from '@auraflux/design-system/interfaces/core';
 
+import { useProjectStore } from '@/stores/project';
 import { useRepositoryStore } from '@/stores/repository';
 import { useRouter } from 'vue-router';
 
+const projectStore = useProjectStore();
 const repositoryStore = useRepositoryStore();
 const router = useRouter();
 
@@ -151,7 +153,7 @@ withDefaults(defineProps<PropositionInitializerCardProps>(), {
 
 const emit = defineEmits<{
   /** Triggered when the user submits with context text and optional files */
-  (e: 'submit', payload: { text: string; files: File[] }): void;
+  (e: 'submit', payload: string): void;
   /** Triggered when clear action is called */
   (e: 'clear'): void;
 }>();
@@ -173,6 +175,7 @@ const goToRepository = (id: ID) => {
 };
 
 const handleFileChange = (files: File[]) => {
+  projectStore.uploadRepositoryFiles(files)
   uploadedFiles.value = files;
 };
 
@@ -184,9 +187,6 @@ const handleClear = () => {
 
 const handleSubmit = () => {
   if (!propositionText.value.trim()) return;
-  emit('submit', {
-    text: propositionText.value,
-    files: uploadedFiles.value
-  });
+  emit('submit', propositionText.value);
 };
 </script>

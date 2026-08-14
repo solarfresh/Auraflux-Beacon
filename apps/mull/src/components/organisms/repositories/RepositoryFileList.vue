@@ -62,7 +62,7 @@
                 <VCluster justify="between" align="start" fullWidth gap="xs">
                   <VCluster gap="xs" align="center" class="min-w-0 flex-1">
                     <VIcon
-                      :name="getFileIcon(file.type)"
+                      :name="getFileIcon(file.fileType)"
                       size="sm"
                       type="solid"
                     />
@@ -71,9 +71,9 @@
                       size="sm"
                       weight="semibold"
                       class="truncate"
-                      :title="file.name"
+                      :title="file.fileName"
                     >
-                      {{ file.name }}
+                      {{ file.fileName }}
                     </VTypography>
                   </VCluster>
 
@@ -110,7 +110,7 @@
                       weight="normal"
                       class="font-mono"
                     >
-                      {{ file.size }}
+                      {{ file.fileSize }}
                     </VTypography>
                   </VCluster>
                 </VBox>
@@ -141,7 +141,7 @@
 import { ref, computed } from 'vue';
 import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
 import type { ID } from '@auraflux/design-system/interfaces/core';
-import type { FileItem } from '@/interfaces/repository';
+import type { RepositoryFile } from '@/interfaces/repository';
 
 // Design System Components
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -155,7 +155,7 @@ import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 
 export interface MasterFileListProps {
-  files: FileItem[];
+  files: RepositoryFile[];
   selectedId?: ID;
 }
 
@@ -173,7 +173,7 @@ const searchQuery = ref('');
 const filteredFiles = computed(() => {
   if (!searchQuery.value.trim()) return props.files;
   const q = searchQuery.value.toLowerCase();
-  return props.files.filter((f) => f.name.toLowerCase().includes(q));
+  return props.files.filter((f) => f.fileName.toLowerCase().includes(q));
 });
 
 const selectFile = (id: ID) => {

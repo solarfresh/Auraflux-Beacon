@@ -79,6 +79,7 @@ import type { Project } from '@/interfaces/project';
 
 const router = useRouter();
 const projectStore = useProjectStore();
+
 const localProject = ref<Project>({
   id: '',
   name: '',
@@ -116,10 +117,6 @@ const filteredProjects = computed((): Project[] => {
 });
 
 const hasProjects = computed(() => projectStore.projects.length > 0);
-
-onMounted(async () => {
-  await projectStore.fetchProjects();
-});
 
 const handleProjectEditting = async () => {
   localProject.value = {

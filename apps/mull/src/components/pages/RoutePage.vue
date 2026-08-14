@@ -17,17 +17,20 @@ import VOverlayLoader from '@auraflux/design-system/components/molecules/indicat
 import AppHeader from '@/components/organisms/navs/AppHeader.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
-import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import { onMounted } from 'vue';
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
+import { useProjectStore } from '@/stores/project';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const projectStore = useProjectStore();
 const router = useRouter();
 
 onMounted(async () => {
   // Check for valid JWT cookie on initial load
   try {
     await authStore.checkAuthStatus();
+    await projectStore.fetchProjects();
   } catch (err: any) {
     router.push('/')
   }
