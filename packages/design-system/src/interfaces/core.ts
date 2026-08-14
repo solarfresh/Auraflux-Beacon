@@ -28,3 +28,27 @@ export type EntityStatus =
   | 'INACTIVE'  // Not currently in use but can be reactivated
   | 'ARCHIVED'  // Removed from active use but kept for historical reference
   | 'DELETED';  // Marked for deletion and no longer accessible
+
+/**
+ * Task & Asynchronous Process Status
+ * Used for file processing, AI computations, background jobs, import/export, and other dynamic processes.
+ */
+export type ProcessStatus =
+  | 'IDLE'         // Idle
+  | 'QUEUED'       // Queued
+  | 'PROCESSING'   // Processing / In progress
+  | 'SUCCESS'      // Completed / Success
+  | 'ERROR'        // Failed / Error
+  | 'CANCELLED'    // Cancelled
+  | 'PAUSED';      // Paused
+
+/**
+ * System & Connection Status (Operational Status)
+ * Used for services, nodes, network connection, and device status.
+ */
+export type OperationalStatus =
+  | 'ONLINE'
+  | 'OFFLINE'
+  | 'CONNECTING'
+  | 'MAINTENANCE'
+  | 'DEGRADED';

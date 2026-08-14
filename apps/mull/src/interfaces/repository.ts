@@ -1,4 +1,5 @@
 import { DateTimeString, ID } from "@auraflux/design-system/interfaces/core";
+import { ProcessStatus } from "@auraflux/design-system/interfaces/core";
 
 /**
  * Impact level classification for strategy scope.
@@ -131,7 +132,7 @@ export interface ChunkData {
  */
 export interface RepositoryFile {
   /** Unique document identifier */
-  fileId: ID;
+  id: ID;
 
   /** Original file name (e.g., "Q3_Procurement_Plan.pdf") */
   fileName: string;
@@ -155,7 +156,7 @@ export interface FileItem {
   type?: 'pdf' | 'doc' | 'code' | 'default';
   chunkCount: number;
   size: string;
-  status?: 'ready' | 'processing' | 'error';
+  status?: ProcessStatus;
 }
 
 /**
