@@ -1,3 +1,11 @@
+
+export interface TokenInfo {
+  token: string;
+  token_type?: string;
+  exp?: number;
+  iat?: number;
+}
+
 export interface User {
   id: number;
   username: string;

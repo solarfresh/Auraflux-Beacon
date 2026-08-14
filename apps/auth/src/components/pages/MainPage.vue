@@ -10,7 +10,7 @@
     />
 
     <VOverlayLoader
-      v-if="authStore.loading"
+      v-if="authStore.isLoading"
       message="Loading application..."
       detail="Please wait while we initialize the research canvas."
     />

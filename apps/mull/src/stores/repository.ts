@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { ChunkData, FileItem } from '@/interfaces/repository';
-import type { ID } from '@auraflux/shared-core/interfaces/core';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 
 export interface RepositoryState {
   files: FileItem[];
@@ -8,7 +8,7 @@ export interface RepositoryState {
   selectedFileId: ID;
   searchQuery: string;
   selectedDomain: string;
-}
+};
 
 export const useRepositoryStore = defineStore('repository', {
   state: (): RepositoryState => ({

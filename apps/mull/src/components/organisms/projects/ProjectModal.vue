@@ -43,6 +43,9 @@
         >
           <template #default="{ id }">
             <VTagInput
+              intent="brand"
+              surface="soft"
+              padding="xs"
               :id="id"
               v-model="localProject.tags"
               placeholder="Press Enter to add a tag (e.g., Strategy, Migration, Research)"
@@ -55,13 +58,13 @@
 
     <template #footer>
       <VButton
-        variant="tertiary"
         :disabled="isSubmitting"
         @click="handleClose"
       >
         Cancel
       </VButton>
       <VButton
+        attention="primary"
         :loading="isSubmitting"
         @click="submitForm"
       >
@@ -76,14 +79,14 @@ import { ref, reactive } from 'vue';
 import { useProjectStore } from '@/stores/project';
 
 // Components
-import VModal from '@/components/molecules/feedback/VModal.vue';
+import VModal from '@auraflux/design-system/components/molecules/indicators/VModal.vue';
 import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import VTagInput from '@/components/molecules/forms/VTagInput.vue';
+import VTagInput from '@auraflux/design-system/components/molecules/forms/VTagInput.vue';
 
 import type { Project } from '@/interfaces/project';
 

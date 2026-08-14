@@ -140,7 +140,7 @@
  */
 import { ref, computed } from 'vue';
 import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
-import type { ID } from '@auraflux/shared-core/interfaces/core';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { FileItem } from '@/interfaces/repository';
 
 // Design System Components

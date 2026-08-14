@@ -45,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { apiService } from '@auraflux/shared-core/api/apiService';
+import { apiService } from '@/api/apiService';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';

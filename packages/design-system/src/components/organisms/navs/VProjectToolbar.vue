@@ -58,7 +58,11 @@ import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolb
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VSegmentedControl, { type SegmentedOption } from '@auraflux/design-system/components/molecules/forms/VSegmentedControl.vue';
 import type { SortOption } from '@auraflux/design-system/interfaces/indicators';
-import type { ProjectFilterType, ProjectSortType, ProjectSelectorState } from '@/interfaces/project';
+import type { EntityAttribute, EntityStatus } from '@auraflux/design-system/interfaces/core';
+import type { BaseSelectorState } from '@auraflux/design-system/interfaces/indicators';
+
+type ProjectFilterType = 'ALL' | EntityStatus
+export type ProjectSelectorState = BaseSelectorState<ProjectFilterType, EntityAttribute>;
 
 const props = defineProps<{
   modelValue: ProjectSelectorState;
@@ -79,7 +83,7 @@ const updateFilter = (filter: ProjectFilterType) => {
   emit('update:modelValue', { ...props.modelValue, filter });
 };
 
-const updateSorter = (sorter: ProjectSortType | SortOption<ProjectSortType>) => {
+const updateSorter = (sorter: EntityAttribute | SortOption<EntityAttribute>) => {
   emit('update:modelValue', { ...props.modelValue, sorter });
 };
 </script>

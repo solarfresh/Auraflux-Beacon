@@ -44,6 +44,7 @@ export const SHARED_BORDER_CLASSES: Record<BorderToken, string> = {
   all: 'border',
   top: 'border-t',
   bottom: 'border-b',
+  y: 'border-y',
   left: 'border-l',
   right: 'border-r',
   dashed: 'border-2 border-dashed',
@@ -77,6 +78,7 @@ export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {
   medium: 'font-medium',
   semibold: 'font-semibold',
   bold: 'font-bold',
+  extrabold: 'font-extrabold'
 };
 
 export const SHARED_GAP_CLASSES: Record<GapSizeToken, string> = {

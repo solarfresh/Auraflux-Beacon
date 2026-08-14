@@ -1,100 +1,132 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
 import { apiService } from '@auraflux/shared-core/api/apiService';
 
-import type { User } from '@auraflux/shared-core/interfaces/user';
+import type { TokenInfo, User } from '@auraflux/shared-core/interfaces/user';
 
-export const useAuthStore = defineStore('auth', () => {
-  // --- State ---
+interface AuthState {
+  user: User | null;
+  accessTokens: Record<string, TokenInfo>;
+  isLoading: boolean;
+};
 
-  // Use 'ref' to create reactive state properties
-  const user = ref<User | null>(null);
-  const loading = ref(false); // Tracks if the initial auth check is running
+export const useAuthStore = defineStore('auth', {
+  state: (): AuthState => ({
+    user: null,
+    accessTokens: {},
+    isLoading: false
+  }),
 
-  // --- Getters (Computed Properties) ---
+  getters: {
+    isLoggedIn: (state) => {
+      return !!state.user
+    },
+  },
 
-  // Use 'computed' to derive state
-  const isLoggedIn = computed(() => !!user.value);
+  actions: {
+    async checkAuthStatus(): Promise<void> {
+      this.isLoading = true;
 
-  // --- Actions (Methods) ---
+      try {
+        const response = await apiService.auth.users.check.get();
+        let user_info: User = response.data;
 
-  /**
-   * Performs the initial check for authentication status (e.g., checking JWT cookie).
-   * This is typically called once on application startup.
-   */
-  async function checkAuthStatus() {
-    loading.value = true;
-    try {
-      // 1. Send request to backend endpoint (e.g., GET /api/user or GET /api/fetch-state)
-      // If the request succeeds (status 200) because the JWT cookie is valid, the user is authenticated.
-
-      // MOCK: Simulate an initial check that finds a valid user
-      const response = await apiService.users.check.get();
-      let user_info: User = response.data;
-
-      if (user_info) {
-        user.value = user_info;
-      } else {
-        user.value = null;
-        throw new Error('User is not logged in or the token expired');
+        if (user_info) {
+          this.user = user_info;
+        } else {
+          this.user = null;
+          throw new Error('User is not logged in or the token expired');
+        }
+      } catch (error) {
+        console.error('Error during initial authentication check:', error);
+        this.user = null;
+        throw error;
+      } finally {
+        this.isLoading = false;
       }
-    } catch (error) {
-      console.error('Error during initial authentication check:', error);
-      user.value = null;
-      throw error;
-    } finally {
-      loading.value = false;
-    }
-  }
+    },
 
-  /**
-   * Handles user login after successful credentials submission.
-   * Assumes tokens are set as HttpOnly cookies by the backend response.
-   */
-  async function loginUser(username: string, password: string) {
-    try {
-      // 1. Call POST /api/login endpoint
-      const response = await apiService.users.login.create(username, password);
-      let user_info = response.data;
+    async fetchServiceToken(serviceName: string): Promise<void> {
+      this.isLoading = true;
 
-      if (user_info) {
-        // 3. Update local user state
-        user.value = user_info;
-        return true;
-      } else {
-        // Handle failed login (e.g., invalid credentials)
-        throw new Error('Login failed.');
+      try {
+        const response = await apiService.auth.users.tokens.exchange(serviceName);
+        if (response.data) {
+          this.setServiceToken(serviceName, response.data);
+        }
+      } catch (error) {
+        console.error(`Error fetching service token for ${serviceName}:`, error);
+      } finally {
+        this.isLoading = false;
       }
-    } catch (error) {
-      user.value = null;
-      throw error;
+    },
+
+    async isServiceTokenExpired(serviceName?: string): Promise<boolean> {
+      if (!serviceName) return false;
+
+      const info = this.accessTokens[serviceName];
+      if (!info || !info.exp) return true;
+
+      return Date.now() >= info.exp;
+    },
+
+    /**
+     * Handles user login after successful credentials submission.
+     * Assumes tokens are set as HttpOnly cookies by the backend response.
+     */
+    async loginUser(username: string, password: string): Promise<boolean> {
+      try {
+        // 1. Call POST /api/login endpoint
+        const response = await apiService.auth.users.login.create(username, password);
+        let user_info = response.data;
+
+        if (user_info) {
+          // 3. Update local user state
+          this.user = user_info;
+          return true;
+        } else {
+          // Handle failed login (e.g., invalid credentials)
+          throw new Error('Login failed.');
+        }
+      } catch (error) {
+        this.user = null;
+        throw error;
+      }
+    },
+
+    /**
+     * Logs the user out and clears the local state.
+     */
+    async logoutUser(): Promise<void> {
+    },
+
+    async parseJwt(token: string): Promise<TokenInfo | null> {
+      try {
+        const base64Url = token.split('.')[1];
+        if (!base64Url) return null;
+
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+
+        const jsonPayload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+            .join('')
+        );
+
+        return JSON.parse(jsonPayload) as TokenInfo;
+      } catch (error) {
+        console.error('Failed to parse JWT:', error);
+        return null;
+      }
+    },
+
+    async setServiceToken(serviceName: string, token: TokenInfo): Promise<void> {
+      const decodedToken = await this.parseJwt(token.token);
+      this.accessTokens[serviceName] = {
+        ...token,
+        ...decodedToken
+      };
     }
+
   }
-
-  /**
-   * Logs the user out and clears the local state.
-   */
-  async function logoutUser() {
-    // 1. Call POST /api/logout endpoint (to clear backend tokens/cookies)
-    try {
-        await fetch('/api/logout', { method: 'POST' });
-    } catch (error) {
-        console.warn("Logout failed on server, proceeding with client cleanup.", error);
-    }
-
-    // 2. Clear local state
-    user.value = null;
-
-    // Note: The main app should refresh or redirect the user after logout.
-  }
-
-  // --- Return the public interface ---
-  return {
-    user,
-    loading,
-    isLoggedIn,
-    checkAuthStatus,
-    loginUser,
-    logoutUser,
-  };
 });

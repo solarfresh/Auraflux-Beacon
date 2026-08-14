@@ -4,7 +4,7 @@ services:
 
   gateway:
     image: nginx:alpine
-    container_name: auraflux_gateway
+    container_name: auraflux_frontend_gateway
     ports:
       - "80:80"
     volumes:
@@ -60,8 +60,8 @@ services:
     build:
       context: .
       dockerfile: apps/mull/Dockerfile
-    image: auraflux-mull:latest
-    container_name: auraflux_mull
+    image: auraflux-mull-frontend:latest
+    container_name: auraflux_mull_frontend
     ports:
       - "5174:5173"
     # env_file:
