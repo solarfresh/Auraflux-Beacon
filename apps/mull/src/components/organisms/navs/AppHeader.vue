@@ -55,8 +55,8 @@ const handleBack = () => {
       params: { id: 'test' },
     });
   }
-  // else {
-  //   router.push({ name: 'ProjectPage' });
-  // }
+  else {
+    router.push({ name: 'ProjectPage' });
+  }
 };
 </script>

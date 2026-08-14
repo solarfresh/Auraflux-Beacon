@@ -71,7 +71,7 @@ export interface VChipProps {
 }
 
 withDefaults(defineProps<VChipProps>(), {
-  padding: 'sm',
+  padding: 'xs',
   rounded: 'xl',
   border: 'all',
   attention: 'secondary',

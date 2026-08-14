@@ -12,30 +12,33 @@
   >
     <VStack gap="md">
       <VCluster justify="between" align="center">
-        <VBox
-          padding="xs"
-          rounded="md"
-          :intent="isReviewed ? 'warning' : 'brand'"
-          surface="soft"
-          class="flex items-center justify-center shrink-0"
-        >
-          <VIcon
-            :name="isReviewed ? 'Sparkles' : 'Folder'"
-            size="sm"
-          />
-        </VBox>
+        <VCluster align="center">
+          <VBox
+            padding="xs"
+            rounded="md"
+            :intent="isReviewed ? 'warning' : 'brand'"
+            surface="soft"
+            class="flex items-center justify-center shrink-0"
+          >
+            <VIcon
+              :name="isReviewed ? 'Sparkles' : 'Folder'"
+              size="sm"
+            />
+          </VBox>
+
+          <VTypography
+            weight="bold"
+            size="md"
+            class="line-clamp-1 transition-colors"
+          >
+            {{ project.name }}
+          </VTypography>
+        </VCluster>
 
         <slot name="actions" />
       </VCluster>
 
       <VStack gap="xs">
-        <VTypography
-          weight="bold"
-          size="md"
-          class="line-clamp-1 group-hover:text-indigo-600 transition-colors"
-        >
-          {{ project.name }}
-        </VTypography>
         <VTypography
           size="sm"
           intent="neutral"
@@ -60,7 +63,7 @@
       >
         <VCluster gap="xs" align="center">
           <VChip
-            v-for="tag in project.tags?.slice(0, 2)"
+            v-for="tag in (isExpanded ? project.tags : project.tags?.slice(0, 2))"
             intent="brand"
             surface="soft"
             :key="tag"
@@ -73,8 +76,9 @@
             intent="neutral"
             surface="ghost"
             weight="medium"
+            @click.stop="isExpanded = !isExpanded"
           >
-            +{{ project.tags.length - 2 }}
+            {{ isExpanded ? 'Less' : `+${project.tags.length - 2}` }}
           </VTypography>
         </VCluster>
 
@@ -92,7 +96,7 @@
  * A business molecule representing a single project entity.
  * Maps domain-specific states (AI-generated vs. Manual) to design tokens.
  */
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
@@ -133,6 +137,8 @@ const props = withDefaults(defineProps<VProjectCardProps>(), {
   clickable: true,
   hoverable: true,
 });
+
+const isExpanded = ref<boolean>(false);
 
 const isReviewed = computed(() => props.project.status === 'REVIEW');
 
