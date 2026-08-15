@@ -15,6 +15,11 @@ export type SorterState<T extends string = string> = T;
  */
 export type SortOrder = 'asc' | 'desc';
 
+export interface SelectOption {
+  label: string;
+  value: string;
+}
+
 /**
  * Generic sort option object structure.
  */
