@@ -32,12 +32,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VHeaderActions from '@auraflux/design-system/components/organisms/navs/VHeaderActions.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VHeader from '@auraflux/design-system/components/organisms/navs/VHeader.vue';
+import VHeaderActions from '@auraflux/design-system/components/organisms/navs/VHeaderActions.vue';
 
-import { useRoute, useRouter } from 'vue-router';
-import { useHeaderActions } from '@auraflux/shared-core/composables/useHeaderActions';
 import { useProjectStore } from '@/stores/project';
+import { useHeaderActions } from '@auraflux/shared-core/composables/useHeaderActions';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
 const router = useRouter();
@@ -75,7 +76,7 @@ const handleBack = () => {
   } else {
     router.push({
       name: 'MainPage',
-      params: { id: projectId.value },
+      params: { projectId: projectId.value },
     });
   }
 };

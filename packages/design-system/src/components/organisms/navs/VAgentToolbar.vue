@@ -16,26 +16,31 @@
           class="flex items-center gap-2"
           @click="isDropdownOpen = !isDropdownOpen"
         >
-          <VIcon name="Bot" size="sm" />
-          <VTypography tag="span" weight="semibold" size="sm">
-            {{ currentAgent?.name || 'Select Agent' }}
-          </VTypography>
-          <VBox
-            v-if="isDirty"
-            rounded="full"
-            intent="danger"
-            surface="soft"
-            tag="span"
-            class="w-2 h-2"
-            title="Unsaved changes"
-          />
-          <VIcon name="ChevronDown" size="xs" />
+          <VCluster gap="md" align="center" justify="between">
+            <VIcon name="Bot" size="sm" />
+            <VTypography tag="span" weight="semibold" size="sm">
+              {{ currentAgent?.name || 'Select Agent' }}
+            </VTypography>
+            <VBox
+              v-if="isDirty"
+              rounded="full"
+              intent="danger"
+              surface="solid"
+              tag="span"
+              class="w-2 h-2"
+              title="Unsaved changes"
+            />
+            <VIcon name="ChevronDown" size="xs" />
+          </VCluster>
         </VButton>
 
         <!-- Dropdown Menu -->
         <VDropdownMenu
           v-if="isDropdownOpen"
-          class="absolute top-full left-0 mt-1 w-96 z-50 shadow-xl"
+          intent="neutral"
+          border="all"
+          surface="solid"
+          class="absolute top-full left-0 mt-1 w-96 shadow-xl"
         >
           <VStack gap="xs" padding="xs">
             <VDropdownItem
@@ -77,6 +82,7 @@
       <VSelect
         v-if="currentAgent"
         :model-value="currentAgent.status"
+        :disabled="disabled"
         rounded="md"
         size="sm"
         class="text-xs font-semibold"
@@ -95,6 +101,7 @@
         <!-- Provider Selector -->
         <VSelect
           :model-value="selectedProvider"
+          :disabled="disabled"
           size="sm"
           class="text-xs border-gray-300 rounded-md"
           @update:model-value="handleProviderChange"
@@ -129,7 +136,24 @@
     <!-- End Region: Save Button -->
     <template #end>
       <VButton
+        v-if="disabled"
         intent="brand"
+        surface="solid"
+        rounded="md"
+        size="sm"
+        class="flex items-center gap-1.5"
+        @click="$emit('edit', currentAgent?.id)"
+      >
+        <VIcon name="Pencil" size="sm" />
+        <VTypography tag="span" size="sm" weight="medium">
+          Edit Agent
+        </VTypography>
+      </VButton>
+
+      <VButton
+        v-else
+        intent="brand"
+        surface="solid"
         rounded="md"
         size="sm"
         class="flex items-center gap-1.5"
@@ -147,6 +171,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VDropdownMenu from '@auraflux/design-system/components/molecules/layout/VDropdownMenu.vue';
 import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
@@ -161,10 +186,11 @@ import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 import type { Agent, ModelOption, ProviderOption } from '@auraflux/design-system/interfaces/agents';
 
 export interface VAgentToolbarProps {
+  disabled?: boolean;
   agents?: Agent[];
   isDirty?: boolean;
-  selectedProvider?: string;
-  selectedModel?: string;
+  selectedProvider: ID;
+  selectedModel: ID;
   providers?: ProviderOption[];
   models?: ModelOption[];
 }
@@ -172,10 +198,11 @@ export interface VAgentToolbarProps {
 const props = withDefaults(
   defineProps<VAgentToolbarProps>(),
   {
+    disabled: false,
     agents: () => [],
     isDirty: false,
-    selectedProvider: 'openai',
-    selectedModel: 'gpt-4o-mini',
+    selectedProvider: '',
+    selectedModel: '',
     providers: () => [
       { label: 'Select Provider...', value: '' },
     ],
@@ -187,6 +214,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'save'): void;
+  (e: 'edit', agentId?: ID): void;
   (e: 'select-agent', agent: Agent): void;
   (e: 'status-change', status: EntityStatus): void;
   (e: 'update:selectedProvider', providerId: ID): void;

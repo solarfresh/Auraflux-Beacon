@@ -134,7 +134,7 @@ const handleProjectEditting = async () => {
 const navigateToProject = (projectId: ID) => {
   router.push({
     name: 'MainPage',
-    params: { id: projectId },
+    params: { projectId: projectId },
   });
 };
 </script>

@@ -165,10 +165,10 @@ const uploadedFiles = ref<File[]>([]);
 const fileCount = computed(() => repositoryStore.files.length);
 const projectId = computed(() => projectStore.currentProjectId || '');
 
-const goToRepository = (id: ID) => {
+const goToRepository = (projectId: ID) => {
   router.push({
     name: 'RepositoryPage',
-    params: { id },
+    params: { projectId: projectId },
   });
 };
 
