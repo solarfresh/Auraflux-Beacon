@@ -46,7 +46,7 @@
             >
               <VCluster justify="between" align="center" fullWidth>
                 <VSectionHeader
-                  :title="activeFile ? activeFile.name : 'All Chunks'"
+                  :title="activeFile ? activeFile.fileName : 'All Chunks'"
                   icon="DocumentText"
                   size="md"
                   weight="bold"

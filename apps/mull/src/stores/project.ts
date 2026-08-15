@@ -64,7 +64,7 @@ export const useProjectStore = defineStore('project', {
       }
     },
 
-    async setCurrentProjectId(projectId: ID): Promise<void> {
+    async setCurrentProjectId(projectId: ID | null): Promise<void> {
       this.currentProjectId = projectId;
     },
 

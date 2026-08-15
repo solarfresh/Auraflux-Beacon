@@ -17,7 +17,7 @@
           surface="base"
           size="md"
           class="cursor-pointer"
-          @click="goToRepository(repositoryId)"
+          @click="goToRepository(projectId)"
         >
           <VCluster align="center" gap="xs">
             <VIcon name="CircleStack" size="xs" />
@@ -158,14 +158,12 @@ const emit = defineEmits<{
   (e: 'clear'): void;
 }>();
 
-// Mock
-const repositoryId = ref<ID>('test');
-
 // Form State
 const propositionText = ref('');
 const uploadedFiles = ref<File[]>([]);
 
 const fileCount = computed(() => repositoryStore.files.length);
+const projectId = computed(() => projectStore.currentProjectId || '');
 
 const goToRepository = (id: ID) => {
   router.push({

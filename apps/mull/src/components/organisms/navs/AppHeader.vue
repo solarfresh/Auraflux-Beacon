@@ -5,6 +5,18 @@
     :show-back="showBack"
     @back="handleBack"
   >
+
+    <template #center>
+      <VTypography
+        v-if="projectDescription"
+        tag="span"
+        size="sm"
+        class="opacity-80 truncate"
+      >
+        {{ projectDescription }}
+      </VTypography>
+    </template>
+
     <template #actions>
       <VHeaderActions
         :setting-items="settingItems"
@@ -18,16 +30,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
 import VHeaderActions from '@auraflux/design-system/components/organisms/navs/VHeaderActions.vue';
 import VHeader from '@auraflux/design-system/components/organisms/navs/VHeader.vue';
 
 import { useRoute, useRouter } from 'vue-router';
 import { useHeaderActions } from '@auraflux/shared-core/composables/useHeaderActions';
+import { useProjectStore } from '@/stores/project';
 
 const route = useRoute();
 const router = useRouter();
+const projectStore = useProjectStore();
 const {
   settingItems,
   toggleNotifications,
@@ -39,24 +53,30 @@ const {
 // Logic derived from your original Header
 const showBack = computed(() => route.name !== 'ProjectPage');
 
+const projectId = computed(() => projectStore.currentProjectId);
+
+const currentProject = computed(() => {
+  if (!projectId.value) return null;
+  return projectStore.projectMap.get(projectId.value) || null;
+});
+
 const section = computed(() => {
-  // if (route.name === 'ProjectPage') return 'MISSION CONTROL';
-  // if (route.name === 'AgentSettingsPage') return 'Agent Settings';
-  // if (route.name === 'ModelProviderSettingsPage') return 'Model Providers';
-  // if (route.name === 'AgentEditorPage') return agentStore.currentAgent?.name || '';
-  // return projectStore.projectName;
-  return '';
+  return currentProject.value?.name || '';
+});
+
+const projectDescription = computed(() => {
+  return currentProject.value?.description || '';
 });
 
 const handleBack = () => {
-  if (route.name === 'RepositoryPage') {
+  if (route.name === 'MainPage') {
+    projectStore.setCurrentProjectId(null);
+    router.push({ name: 'ProjectPage' });
+  } else {
     router.push({
       name: 'MainPage',
-      params: { id: 'test' },
+      params: { id: projectId.value },
     });
-  }
-  else {
-    router.push({ name: 'ProjectPage' });
   }
 };
 </script>
