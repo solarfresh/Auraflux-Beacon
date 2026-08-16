@@ -1,4 +1,4 @@
-import type { EntityStatus, ID, OperationalStatus } from '@auraflux/design-system/interfaces/core';
+import type { DateTimeString, EntityStatus, ID, OperationalStatus } from '@auraflux/design-system/interfaces/core';
 import type { SelectOption } from '@auraflux/design-system/interfaces/indicators';
 
 export type ProviderType = 'ALL' | 'GOOGLE' | 'OPENAI' | 'ANTHROPIC' | 'MISTRAL' | 'LOCAL' | 'CUSTOM';
@@ -13,7 +13,7 @@ export interface LLMParameters {
   [key: string]: unknown;
 }
 
-interface ModelFamilies {
+export interface ModelFamilies {
   id: ID;
   name: string;
   displayName: string;
@@ -41,8 +41,8 @@ export interface ModelProvider {
   supportedFamilies: ModelFamilies[]; // e.g., ["GEMINI", "GPT-4"]
   activeAgentCount: number;    // Number of agents currently using this provider
 
-  createdAt: string;
-  updatedAt: string;
+  createdAt: DateTimeString;
+  updatedAt: DateTimeString;
 }
 
 export interface TemplateVariable {

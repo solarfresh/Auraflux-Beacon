@@ -49,7 +49,9 @@ const {
   openProfile,
   logout,
   clickSettings,
-} = useHeaderActions();
+} = useHeaderActions({
+  modelProviderRoute: '/settings/models/'
+});
 
 // Logic derived from your original Header
 const showBack = computed(() => route.name !== 'ProjectPage');
@@ -70,7 +72,7 @@ const projectDescription = computed(() => {
 });
 
 const handleBack = () => {
-  if (route.name === 'MainPage') {
+  if (['MainPage', 'ModelProviderPage'].includes(route.name?.toString() || '')) {
     projectStore.setCurrentProjectId(null);
     router.push({ name: 'ProjectPage' });
   } else {

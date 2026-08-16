@@ -13,6 +13,8 @@
 
     <VBox
       class="relative group"
+      @mouseenter="showSettingsMenu = true;"
+      @mouseleave="closeSettingsMenu"
     >
       <VButton
         attention="primary"
@@ -22,15 +24,16 @@
         icon-only
       />
       <VDropdownMenu
+        v-if="showSettingsMenu"
         attention="primary"
-        class="hidden group-hover:block absolute top-full right-0"
+        class="group-hover:block absolute top-full right-0"
       >
         <VDropdownItem
           attention="primary"
           v-for="item in settingItems"
           :key="item.label"
           :icon-name="item.iconName"
-          @click="emit('click-setting', item)"
+          @click="closeSettingsMenu(item)"
         >
           {{ item.label }}
         </VDropdownItem>
@@ -73,6 +76,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -86,10 +91,17 @@ defineProps<{
   settingItems?: LinkItem[];
 }>();
 
+const showSettingsMenu = ref<boolean>(false);
+
 const emit = defineEmits<{
   (e: 'toggle-notifications'): void;
   (e: 'click-setting', item: LinkItem): void;
   (e: 'open-profile'): void;
   (e: 'logout'): void;
 }>();
+
+const closeSettingsMenu = (item: LinkItem) => {
+  showSettingsMenu.value = false;
+  emit('click-setting', item)
+}
 </script>

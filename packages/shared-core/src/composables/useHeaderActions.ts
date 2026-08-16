@@ -5,14 +5,22 @@ import type { LinkItem } from '@auraflux/design-system/interfaces/navs';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 
-export function useHeaderActions() {
+export interface HeaderActionsOptions {
+  modelProviderRoute?: string;
+}
+
+export function useHeaderActions(options?: HeaderActionsOptions) {
   const router = useRouter();
   const authStore = useAuthStore();
 
   const user = computed(() => authStore.user);
 
   const settingItems: LinkItem[] = [
-    { label: 'Model Providers', iconName: 'CpuChip', route: '/settings/models' },
+    {
+      label: 'Model Providers',
+      iconName: 'ServerStack',
+      route: options?.modelProviderRoute || '/settings/models/'
+    },
     { label: 'System Preferences', iconName: 'Cog8Tooth', route: '' }
   ];
 

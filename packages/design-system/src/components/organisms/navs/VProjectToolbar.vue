@@ -35,7 +35,8 @@
 
       <VButton
         attention="primary"
-        size="xs"
+        rounded="md"
+        size="sm"
         icon-name="Plus"
         @click="$emit('create')"
       >
