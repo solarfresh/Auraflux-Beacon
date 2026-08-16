@@ -1,5 +1,6 @@
-import type { ModelProvider } from '@auraflux/design-system/interfaces/agents';
+import type { ModelProvider, ModelProviderForm } from '@auraflux/design-system/interfaces/agents';
 import type { ID } from '@auraflux/design-system/interfaces/core';
+import { apiService } from '@auraflux/shared-core/api/apiService';
 import { ref } from 'vue';
 
 export interface ModelProviderManagerOptions {
@@ -16,7 +17,12 @@ export function useModelProviderManager(options: ModelProviderManagerOptions) {
   const fetchAll = async () => {
     isLoading.value = true;
     try {
-      // providers.value = await options.fetchProviders(options.serverScope);
+      const response  = await apiService.auth.agents.models.get();
+      if (response.data) {
+        providers.value = response.data;
+      } else {
+        console.warn('No data received from the API when fetching model providers.');
+      }
     } finally {
       isLoading.value = false;
     }
@@ -28,7 +34,7 @@ export function useModelProviderManager(options: ModelProviderManagerOptions) {
     isModalOpen.value = true;
   };
 
-  const openEditModal = (providerId: string) => {
+  const openEditModal = (providerId: ID) => {
     const target = providers.value.find((p) => p.id === providerId);
     if (target) {
       selectedProvider.value = { ...target };
@@ -42,17 +48,25 @@ export function useModelProviderManager(options: ModelProviderManagerOptions) {
     selectedProvider.value = null;
   };
 
-  const handleSave = async (providerData: ModelProvider) => {
+  const handleSave = async (providerData: ModelProviderForm) => {
     isLoading.value = true;
     try {
-      // const saved = await options.saveProvider(providerData, options.serverScope);
+      const payload = {
+        ...providerData,
+        clientId: options.serverScope
+      }
+      const response = await apiService.auth.agents.models.create(payload);
+      if (response.data) {
+        if (isNew.value) {
+          providers.value.push(response.data);
+        } else {
+          const index = providers.value.findIndex((p) => p.id === response.data.id);
+          if (index !== -1) providers.value[index] = response.data;
+        }
+      } else {
+        console.warn('No data received from the API when saving model provider.');
+      }
 
-      // if (isNew.value) {
-      //   providers.value.push(saved);
-      // } else {
-      //   const index = providers.value.findIndex((p) => p.id === saved.id);
-      //   if (index !== -1) providers.value[index] = saved;
-      // }
       closeModal();
     } finally {
       isLoading.value = false;

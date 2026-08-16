@@ -69,7 +69,6 @@ export const useAgentStore = defineStore('agent', {
         apiKeyFingerprint: '••••4n2z',
         latencyMs: 120,
         lastVerifiedAt: '2026-08-15T10:00:00Z',
-        activeAgentCount: 2,
         createdAt: '2026-01-01T00:00:00Z',
         updatedAt: '2026-08-15T00:00:00Z',
         supportedFamilies: [
@@ -99,7 +98,6 @@ export const useAgentStore = defineStore('agent', {
         apiKeyFingerprint: '••••9x1a',
         latencyMs: 180,
         lastVerifiedAt: '2026-08-15T10:00:00Z',
-        activeAgentCount: 1,
         createdAt: '2026-02-01T00:00:00Z',
         updatedAt: '2026-08-15T00:00:00Z',
         supportedFamilies: [

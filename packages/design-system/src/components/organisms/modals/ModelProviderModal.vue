@@ -5,7 +5,7 @@
     size="md"
     @close="$emit('cancel')"
   >
-    <VForm @submit.prevent="handleSubmit" class="flex flex-col max-h-[80vh]">
+    <VForm @submit="handleSubmit" class="flex flex-col max-h-[80vh]">
       <VBox class="overflow-y-auto px-1 py-2 flex-1">
         <VStack gap="md" class="py-2">
           <!-- 1. Provider Name -->
@@ -31,11 +31,9 @@
             required
           >
             <template #default="{ id }">
-              <VSelect
-                :id="id"
-                v-model="form.type"
-                :options="providerTypeOptions"
-              />
+              <VSelect v-model="form.type" :id="id">
+                <option v-for="option in providerTypeOptions" :value="option.value">{{ option.label }}</option>
+              </VSelect>
             </template>
           </VFormField>
 
@@ -108,7 +106,7 @@ import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue'
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VModal from '@auraflux/design-system/components/molecules/indicators/VModal.vue';
 
-import type { ModelProvider, ProviderType } from '@auraflux/design-system/interfaces/agents';
+import type { ModelProvider, ModelProviderForm, ProviderType } from '@auraflux/design-system/interfaces/agents';
 
 export interface ModelProviderModalProps {
   isOpen: boolean;
@@ -123,30 +121,21 @@ const props = withDefaults(defineProps<ModelProviderModalProps>(), {
 
 const emit = defineEmits<{
   (e: 'cancel'): void;
-  (e: 'confirm', provider: ModelProvider): void;
+  (e: 'confirm', provider: ModelProviderForm): void;
 }>();
 
 const providerTypeOptions: { label: string; value: ProviderType }[] = [
-  { label: 'OpenAI', value: 'OPENAI' },
-  { label: 'Anthropic', value: 'ANTHROPIC' },
   { label: 'Google', value: 'GOOGLE' },
-  { label: 'Custom', value: 'CUSTOM' },
 ];
 
 const rawApiKey = ref('');
-const form = ref<ModelProvider>({
-  id: '',
+const form = ref<ModelProviderForm>({
   name: '',
   type: 'OPENAI',
   status: 'ONLINE',
-  apiKeyFingerprint: '',
   baseUrl: '',
-  latencyMs: null,
+  latencyMs: 999,
   lastVerifiedAt: new Date().toISOString(),
-  supportedFamilies: [],
-  activeAgentCount: 0,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
 });
 
 watch(
@@ -156,18 +145,12 @@ watch(
       form.value = { ...newVal };
     } else {
       form.value = {
-        id: '',
         name: '',
         type: 'OPENAI',
         status: 'ONLINE',
-        apiKeyFingerprint: '',
         baseUrl: '',
-        latencyMs: null,
+        latencyMs: 999,
         lastVerifiedAt: new Date().toISOString(),
-        supportedFamilies: [],
-        activeAgentCount: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       };
     }
     rawApiKey.value = '';
@@ -176,14 +159,15 @@ watch(
 );
 
 const handleSubmit = () => {
-  const updatedFingerprint = rawApiKey.value
-    ? `••••${rawApiKey.value.slice(-4)}`
-    : form.value.apiKeyFingerprint;
-
-  emit('confirm', {
+  const formData = {
     ...form.value,
-    apiKeyFingerprint: updatedFingerprint,
     updatedAt: new Date().toISOString(),
-  });
+  };
+
+  if (rawApiKey.value) {
+    formData['apiKey'] = rawApiKey.value;
+  }
+
+  emit('confirm', formData);
 };
 </script>

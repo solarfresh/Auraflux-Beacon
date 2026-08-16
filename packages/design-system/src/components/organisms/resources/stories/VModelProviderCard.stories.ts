@@ -71,7 +71,6 @@ const mockHealthyProvider: ModelProvider = {
     mockSupportedFamilies[1], // GPT-4o Mini
     mockSupportedFamilies[2], // o1 Preview
   ],
-  activeAgentCount: 5,
   createdAt: '2026-01-01T00:00:00Z',
   updatedAt: '2026-08-15T10:00:00Z',
 };
@@ -89,7 +88,6 @@ const mockDegradedProvider: ModelProvider = {
     mockSupportedFamilies[3], // Claude 3.5 Haiku
     mockSupportedFamilies[4], // Claude 3.5 Sonnet
   ],
-  activeAgentCount: 2,
 };
 
 const mockOfflineProvider: ModelProvider = {
@@ -104,7 +102,6 @@ const mockOfflineProvider: ModelProvider = {
   supportedFamilies: [
     mockSupportedFamilies[5], // Llama 3.1 70B
   ],
-  activeAgentCount: 0,
 };
 
 const meta = {

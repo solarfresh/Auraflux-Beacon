@@ -42,7 +42,7 @@
       </VCluster>
 
       <!-- 2. Metadata: Base URL & Metrics -->
-      <VStack gap="xs">
+      <VCluster justify="between" align="center">
         <VTypography
           size="xs"
           intent="neutral"
@@ -52,22 +52,13 @@
           {{ provider.baseUrl || 'https://api.openai.com/v1' }}
         </VTypography>
 
-        <VCluster justify="between" align="center">
-          <VCluster gap="xs" align="center">
-            <VIcon name="Zap" size="xs" />
-            <VTypography size="xs" weight="medium">
-              {{ provider.latencyMs != null ? `${provider.latencyMs} ms` : 'N/A' }}
-            </VTypography>
-          </VCluster>
-
-          <VCluster gap="xs" align="center">
-            <VIcon name="Bot" size="xs" />
-            <VTypography size="xs" weight="medium">
-              {{ provider.activeAgentCount }} {{ provider.activeAgentCount === 1 ? 'Agent' : 'Agents' }}
-            </VTypography>
-          </VCluster>
+        <VCluster gap="xs" align="center">
+          <VIcon name="Zap" size="xs" />
+          <VTypography size="xs" weight="medium">
+            {{ provider.latencyMs != null ? `${provider.latencyMs} ms` : 'N/A' }}
+          </VTypography>
         </VCluster>
-      </VStack>
+      </VCluster>
 
       <VDivider
         orientation="horizontal"

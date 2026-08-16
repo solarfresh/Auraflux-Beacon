@@ -7,7 +7,6 @@ export function useAgentToolbar() {
   const agentStore = useAgentStore();
 
   const agents = computed(() => agentStore.agents);
-  const isDirty = computed(() => agentStore.isDirty);
   const selectedProvider = computed(() => agentStore.selectedProviderId);
   const selectedModel = computed(() => agentStore.selectedModelFamilyId);
   const providerOptions = computed(() => agentStore.providerOptions);
@@ -35,7 +34,6 @@ export function useAgentToolbar() {
 
   return {
     agents,
-    isDirty,
     selectedProvider,
     selectedModel,
     providerOptions,
