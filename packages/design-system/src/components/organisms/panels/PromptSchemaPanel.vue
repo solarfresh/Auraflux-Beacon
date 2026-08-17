@@ -3,9 +3,8 @@
     tag="section"
     surface="solid"
     intent="neutral"
-    border="right"
     padding="none"
-    class="w-1/2 flex flex-col h-full bg-white"
+    class="w-1/2 flex flex-col h-full shadow-md"
   >
     <!-- Section Header Bar -->
     <VBox
