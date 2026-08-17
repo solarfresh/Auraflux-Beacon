@@ -1,30 +1,27 @@
 <template>
-  <code
+  <pre
     :class="[
-      // Base Font & Rounding
-      'font-mono rounded whitespace-nowrap',
+      // Base Pre Block Styles
+      'font-mono rounded-lg p-3 overflow-x-auto whitespace-pre leading-relaxed',
 
-      // Spacing & Layout Tokens
-      paddingStyles,
+      // Layout & Typography Tokens
       borderStyles,
       fontWeightStyles,
       sizeStyles.text,
 
-      // Surface Styles
+      // Surface Styles (Dynamic Intent/Surface resolution)
       surfaceStyle.bg,
       surfaceStyle.text,
       surfaceStyle.border,
       surfaceStyle.hover,
     ]"
-  >
-    <slot />
-  </code>
+  ><slot /></pre>
 </template>
 
 <script setup lang="ts">
 /**
- * Code Atom
- * Inline code snippet / token element integrated with Design Tokens
+ * Pre Atom
+ * Block-level preformatted text container integrated with Design Tokens
  * and Attention/Intent/Surface architecture.
  */
 import { computed } from 'vue';
@@ -34,27 +31,23 @@ import type {
   FontWeightToken,
   ComponentSizeToken,
   IntentToken,
-  SpacingToken,
   SurfaceToken,
 } from '@auraflux/design-system/interfaces/theme';
 import {
   SHARED_BORDER_CLASSES,
   SHARED_FONT_WEIGHT_CLASSES,
   SHARED_COMPONENT_SIZE_CLASSES,
-  SHARED_PADDING_CLASSES,
 } from '@auraflux/design-system/constants/theme';
 import { resolveSurfaceStyle } from '@auraflux/design-system/utils/theme';
 
-export interface VCodeProps {
-  /** Padding size token */
-  padding?: SpacingToken;
+export interface VPreProps {
   /** Border position token */
   border?: BorderToken;
   /** Text size preset */
   size?: ComponentSizeToken;
   /** Font weight preset */
   weight?: FontWeightToken;
-  /** Visual priority token */
+  /** Visual priority token (defaults to 'secondary' for standard pre background) */
   attention?: AttentionToken;
   /** Optional semantic intent color override */
   intent?: IntentToken;
@@ -62,20 +55,15 @@ export interface VCodeProps {
   surface?: SurfaceToken;
 }
 
-const props = withDefaults(defineProps<VCodeProps>(), {
-  padding: 'xs',
-  border: 'none',
+const props = withDefaults(defineProps<VPreProps>(), {
+  border: 'all',
   size: 'xs',
   weight: 'normal',
   attention: 'secondary',
 });
 
-const paddingStyles = computed(() => {
-  return SHARED_PADDING_CLASSES[props.padding] || SHARED_PADDING_CLASSES.xs;
-});
-
 const borderStyles = computed(() => {
-  return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.none;
+  return SHARED_BORDER_CLASSES[props.border] || SHARED_BORDER_CLASSES.all;
 });
 
 const fontWeightStyles = computed(() => {
