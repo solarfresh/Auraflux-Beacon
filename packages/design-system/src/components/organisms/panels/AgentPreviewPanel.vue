@@ -1,11 +1,11 @@
 <template>
   <VBox
     padding="lg"
-    class="h-full w-full max-w-md overflow-y-auto shadow-md"
+    class="shadow-md"
   >
-    <VStack gap="lg" class="w-full">
+    <VStack gap="lg">
       <!-- 1. Header Control Bar -->
-      <VCluster justify="between" align="center" class="w-full">
+      <VCluster justify="between" align="center">
         <VStack gap="xs">
           <VTypography size="md" weight="bold">
             Agent Preview
@@ -16,7 +16,10 @@
         </VStack>
 
         <VButton
-          attention="primary"
+          intent="success"
+          surface="solid"
+          rounded="md"
+          icon-name="Play"
           size="sm"
           :is-loading="isLoading"
           @click="handleRunTest"
@@ -24,8 +27,6 @@
           Run Test
         </VButton>
       </VCluster>
-
-      <VDivider orientation="horizontal" size="full" class="text-gray-700" />
 
       <!-- 2. Dynamic Variable Simulation Sandbox -->
       <VFieldset
@@ -168,7 +169,6 @@ import VMarkdown from '@auraflux/design-system/components/atoms/indicators/VMark
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VDivider from '@auraflux/design-system/components/atoms/layout/VDivider.vue';
 import VGrid from '@auraflux/design-system/components/atoms/layout/VGrid.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VFieldset from '@auraflux/design-system/components/molecules/forms/VFieldset.vue';
@@ -176,12 +176,7 @@ import VFormField from '@auraflux/design-system/components/molecules/forms/VForm
 import VJsonViewer from '@auraflux/design-system/components/molecules/indicators/VJsonViewer.vue';
 import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 
-export interface DynamicVariable {
-  name: string;
-  type?: string;
-  multiline?: boolean;
-  defaultValue?: string;
-}
+import type { DynamicVariable } from '@auraflux/design-system/interfaces/agents';
 
 export interface AgentPreviewPanelProps {
   /** Dynamic prompt variables list extracted from prompt schema */

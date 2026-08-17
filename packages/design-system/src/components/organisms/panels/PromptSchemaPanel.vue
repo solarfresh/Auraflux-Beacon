@@ -4,32 +4,32 @@
     surface="solid"
     intent="neutral"
     padding="none"
-    class="w-1/2 flex flex-col h-full shadow-md"
+    class="flex flex-col h-full shadow-md"
   >
     <!-- Section Header Bar -->
     <VBox
-      padding="md"
+      padding="none"
       border="bottom"
       surface="solid"
-      class="shrink-0"
+      class="shrink-0 pt-6 px-6"
     >
       <VSectionHeader
         title="Agent Capabilities"
         icon="Sliders"
-        size="sm"
-        weight="semibold"
+        size="md"
+        weight="bold"
       />
     </VBox>
 
     <!-- Scrollable Form Body -->
-    <VBox class="flex-1 overflow-y-auto p-6">
+    <VBox class="flex-1 p-6">
       <VForm gap="lg" @submit="handleSubmit">
         <!-- Core Intent -->
         <VFormField label="Core Design Intent">
           <template #default="{ id }">
             <VInput
               :id="id"
-              v-model="formData.intent"
+              v-model="formData.purpose"
               placeholder="Enter agent purpose..."
               size="md"
             />
@@ -63,7 +63,7 @@
           <template #default="{ id }">
             <VTextarea
               :id="id"
-              v-model="formData.userPromptTemplate"
+              v-model="formData.promptTemplate"
               placeholder="Analyze: {{ text }}"
               :rows="4"
               class="font-mono text-xs leading-relaxed"
@@ -153,7 +153,6 @@
  * PromptSchemaPanel (Organism)
  * Production-ready interactive form panel for managing Agent prompts and output schemas.
  */
-import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
 import { reactive, watch } from 'vue';
 
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
@@ -170,20 +169,7 @@ import VSchemaItem from '@auraflux/design-system/components/molecules/indicators
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 
-export interface SchemaFieldItem {
-  id?: string;
-  name: string;
-  type: string;
-  badgeText?: string;
-  badgeIntent?: IntentToken;
-}
-
-export interface PromptSchemaFormData {
-  intent: string;
-  systemPrompt: string;
-  userPromptTemplate: string;
-  schemaFields: SchemaFieldItem[];
-}
+import type { PromptSchemaFormData } from '@auraflux/design-system/interfaces/agents';
 
 const props = withDefaults(
   defineProps<{
@@ -207,9 +193,9 @@ const emit = defineEmits<{
 
 // Reactive form state initialized cleanly from props
 const formData = reactive<PromptSchemaFormData>({
-  intent: props.modelValue.intent || '',
+  purpose: props.modelValue.purpose || '',
   systemPrompt: props.modelValue.systemPrompt || '',
-  userPromptTemplate: props.modelValue.userPromptTemplate || '',
+  promptTemplate: props.modelValue.promptTemplate || '',
   schemaFields: props.modelValue.schemaFields ? [...props.modelValue.schemaFields] : [],
 });
 
@@ -218,9 +204,9 @@ watch(
   () => props.modelValue,
   (newVal) => {
     if (newVal) {
-      formData.intent = newVal.intent || '';
+      formData.purpose = newVal.purpose || '';
       formData.systemPrompt = newVal.systemPrompt || '';
-      formData.userPromptTemplate = newVal.userPromptTemplate || '';
+      formData.promptTemplate = newVal.promptTemplate || '';
       formData.schemaFields = newVal.schemaFields ? [...newVal.schemaFields] : [];
     }
   },

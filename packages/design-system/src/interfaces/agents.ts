@@ -1,7 +1,15 @@
 import type { DateTimeString, EntityStatus, ID, OperationalStatus } from '@auraflux/design-system/interfaces/core';
 import type { SelectOption } from '@auraflux/design-system/interfaces/indicators';
+import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
 
 export type ProviderType = 'ALL' | 'GOOGLE' | 'OPENAI' | 'ANTHROPIC' | 'MISTRAL' | 'CUSTOM';
+
+export interface DynamicVariable {
+  name: string;
+  type?: string;
+  multiline?: boolean;
+  defaultValue?: string;
+}
 
 export interface LLMParameters {
   temperature?: number;
@@ -55,6 +63,35 @@ export interface TemplateVariable {
   defaultValue?: string;
 }
 
+export interface SchemaFieldItem {
+  id?: string;
+  name: string;
+  type: string;
+  badgeText?: string;
+  badgeIntent?: IntentToken;
+}
+
+export interface PromptSchemaFormData {
+  purpose?: string;
+  systemPrompt: string;
+  promptTemplate: string;
+  schemaFields: SchemaFieldItem[];
+}
+
+export interface SchemaProperty {
+  type: string;
+  description?: string;
+}
+
+/**
+ * Standardized JSON Schema structure for Agent Output Constraints
+ */
+export interface AgentOutputSchema {
+  type: 'object';
+  properties: Record<string, SchemaProperty>;
+  required?: string[];
+}
+
 export interface Agent {
   id: ID;
   name: string;
@@ -69,7 +106,11 @@ export interface Agent {
   promptTemplate?: string;
   templateVariables?: TemplateVariable[];
 
-  outputSchema?: Record<string, unknown> | string;
+  /**
+   * Structured JSON Schema object for output constraints,
+   * or raw string JSON for advanced customization.
+   */
+  outputSchema?: AgentOutputSchema;
 }
 
 export interface ProviderOption extends SelectOption {}

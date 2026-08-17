@@ -1,3 +1,4 @@
+import AgentBenchPage from '@/components/pages/AgentBenchPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import MainPage from '@/components/pages/MainPage.vue';
 import ModelProviderPage from '@/components/pages/ModelProviderPage.vue';
@@ -26,6 +27,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: ':projectId/',
         name: 'MainPage',
         component: MainPage
+      },
+      {
+        path: ':projectId/agents/:agentId/',
+        name: 'AgentBenchPage',
+        component: AgentBenchPage
       },
       {
         path: ':projectId/repository/',

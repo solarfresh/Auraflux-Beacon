@@ -5,7 +5,6 @@
         <VAgentToolbar
           :disabled="true"
           :agents="agents"
-          :is-dirty="isDirty"
           :providers="providerOptions"
           :models="modelOptions"
           :selected-provider="selectedProvider"
@@ -41,7 +40,6 @@ const router = useRouter();
 const projectStore = useProjectStore();
 const {
   agents,
-  isDirty,
   providerOptions,
   modelOptions,
   selectedProvider,
@@ -65,11 +63,14 @@ watch(
 )
 
 const goToEditAgent = (agentId?: ID) => {
-  if (!agentId) return;
+    if (!agentId) return;
 
-    // router.push({
-    //   name: 'AgentPage',
-    //   params: { projectId: projectId.value, agentId: agentId },
-    // });
+    router.push({
+      name: 'AgentBenchPage',
+      params: {
+        projectId: route.params.projectId,
+        agentId: agentId
+      },
+    });
 }
 </script>
