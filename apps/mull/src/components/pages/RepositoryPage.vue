@@ -27,7 +27,7 @@
           :files="repositoryStore.filteredFiles"
           :selected-id="repositoryStore.selectedFileId"
           @select="repositoryStore.selectFile"
-          @upload="projectStore.uploadRepositoryFiles"
+          @upload="handleFileUpload"
         />
 
         <!-- Right Area: Detail Chunk List -->
@@ -98,7 +98,7 @@
  * Renders the primary Master-Detail layout for exploring repository files and chunk cards.
  * Refactored using Layout Atoms (VBox, VStack, VCluster) and Organisms.
  */
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 // Design System Components
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -123,4 +123,15 @@ const repositoryStore = useRepositoryStore();
 const activeFile = computed(() => repositoryStore.activeFile);
 const totalChunks = computed(() => repositoryStore.totalChunks);
 const filteredChunks = computed(() => repositoryStore.filteredChunks);
+
+watch(() => projectStore.currentProjectId, async (newVal) => {
+  if (newVal) {
+    await repositoryStore.fetchData(newVal);
+  }
+}, { immediate: true });
+
+const handleFileUpload = (files: File[]) => {
+  if (!projectStore.currentProjectId) return;
+  repositoryStore.uploadRepositoryFiles(projectStore.currentProjectId, files);
+}
 </script>

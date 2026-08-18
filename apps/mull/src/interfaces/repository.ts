@@ -156,6 +156,13 @@ export interface RepositoryFile {
   chunks: ChunkData[];
 }
 
+export interface RepositoryFileUploadResult {
+  successCount: number;
+  failedCount: number;
+  successfulFiles: RepositoryFile[];
+  failedFiles: RepositoryFile[];
+}
+
 /**
  * Aggregate Page Repository View Data
  */

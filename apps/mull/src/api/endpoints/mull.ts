@@ -7,7 +7,7 @@ const ProjectsEndpoints = {
   base: () =>
     `${AURAFLUX_MULL_URL}/projects/`,
   files: (projectId: ID) =>
-    `${AURAFLUX_MULL_URL}/projects/${projectId}/files/upload/`,
+    `${AURAFLUX_MULL_URL}/projects/${projectId}/files/`,
 };
 
 export const MullEndpoints = {

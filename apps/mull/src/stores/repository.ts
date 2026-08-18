@@ -1,10 +1,12 @@
 import { defineStore } from 'pinia';
 import type { ChunkData, RepositoryFile } from '@/interfaces/repository';
 import type { ID } from '@auraflux/design-system/interfaces/core';
+import { apiService } from '@/api/apiService';
 
 export interface RepositoryState {
   files: RepositoryFile[];
   chunks: ChunkData[];
+  error: string | null;
   selectedFileId: ID;
   searchQuery: string;
   selectedDomain: string;
@@ -115,6 +117,7 @@ export const useRepositoryStore = defineStore('repository', {
         },
       },
     ],
+    error: null,
 
     // --- Active UI Filters State ---
     selectedFileId: 'f1',
@@ -219,6 +222,20 @@ export const useRepositoryStore = defineStore('repository', {
   },
 
   actions: {
+    async fetchData(projectId: ID) {
+      try {
+        const response = await apiService.projects.files.get(projectId);
+        if (response.data) {
+          this.files = response.data;
+        } else {
+          console.warn(`No repository files found for project ${projectId}. Using mock data.`);
+        }
+      } catch {
+        console.warn(`Failed to fetch repository files for project ${projectId}. Using mock data.`);
+      }
+
+    },
+
     async refreshData() {
       console.log('Fetching fresh repository data from API...');
     },
@@ -234,5 +251,29 @@ export const useRepositoryStore = defineStore('repository', {
     setSelectedDomain(domain: string) {
       this.selectedDomain = domain;
     },
+
+    async uploadRepositoryFiles(projectId: ID, files: File[]) {
+      if (!projectId) {
+        console.warn("No current project selected. Cannot upload files.");
+        return;
+      }
+
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append('files', file);
+      }
+
+      try {
+        const response = await apiService.projects.files.upload(projectId, formData);
+        if (response.data) {
+          this.files = this.files.concat(response.data.successfulFiles);
+        } else {
+          console.warn('No data returned from file upload API');
+        }
+      } catch (err: any) {
+        this.error = err.message || 'An unknown error occurred'
+        console.error(err)
+      }
+    }
   },
 });

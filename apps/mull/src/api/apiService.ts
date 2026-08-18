@@ -1,6 +1,6 @@
 import { MullEndpoints } from '@/api/endpoints';
 import type { Project } from '@/interfaces/project';
-import type { RepositoryFile } from '@/interfaces/repository';
+import type { RepositoryFile, RepositoryFileUploadResult } from '@/interfaces/repository';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { apiClient } from '@auraflux/shared-core/api/apiClient';
 import config from '@auraflux/shared-core/config';
@@ -24,7 +24,12 @@ export const apiService = {
       });
     },
     files: {
-      upload: (projectId: ID, payload: FormData): Promise<AxiosResponse<RepositoryFile>> => {
+      get: (projectId: ID): Promise<AxiosResponse<RepositoryFile[]>> => {
+        return apiClient.get(MullEndpoints.projects.files(projectId), {
+          serviceScope: AURAFLUX_MULL_CLIENT_ID,
+        })
+      },
+      upload: (projectId: ID, payload: FormData): Promise<AxiosResponse<RepositoryFileUploadResult>> => {
         return apiClient.post(MullEndpoints.projects.files(projectId), payload, {
           serviceScope: AURAFLUX_MULL_CLIENT_ID,
         })

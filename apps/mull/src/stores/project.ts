@@ -67,29 +67,5 @@ export const useProjectStore = defineStore('project', {
     async setCurrentProjectId(projectId: ID | null): Promise<void> {
       this.currentProjectId = projectId;
     },
-
-    async uploadRepositoryFiles(files: File[]) {
-      if (!this.currentProjectId) {
-        console.warn("No current project selected. Cannot upload files.");
-        return;
-      }
-
-      const formData = new FormData();
-      for (const file of files) {
-        formData.append('files', file);
-      }
-
-      try {
-        const response = await apiService.projects.files.upload(this.currentProjectId, formData);
-        if (response.data) {
-          return response.data;
-        } else {
-          console.warn('No data returned from file upload API');
-        }
-      } catch (err: any) {
-        this.error = err.message || 'An unknown error occurred'
-        console.error(err)
-      }
-    }
   }
 })

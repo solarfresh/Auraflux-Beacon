@@ -173,7 +173,7 @@ const goToRepository = (projectId: ID) => {
 };
 
 const handleFileChange = (files: File[]) => {
-  projectStore.uploadRepositoryFiles(files)
+  repositoryStore.uploadRepositoryFiles(projectId.value, files)
   uploadedFiles.value = files;
 };
 
