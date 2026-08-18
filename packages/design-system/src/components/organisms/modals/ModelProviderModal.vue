@@ -168,6 +168,16 @@ const handleSubmit = () => {
     formData['apiKey'] = rawApiKey.value;
   }
 
+  form.value = {
+    name: '',
+    type: 'OPENAI',
+    status: 'ONLINE',
+    baseUrl: '',
+    latencyMs: 999,
+    lastVerifiedAt: new Date().toISOString(),
+  }
+  rawApiKey.value = '';
+
   emit('confirm', formData);
 };
 </script>

@@ -39,7 +39,6 @@ export interface ModelProvider {
   // Security & Identity
   apiKeyFingerprint: string;   // Masked key (e.g., "••••4n2z")
   baseUrl?: string;            // Custom endpoint for Local/Private LLMs
-  clientId?: ID;
 
   // Performance Metadata
   latencyMs: number | null;    // Last recorded response time

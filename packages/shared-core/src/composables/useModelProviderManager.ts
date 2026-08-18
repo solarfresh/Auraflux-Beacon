@@ -7,7 +7,7 @@ export interface ModelProviderManagerOptions {
   serverScope?: ID;
 }
 
-export function useModelProviderManager(options: ModelProviderManagerOptions) {
+export function useModelProviderManager() {
   const providers = ref<ModelProvider[]>([]);
   const selectedProvider = ref<ModelProvider | null>(null);
   const isModalOpen = ref(false);
@@ -53,7 +53,6 @@ export function useModelProviderManager(options: ModelProviderManagerOptions) {
     try {
       const payload = {
         ...providerData,
-        clientId: options.serverScope
       }
       const response = await apiService.auth.agents.models.create(payload);
       if (response.data) {

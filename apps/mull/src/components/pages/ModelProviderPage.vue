@@ -29,9 +29,7 @@ const title = ref<string>('Model Providers');
 const description = ref<string>('Configure LLM API credentials, endpoints, and monitor operational health.');
 
 // Initialize Composable with injected API Adapter
-const manager = useModelProviderManager({
-  serverScope: serverScope.value,
-});
+const manager = useModelProviderManager();
 
 // Fetch provider list on component mount
 onMounted(() => {

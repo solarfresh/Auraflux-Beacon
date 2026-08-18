@@ -68,7 +68,12 @@
 
       <!-- 3. Footer: Supported Model Families & Status Badge -->
       <VCluster gap="xs" wrap justify="between" align="center">
-        <VCluster gap="xs" align="center">
+        <VCluster
+          gap="xs"
+          wrap
+          align="center"
+          @click.stop="isExpanded = !isExpanded"
+        >
           <VChip
             v-for="family in (isExpanded ? provider.supportedFamilies : provider.supportedFamilies?.slice(0, 2))"
             intent="neutral"
@@ -84,7 +89,6 @@
             surface="ghost"
             weight="medium"
             class="cursor-pointer select-none"
-            @click.stop="isExpanded = !isExpanded"
           >
             {{ isExpanded ? 'Less' : `+${provider.supportedFamilies.length - 2}` }}
           </VTypography>
