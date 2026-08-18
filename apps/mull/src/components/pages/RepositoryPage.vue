@@ -27,6 +27,7 @@
           :files="repositoryStore.filteredFiles"
           :selected-id="repositoryStore.selectedFileId"
           @select="repositoryStore.selectFile"
+          @upload="projectStore.uploadRepositoryFiles"
         />
 
         <!-- Right Area: Detail Chunk List -->
@@ -113,8 +114,10 @@ import RepositoryToolbar from '@/components/organisms/repositories/RepositoryToo
 import RepositoryFileList from '@/components/organisms/repositories/RepositoryFileList.vue';
 import ChunkCard from '@/components/organisms/repositories/RepositoryChunkCard.vue';
 
+import { useProjectStore } from '@/stores/project';
 import { useRepositoryStore } from '@/stores/repository';
 
+const projectStore = useProjectStore();
 const repositoryStore = useRepositoryStore();
 
 const activeFile = computed(() => repositoryStore.activeFile);

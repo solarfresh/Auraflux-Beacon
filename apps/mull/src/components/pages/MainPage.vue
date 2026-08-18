@@ -22,9 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { useProjectStore } from '@/stores/project';
 import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
 
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -32,11 +30,8 @@ import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VAgentToolbar from '@auraflux/design-system/components/organisms/navs/VAgentToolbar.vue';
 import PropositionInitializerCard from '@/components/organisms/propositions/PropositionInitializerCard.vue';
 
-import type { ID } from '@auraflux/design-system/interfaces/core';
-
 const route = useRoute();
 const router = useRouter();
-const projectStore = useProjectStore();
 const {
   agents,
   selectedAgent,
@@ -47,18 +42,6 @@ const {
   handleProviderChange,
   handleModelChange,
 } = useAgentBench();
-
-watch(
-  () => route.params.projectId,
-  (newProjectId, oldProjectId) => {
-    if (newProjectId && newProjectId !== oldProjectId) {
-      if (!Array.isArray(newProjectId)) {
-        projectStore.setCurrentProjectId(newProjectId);
-      }
-    }
-  },
-  { immediate: true }
-)
 
 const goToEditAgent = () => {
   router.push({
