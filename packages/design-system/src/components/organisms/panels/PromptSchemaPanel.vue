@@ -182,6 +182,7 @@ const formData = defineModel<PromptSchemaFormData>({
 });
 
 const emit = defineEmits<{
+  (e: 'update:model-value', value: PromptSchemaFormData): void;
   (e: 'submit', value: PromptSchemaFormData): void;
 }>();
 

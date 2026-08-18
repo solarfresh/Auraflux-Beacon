@@ -222,6 +222,18 @@ export const useRepositoryStore = defineStore('repository', {
   },
 
   actions: {
+    async deleteFile(projectId: ID, fileId: ID) {
+      try {
+        const response = await apiService.projects.files.details.delete(projectId, fileId);
+        if (response.data) {
+          const index = this.files.findIndex(f => f.id === fileId);
+          this.files.splice(index, 1);
+        }
+      } catch {
+        console.error(`Failed to delete file ${fileId} from project ${projectId}.`);
+      }
+    },
+
     async fetchData(projectId: ID) {
       try {
         const response = await apiService.projects.files.get(projectId);
@@ -231,7 +243,7 @@ export const useRepositoryStore = defineStore('repository', {
           console.warn(`No repository files found for project ${projectId}. Using mock data.`);
         }
       } catch {
-        console.warn(`Failed to fetch repository files for project ${projectId}. Using mock data.`);
+        console.error(`Failed to fetch repository files for project ${projectId}. Using mock data.`);
       }
 
     },

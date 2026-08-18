@@ -120,6 +120,16 @@
                     >
                       {{ file.fileSize }}
                     </VTypography>
+
+                    <VButton
+                      intent="danger"
+                      surface="solid"
+                      size="xs"
+                      icon-name="Trash"
+                      icon-only
+                      title="Delete file"
+                      @click.stop="deleteFile(file.id)"
+                    />
                   </VCluster>
                 </VBox>
               </VStack>
@@ -151,6 +161,7 @@ import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
 
 // Design System Components
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
@@ -172,9 +183,14 @@ withDefaults(defineProps<MasterFileListProps>(), {
 });
 
 const emit = defineEmits<{
+  (e: 'delete', id: ID): void;
   (e: 'select', id: ID): void;
   (e: 'upload', files: File[]): void;
 }>();
+
+const deleteFile = (id: ID) => {
+  emit('delete', id);
+};
 
 const selectFile = (id: ID) => {
   emit('select', id);

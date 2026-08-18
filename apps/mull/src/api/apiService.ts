@@ -24,13 +24,20 @@ export const apiService = {
       });
     },
     files: {
+      details: {
+        delete: (projectId: ID, fileId: ID): Promise<AxiosResponse<any>> => {
+          return apiClient.delete(MullEndpoints.projects.files.details.delete(projectId, fileId), {
+            serviceScope: AURAFLUX_MULL_CLIENT_ID,
+          });
+        }
+      },
       get: (projectId: ID): Promise<AxiosResponse<RepositoryFile[]>> => {
-        return apiClient.get(MullEndpoints.projects.files(projectId), {
+        return apiClient.get(MullEndpoints.projects.files.base(projectId), {
           serviceScope: AURAFLUX_MULL_CLIENT_ID,
         })
       },
       upload: (projectId: ID, payload: FormData): Promise<AxiosResponse<RepositoryFileUploadResult>> => {
-        return apiClient.post(MullEndpoints.projects.files(projectId), payload, {
+        return apiClient.post(MullEndpoints.projects.files.base(projectId), payload, {
           serviceScope: AURAFLUX_MULL_CLIENT_ID,
         })
       }

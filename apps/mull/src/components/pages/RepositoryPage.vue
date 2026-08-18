@@ -26,8 +26,9 @@
         <RepositoryFileList
           :files="repositoryStore.filteredFiles"
           :selected-id="repositoryStore.selectedFileId"
+          @delete="deleteFile"
           @select="repositoryStore.selectFile"
-          @upload="handleFileUpload"
+          @upload="uploadFile"
         />
 
         <!-- Right Area: Detail Chunk List -->
@@ -114,6 +115,8 @@ import RepositoryToolbar from '@/components/organisms/repositories/RepositoryToo
 import RepositoryFileList from '@/components/organisms/repositories/RepositoryFileList.vue';
 import ChunkCard from '@/components/organisms/repositories/RepositoryChunkCard.vue';
 
+import type { ID } from '@auraflux/design-system/interfaces/core';
+
 import { useProjectStore } from '@/stores/project';
 import { useRepositoryStore } from '@/stores/repository';
 
@@ -130,7 +133,12 @@ watch(() => projectStore.currentProjectId, async (newVal) => {
   }
 }, { immediate: true });
 
-const handleFileUpload = (files: File[]) => {
+const deleteFile = (fileId: ID) => {
+  if (!projectStore.currentProjectId) return;
+  repositoryStore.deleteFile(projectStore.currentProjectId, fileId);
+}
+
+const uploadFile = (files: File[]) => {
   if (!projectStore.currentProjectId) return;
   repositoryStore.uploadRepositoryFiles(projectStore.currentProjectId, files);
 }
