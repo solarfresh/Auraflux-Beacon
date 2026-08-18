@@ -19,7 +19,7 @@
           <VCluster gap="md" align="center" justify="between">
             <VIcon name="Bot" size="sm" />
             <VTypography tag="span" weight="semibold" size="sm">
-              {{ currentAgent?.name || 'Select Agent' }}
+              {{ selectedAgent?.name || 'Select Agent' }}
             </VTypography>
             <VBox
               v-if="isDirty"
@@ -80,8 +80,8 @@
 
       <!-- Current Agent Entity Status Selector -->
       <VSelect
-        v-if="currentAgent"
-        :model-value="currentAgent.status"
+        v-if="selectedAgent"
+        :model-value="selectedAgent.status"
         :disabled="disabled"
         rounded="md"
         size="sm"
@@ -100,7 +100,7 @@
       <VBox class="flex items-center gap-2">
         <!-- Provider Selector -->
         <VSelect
-          :model-value="selectedProvider"
+          :model-value="selectedAgent?.providerId"
           :disabled="disabled"
           size="sm"
           class="text-xs border-gray-300 rounded-md"
@@ -117,7 +117,7 @@
 
         <!-- Model Selector -->
         <VSelect
-          :model-value="selectedModel"
+          :model-value="selectedAgent?.modelFamilyId"
           size="sm"
           class="text-xs border-gray-300 rounded-md"
           @update:model-value="handleModelChange"
@@ -142,7 +142,7 @@
         rounded="md"
         size="sm"
         class="flex items-center gap-1.5"
-        @click="$emit('edit', currentAgent?.id)"
+        @click="$emit('edit')"
       >
         <VIcon name="Pencil" size="sm" />
         <VTypography tag="span" size="sm" weight="medium">
@@ -169,28 +169,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
-import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VDropdownMenu from '@auraflux/design-system/components/molecules/layout/VDropdownMenu.vue';
-import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
-import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDropdownItem.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VChip from '@auraflux/design-system/components/molecules/indicators/VChip.vue';
+import VDropdownMenu from '@auraflux/design-system/components/molecules/layout/VDropdownMenu.vue';
+import VToolbar from '@auraflux/design-system/components/organisms/layout/VToolbar.vue';
+import { computed, ref } from 'vue';
 
-import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 import type { Agent, ModelOption, ProviderOption } from '@auraflux/design-system/interfaces/agents';
+import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 
 export interface VAgentToolbarProps {
   disabled?: boolean;
   agents?: Agent[];
+  selectedAgent?: Partial<Agent> | null;
   isDirty?: boolean;
-  selectedProvider: ID;
-  selectedModel: ID;
   providers?: ProviderOption[];
   models?: ModelOption[];
 }
@@ -200,9 +199,8 @@ const props = withDefaults(
   {
     disabled: false,
     agents: () => [],
+    selectedAgent: null,
     isDirty: false,
-    selectedProvider: '',
-    selectedModel: '',
     providers: () => [
       { label: 'Select Provider...', value: '' },
     ],
@@ -214,7 +212,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'save'): void;
-  (e: 'edit', agentId?: ID): void;
+  (e: 'edit'): void;
   (e: 'select-agent', agent: Agent): void;
   (e: 'status-change', status: EntityStatus): void;
   (e: 'update:selectedProvider', providerId: ID): void;
@@ -222,10 +220,8 @@ const emit = defineEmits<{
 }>();
 
 const isDropdownOpen = ref(false);
-const currentAgent = ref<Agent | null>(props.agents[0] || null);
-
 const availableModels = computed(() => {
-  return props.models.filter((m) => m.providerId === props.selectedProvider);
+  return props.models.filter((m) => m.providerId === props.selectedAgent?.providerId);
 });
 
 const getStatusIntent = (status: EntityStatus) => {
@@ -238,7 +234,6 @@ const getStatusIntent = (status: EntityStatus) => {
 };
 
 const selectAgent = (agent: Agent) => {
-  currentAgent.value = agent;
   isDropdownOpen.value = false;
   emit('select-agent', agent);
   emit('update:selectedProvider', agent.providerId);
@@ -259,9 +254,6 @@ const handleModelChange = (val: string) => {
 
 const handleStatusChange = (val: string) => {
   const status = val as EntityStatus;
-  if (currentAgent.value) {
-    currentAgent.value.status = status;
-  }
   emit('status-change', status);
 };
 </script>

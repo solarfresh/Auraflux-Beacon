@@ -1,6 +1,6 @@
 import { useAgentStore } from '@auraflux/shared-core/stores/agent';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue';
 
 import type { Agent, DynamicVariable, PromptSchemaFormData } from '@auraflux/design-system/interfaces/agents';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
@@ -23,16 +23,23 @@ export function useAgentBench() {
   // --- Local UI States ---
   const isExecuting = ref(false);
   const isDirty = ref(false);
-  const disabled = ref(false);
   const activeVariableValues = ref<Record<string, string>>({});
 
   // Execution & Metric States (Initialized empty, populated post-run)
   const isSchemaValid = ref(true);
+  const isSyncing = ref(false);
   const responseOutput = ref<Record<string, unknown> | string>({});
   const rawMarkdownOutput = ref<string>('');
   const metrics = ref<{ latency?: number; tokens?: number } | undefined>(undefined);
 
-  // --- Prompt Form Data State (Synchronized with currentAgent) ---
+  const selectedAgent = ref<Partial<Agent>>({
+    id: '',
+    name: '',
+    status: 'DRAFT',
+    providerId: selectedProviderId.value,
+    modelFamilyId: selectedModelFamilyId.value,
+  });
+
   const promptFormData = ref<PromptSchemaFormData>({
     purpose: '',
     systemPrompt: '',
@@ -45,6 +52,16 @@ export function useAgentBench() {
     () => currentAgent.value,
     (agent) => {
       if (agent) {
+        isSyncing.value = true;
+
+        selectedAgent.value = {
+          id: agent.id || '',
+          name: agent.name || '',
+          status: agent.status || 'DRAFT',
+          providerId: agent.providerId || '',
+          modelFamilyId: agent.modelFamilyId || ''
+        }
+
         promptFormData.value = {
           purpose: agent.purpose || '',
           systemPrompt: agent.systemPrompt || '',
@@ -59,7 +76,20 @@ export function useAgentBench() {
               }))
             : [],
         };
+
+        nextTick(() => {
+          isSyncing.value = false;
+          isDirty.value = false;
+        });
       } else {
+        selectedAgent.value = {
+          id: '',
+          name: '',
+          status: 'DRAFT',
+          providerId: '',
+          modelFamilyId: '',
+        }
+
         promptFormData.value = {
           purpose: '',
           systemPrompt: '',
@@ -75,12 +105,11 @@ export function useAgentBench() {
   watch(
     promptFormData,
     () => {
+      if (isSyncing.value) return;
       isDirty.value = true;
     },
     { deep: true }
   );
-
-  // --- Computed Properties ---
 
   /** Dynamically parse {{ variable_name }} syntax from template string */
   const parsedVariables = computed<DynamicVariable[]>(() => {
@@ -108,41 +137,45 @@ export function useAgentBench() {
   // --- Event & Action Handlers ---
 
   const handleSelectAgent = (agent: Agent) => {
+    if (currentAgent.value?.id === agent.id) return;
+
+    if (isDirty.value) {
+      const confirmLeave = window.confirm(
+        'You have unsaved changes. Are you sure you want to switch agents? Your changes will be lost.'
+      );
+
+      if (!confirmLeave) return;
+    }
+
     store.setCurrentAgentId(agent.id);
+    isDirty.value = false;
   };
 
   const handleStatusChange = async (status: EntityStatus) => {
-    await store.updateCurrentAgentStatus(status);
+    if (isSyncing.value) return;
+    selectedAgent.value.status = status;
+    isDirty.value = true;
   };
 
   const handleProviderChange = (providerId: ID) => {
-    store.setSelectedProviderId(providerId);
+    if (isSyncing.value) return;
+    selectedAgent.value.providerId = providerId;
     isDirty.value = true;
   };
 
   const handleModelChange = (modelId: ID) => {
-    store.setSelectedModelFamilyId(modelId);
+    if (isSyncing.value) return;
+    selectedAgent.value.modelFamilyId = modelId;
     isDirty.value = true;
   };
 
-  const handlePromptFormUpdate = (updatedData: PromptSchemaFormData) => {
-    promptFormData.value = updatedData;
-
-    // Keep active agent instance in sync within current memory state
-    if (currentAgent.value) {
-      currentAgent.value.purpose = updatedData.purpose;
-      currentAgent.value.systemPrompt = updatedData.systemPrompt;
-      currentAgent.value.promptTemplate = updatedData.promptTemplate;
-    }
-  };
-
   const handleSave = async () => {
-    await store.saveCurrentAgent();
+    const updatedAgent = {
+      ...selectedAgent.value,
+      ...promptFormData.value
+    }
+    await store.saveCurrentAgent(updatedAgent);
     isDirty.value = false;
-  };
-
-  const handleEdit = () => {
-    disabled.value = false;
   };
 
   const handleVariableValuesChange = (values: Record<string, string>) => {
@@ -163,16 +196,14 @@ export function useAgentBench() {
 
   return {
     // States & Ref Bindings
-    disabled,
     isDirty,
     isExecuting,
     isStoreLoading,
     agents,
+    selectedAgent,
     providers,
     providerOptions,
     modelOptions,
-    selectedProviderId,
-    selectedModelFamilyId,
     promptFormData,
     isSchemaValid,
     responseOutput,
@@ -188,9 +219,7 @@ export function useAgentBench() {
     handleStatusChange,
     handleProviderChange,
     handleModelChange,
-    handlePromptFormUpdate,
     handleSave,
-    handleEdit,
     handleVariableValuesChange,
     handleRunTest,
   };

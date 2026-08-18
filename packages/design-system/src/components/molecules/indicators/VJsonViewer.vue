@@ -62,6 +62,7 @@ import { computed, ref } from 'vue';
 
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
+import VCode from '@auraflux/design-system/components/atoms/indicators/VCode.vue';
 import VPre from '@auraflux/design-system/components/atoms/indicators/VPre.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';

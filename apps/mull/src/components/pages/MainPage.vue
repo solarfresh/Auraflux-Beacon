@@ -5,15 +5,14 @@
         <VAgentToolbar
           :disabled="true"
           :agents="agents"
+          :selected-agent="selectedAgent"
           :providers="providerOptions"
           :models="modelOptions"
-          :selected-provider="selectedProvider"
-          :selected-model="selectedModel"
           @edit="goToEditAgent"
           @select-agent="handleSelectAgent"
           @status-change="handleStatusChange"
-          @update:selected-provider="handleUpdateSelectedProvider"
-          @update:selected-model="handleUpdateSelectedModel"
+          @update:selected-provider="handleProviderChange"
+          @update:selected-model="handleModelChange"
         />
 
         <PropositionInitializerCard />
@@ -26,7 +25,7 @@
 import { watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { useProjectStore } from '@/stores/project';
-import { useAgentToolbar } from '@auraflux/shared-core/composables/useAgentToolbar';
+import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
 
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
@@ -40,15 +39,14 @@ const router = useRouter();
 const projectStore = useProjectStore();
 const {
   agents,
+  selectedAgent,
   providerOptions,
   modelOptions,
-  selectedProvider,
-  selectedModel,
   handleSelectAgent,
   handleStatusChange,
-  handleUpdateSelectedProvider,
-  handleUpdateSelectedModel
-} = useAgentToolbar();
+  handleProviderChange,
+  handleModelChange,
+} = useAgentBench();
 
 watch(
   () => route.params.projectId,
@@ -62,15 +60,12 @@ watch(
   { immediate: true }
 )
 
-const goToEditAgent = (agentId?: ID) => {
-    if (!agentId) return;
-
-    router.push({
-      name: 'AgentBenchPage',
-      params: {
-        projectId: route.params.projectId,
-        agentId: agentId
-      },
-    });
+const goToEditAgent = () => {
+  router.push({
+    name: 'AgentBenchPage',
+    params: {
+      projectId: route.params.projectId,
+    },
+  });
 }
 </script>

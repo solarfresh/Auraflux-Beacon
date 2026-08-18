@@ -54,7 +54,7 @@
 
         <!-- User Prompt Template -->
         <VFormField label="User Prompt Template">
-          <template #labelExtra>
+          <template #hint>
             <VCluster gap="xs" align="center">
               <VCode size="xs">{{ '\{\{' }}</VCode>
               <VTypography size="xs" attention="tertiary">Vars</VTypography>
@@ -163,81 +163,47 @@ import VCode from '@auraflux/design-system/components/atoms/indicators/VCode.vue
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
+import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 import VSchemaItem from '@auraflux/design-system/components/molecules/indicators/VSchemaItem.vue';
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
-import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 
 import type { PromptSchemaFormData } from '@auraflux/design-system/interfaces/agents';
 
-const props = withDefaults(
-  defineProps<{
-    modelValue?: Partial<PromptSchemaFormData>;
-  }>(),
-  {
-    modelValue: () => ({
-      intent: '',
-      systemPrompt: '',
-      userPromptTemplate: '',
-      schemaFields: [],
-    }),
-  }
-);
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: PromptSchemaFormData): void;
-  (e: 'submit', value: PromptSchemaFormData): void;
-  (e: 'addField'): void;
-}>();
-
-// Reactive form state initialized cleanly from props
-const formData = reactive<PromptSchemaFormData>({
-  purpose: props.modelValue.purpose || '',
-  systemPrompt: props.modelValue.systemPrompt || '',
-  promptTemplate: props.modelValue.promptTemplate || '',
-  schemaFields: props.modelValue.schemaFields ? [...props.modelValue.schemaFields] : [],
+const formData = defineModel<PromptSchemaFormData>({
+  default: () => ({
+    purpose: '',
+    systemPrompt: '',
+    promptTemplate: '',
+    schemaFields: [],
+  }),
 });
 
-// Keep formData in sync with incoming modelValue changes
-watch(
-  () => props.modelValue,
-  (newVal) => {
-    if (newVal) {
-      formData.purpose = newVal.purpose || '';
-      formData.systemPrompt = newVal.systemPrompt || '';
-      formData.promptTemplate = newVal.promptTemplate || '';
-      formData.schemaFields = newVal.schemaFields ? [...newVal.schemaFields] : [];
-    }
-  },
-  { deep: true }
-);
-
-// Emit form updates whenever user modifies any field
-watch(
-  formData,
-  (newVal) => {
-    emit('update:modelValue', { ...newVal });
-  },
-  { deep: true }
-);
+const emit = defineEmits<{
+  (e: 'submit', value: PromptSchemaFormData): void;
+}>();
 
 const handleAddField = () => {
-  formData.schemaFields.push({
+  if (!formData.value.schemaFields) {
+    formData.value.schemaFields = [];
+  }
+
+  formData.value.schemaFields.push({
     id: `field-${Date.now()}`,
     name: 'new_field',
     type: 'String',
     badgeText: 'Optional',
     badgeIntent: 'neutral',
   });
-  emit('addField');
 };
 
 const handleRemoveField = (index: number) => {
-  formData.schemaFields.splice(index, 1);
+  formData.value.schemaFields.splice(index, 1);
 };
 
 const handleSubmit = () => {
-  emit('submit', { ...formData });
+  emit('submit', { ...formData.value });
 };
 </script>

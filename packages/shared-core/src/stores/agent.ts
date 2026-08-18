@@ -257,43 +257,9 @@ export const useAgentStore = defineStore('agent', {
     },
 
     /**
-     * Updates the selected provider and automatically selects its first available model family.
-     */
-    setSelectedProviderId(providerId: ID): void {
-      const index = this.agents.findIndex((a) => a.id === this.currentAgentId);
-      if (index !== -1) {
-        const agent = this.agents[index];
-        agent.providerId = providerId;
-      };
-    },
-
-    /**
-     * Updates the selected model family ID.
-     */
-    setSelectedModelFamilyId(modelFamilyId: ID): void {
-      const index = this.agents.findIndex((a) => a.id === this.currentAgentId);
-      if (index !== -1) {
-        const agent = this.agents[index];
-        agent.modelFamilyId = modelFamilyId;
-      };
-    },
-
-    /**
-     * Updates the entity status of the current active agent.
-     */
-    async updateCurrentAgentStatus(status: EntityStatus): Promise<void> {
-      if (!this.currentAgentId) return;
-
-      const agent = this.agents.find((a) => a.id === this.currentAgentId);
-      if (agent) {
-        agent.status = status;
-      }
-    },
-
-    /**
      * Persists the current agent configuration changes to the backend.
      */
-    async saveCurrentAgent(): Promise<void> {
+    async saveCurrentAgent(agent: Partial<Agent>): Promise<void> {
       if (!this.currentAgentId || !this.currentAgent) return;
 
       this.isLoading = true;
@@ -301,8 +267,7 @@ export const useAgentStore = defineStore('agent', {
 
       const payload: Partial<Agent> = {
         ...this.currentAgent,
-        providerId: this.selectedProviderId || this.currentAgent.providerId,
-        modelFamilyId: this.selectedModelFamilyId || this.currentAgent.modelFamilyId,
+        ...agent
       };
 
       try {

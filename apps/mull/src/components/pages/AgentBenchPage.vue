@@ -2,12 +2,12 @@
   <VBox tag="main" class="w-full min-h-screen">
     <VBox intent="neutral" surface="base" padding="lg" class="max-w-5xl mx-auto w-full">
       <AgentBenchView
-        :disabled="disabled"
+        :disabled="false"
         :is-dirty="isDirty"
         :agents="agents"
+        :selected-agent="selectedAgent"
         :providers="providerOptions"
-        :selected-provider="selectedProviderId"
-        :selected-model="selectedModelFamilyId"
+        :models="modelOptions"
         :prompt-form-data="promptFormData"
         :variables="parsedVariables"
         :has-output-schema="hasOutputSchema"
@@ -20,10 +20,8 @@
         @status-change="handleStatusChange"
         @update:selected-provider="handleProviderChange"
         @update:selected-model="handleModelChange"
-        @update:prompt-form-data="handlePromptFormUpdate"
         @update:variable-values="handleVariableValuesChange"
         @save="handleSave"
-        @edit="handleEdit"
         @run-test="handleRunTest"
       />
     </VBox>
@@ -46,13 +44,12 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 const agentStore = useAgentStore();
 
 const {
-  disabled,
   isDirty,
   isExecuting,
   agents,
+  selectedAgent,
   providerOptions,
-  selectedProviderId,
-  selectedModelFamilyId,
+  modelOptions,
   promptFormData,
   parsedVariables,
   hasOutputSchema,
@@ -64,10 +61,8 @@ const {
   handleStatusChange,
   handleProviderChange,
   handleModelChange,
-  handlePromptFormUpdate,
   handleVariableValuesChange,
   handleSave,
-  handleEdit,
   handleRunTest,
 } = useAgentBench();
 

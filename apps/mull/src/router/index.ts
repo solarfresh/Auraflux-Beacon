@@ -29,7 +29,7 @@ export const routes: Array<RouteRecordRaw> = [
         component: MainPage
       },
       {
-        path: ':projectId/agents/:agentId/',
+        path: ':projectId/agents/',
         name: 'AgentBenchPage',
         component: AgentBenchPage
       },

@@ -4,18 +4,16 @@
     <VAgentToolbar
       class="px-6"
       :agents="agents"
+      :selected-agent="selectedAgent"
       :disabled="disabled"
       :is-dirty="isDirty"
-      :selected-provider="selectedProvider"
-      :selected-model="selectedModel"
       :providers="providers"
       :models="models"
       @save="$emit('save')"
-      @edit="agentId => $emit('edit', agentId)"
       @select-agent="agent => $emit('select-agent', agent)"
       @status-change="status => $emit('status-change', status)"
-      @update:selected-provider="providerId => $emit('update:selectedProvider', providerId)"
-      @update:selected-model="modelId => $emit('update:selectedModel', modelId)"
+      @update:selected-provider="providerId => $emit('update:selected-provider', providerId)"
+      @update:selected-model="modelId => $emit('update:selected-model', modelId)"
     />
 
     <!-- Main Workspace Split-Pane View -->
@@ -24,8 +22,6 @@
       <PromptSchemaPanel
         :model-value="promptFormData"
         class="w-1/2"
-        @update:model-value="val => $emit('update:promptFormData', val)"
-        @add-field="$emit('add-schema-field')"
         @submit="$emit('submit-prompt')"
       />
 
@@ -40,7 +36,7 @@
         :metrics="metrics"
         :is-loading="isExecuting"
         @run="$emit('run-test')"
-        @update:variable-values="values => $emit('update:variableValues', values)"
+        @update:variable-values="values => $emit('update:variable-values', values)"
       />
     </VBox>
   </VStack>
@@ -66,13 +62,12 @@ export interface AgentBenchViewProps {
   disabled?: boolean;
   isDirty?: boolean;
   agents?: Agent[];
-  selectedProvider?: ID;
-  selectedModel?: ID;
+  selectedAgent?: Partial<Agent> | null;
   providers?: ProviderOption[];
   models?: ModelOption[];
 
   // Prompt Schema Panel Props
-  promptFormData?: Partial<PromptSchemaFormData>;
+  promptFormData?: PromptSchemaFormData;
 
   // Agent Bench Panel Props
   variables?: DynamicVariable[];
@@ -91,14 +86,13 @@ withDefaults(defineProps<AgentBenchViewProps>(), {
   disabled: false,
   isDirty: false,
   agents: () => [],
-  selectedProvider: '',
-  selectedModel: '',
+  selectedAgent: null,
   providers: () => [],
   models: () => [],
   promptFormData: () => ({
-    intent: '',
+    purpose: '',
     systemPrompt: '',
-    userPromptTemplate: '',
+    promptTemplate: '',
     schemaFields: [],
   }),
   variables: () => [],
@@ -116,16 +110,14 @@ defineEmits<{
   (e: 'edit', agentId?: ID): void;
   (e: 'select-agent', agent: Agent): void;
   (e: 'status-change', status: EntityStatus): void;
-  (e: 'update:selectedProvider', providerId: ID): void;
-  (e: 'update:selectedModel', modelId: ID): void;
+  (e: 'update:selected-provider', providerId: ID): void;
+  (e: 'update:selected-model', modelId: ID): void;
 
   // Prompt Schema Panel Emits
-  (e: 'update:promptFormData', value: PromptSchemaFormData): void;
-  (e: 'add-schema-field'): void;
   (e: 'submit-prompt'): void;
 
   // Agent Bench Emits
   (e: 'run-test'): void;
-  (e: 'update:variableValues', values: Record<string, string>): void;
+  (e: 'update:variable-values', values: Record<string, string>): void;
 }>();
 </script>
