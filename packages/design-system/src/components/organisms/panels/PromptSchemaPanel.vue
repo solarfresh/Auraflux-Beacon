@@ -27,11 +27,13 @@
         <!-- Core Intent -->
         <VFormField label="Core Design Intent">
           <template #default="{ id }">
-            <VInput
+            <VTextarea
               :id="id"
+              :rows="2"
               v-model="formData.purpose"
               placeholder="Enter agent purpose..."
               size="md"
+              disabled
             />
           </template>
         </VFormField>
