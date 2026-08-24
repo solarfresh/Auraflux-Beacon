@@ -22,18 +22,22 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router'
 import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
+import { useAgentStore } from '@/stores/agent';
 
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VAgentToolbar from '@auraflux/design-system/components/organisms/navs/VAgentToolbar.vue';
 import PropositionInitializerCard from '@/components/organisms/propositions/PropositionInitializerCard.vue';
 
+const agentStore = useAgentStore();
+const { agents, currentAgent, isLoading: isAgentLoading } = storeToRefs(agentStore);
+
 const route = useRoute();
 const router = useRouter();
 const {
-  agents,
   selectedAgent,
   providerOptions,
   modelOptions,
@@ -41,7 +45,18 @@ const {
   handleStatusChange,
   handleProviderChange,
   handleModelChange,
-} = useAgentBench();
+} = useAgentBench({
+  agents,
+  currentAgent,
+  isLoading: isAgentLoading,
+  onSelectAgent: (agentId) => agentStore.setCurrentAgentId(agentId),
+  onSaveAgent: async (payload) => {
+    await agentStore.updateCurrentAgent(payload);
+  },
+  onRunTest: async (payload, variables) => {
+    // Invoke module-specific execution service
+  },
+});
 
 const goToEditAgent = () => {
   router.push({

@@ -6,6 +6,10 @@ const AURAFLUX_MULL_URL = config.AURAFLUX_MULL_URL;
 const ProjectsEndpoints = {
   base: () =>
     `${AURAFLUX_MULL_URL}/projects/`,
+  agents: {
+    base: (projectId: ID) =>
+      `${AURAFLUX_MULL_URL}/projects/${projectId}/agents/`,
+  },
   files: {
     base: (projectId: ID) =>
       `${AURAFLUX_MULL_URL}/projects/${projectId}/files/`,

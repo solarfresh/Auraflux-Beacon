@@ -2,7 +2,7 @@
   <VBox tag="main" class="w-full min-h-screen">
     <VBox intent="neutral" surface="base" padding="lg" class="max-w-5xl mx-auto w-full">
       <AgentBenchView
-        :disabled="false"
+        :disabled="isLoading"
         :is-dirty="isDirty"
         :agents="agents"
         :selected-agent="selectedAgent"
@@ -31,22 +31,24 @@
 <script setup lang="ts">
 /**
  * AgentBenchPage (Business Container Page)
- * Connects the application logic/Pinia store (via useAgentBench)
- * to the presentational AgentBenchView component.
+ * Connects the local feature module store to the shared bench composable
+ * and renders the presentational AgentBenchView component.
  */
-import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import AgentBenchView from '@auraflux/design-system/components/views/AgentBenchView.vue';
-import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
-import { useAgentStore } from '@auraflux/shared-core/stores/agent';
-
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 
-const agentStore = useAgentStore();
+import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
+import { useAgentStore } from '@/stores/agent';
 
+const agentStore = useAgentStore();
+const { agents, currentAgent, isLoading: isAgentLoading } = storeToRefs(agentStore);
+
+// 3. Initialize useAgentBench using the Adapter interface pattern
 const {
   isDirty,
   isExecuting,
-  agents,
+  isLoading,
   selectedAgent,
   providerOptions,
   modelOptions,
@@ -64,13 +66,16 @@ const {
   handleVariableValuesChange,
   handleSave,
   handleRunTest,
-} = useAgentBench();
-
-// Fetch initial data from backend services when the page loads
-onMounted(async () => {
-  await Promise.all([
-    agentStore.fetchAgents(),
-    agentStore.fetchProviders(),
-  ]);
+} = useAgentBench({
+  agents,
+  currentAgent,
+  isLoading: isAgentLoading,
+  onSelectAgent: (agentId) => agentStore.setCurrentAgentId(agentId),
+  onSaveAgent: async (payload) => {
+    await agentStore.updateCurrentAgent(payload);
+  },
+  onRunTest: async (payload, variables) => {
+    // Invoke module-specific execution service
+  },
 });
 </script>

@@ -1,33 +1,39 @@
-import { useAgentStore } from '@auraflux/shared-core/stores/agent';
+import { useProviderStore } from '@auraflux/shared-core/stores/provider';
 import { storeToRefs } from 'pinia';
+import type { Ref } from 'vue';
 import { computed, nextTick, ref, watch } from 'vue';
 
 import type { Agent, DynamicVariable, PromptSchemaFormData } from '@auraflux/design-system/interfaces/agents';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 
-export function useAgentBench() {
-  const store = useAgentStore();
+interface AgentBenchAdapter {
+  /** Reactive reference to the currently selected agent entity */
+  currentAgent: Ref<Agent | null>;
+  /** Reactive list of all agents in the current module scope */
+  agents: Ref<Agent[]>;
+  /** External loading state flag */
+  isLoading?: Ref<boolean>;
 
-  // Deconstruct reactive state and getters directly from Pinia store
-  const {
-    agents,
-    providers,
-    currentAgent,
-    providerOptions,
-    modelOptions,
-    selectedProviderId,
-    selectedModelFamilyId,
-    isLoading: isStoreLoading,
-  } = storeToRefs(store);
+  /** Handler invoked when selecting a different agent */
+  onSelectAgent: (agentId: ID) => void;
+  /** Handler invoked to persist agent updates */
+  onSaveAgent: (agentPayload: Partial<Agent>) => Promise<void>;
+  /** Optional handler invoked to execute an agent test */
+  onRunTest?: (agentPayload: Partial<Agent>, variables: Record<string, string>) => Promise<void>;
+}
 
-  // --- Local UI States ---
+export function useAgentBench(adapter: AgentBenchAdapter) {
+  const providerStore = useProviderStore();
+
+  const { providerOptions, isLoading: isProviderLoading } = storeToRefs(providerStore);
+  const { currentAgent, agents, isLoading: isAdapterLoading } = adapter;
+
   const isExecuting = ref(false);
   const isDirty = ref(false);
-  const activeVariableValues = ref<Record<string, string>>({});
-
-  // Execution & Metric States (Initialized empty, populated post-run)
-  const isSchemaValid = ref(true);
   const isSyncing = ref(false);
+  const isSchemaValid = ref(true);
+
+  const activeVariableValues = ref<Record<string, string>>({});
   const responseOutput = ref<Record<string, unknown> | string>({});
   const rawMarkdownOutput = ref<string>('');
   const metrics = ref<{ latency?: number; tokens?: number } | undefined>(undefined);
@@ -36,8 +42,8 @@ export function useAgentBench() {
     id: '',
     name: '',
     status: 'DRAFT',
-    providerId: selectedProviderId.value,
-    modelFamilyId: selectedModelFamilyId.value,
+    providerId: '',
+    modelFamilyId: '',
   });
 
   const promptFormData = ref<PromptSchemaFormData>({
@@ -45,6 +51,11 @@ export function useAgentBench() {
     systemPrompt: '',
     promptTemplate: '',
     schemaFields: [],
+  });
+
+  const modelOptions = computed(() => {
+    const currentProviderId = selectedAgent.value.providerId;
+    return providerStore.getModelOptionsByProviderId(currentProviderId || null);
   });
 
   // Synchronize form values whenever currentAgent in the store changes
@@ -134,6 +145,8 @@ export function useAgentBench() {
     return (promptFormData.value.schemaFields?.length || 0) > 0;
   });
 
+  const isLoading = computed(() => isProviderLoading.value || (isAdapterLoading?.value ?? false));
+
   // --- Event & Action Handlers ---
 
   const handleSelectAgent = (agent: Agent) => {
@@ -147,34 +160,35 @@ export function useAgentBench() {
       if (!confirmLeave) return;
     }
 
-    store.setCurrentAgentId(agent.id);
+    adapter.onSelectAgent(agent.id);
     isDirty.value = false;
   };
 
   const handleStatusChange = async (status: EntityStatus) => {
     if (isSyncing.value) return;
     selectedAgent.value.status = status;
-    isDirty.value = true;
   };
 
   const handleProviderChange = (providerId: ID) => {
     if (isSyncing.value) return;
     selectedAgent.value.providerId = providerId;
-    isDirty.value = true;
+    selectedAgent.value.modelFamilyId = '';
   };
 
   const handleModelChange = (modelId: ID) => {
     if (isSyncing.value) return;
     selectedAgent.value.modelFamilyId = modelId;
-    isDirty.value = true;
   };
 
   const handleSave = async () => {
-    const updatedAgent = {
+    const payload: Partial<Agent> = {
       ...selectedAgent.value,
-      ...promptFormData.value
-    }
-    await store.saveCurrentAgent(updatedAgent);
+      purpose: promptFormData.value.purpose,
+      systemPrompt: promptFormData.value.systemPrompt,
+      promptTemplate: promptFormData.value.promptTemplate,
+    };
+
+    await adapter.onSaveAgent(payload);
     isDirty.value = false;
   };
 
@@ -184,9 +198,17 @@ export function useAgentBench() {
 
   /** Trigger Agent Test Execution */
   const handleRunTest = async () => {
+    if (!adapter.onRunTest) return;
+
     isExecuting.value = true;
     try {
-      // Trigger API service or execution pipeline here
+      const payload: Partial<Agent> = {
+        ...selectedAgent.value,
+        purpose: promptFormData.value.purpose,
+        systemPrompt: promptFormData.value.systemPrompt,
+        promptTemplate: promptFormData.value.promptTemplate,
+      };
+      await adapter.onRunTest(payload, activeVariableValues.value);
     } catch (error) {
       console.error('Execution error:', error);
     } finally {
@@ -198,10 +220,9 @@ export function useAgentBench() {
     // States & Ref Bindings
     isDirty,
     isExecuting,
-    isStoreLoading,
+    isLoading,
     agents,
     selectedAgent,
-    providers,
     providerOptions,
     modelOptions,
     promptFormData,

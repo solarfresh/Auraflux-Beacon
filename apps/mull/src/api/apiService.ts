@@ -1,6 +1,7 @@
 import { MullEndpoints } from '@/api/endpoints';
 import type { Project } from '@/interfaces/project';
 import type { RepositoryFile, RepositoryFileUploadResult } from '@/interfaces/repository';
+import type { Agent } from '@auraflux/design-system/interfaces/agents';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { apiClient } from '@auraflux/shared-core/api/apiClient';
 import config from '@auraflux/shared-core/config';
@@ -22,6 +23,13 @@ export const apiService = {
       return apiClient.post(MullEndpoints.projects.base(), payload, {
         serviceScope: AURAFLUX_MULL_CLIENT_ID,
       });
+    },
+    agents: {
+      get: (projectId: ID): Promise<AxiosResponse<Agent[]>> => {
+        return apiClient.get(MullEndpoints.projects.agents.base(projectId), {
+          serviceScope: AURAFLUX_MULL_CLIENT_ID,
+        })
+      },
     },
     files: {
       details: {

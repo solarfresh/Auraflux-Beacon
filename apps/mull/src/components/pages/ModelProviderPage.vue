@@ -22,9 +22,6 @@ import config from '@auraflux/shared-core/config';
 import ModelProviderManagementView from '@auraflux/design-system/components/views/ModelProviderManagementView.vue';
 import { useModelProviderManager } from '@auraflux/shared-core/composables/useModelProviderManager';
 
-import type { ID } from '@auraflux/design-system/interfaces/core';
-
-const serverScope = ref<ID>(config.AURAFLUX_MULL_CLIENT_ID);
 const title = ref<string>('Model Providers');
 const description = ref<string>('Configure LLM API credentials, endpoints, and monitor operational health.');
 
