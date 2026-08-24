@@ -93,6 +93,7 @@ export interface AgentOutputSchema {
 
 export interface Agent {
   id: ID;
+  projectId?: ID;
   name: string;
   purpose?: string;
   status: EntityStatus;

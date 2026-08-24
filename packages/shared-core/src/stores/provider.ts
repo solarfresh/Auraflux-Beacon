@@ -28,10 +28,12 @@ export const useProviderStore = defineStore('provider', {
      * General dropdown options for all providers.
      */
     providerOptions: (state): ProviderOption[] => {
-      return state.providers.map((p) => ({
-        label: p.name,
-        value: p.id,
-      }));
+      return [{ label: 'Select Provider...', value: '' }].concat(
+        state.providers.map((p) => ({
+          label: p.name,
+          value: p.id,
+        }))
+      );
     },
 
     /**
@@ -43,11 +45,13 @@ export const useProviderStore = defineStore('provider', {
         const provider = state.providers.find((p) => p.id === providerId);
         if (!provider) return [];
 
-        return provider.supportedFamilies.map((family) => ({
-          label: family.displayName,
-          value: family.id,
-          providerId: provider.id,
-        }));
+        return [{ label: 'Select Model...', value: '', providerId: '' }].concat(
+          provider.supportedFamilies.map((family) => ({
+            label: family.displayName,
+            value: family.id,
+            providerId: provider.id,
+          }))
+        );
       };
     },
   },

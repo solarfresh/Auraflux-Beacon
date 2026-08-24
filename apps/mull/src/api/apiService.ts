@@ -30,11 +30,20 @@ export const apiService = {
           serviceScope: AURAFLUX_MULL_CLIENT_ID,
         })
       },
+      details: {
+        update: (projectId: ID, agentId: ID, payload: Partial<Agent>): Promise<AxiosResponse<Agent>> => {
+          return apiClient.put(
+            MullEndpoints.projects.agents.details.base(projectId, agentId),
+            payload,
+            {serviceScope: AURAFLUX_MULL_CLIENT_ID}
+          )
+        }
+      }
     },
     files: {
       details: {
         delete: (projectId: ID, fileId: ID): Promise<AxiosResponse<any>> => {
-          return apiClient.delete(MullEndpoints.projects.files.details.delete(projectId, fileId), {
+          return apiClient.delete(MullEndpoints.projects.files.details.base(projectId, fileId), {
             serviceScope: AURAFLUX_MULL_CLIENT_ID,
           });
         }

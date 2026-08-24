@@ -9,12 +9,16 @@ const ProjectsEndpoints = {
   agents: {
     base: (projectId: ID) =>
       `${AURAFLUX_MULL_URL}/projects/${projectId}/agents/`,
+    details: {
+      base: (projectId: ID, agentId: ID) =>
+        `${AURAFLUX_MULL_URL}/projects/${projectId}/agents/${agentId}/`,
+    }
   },
   files: {
     base: (projectId: ID) =>
       `${AURAFLUX_MULL_URL}/projects/${projectId}/files/`,
     details: {
-      delete: (projectId: ID, fileId: ID) =>
+      base: (projectId: ID, fileId: ID) =>
         `${AURAFLUX_MULL_URL}/projects/${projectId}/files/${fileId}/`,
     }
   }

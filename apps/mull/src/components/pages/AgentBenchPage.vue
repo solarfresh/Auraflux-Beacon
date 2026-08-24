@@ -71,9 +71,7 @@ const {
   currentAgent,
   isLoading: isAgentLoading,
   onSelectAgent: (agentId) => agentStore.setCurrentAgentId(agentId),
-  onSaveAgent: async (payload) => {
-    await agentStore.updateCurrentAgent(payload);
-  },
+  onSaveAgent: async (payload) => {await agentStore.updateCurrentAgent(payload);},
   onRunTest: async (payload, variables) => {
     // Invoke module-specific execution service
   },

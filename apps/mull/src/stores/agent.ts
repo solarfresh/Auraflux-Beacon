@@ -75,13 +75,15 @@ export const useAgentStore = defineStore('agent', {
      * Update current agent config.
      */
     async updateCurrentAgent(payload: Partial<Agent>): Promise<void> {
-      if (!this.currentAgentId || !this.currentAgent) return;
+      if (!this.currentAgentId || !this.currentAgent || !this.currentAgent.projectId) return;
 
       this.isLoading = true;
       try {
-        // const updated = await apiService.agents.update(this.currentAgentId, payload);
-        // const index = this.agents.findIndex(a => a.id === this.currentAgentId);
-        // if (index !== -1) this.agents[index] = updated;
+        const response = await apiService.projects.agents.details.update(this.currentAgent.projectId, this.currentAgentId, payload);
+        if (response.data) {
+          const index = this.agents.findIndex(a => a.id === this.currentAgentId);
+          if (index !== -1) this.agents[index] = response.data;
+        }
       } catch (err: any) {
         this.error = err.message || 'Failed to update agent';
       } finally {
