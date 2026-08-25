@@ -1,5 +1,5 @@
 <template>
-  <VStack gap="xs" v-bind="$attrs" class="w-full">
+  <VStack gap="xs" class="w-full">
     <!-- Header: Label & Hint Slot -->
     <VCluster v-if="label" justify="between" align="center">
       <VTypography

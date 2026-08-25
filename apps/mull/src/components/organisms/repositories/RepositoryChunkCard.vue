@@ -98,7 +98,7 @@
           <!-- Domain Tags -->
           <VCluster v-if="chunk.keywords.tags?.length" gap="xs" align="center">
             <VBadge
-              v-for="tag in chunk.keywords.tags"
+              v-for="tag in visibleTags"
               :key="tag"
               attention="tertiary"
               size="xs"
@@ -106,6 +106,16 @@
             >
               #{{ tag }}
             </VBadge>
+
+            <VBadge
+            v-if="chunk.keywords.tags.length > tagLimit"
+            attention="tertiary"
+            size="xs"
+            class="opacity-60 cursor-help"
+            :title="allTagsTitle"
+          >
+            +{{ chunk.keywords.tags.length - tagLimit }}
+          </VBadge>
           </VCluster>
         </VCluster>
 
@@ -171,11 +181,13 @@ import type { ChunkData } from '@/interfaces/repository';
 export interface RepositoryChunkCardProps {
   /** Unified ChunkData from repository.ts */
   chunk: ChunkData;
+  tagLimit?: number;
   /** Triple collapse threshold */
   tripleLimit?: number;
 }
 
 const props = withDefaults(defineProps<RepositoryChunkCardProps>(), {
+  tagLimit: 3,
   tripleLimit: 3,
 });
 
@@ -190,6 +202,16 @@ const formattedChunkId = computed(() => {
 
 // Triple collapse toggle logic
 const isExpanded = ref(false);
+
+const visibleTags = computed(() => {
+  const tags = props.chunk.keywords?.tags || [];
+  return tags.slice(0, props.tagLimit);
+});
+
+const allTagsTitle = computed(() => {
+  const tags = props.chunk.keywords?.tags || [];
+  return tags.map((t) => `#${t}`).join(', ');
+});
 
 const visibleTriples = computed(() => {
   const triples = props.chunk.keywords?.triples || [];

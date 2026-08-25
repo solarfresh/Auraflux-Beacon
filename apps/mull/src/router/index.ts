@@ -1,5 +1,7 @@
+import AgentBenchPage from '@/components/pages/AgentBenchPage.vue';
 import LandingPage from '@/components/pages/LandingPage.vue';
 import MainPage from '@/components/pages/MainPage.vue';
+import ModelProviderPage from '@/components/pages/ModelProviderPage.vue';
 import ProjectPage from '@/components/pages/ProjectPage.vue';
 import RepositoryPage from '@/components/pages/RepositoryPage.vue';
 import RoutePage from '@/components/pages/RoutePage.vue';
@@ -22,17 +24,34 @@ export const routes: Array<RouteRecordRaw> = [
         component: ProjectPage
       },
       {
-        path: ':id',
+        path: ':projectId/',
         name: 'MainPage',
         component: MainPage
       },
       {
-        path: ':id/repository',
+        path: ':projectId/agents/',
+        name: 'AgentBenchPage',
+        component: AgentBenchPage
+      },
+      {
+        path: ':projectId/repository/',
         name: 'RepositoryPage',
         component: RepositoryPage
       }
     ]
   },
+  {
+    path: '/settings/',
+    name: 'SettingsPage',
+    component: RoutePage,
+    children: [
+      {
+        path: 'models/',
+        name: 'ModelProviderPage',
+        component: ModelProviderPage
+      }
+    ]
+  }
 ]
 
 const router = createRouter({

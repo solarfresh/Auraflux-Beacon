@@ -15,6 +15,7 @@
         border="bottom"
       >
         <VStack gap="sm" align="stretch">
+          <!-- Header Title & Counter Badge -->
           <VSectionHeader
             title="Files"
             icon="Folder"
@@ -28,22 +29,29 @@
             </template>
           </VSectionHeader>
 
-          <!-- File Search Input -->
-          <VInput
-            v-model="searchQuery"
-            placeholder="Filter files..."
-            size="sm"
-            rounded="md"
-          />
+          <!-- File Upload Box Component -->
+          <VFileUploadBox
+            accept=".pdf,.md,.txt,.json"
+            multiple
+            padding="sm"
+            @change="handleFileUpload"
+          >
+            <template #title>
+              Click or drag files here
+            </template>
+            <template #description>
+              PDF, Markdown, TXT, JSON
+            </template>
+          </VFileUploadBox>
         </VStack>
       </VBox>
 
       <!-- File Items List Section -->
       <VBox padding="sm" class="flex-1 min-h-0 overflow-y-auto">
         <VStack gap="xs" align="stretch">
-          <template v-if="filteredFiles.length > 0">
+          <template v-if="files.length > 0">
             <VCard
-              v-for="file in filteredFiles"
+              v-for="file in files"
               :key="file.id"
               padding="sm"
               rounded="md"
@@ -62,7 +70,7 @@
                 <VCluster justify="between" align="start" fullWidth gap="xs">
                   <VCluster gap="xs" align="center" class="min-w-0 flex-1">
                     <VIcon
-                      :name="getFileIcon(file.type)"
+                      :name="getFileIcon(file.fileType)"
                       size="sm"
                       type="solid"
                     />
@@ -71,9 +79,9 @@
                       size="sm"
                       weight="semibold"
                       class="truncate"
-                      :title="file.name"
+                      :title="file.fileName"
                     >
-                      {{ file.name }}
+                      {{ file.fileName }}
                     </VTypography>
                   </VCluster>
 
@@ -110,8 +118,18 @@
                       weight="normal"
                       class="font-mono"
                     >
-                      {{ file.size }}
+                      {{ file.fileSize }}
                     </VTypography>
+
+                    <VButton
+                      intent="danger"
+                      surface="solid"
+                      size="xs"
+                      icon-name="Trash"
+                      icon-only
+                      title="Delete file"
+                      @click.stop="deleteFile(file.id)"
+                    />
                   </VCluster>
                 </VBox>
               </VStack>
@@ -123,7 +141,7 @@
             <VStack gap="xs" align="center" justify="center" class="text-center h-full">
               <VIcon name="DocumentMagnifyingGlass" size="lg" type="outline" class="opacity-50" />
               <VTypography tag="p" size="xs" weight="normal">
-                No matching files found
+                No files uploaded yet
               </VTypography>
             </VStack>
           </VBox>
@@ -136,48 +154,50 @@
 <script setup lang="ts">
 /**
  * MasterFileList Organism / Sidebar Molecule
- * Displays a searchable list of repository files tailored for Light Theme surfaces.
+ * Displays a list of repository files tailored for Light Theme surfaces with file upload capability.
  */
-import { ref, computed } from 'vue';
-import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
+import type { RepositoryFile } from '@/interfaces/repository';
 import type { ID } from '@auraflux/design-system/interfaces/core';
-import type { FileItem } from '@/interfaces/repository';
+import type { IntentToken } from '@auraflux/design-system/interfaces/theme';
 
 // Design System Components
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
-import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
-import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
-import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
-import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
+import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
+import VFileUploadBox from '@auraflux/design-system/components/molecules/forms/VFileUploadBox.vue';
+import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
+import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 
 export interface MasterFileListProps {
-  files: FileItem[];
+  files: RepositoryFile[];
   selectedId?: ID;
 }
 
-const props = withDefaults(defineProps<MasterFileListProps>(), {
+withDefaults(defineProps<MasterFileListProps>(), {
   files: () => [],
   selectedId: undefined,
 });
 
 const emit = defineEmits<{
+  (e: 'delete', id: ID): void;
   (e: 'select', id: ID): void;
+  (e: 'upload', files: File[]): void;
 }>();
 
-const searchQuery = ref('');
-
-const filteredFiles = computed(() => {
-  if (!searchQuery.value.trim()) return props.files;
-  const q = searchQuery.value.toLowerCase();
-  return props.files.filter((f) => f.name.toLowerCase().includes(q));
-});
+const deleteFile = (id: ID) => {
+  emit('delete', id);
+};
 
 const selectFile = (id: ID) => {
   emit('select', id);
+};
+
+const handleFileUpload = (files: File[]) => {
+  emit('upload', files);
 };
 
 const getFileIcon = (type?: string) => {

@@ -17,7 +17,7 @@
           surface="base"
           size="md"
           class="cursor-pointer"
-          @click="goToRepository(repositoryId)"
+          @click="goToRepository(projectId)"
         >
           <VCluster align="center" gap="xs">
             <VIcon name="CircleStack" size="xs" />
@@ -134,9 +134,11 @@ import VCard from '@auraflux/design-system/components/molecules/resources/VCard.
 
 import type { ID } from '@auraflux/design-system/interfaces/core';
 
+import { useProjectStore } from '@/stores/project';
 import { useRepositoryStore } from '@/stores/repository';
 import { useRouter } from 'vue-router';
 
+const projectStore = useProjectStore();
 const repositoryStore = useRepositoryStore();
 const router = useRouter();
 
@@ -151,28 +153,27 @@ withDefaults(defineProps<PropositionInitializerCardProps>(), {
 
 const emit = defineEmits<{
   /** Triggered when the user submits with context text and optional files */
-  (e: 'submit', payload: { text: string; files: File[] }): void;
+  (e: 'submit', payload: string): void;
   /** Triggered when clear action is called */
   (e: 'clear'): void;
 }>();
-
-// Mock
-const repositoryId = ref<ID>('test');
 
 // Form State
 const propositionText = ref('');
 const uploadedFiles = ref<File[]>([]);
 
 const fileCount = computed(() => repositoryStore.files.length);
+const projectId = computed(() => projectStore.currentProjectId || '');
 
-const goToRepository = (id: ID) => {
+const goToRepository = (projectId: ID) => {
   router.push({
     name: 'RepositoryPage',
-    params: { id },
+    params: { projectId: projectId },
   });
 };
 
 const handleFileChange = (files: File[]) => {
+  repositoryStore.uploadRepositoryFiles(projectId.value, files)
   uploadedFiles.value = files;
 };
 
@@ -184,9 +185,6 @@ const handleClear = () => {
 
 const handleSubmit = () => {
   if (!propositionText.value.trim()) return;
-  emit('submit', {
-    text: propositionText.value,
-    files: uploadedFiles.value
-  });
+  emit('submit', propositionText.value);
 };
 </script>

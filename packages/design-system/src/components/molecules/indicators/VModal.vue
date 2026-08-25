@@ -34,6 +34,7 @@
           </slot>
 
           <VButton
+            attention="primary"
             iconOnly
             iconName="XMark"
             size="sm"

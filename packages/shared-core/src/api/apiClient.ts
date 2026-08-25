@@ -13,10 +13,6 @@ import type { TokenInfo } from '@auraflux/shared-core/interfaces/user';
 export const apiClient = axios.create({
   // **Crucial for JWT Cookie Auth**
   withCredentials: true,
-
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 /**

@@ -97,6 +97,7 @@
  * Maps domain-specific states (AI-generated vs. Manual) to design tokens.
  */
 import { computed, ref } from 'vue';
+
 import VCard from '@auraflux/design-system/components/molecules/resources/VCard.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';

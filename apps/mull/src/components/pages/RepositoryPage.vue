@@ -26,7 +26,9 @@
         <RepositoryFileList
           :files="repositoryStore.filteredFiles"
           :selected-id="repositoryStore.selectedFileId"
+          @delete="deleteFile"
           @select="repositoryStore.selectFile"
+          @upload="uploadFile"
         />
 
         <!-- Right Area: Detail Chunk List -->
@@ -46,7 +48,7 @@
             >
               <VCluster justify="between" align="center" fullWidth>
                 <VSectionHeader
-                  :title="activeFile ? activeFile.name : 'All Chunks'"
+                  :title="activeFile ? activeFile.fileName : 'All Chunks'"
                   icon="DocumentText"
                   size="md"
                   weight="bold"
@@ -97,7 +99,7 @@
  * Renders the primary Master-Detail layout for exploring repository files and chunk cards.
  * Refactored using Layout Atoms (VBox, VStack, VCluster) and Organisms.
  */
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 
 // Design System Components
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -113,11 +115,31 @@ import RepositoryToolbar from '@/components/organisms/repositories/RepositoryToo
 import RepositoryFileList from '@/components/organisms/repositories/RepositoryFileList.vue';
 import ChunkCard from '@/components/organisms/repositories/RepositoryChunkCard.vue';
 
+import type { ID } from '@auraflux/design-system/interfaces/core';
+
+import { useProjectStore } from '@/stores/project';
 import { useRepositoryStore } from '@/stores/repository';
 
+const projectStore = useProjectStore();
 const repositoryStore = useRepositoryStore();
 
 const activeFile = computed(() => repositoryStore.activeFile);
 const totalChunks = computed(() => repositoryStore.totalChunks);
 const filteredChunks = computed(() => repositoryStore.filteredChunks);
+
+watch(() => projectStore.currentProjectId, async (newVal) => {
+  if (newVal) {
+    await repositoryStore.fetchData(newVal);
+  }
+}, { immediate: true });
+
+const deleteFile = (fileId: ID) => {
+  if (!projectStore.currentProjectId) return;
+  repositoryStore.deleteFile(projectStore.currentProjectId, fileId);
+}
+
+const uploadFile = (files: File[]) => {
+  if (!projectStore.currentProjectId) return;
+  repositoryStore.uploadRepositoryFiles(projectStore.currentProjectId, files);
+}
 </script>

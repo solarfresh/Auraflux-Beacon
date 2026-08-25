@@ -13,21 +13,45 @@
 </template>
 
 <script setup lang="ts">
-import VOverlayLoader from '@auraflux/design-system/components/molecules/indicators/VOverlayLoader.vue';
 import AppHeader from '@/components/organisms/navs/AppHeader.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VOverlayLoader from '@auraflux/design-system/components/molecules/indicators/VOverlayLoader.vue';
 
+import { useAgentStore } from '@/stores/agent';
+import { useProjectStore } from '@/stores/project';
+import { useProviderStore } from '@auraflux/shared-core/stores/provider';
 import { useAuthStore } from '@auraflux/shared-core/stores/auth';
-import { onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
+const agentStore = useAgentStore();
 const authStore = useAuthStore();
+const projectStore = useProjectStore();
+const providerStore = useProviderStore();
+const route = useRoute();
 const router = useRouter();
+
+watch(
+  () => route.params.projectId,
+  (newProjectId, oldProjectId) => {
+    if (newProjectId && newProjectId !== oldProjectId) {
+      if (!Array.isArray(newProjectId)) {
+        projectStore.setCurrentProjectId(newProjectId);
+        agentStore.fetchAgentsByProject(newProjectId);
+      }
+    }
+  },
+  { immediate: true }
+)
 
 onMounted(async () => {
   // Check for valid JWT cookie on initial load
   try {
-    await authStore.checkAuthStatus();
+    await Promise.all([
+      authStore.checkAuthStatus(),
+      projectStore.fetchProjects(),
+      providerStore.fetchProviders(),
+    ]);
   } catch (err: any) {
     router.push('/')
   }

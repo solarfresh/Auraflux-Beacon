@@ -65,14 +65,6 @@
 
     <VCluster gap="xs" align="center">
       <VBox
-        tag="span"
-        background="indigo-50"
-        class="px-2 py-0.5 rounded text-[10px] font-bold text-indigo-600 border border-indigo-100"
-      >
-        {{ provider.activeAgentCount }} AGENTS
-      </VBox>
-
-      <VBox
         v-for="family in provider.supportedFamilies.slice(0, 2)"
         :key="family.id"
         tag="span"
