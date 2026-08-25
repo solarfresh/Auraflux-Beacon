@@ -181,11 +181,19 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
   };
 
   const handleSave = async () => {
+    const selectedModel = modelOptions.value.find(
+      (m) => m.value === selectedAgent.value?.modelFamilyId
+    );
     const payload: Partial<Agent> = {
       ...selectedAgent.value,
       purpose: promptFormData.value.purpose,
       systemPrompt: promptFormData.value.systemPrompt,
       promptTemplate: promptFormData.value.promptTemplate,
+      llmParameters: {
+        ...selectedAgent.value?.llmParameters,
+        provider: selectedAgent.value?.providerId ?? '',
+        model: selectedModel?.name ?? '',
+      },
     };
 
     await adapter.onSaveAgent(payload);
@@ -202,11 +210,19 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
 
     isExecuting.value = true;
     try {
+      const selectedModel = modelOptions.value.find(
+        (m) => m.value === selectedAgent.value?.modelFamilyId
+      );
       const payload: Partial<Agent> = {
         ...selectedAgent.value,
         purpose: promptFormData.value.purpose,
         systemPrompt: promptFormData.value.systemPrompt,
         promptTemplate: promptFormData.value.promptTemplate,
+        llmParameters: {
+          ...selectedAgent.value?.llmParameters,
+          provider: selectedAgent.value?.providerId ?? '',
+          model: selectedModel?.name ?? '',
+        },
       };
       await adapter.onRunTest(payload, activeVariableValues.value);
     } catch (error) {

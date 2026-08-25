@@ -12,6 +12,8 @@ export interface DynamicVariable {
 }
 
 export interface LLMParameters {
+  provider: ID;
+  model: string;            // e.g., "gemini-3-flash-preview"
   temperature?: number;
   topP?: number;
   maxTokens?: number;
@@ -116,4 +118,5 @@ export interface Agent {
 export interface ProviderOption extends SelectOption {}
 export interface ModelOption extends SelectOption {
   providerId: ID;
+  name: string;
 }

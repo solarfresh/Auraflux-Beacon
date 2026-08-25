@@ -185,7 +185,7 @@ export const NEUTRAL_SURFACE_MAP: SurfaceStyleMap = {
     bg: 'bg-white',
     text: 'text-slate-700',
     border: 'border-slate-200',
-    hover: 'hover:bg-slate-400',
+    hover: 'hover:bg-slate-200',
     focus: 'focus-visible:ring-slate-400',
   },
   soft: {

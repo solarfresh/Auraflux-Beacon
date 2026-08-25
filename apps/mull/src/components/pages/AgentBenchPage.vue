@@ -2,7 +2,7 @@
   <VBox tag="main" class="w-full min-h-screen">
     <VBox intent="neutral" surface="base" padding="lg" class="max-w-5xl mx-auto w-full">
       <AgentBenchView
-        :disabled="isLoading"
+        :disabled="false"
         :is-dirty="isDirty"
         :agents="agents"
         :selected-agent="selectedAgent"
