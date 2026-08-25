@@ -15,112 +15,14 @@ export interface RepositoryState {
 export const useRepositoryStore = defineStore('repository', {
   state: (): RepositoryState => ({
     // --- Master Files Data ---
-    files: [
-      { id: 'f1', fileName: 'architecture_spec.pdf', fileType: 'pdf', chunkCount: 2, fileSize: '2.4 MB', status: 'SUCCESS', createdAt: '', updatedAt: '', chunks: []},
-      { id: 'f2', fileName: 'security_policy_v2.docx', fileType: 'doc', chunkCount: 1, fileSize: '1.1 MB', status: 'SUCCESS', createdAt: '', updatedAt: '', chunks: [] },
-      { id: 'f3', fileName: 'data_pipeline.py', fileType: 'code', chunkCount: 1, fileSize: '340 KB', status: 'PROCESSING', createdAt: '', updatedAt: '', chunks: []},
-    ],
+    files: [],
 
     // --- Chunks Data compliant with repository.ts ---
-    chunks: [
-      {
-        id: 'e58ed02b-a81d-40c2-9e32-22502c3d4a1b',
-        fileId: 'f1',
-        alignment: {
-          targetQuestion: '當第三方服務商存取敏感資料時，有哪些地緣法規與稽核邊界限制？',
-          scope: {
-            domain: 'Data Protection',
-            impactLevel: 'strategic',
-            boundaries: [
-              '禁止未經加密的敏感數據傳輸至非 GDPR 適格之第三國伺服器',
-              '嚴禁第三方服務商於本機建立任何形式的持久化資料快取 (Local Cache)',
-              '稽核 Log 記錄保存時間不得少於 180 天，且不得由操作者自行刪除',
-            ],
-          },
-        },
-        concept: {
-          title: 'Data Sovereignty vs. Architectural Agility',
-          description: '跨國數據存取必須遵循最少權限原則，並建立即時自動化稽核軌跡，以確保滿足地緣政治法規之合規標準。',
-        },
-        keywords: {
-          tags: ['compliance', 'gdpr', 'data-security'],
-          triples: [
-            { subject: 'Third-Party Provider', predicate: 'must execute', object: 'Standard Contractual Clauses (SCC)' },
-            { subject: 'Data Transfer Audit', predicate: 'requires logging within', object: '24 Hours' },
-            { subject: 'DPO Approval', predicate: 'is mandatory for', object: 'Cross-Border Access' },
-            { subject: 'Storage Encryption', predicate: 'must comply with', object: 'AES-256' },
-          ],
-        },
-        evidence: {
-          location: 'Page 14, Section 4.2.1',
-          excerptText: 'All third-party processors handling restricted category data shall implement automated audit logging and submit quarterly compliance certificates to the Data Protection Officer.',
-        },
-      },
-      {
-        id: '7f91c3d2-3b1a-4c22-8e10-912345678abc',
-        fileId: 'f1',
-        alignment: {
-          targetQuestion: '系統微服務架構如何設計備援機制以確保 99.99% 可用性？',
-          scope: {
-            domain: 'Architecture',
-            impactLevel: 'tactical',
-            boundaries: [
-              '主備資料庫切換時間 (RTO) 不得超過 30 秒',
-              '跨區域資料同步延遲 (RPO) 必須低於 1 秒',
-            ],
-          },
-        },
-        concept: {
-          title: 'High Availability & Fault Tolerance Design',
-          description: '透過 Multi-Region Active-Active 架構與斷路器機制，防止單點故障引起的雪崩效應。',
-        },
-        keywords: {
-          tags: ['microservices', 'high-availability', 'database'],
-          triples: [
-            { subject: 'Database Replication', predicate: 'utilizes', object: 'Raft Consensus' },
-            { subject: 'Failover Timeout', predicate: 'is capped at', object: '30 Seconds' },
-          ],
-        },
-        evidence: {
-          location: 'Page 22, Section 5.1',
-          excerptText: 'The architecture incorporates multi-region deployment with automated failover managed by global load balancers.',
-        },
-      },
-      {
-        id: '3c82d1a0-9e4f-4d11-b823-112233445566',
-        fileId: 'f2',
-        alignment: {
-          targetQuestion: '企業內部零信任（Zero Trust）存取架構的驗證標準為何？',
-          scope: {
-            domain: 'IT Security',
-            impactLevel: 'strategic',
-            boundaries: [
-              '嚴禁任何無 MFA 驗證的內部 IP 直連核心 API',
-              '禁止長期有效的 Session Token 存在，過期後必須重新授權',
-            ],
-          },
-        },
-        concept: {
-          title: 'Never Trust, Always Verify',
-          description: '網路邊界不可信，所有存取請求皆須經過強身分認證、設備健康度審查與動態權限給予。',
-        },
-        keywords: {
-          tags: ['zero-trust', 'mfa', 'identity'],
-          triples: [
-            { subject: 'Access Control', predicate: 'enforces', object: 'Multi-Factor Authentication (MFA)' },
-            { subject: 'Session Token', predicate: 'expires in', object: '15 Minutes' },
-          ],
-        },
-        evidence: {
-          location: 'Section 2.3',
-          excerptText: 'Identity verification must be performed continuously, with session re-evaluation triggered upon every sensitive operation.',
-        },
-      },
-    ],
+    chunks: [],
     error: null,
 
     // --- Active UI Filters State ---
-    selectedFileId: 'f1',
+    selectedFileId: '',
     searchQuery: '',
     selectedDomain: '',
   }),
@@ -239,6 +141,10 @@ export const useRepositoryStore = defineStore('repository', {
         const response = await apiService.projects.files.get(projectId);
         if (response.data) {
           this.files = response.data;
+          this.chunks = response.data.flatMap((file) => file.chunks || []);
+          if (!this.selectedFileId && this.files.length > 0) {
+            this.selectedFileId = this.files[0].id;
+          }
         } else {
           console.warn(`No repository files found for project ${projectId}. Using mock data.`);
         }
