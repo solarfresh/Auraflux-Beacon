@@ -117,6 +117,21 @@ export const SHARED_ROUNDED_CLASSES: Record<RoundedToken, string> = {
   full: 'rounded-full',
 };
 
+/**
+ * Shared CSS variables map for VSlider track and thumb dimensions.
+ */
+export const SHARED_SLIDER_SIZE_CLASSES: Record<
+  ComponentSizeToken,
+  { trackHeight: string; thumbSize: string; thumbMarginTop: string }
+> = {
+  xs: { trackHeight: '4px', thumbSize: '10px', thumbMarginTop: '-3px' },
+  sm: { trackHeight: '6px', thumbSize: '14px', thumbMarginTop: '-4px' },
+  md: { trackHeight: '8px', thumbSize: '16px', thumbMarginTop: '-4px' },
+  lg: { trackHeight: '12px', thumbSize: '20px', thumbMarginTop: '-4px' },
+  xl: { trackHeight: '16px', thumbSize: '24px', thumbMarginTop: '-4px' },
+  '2xl': { trackHeight: '20px', thumbSize: '28px', thumbMarginTop: '-4px' },
+};
+
 export const SHARED_COMPONENT_SIZE_CLASSES: Record<ComponentSizeToken, { badge: string; control: string; iconButton: string; icon: string; text: string; }> = {
   xs: {
     badge: 'px-1.5 py-0.5 text-[10px] leading-none',
