@@ -84,6 +84,18 @@ export interface SchemaProperty {
   description?: string;
 }
 
+export interface EmbeddingRrfConfigFormData {
+  providerId: string;
+  modelFamilyId: string;
+  dimensions: number;
+  candidateTopN: number;
+  kFactor: number;
+  vectorWeight: number;
+  bm25Weight: number;
+  topK: number;
+  scoreCutoff: string;
+}
+
 /**
  * Standardized JSON Schema structure for Agent Output Constraints
  */
@@ -119,4 +131,8 @@ export interface ProviderOption extends SelectOption {}
 export interface ModelOption extends SelectOption {
   providerId: ID;
   name: string;
+}
+export interface EmbeddingModelOption extends SelectOption {
+  providerId: ID;
+  dimensions: number;
 }

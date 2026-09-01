@@ -27,19 +27,21 @@
 
         <!-- SECTION 1: Index-Bound Settings (Provider & Model Selection) -->
         <VBox
+          intent="warning"
+          surface="soft"
           padding="md"
           rounded="lg"
           border="all"
-          class="border-amber-200 bg-amber-50/40 space-y-4"
+          class="space-y-4"
         >
           <VCluster justify="between" align="center">
             <VCluster gap="xs" align="center">
-              <VIcon name="AlertTriangle" class="text-amber-600 w-4 h-4" />
-              <VTypography size="xs" weight="bold" class="text-amber-900 uppercase">
-                1. Initial Core Config (Re-index Required)
+              <VIcon name="ExclamationTriangle" class="w-4 h-4" />
+              <VTypography size="xs" weight="bold" class="uppercase">
+                Initial Core Config (Re-index Required)
               </VTypography>
             </VCluster>
-            <VBadge intent="warning" size="xs">Index Binding</VBadge>
+            <VBadge size="xs">Index Binding</VBadge>
           </VCluster>
 
           <!-- Provider & Embedding Model (Grid Layout / Provider-First) -->
@@ -121,8 +123,8 @@
         <!-- SECTION 2: OpenSearch RRF Dynamic Tuning (Query Time) -->
         <VStack gap="md" class="w-full">
           <VCluster justify="between" align="center">
-            <VTypography size="xs" weight="bold" attention="tertiary" class="uppercase">
-              2. OpenSearch RRF Tuning (Real-time)
+            <VTypography size="xs" weight="bold" class="uppercase">
+              OpenSearch RRF Tuning (Real-time)
             </VTypography>
             <VBadge intent="success" size="xs">Query-Time Active</VBadge>
           </VCluster>
@@ -146,7 +148,7 @@
           </VFormField>
 
           <!-- Pipeline Weights Box -->
-          <VBox padding="md" rounded="lg" border="all" class="bg-gray-50/50 space-y-3">
+          <VBox intent="neutral" surface="soft" padding="md" rounded="lg" border="all" class="space-y-3">
             <VTypography size="xs" weight="bold">Weighted RRF Rank Weights</VTypography>
 
             <!-- Vector Weight -->
@@ -236,29 +238,7 @@ import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue'
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
 
-export interface EmbeddingModelOption {
-  label: string;
-  value: string;
-  providerId: string;
-  dimensions: number;
-}
-
-export interface ProviderOption {
-  label: string;
-  value: string;
-}
-
-export interface EmbeddingRrfConfigFormData {
-  providerId: string;
-  modelFamilyId: string;
-  dimensions: number;
-  candidateTopN: number;
-  kFactor: number;
-  vectorWeight: number;
-  bm25Weight: number;
-  topK: number;
-  scoreCutoff: string;
-}
+import type { EmbeddingModelOption, EmbeddingRrfConfigFormData, ProviderOption } from '@auraflux/design-system/interfaces/agents';
 
 interface Props {
   providers?: ProviderOption[];
