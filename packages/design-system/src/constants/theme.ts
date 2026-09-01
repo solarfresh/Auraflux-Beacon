@@ -32,12 +32,20 @@ export const ATTENTION_PRESET_MAP: Record<AttentionToken, AttentionPreset> = {
   },
 };
 
-export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
+export const SHARED_ITEM_ALIGN_CLASSES: Record<Alignment, string> = {
   start: 'items-start',
   center: 'items-center',
   end: 'items-end',
   baseline: 'items-baseline',
   stretch: 'items-stretch',
+};
+
+export const SHARED_TEXT_ALIGN_CLASS_MAP: Record<Alignment, string> = {
+  start: 'text-left',
+  center: 'text-center',
+  end: 'text-right',
+  baseline: 'text-left',
+  stretch: 'text-left',
 };
 
 export const SHARED_BORDER_CLASSES: Record<BorderToken, string> = {
@@ -70,6 +78,15 @@ export const SHARED_CONTAINER_SIZE_CLASSES: Record<ContainerSizeToken, string> =
 
   /** Full-screen container - Takes up near-viewport dimensions for immersive flows */
   full: 'max-w-[95vw] w-full h-[90vh]'
+};
+
+export const SHARED_DIVIDE_INTENT_MAP: Record<IntentToken, string> = {
+  neutral: 'divide-slate-200',
+  brand: 'divide-indigo-200',
+  success: 'divide-emerald-200',
+  warning: 'divide-amber-200',
+  danger: 'divide-rose-200',
+  info: 'divide-sky-200',
 };
 
 export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {

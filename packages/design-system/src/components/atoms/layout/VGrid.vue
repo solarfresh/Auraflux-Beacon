@@ -38,7 +38,7 @@ import type {
   TagToken
 } from '@auraflux/design-system/interfaces/theme';
 import {
-  SHARED_ALIGN_CLASSES,
+  SHARED_ITEM_ALIGN_CLASSES,
   SHARED_GAP_CLASSES,
   SHARED_JUSTIFY_CLASSES,
   SHARED_PADDING_CLASSES
@@ -122,7 +122,7 @@ const paddingStyles = computed(() => {
 });
 
 const alignStyles = computed(() => {
-  return SHARED_ALIGN_CLASSES[props.align] || SHARED_ALIGN_CLASSES.stretch;
+  return SHARED_ITEM_ALIGN_CLASSES[props.align] || SHARED_ITEM_ALIGN_CLASSES.stretch;
 });
 
 const gapStyles = computed(() => {
