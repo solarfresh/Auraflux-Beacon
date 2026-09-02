@@ -20,6 +20,8 @@ export interface VTableCellProps {
   size?: ComponentSizeToken;
   /** Explicit padding override mapped to SHARED_PADDING_CLASSES */
   padding?: SpacingToken;
+  /** Column span for merged table cells */
+  colspan?: number;
 }
 
 const props = withDefaults(defineProps<VTableCellProps>(), {
