@@ -127,6 +127,36 @@ export interface Agent {
   outputSchema?: AgentOutputSchema;
 }
 
+/**
+ * Runtime execution parameters for the embedding model
+ */
+export interface EmbeddingParameters {
+  dimensions?: number;
+  chunkSize?: number;
+  chunkOverlap?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * Defines the embedding model configuration bound to a specific project
+ */
+export interface Embedding {
+  id: ID;
+  name: string;
+  status: EntityStatus;
+  providerId: ID;
+  modelFamilyId: ID;
+  parameters?: EmbeddingParameters;
+  projectId: ID;
+  createdAt?: DateTimeString;
+  updatedAt?: DateTimeString;
+}
+
+/**
+ * Form payload representation for creating or updating Embedding Configurations
+ */
+export type EmbeddingFormData = Omit<Embedding, 'id' | 'createdAt' | 'updatedAt'>;
+
 export interface ProviderOption extends SelectOption {}
 export interface ModelOption extends SelectOption {
   providerId: ID;
