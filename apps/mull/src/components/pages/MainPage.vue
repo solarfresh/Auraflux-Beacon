@@ -5,11 +5,13 @@
         <VAgentToolbar
           :disabled="true"
           :agents="agents"
+          :embeddings="embeddings"
           :selected-agent="selectedAgent"
+          :selected-embedding="selectedEmbedding"
           :providers="providerOptions"
           :models="modelOptions"
           @edit="goToEditAgent"
-          @select-agent="handleSelectAgent"
+          @select-agent="handleSelectTarget"
           @status-change="handleStatusChange"
           @update:selected-provider="handleProviderChange"
           @update:selected-model="handleModelChange"
@@ -22,38 +24,67 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
+
 import { useAgentBench } from '@auraflux/shared-core/composables/useAgentBench';
 import { useAgentStore } from '@/stores/agent';
+import { useEmbeddingStore } from '@/stores/embedding';
 
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import VAgentToolbar from '@auraflux/design-system/components/organisms/navs/VAgentToolbar.vue';
 import PropositionInitializerCard from '@/components/organisms/propositions/PropositionInitializerCard.vue';
 
-const agentStore = useAgentStore();
-const { agents, currentAgent, isLoading: isAgentLoading } = storeToRefs(agentStore);
-
 const route = useRoute();
 const router = useRouter();
+
+const agentStore = useAgentStore();
+const embeddingStore = useEmbeddingStore();
+
+const { agents, currentAgent, isLoading: isAgentLoading } = storeToRefs(agentStore);
+const { embeddings, currentEmbedding, isLoading: isEmbeddingLoading } = storeToRefs(embeddingStore);
+
+const isPageLoading = computed(() => isAgentLoading.value || isEmbeddingLoading.value);
+
+// 2. 透過 useAgentBench 整合狀態與事件
 const {
   selectedAgent,
+  selectedEmbedding,
   providerOptions,
   modelOptions,
-  handleSelectAgent,
+  handleSelectTarget,
   handleStatusChange,
   handleProviderChange,
   handleModelChange,
 } = useAgentBench({
   agents,
   currentAgent,
-  isLoading: isAgentLoading,
-  onSelectAgent: (agentId) => agentStore.setCurrentAgentId(agentId),
-  onSaveAgent: async (payload) => {},
-  onRunTest: async (payload, variables) => {
-    // Invoke module-specific execution service
+  embeddings,
+  currentEmbedding,
+  isLoading: isPageLoading,
+  onSelectTarget: (targetId, type) => {
+    if (type === 'AGENT') {
+      agentStore.setCurrentAgentId(targetId);
+      embeddingStore.setCurrentEmbeddingId(null);
+    } else {
+      embeddingStore.setCurrentEmbeddingId(targetId);
+      agentStore.setCurrentAgentId(null);
+    }
   },
+  onSaveAgent: async () => {},
+  onSaveEmbedding: async () => {},
+});
+
+onMounted(async () => {
+  const projectId = (route.params.projectId as string) || '';
+  if (projectId) {
+    await Promise.all([
+      agentStore.fetchAgentsByProject(projectId),
+      embeddingStore.fetchEmbeddingsByProject(projectId),
+    ]);
+  }
 });
 
 const goToEditAgent = () => {
@@ -63,5 +94,5 @@ const goToEditAgent = () => {
       projectId: route.params.projectId,
     },
   });
-}
+};
 </script>

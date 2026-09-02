@@ -56,12 +56,14 @@
 
         <!-- User Prompt Template -->
         <VFormField label="User Prompt Template">
+<!--
           <template #hint>
             <VCluster gap="xs" align="center">
               <VCode size="xs">{{ '\{\{' }}</VCode>
               <VTypography size="xs" attention="tertiary">Vars</VTypography>
             </VCluster>
           </template>
+ -->
           <template #default="{ id }">
             <VTextarea
               :id="id"

@@ -170,7 +170,11 @@ defineEmits<{
  * Switches to EmbeddingBenchView if selectedEmbedding is active or embeddingConfigData is provided.
  */
 const isEmbeddingMode = computed(() => {
-  return Boolean(props.selectedEmbedding || props.embeddingConfigData);
+  if (props.selectedAgent?.id) {
+    return false;
+  }
+
+  return Boolean(props.selectedEmbedding?.id);
 });
 
 /**

@@ -127,6 +127,8 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
           isSyncing.value = false;
           isDirty.value = false;
         });
+      } else {
+        selectedAgent.value = null;
       }
     },
     { immediate: true, deep: true }
@@ -165,6 +167,8 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
           isSyncing.value = false;
           isDirty.value = false;
         });
+      } else {
+        selectedEmbedding.value = null;
       }
     },
     { immediate: true, deep: true }

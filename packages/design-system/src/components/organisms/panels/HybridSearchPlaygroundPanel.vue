@@ -3,14 +3,14 @@
     tag="section"
     padding="none"
     border="none"
-    class="flex flex-col h-full"
+    class="flex flex-col h-full shadow-md"
   >
     <!-- Right Panel Header -->
     <VBox
       tag="div"
       padding="none"
       border="bottom"
-      class="flex items-center justify-between shrink-0 pt-6 pb-4"
+      class="flex items-center justify-between shrink-0 pt-6 px-6 pb-4"
     >
       <VCluster gap="sm" align="center">
         <VIcon name="play-circle" type="outline" size="sm" />
