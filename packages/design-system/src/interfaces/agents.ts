@@ -143,6 +143,7 @@ export interface EmbeddingParameters {
 export interface Embedding {
   id: ID;
   name: string;
+  role: string;
   status: EntityStatus;
   providerId: ID;
   modelFamilyId: ID;

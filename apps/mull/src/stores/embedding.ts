@@ -50,17 +50,17 @@ export const useEmbeddingStore = defineStore('embedding', {
       this.error = null;
 
       try {
-        // const response = await apiService.projects.embeddings.get(this.currentProjectId);
+        const response = await apiService.projects.embeddings.get(this.currentProjectId);
 
-        // if (response.data) {
-        //   this.embeddings = Array.isArray(response.data)
-        //     ? response.data
-        //     : [response.data];
-        // }
+        if (response.data) {
+          this.embeddings = Array.isArray(response.data)
+            ? response.data
+            : [response.data];
+        }
 
-        // if (this.embeddings.length > 0 && !this.currentEmbeddingId) {
-        //   this.currentEmbeddingId = this.embeddings[0].id;
-        // }
+        if (this.embeddings.length > 0 && !this.currentEmbeddingId) {
+          this.currentEmbeddingId = this.embeddings[0].id;
+        }
       } catch (err: any) {
         this.error = err.message || 'Failed to fetch embedding configurations';
       } finally {
@@ -80,15 +80,15 @@ export const useEmbeddingStore = defineStore('embedding', {
 
       this.isLoading = true;
       try {
-        // const response = await apiService.projects.embeddings.update(
-        //   this.currentProjectId,
-        //   this.currentEmbeddingId,
-        //   payload
-        // );
-        // if (response.data) {
-        //   const index = this.embeddings.findIndex((e) => e.id === this.currentEmbeddingId);
-        //   if (index !== -1) this.embeddings[index] = response.data;
-        // }
+        const response = await apiService.projects.embeddings.update(
+          this.currentProjectId,
+          this.currentEmbeddingId,
+          payload
+        );
+        if (response.data) {
+          const index = this.embeddings.findIndex((e) => e.id === this.currentEmbeddingId);
+          if (index !== -1) this.embeddings[index] = response.data;
+        }
       } catch (err: any) {
         this.error = err.message || 'Failed to update embedding configuration';
       } finally {
