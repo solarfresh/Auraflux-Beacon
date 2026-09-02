@@ -95,7 +95,6 @@
                       {{ embedding.name }}
                     </VTypography>
                     <VChip
-                      v-if="embedding.status"
                       size="xs"
                       padding="xs"
                       rounded="sm"
@@ -111,10 +110,10 @@
         </VDropdownMenu>
       </VBox>
 
-      <!-- Current Entity Status Selector -->
+      <!-- Current Entity Status Selector (Agent or Embedding) -->
       <VSelect
-        v-if="selectedAgent?.status"
-        :model-value="selectedAgent.status"
+        v-if="currentTargetStatus"
+        :model-value="currentTargetStatus"
         :disabled="disabled"
         rounded="md"
         size="sm"
@@ -140,7 +139,7 @@
           @update:model-value="(val: string) => handleProviderChange(val)"
         >
           <option
-            v-for="provider in providers"
+            v-for="provider in providerOptions"
             :key="String(provider.value)"
             :value="provider.value"
           >
@@ -157,7 +156,7 @@
           @update:model-value="(val: string) => handleModelChange(val)"
         >
           <option
-            v-for="model in availableModels"
+            v-for="model in modelOptions"
             :key="String(model.value)"
             :value="model.value"
           >
@@ -263,20 +262,70 @@ const currentTargetName = computed(() => {
   return props.selectedEmbedding?.name || props.selectedAgent?.name || 'Select Target';
 });
 
+const currentTargetStatus = computed(() => {
+  return props.selectedEmbedding?.status || props.selectedAgent?.status;
+});
+
 const activeTargetIcon = computed(() => {
   return props.selectedEmbedding ? 'Database' : 'Bot';
 });
 
 const activeProviderId = computed(() => {
-  return props.selectedEmbedding?.providerId || props.selectedAgent?.providerId;
+  const rawProviderId = props.selectedEmbedding?.providerId || props.selectedAgent?.providerId;
+
+  if (!rawProviderId) {
+    return '';
+  }
+
+  const existsInOptions = props.providers.some(
+    (p) => String(p.value) === String(rawProviderId)
+  );
+
+  return existsInOptions ? rawProviderId : '';
 });
 
 const activeModelFamilyId = computed(() => {
-  return props.selectedEmbedding?.modelFamilyId || props.selectedAgent?.modelFamilyId;
+  const rawModelFamilyId =
+    props.selectedEmbedding?.modelFamilyId || props.selectedAgent?.modelFamilyId;
+
+  if (!rawModelFamilyId) {
+    return '';
+  }
+
+  const existsInAvailable = availableModels.value.some(
+    (m) => String(m.value) === String(rawModelFamilyId)
+  );
+
+  return existsInAvailable ? rawModelFamilyId : '';
 });
 
 const availableModels = computed(() => {
-  return props.models.filter((m) => m.providerId === activeProviderId.value);
+  if (!activeProviderId.value) return [];
+  return props.models.filter(
+    (m) => String(m.providerId) === String(activeProviderId.value)
+  );
+});
+
+const providerOptions = computed(() => {
+  const hasPlaceholder = props.providers.some((p) => p.value === '');
+  if (!activeProviderId.value && !hasPlaceholder) {
+    return [
+      { label: 'Select Provider...', value: '' },
+      ...props.providers,
+    ];
+  }
+  return props.providers;
+});
+
+const modelOptions = computed(() => {
+  const hasPlaceholder = availableModels.value.some((m) => m.value === '');
+  if (!activeModelFamilyId.value && !hasPlaceholder) {
+    return [
+      { label: 'Select Model...', value: '', providerId: '', name: '' },
+      ...availableModels.value,
+    ];
+  }
+  return availableModels.value;
 });
 
 const getStatusIntent = (status?: EntityStatus) => {

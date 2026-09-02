@@ -80,7 +80,7 @@ export const useEmbeddingStore = defineStore('embedding', {
 
       this.isLoading = true;
       try {
-        const response = await apiService.projects.embeddings.update(
+        const response = await apiService.projects.embeddings.details.update(
           this.currentProjectId,
           this.currentEmbeddingId,
           payload
