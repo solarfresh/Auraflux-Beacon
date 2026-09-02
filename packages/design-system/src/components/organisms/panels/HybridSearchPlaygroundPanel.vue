@@ -1,8 +1,6 @@
 <template>
   <VBox
-    tag="section"
-    padding="none"
-    border="none"
+    padding="lg"
     class="flex flex-col h-full shadow-md"
   >
     <!-- Right Panel Header -->

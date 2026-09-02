@@ -2,7 +2,7 @@ import EmbeddingSearchConfigPanel from '@auraflux/design-system/components/organ
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import type { Meta, StoryObj } from '@storybook/vue3';
 import { ref } from 'vue';
-import type { EmbeddingRrfConfigFormData } from '@auraflux/design-system/interfaces/agents';
+import type { EmbeddingFormData } from '@auraflux/design-system/interfaces/agents';
 
 const meta = {
   title: 'Organisms/Panels/EmbeddingSearchConfigPanel',
@@ -21,7 +21,7 @@ export const Default: Story = {
   render: () => ({
     components: { EmbeddingSearchConfigPanel, VBox },
     setup() {
-      const formData = ref<EmbeddingRrfConfigFormData>({
+      const formData = ref<EmbeddingFormData>({
         providerId: 'openai',
         modelFamilyId: 'text-embedding-3-small',
         dimensions: 1536,
@@ -33,7 +33,7 @@ export const Default: Story = {
         scoreCutoff: '0.0150',
       });
 
-      const handleSubmit = (data: EmbeddingRrfConfigFormData) => {
+      const handleSubmit = (data: EmbeddingFormData) => {
         console.log('Submitted:', data);
       };
 

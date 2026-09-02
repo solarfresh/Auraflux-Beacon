@@ -238,7 +238,7 @@ import VForm from '@auraflux/design-system/components/molecules/forms/VForm.vue'
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VSectionHeader from '@auraflux/design-system/components/molecules/indicators/VSectionHeader.vue';
 
-import type { EmbeddingModelOption, EmbeddingRrfConfigFormData, ProviderOption } from '@auraflux/design-system/interfaces/agents';
+import type { EmbeddingModelOption, EmbeddingFormData, ProviderOption } from '@auraflux/design-system/interfaces/agents';
 
 interface Props {
   providers?: ProviderOption[];
@@ -259,7 +259,7 @@ const props = withDefaults(defineProps<Props>(), {
   ],
 });
 
-const formData = defineModel<EmbeddingRrfConfigFormData>({
+const formData = defineModel<EmbeddingFormData>({
   default: () => ({
     providerId: 'openai',
     modelFamilyId: 'text-embedding-3-small',
@@ -274,7 +274,7 @@ const formData = defineModel<EmbeddingRrfConfigFormData>({
 });
 
 const emit = defineEmits<{
-  (e: 'submit', value: EmbeddingRrfConfigFormData): void;
+  (e: 'submit', value: EmbeddingFormData): void;
 }>();
 
 const availableModels = computed(() => {

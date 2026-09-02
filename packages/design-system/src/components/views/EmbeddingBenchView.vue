@@ -5,8 +5,8 @@
       :providers="providers"
       :embedding-models="embeddingModels"
       class="w-1/2 border-r border-slate-200"
-      @update:model-value="(val: EmbeddingRrfConfigFormData) => $emit('update:configData', val)"
-      @submit="(val: EmbeddingRrfConfigFormData) => $emit('submit-config', val)"
+      @update:model-value="(val: EmbeddingFormData) => $emit('update:configData', val)"
+      @submit="(val: EmbeddingFormData) => $emit('submit-config', val)"
     />
 
     <HybridSearchPlaygroundPanel
@@ -31,12 +31,12 @@ import HybridSearchPlaygroundPanel, {
 
 import type {
   EmbeddingModelOption,
-  EmbeddingRrfConfigFormData,
+  EmbeddingFormData,
   ProviderOption,
 } from '@auraflux/design-system/interfaces/agents';
 
 export interface EmbeddingBenchViewProps {
-  configData?: EmbeddingRrfConfigFormData;
+  configData?: EmbeddingFormData;
   providers?: ProviderOption[];
   embeddingModels?: EmbeddingModelOption[];
   queryText?: string;
@@ -56,8 +56,8 @@ withDefaults(defineProps<EmbeddingBenchViewProps>(), {
 });
 
 defineEmits<{
-  (e: 'update:configData', value: EmbeddingRrfConfigFormData): void;
-  (e: 'submit-config', value: EmbeddingRrfConfigFormData): void;
+  (e: 'update:configData', value: EmbeddingFormData): void;
+  (e: 'submit-config', value: EmbeddingFormData): void;
   (e: 'update:queryText', value: string): void;
   (e: 'run-test'): void;
 }>();

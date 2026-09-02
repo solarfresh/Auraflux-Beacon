@@ -84,18 +84,6 @@ export interface SchemaProperty {
   description?: string;
 }
 
-export interface EmbeddingRrfConfigFormData {
-  providerId: string;
-  modelFamilyId: string;
-  dimensions: number;
-  candidateTopN: number;
-  kFactor: number;
-  vectorWeight: number;
-  bm25Weight: number;
-  topK: number;
-  scoreCutoff: string;
-}
-
 /**
  * Standardized JSON Schema structure for Agent Output Constraints
  */
@@ -154,9 +142,17 @@ export interface Embedding {
 }
 
 /**
- * Form payload representation for creating or updating Embedding Configurations
+ * Pure form content data for Embedding configuration & RRF parameters
  */
-export type EmbeddingFormData = Omit<Embedding, 'id' | 'createdAt' | 'updatedAt'>;
+export interface EmbeddingFormData {
+  dimensions: number;
+  candidateTopN: number;
+  kFactor: number;
+  vectorWeight: number;
+  bm25Weight: number;
+  topK: number;
+  scoreCutoff: string;
+}
 
 export interface ProviderOption extends SelectOption {}
 export interface ModelOption extends SelectOption {

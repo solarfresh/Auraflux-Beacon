@@ -7,7 +7,7 @@ import type {
   Agent,
   DynamicVariable,
   Embedding,
-  EmbeddingRrfConfigFormData,
+  EmbeddingFormData,
   PromptSchemaFormData,
 } from '@auraflux/design-system/interfaces/agents';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
@@ -68,9 +68,7 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
 
   // Embedding State
   const selectedEmbedding = ref<Partial<Embedding> | null>(null);
-  const embeddingConfigData = ref<EmbeddingRrfConfigFormData>({
-    providerId: '',
-    modelFamilyId: '',
+  const embeddingConfigData = ref<EmbeddingFormData>({
     dimensions: 1536,
     candidateTopN: 60,
     kFactor: 60,
@@ -81,7 +79,15 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
   });
 
   const activeProviderId = computed(() => {
-    return selectedEmbedding.value?.providerId || selectedAgent.value?.providerId || '';
+    if (selectedEmbedding.value) {
+      return selectedEmbedding.value.providerId ? String(selectedEmbedding.value.providerId) : '';
+    }
+
+    if (selectedAgent.value) {
+      return selectedAgent.value.providerId ? String(selectedAgent.value.providerId) : '';
+    }
+
+    return '';
   });
 
   const activeModelFamilyId = computed(() => {
@@ -152,8 +158,6 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
         };
 
         embeddingConfigData.value = {
-          providerId: embedding.providerId || '',
-          modelFamilyId: embedding.modelFamilyId || '',
           dimensions: embedding.parameters?.dimensions || 1536,
           candidateTopN: (embedding.parameters?.candidateTopN as number) || 60,
           kFactor: (embedding.parameters?.kFactor as number) || 60,
@@ -222,6 +226,29 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
       if (!confirmLeave) return;
     }
 
+    if (isEmbeddingTarget) {
+      const embedding = target as Embedding;
+      selectedAgent.value = null;
+      selectedEmbedding.value = {
+        id: embedding.id || '',
+        name: embedding.name || '',
+        status: embedding.status || 'DRAFT',
+        providerId: embedding.providerId || '',
+        modelFamilyId: embedding.modelFamilyId || '',
+        parameters: embedding.parameters || {},
+      };
+    } else {
+      const agent = target as Agent;
+      selectedEmbedding.value = null;
+      selectedAgent.value = {
+        id: agent.id || '',
+        name: agent.name || '',
+        status: agent.status || 'DRAFT',
+        providerId: agent.providerId || '',
+        modelFamilyId: agent.modelFamilyId || '',
+      };
+    }
+
     adapter.onSelectTarget(target.id, targetType);
     isDirty.value = false;
   };
@@ -254,8 +281,6 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
     if (selectedEmbedding.value && adapter.onSaveEmbedding) {
       const payload: Partial<Embedding> = {
         ...selectedEmbedding.value,
-        providerId: embeddingConfigData.value.providerId,
-        modelFamilyId: embeddingConfigData.value.modelFamilyId,
         parameters: {
           dimensions: embeddingConfigData.value.dimensions,
           candidateTopN: embeddingConfigData.value.candidateTopN,

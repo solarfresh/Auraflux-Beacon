@@ -4,13 +4,15 @@
     <VAgentToolbar
       class="px-6 shrink-0"
       :agents="agents"
+      :embeddings="embeddings"
       :selected-agent="selectedAgent"
+      :selected-embedding="selectedEmbedding"
       :disabled="disabled"
       :is-dirty="isDirty"
       :providers="providers"
       :models="models"
       @save="$emit('save')"
-      @select-agent="(agent: Agent) => $emit('select-agent', agent)"
+      @select-agent="(target: Agent | Embedding) => $emit('select-agent', target)"
       @status-change="(status: EntityStatus) => $emit('status-change', status)"
       @update:selected-provider="(providerId: ID) => $emit('update:selected-provider', providerId)"
       @update:selected-model="(modelId: ID) => $emit('update:selected-model', modelId)"
@@ -24,8 +26,8 @@
       @submit-prompt="$emit('submit-prompt')"
       @run-test="$emit('run-test')"
       @update:variable-values="(values: Record<string, string>) => $emit('update:variable-values', values)"
-      @submit-config="(val: EmbeddingRrfConfigFormData) => $emit('submit-config', val)"
-      @update:config-data="(val: EmbeddingRrfConfigFormData) => $emit('update:config-data', val)"
+      @submit-config="(val: EmbeddingFormData) => $emit('submit-config', val)"
+      @update:config-data="(val: EmbeddingFormData) => $emit('update:config-data', val)"
       @update:query-text="(val: string) => $emit('update:query-text', val)"
     />
   </VStack>
@@ -51,7 +53,7 @@ import type {
   Agent,
   DynamicVariable,
   Embedding,
-  EmbeddingRrfConfigFormData,
+  EmbeddingFormData,
   ModelOption,
   PromptSchemaFormData,
   ProviderOption,
@@ -66,6 +68,8 @@ export interface AgentBenchViewProps {
   isDirty?: boolean;
   /** Available agent configurations */
   agents?: Agent[];
+  /** Available embedding configurations */
+  embeddings?: Embedding[];
   /** Currently selected agent object */
   selectedAgent?: Partial<Agent> | null;
   /** Currently selected embedding entity (if active mode is search/embedding) */
@@ -98,7 +102,7 @@ export interface AgentBenchViewProps {
 
   // Embedding & RRF Mode Props
   /** Embedding configuration dataset */
-  embeddingConfigData?: EmbeddingRrfConfigFormData;
+  embeddingConfigData?: EmbeddingFormData;
   /** Two-way bound query text for search playground */
   queryText?: string;
   /** Reciprocal Rank Fusion dataset for search table */
@@ -114,6 +118,7 @@ const props = withDefaults(defineProps<AgentBenchViewProps>(), {
   disabled: false,
   isDirty: false,
   agents: () => [],
+  embeddings: () => [],
   selectedAgent: null,
   selectedEmbedding: null,
   selectedModelId: '',
@@ -142,7 +147,7 @@ defineEmits<{
   /** Triggered when save button is clicked in toolbar */
   (e: 'save'): void;
   /** Triggered when agent target is switched */
-  (e: 'select-agent', agent: Agent): void;
+  (e: 'select-agent', target: Agent | Embedding): void;
   /** Triggered when agent active status changes */
   (e: 'status-change', status: EntityStatus): void;
   /** Triggered when AI provider option changes */
@@ -158,9 +163,9 @@ defineEmits<{
   (e: 'update:variable-values', values: Record<string, string>): void;
 
   /** Embedding: Configuration submission emit */
-  (e: 'submit-config', value: EmbeddingRrfConfigFormData): void;
+  (e: 'submit-config', value: EmbeddingFormData): void;
   /** Embedding: Two-way config data sync emit */
-  (e: 'update:config-data', value: EmbeddingRrfConfigFormData): void;
+  (e: 'update:config-data', value: EmbeddingFormData): void;
   /** Embedding: Query text input sync emit */
   (e: 'update:query-text', value: string): void;
 }>();
@@ -170,11 +175,10 @@ defineEmits<{
  * Switches to EmbeddingBenchView if selectedEmbedding is active or embeddingConfigData is provided.
  */
 const isEmbeddingMode = computed(() => {
-  if (props.selectedAgent?.id) {
-    return false;
+  if (props.selectedEmbedding && (props.selectedEmbedding.id || !props.selectedAgent?.id)) {
+    return true;
   }
-
-  return Boolean(props.selectedEmbedding?.id);
+  return false;
 });
 
 /**
