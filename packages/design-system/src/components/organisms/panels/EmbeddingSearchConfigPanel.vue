@@ -44,53 +44,6 @@
             <VBadge size="xs">Index Binding</VBadge>
           </VCluster>
 
-          <!-- Provider & Embedding Model (Grid Layout / Provider-First) -->
-          <VGrid cols="2" gap="sm">
-            <!-- Provider Selector -->
-            <VFormField label="Embedding Provider">
-              <template #default="{ id }">
-                <VSelect
-                  :id="id"
-                  :model-value="formData.providerId"
-                  size="sm"
-                  class="text-xs"
-                  @update:model-value="handleProviderChange"
-                >
-                  <option
-                    v-for="provider in providers"
-                    :key="provider.value"
-                    :value="provider.value"
-                  >
-                    {{ provider.label }}
-                  </option>
-                </VSelect>
-              </template>
-            </VFormField>
-
-            <!-- Embedding Model Selector (Filtered by Provider) -->
-            <VFormField label="Embedding Model">
-              <template #default="{ id }">
-                <VSelect
-                  :id="id"
-                  :model-value="formData.modelFamilyId"
-                  :disabled="!formData.providerId"
-                  size="sm"
-                  class="text-xs"
-                  @update:model-value="handleModelChange"
-                >
-                  <option value="" disabled>Select Model...</option>
-                  <option
-                    v-for="model in availableModels"
-                    :key="model.value"
-                    :value="model.value"
-                  >
-                    {{ model.label }}
-                  </option>
-                </VSelect>
-              </template>
-            </VFormField>
-          </VGrid>
-
           <VGrid cols="2" gap="sm">
             <!-- Dimensions (Auto-filled & Readonly) -->
             <VFormField label="Dimensions">
@@ -222,10 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
-import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VSlider from '@auraflux/design-system/components/atoms/forms/VSlider.vue';
 import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
@@ -245,24 +195,10 @@ interface Props {
   embeddingModels?: EmbeddingModelOption[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  providers: () => [
-    { label: 'OpenAI', value: 'openai' },
-    { label: 'BAAI (HuggingFace)', value: 'baai' },
-    { label: 'Cohere', value: 'cohere' },
-  ],
-  embeddingModels: () => [
-    { label: 'text-embedding-3-small', value: 'text-embedding-3-small', providerId: 'openai', dimensions: 1536 },
-    { label: 'text-embedding-3-large', value: 'text-embedding-3-large', providerId: 'openai', dimensions: 3072 },
-    { label: 'bge-m3', value: 'bge-m3', providerId: 'baai', dimensions: 1024 },
-    { label: 'embed-multilingual-v3.0', value: 'embed-multilingual-v3.0', providerId: 'cohere', dimensions: 1024 },
-  ],
-});
+const props = defineProps<Props>();
 
 const formData = defineModel<EmbeddingFormData>({
   default: () => ({
-    providerId: 'openai',
-    modelFamilyId: 'text-embedding-3-small',
     dimensions: 1536,
     candidateTopN: 50,
     kFactor: 60,
@@ -276,30 +212,6 @@ const formData = defineModel<EmbeddingFormData>({
 const emit = defineEmits<{
   (e: 'submit', value: EmbeddingFormData): void;
 }>();
-
-const availableModels = computed(() => {
-  return props.embeddingModels.filter((m) => m.providerId === formData.value.providerId);
-});
-
-const handleProviderChange = (providerVal: string) => {
-  formData.value.providerId = providerVal;
-  const firstModel = props.embeddingModels.find((m) => m.providerId === providerVal);
-  if (firstModel) {
-    formData.value.modelFamilyId = firstModel.value;
-    formData.value.dimensions = firstModel.dimensions;
-  } else {
-    formData.value.modelFamilyId = '';
-    formData.value.dimensions = 0;
-  }
-};
-
-const handleModelChange = (modelVal: string) => {
-  formData.value.modelFamilyId = modelVal;
-  const selectedModel = props.embeddingModels.find((m) => m.value === modelVal);
-  if (selectedModel) {
-    formData.value.dimensions = selectedModel.dimensions;
-  }
-};
 
 const handleSubmit = () => {
   emit('submit', { ...formData.value });

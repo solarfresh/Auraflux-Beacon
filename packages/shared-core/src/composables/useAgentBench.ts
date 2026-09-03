@@ -35,6 +35,23 @@ interface AgentBenchAdapter {
   onRunTest?: (payload: Partial<Agent> | Partial<Embedding>, variables: Record<string, string>) => Promise<void>;
 }
 
+const DEFAULT_PROMPT_FORM_DATA: PromptSchemaFormData = {
+  purpose: '',
+  systemPrompt: '',
+  promptTemplate: '',
+  schemaFields: [],
+};
+
+const DEFAULT_EMBEDDING_CONFIG_DATA: EmbeddingFormData = {
+  dimensions: 1536,
+  candidateTopN: 60,
+  kFactor: 60,
+  vectorWeight: 0.5,
+  bm25Weight: 0.5,
+  topK: 10,
+  scoreCutoff: '0.0',
+};
+
 export function useAgentBench(adapter: AgentBenchAdapter) {
   const providerStore = useProviderStore();
 
@@ -51,6 +68,9 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
   const isDirty = ref(false);
   const isSyncing = ref(false);
   const isSchemaValid = ref(true);
+
+  /** Tracks which entity type is currently active ('AGENT' | 'EMBEDDING' | null) */
+  const activeType = ref<'AGENT' | 'EMBEDDING' | null>(null);
 
   const activeVariableValues = ref<Record<string, string>>({});
   const responseOutput = ref<Record<string, unknown> | string>({});
@@ -98,81 +118,135 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
     return providerStore.getModelOptionsByProviderId(activeProviderId.value || null);
   });
 
-  // Synchronize form values whenever currentAgent changes
+  // --- Helper Functions for Entity Synchronization ---
+
+  const syncAgentData = (agent: Agent) => {
+    isSyncing.value = true;
+    activeType.value = 'AGENT';
+    selectedEmbedding.value = null; // Clear active embedding
+
+    embeddingConfigData.value = { ...DEFAULT_EMBEDDING_CONFIG_DATA };
+
+    selectedAgent.value = {
+      id: agent.id || '',
+      name: agent.name || '',
+      status: agent.status || 'DRAFT',
+      providerId: agent.providerId || '',
+      modelFamilyId: agent.modelFamilyId || '',
+    };
+
+    promptFormData.value = {
+      purpose: agent.purpose || '',
+      systemPrompt: agent.systemPrompt || '',
+      promptTemplate: agent.promptTemplate || '',
+      schemaFields: agent.outputSchema?.properties
+        ? Object.keys(agent.outputSchema.properties).map((key, idx) => ({
+            id: `field-${idx}`,
+            name: key,
+            type: agent.outputSchema?.properties?.[key]?.type || 'String',
+            badgeText: 'Required',
+            badgeIntent: 'neutral',
+          }))
+        : [],
+    };
+
+    nextTick(() => {
+      isSyncing.value = false;
+      isDirty.value = false;
+    });
+  };
+
+  const syncEmbeddingData = (embedding: Embedding) => {
+    isSyncing.value = true;
+    activeType.value = 'EMBEDDING';
+    selectedAgent.value = null; // Clear active agent
+
+    promptFormData.value = { ...DEFAULT_PROMPT_FORM_DATA };
+
+    selectedEmbedding.value = {
+      id: embedding.id || '',
+      name: embedding.name || '',
+      status: embedding.status || 'DRAFT',
+      providerId: embedding.providerId || '',
+      modelFamilyId: embedding.modelFamilyId || '',
+      parameters: embedding.parameters || {},
+    };
+
+    embeddingConfigData.value = {
+      dimensions: embedding.parameters?.dimensions || 1536,
+      candidateTopN: (embedding.parameters?.candidateTopN as number) || 60,
+      kFactor: (embedding.parameters?.kFactor as number) || 60,
+      vectorWeight: (embedding.parameters?.vectorWeight as number) || 0.5,
+      bm25Weight: (embedding.parameters?.bm25Weight as number) || 0.5,
+      topK: (embedding.parameters?.topK as number) || 10,
+      scoreCutoff: String(embedding.parameters?.scoreCutoff || '0.0'),
+    };
+
+    nextTick(() => {
+      isSyncing.value = false;
+      isDirty.value = false;
+    });
+  };
+
+  /**
+   * Helper to check if an entity is valid and initialized.
+   */
+  const isValidEntity = (entity: Agent | Embedding | null | undefined): boolean => {
+    if (!entity) return false;
+    // Assumes an initialized active entity must have a valid ID or non-empty ID
+    return Boolean(entity.id && String(entity.id).trim() !== '');
+  };
+
+  /** Consolidated watcher resolving conflicts based on initialized entity status */
   watch(
-    () => currentAgent?.value,
-    (agent) => {
-      if (agent) {
-        isSyncing.value = true;
-        selectedEmbedding.value = null; // Clear active embedding
-
-        selectedAgent.value = {
-          id: agent.id || '',
-          name: agent.name || '',
-          status: agent.status || 'DRAFT',
-          providerId: agent.providerId || '',
-          modelFamilyId: agent.modelFamilyId || '',
-        };
-
-        promptFormData.value = {
-          purpose: agent.purpose || '',
-          systemPrompt: agent.systemPrompt || '',
-          promptTemplate: agent.promptTemplate || '',
-          schemaFields: agent.outputSchema?.properties
-            ? Object.keys(agent.outputSchema.properties).map((key, idx) => ({
-                id: `field-${idx}`,
-                name: key,
-                type: agent.outputSchema?.properties?.[key]?.type || 'String',
-                badgeText: 'Required',
-                badgeIntent: 'neutral',
-              }))
-            : [],
-        };
-
-        nextTick(() => {
-          isSyncing.value = false;
-          isDirty.value = false;
-        });
-      } else {
+    [() => currentAgent?.value, () => currentEmbedding?.value],
+    ([newAgent, newEmbedding], [oldAgent, oldEmbedding]) => {
+      // 1. Both entities are empty or uninitialized
+      if (!newAgent && !newEmbedding) {
         selectedAgent.value = null;
-      }
-    },
-    { immediate: true, deep: true }
-  );
-
-  // Synchronize form values whenever currentEmbedding changes
-  watch(
-    () => currentEmbedding?.value,
-    (embedding) => {
-      if (embedding) {
-        isSyncing.value = true;
-        selectedAgent.value = null; // Clear active agent
-
-        selectedEmbedding.value = {
-          id: embedding.id || '',
-          name: embedding.name || '',
-          status: embedding.status || 'DRAFT',
-          providerId: embedding.providerId || '',
-          modelFamilyId: embedding.modelFamilyId || '',
-          parameters: embedding.parameters || {},
-        };
-
-        embeddingConfigData.value = {
-          dimensions: embedding.parameters?.dimensions || 1536,
-          candidateTopN: (embedding.parameters?.candidateTopN as number) || 60,
-          kFactor: (embedding.parameters?.kFactor as number) || 60,
-          vectorWeight: (embedding.parameters?.vectorWeight as number) || 0.5,
-          bm25Weight: (embedding.parameters?.bm25Weight as number) || 0.5,
-          topK: (embedding.parameters?.topK as number) || 10,
-          scoreCutoff: String(embedding.parameters?.scoreCutoff || '0.0'),
-        };
-
-        nextTick(() => {
-          isSyncing.value = false;
-          isDirty.value = false;
-        });
-      } else {
         selectedEmbedding.value = null;
+        activeType.value = null;
+        promptFormData.value = { ...DEFAULT_PROMPT_FORM_DATA };
+        embeddingConfigData.value = { ...DEFAULT_EMBEDDING_CONFIG_DATA };
+        return;
+      }
+
+      const isAgentValid = isValidEntity(newAgent);
+      const isEmbeddingValid = isValidEntity(newEmbedding);
+
+      // 2. Only one entity is validly initialized (Clear winner after page switch/initialization)
+      if (isAgentValid && !isEmbeddingValid) {
+        syncAgentData(newAgent!);
+        return;
+      }
+
+      if (isEmbeddingValid && !isAgentValid) {
+        syncEmbeddingData(newEmbedding!);
+        return;
+      }
+
+      // 3. Conflict Resolution: Both have valid IDs (e.g. initial load with dual preset refs)
+      // First, check if reference actually changed from old state
+      const agentChanged = newAgent !== oldAgent;
+      const embeddingChanged = newEmbedding !== oldEmbedding;
+
+      if (agentChanged && !embeddingChanged && newAgent) {
+        syncAgentData(newAgent);
+        return;
+      }
+
+      if (embeddingChanged && !agentChanged && newEmbedding) {
+        syncEmbeddingData(newEmbedding);
+        return;
+      }
+
+      // 4. Fallback: If both are valid and changed simultaneously, prefer the active type or Agent
+      if (activeType.value === 'EMBEDDING' && newEmbedding) {
+        syncEmbeddingData(newEmbedding);
+      } else if (newAgent) {
+        syncAgentData(newAgent);
+      } else if (newEmbedding) {
+        syncEmbeddingData(newEmbedding);
       }
     },
     { immediate: true, deep: true }
@@ -227,26 +301,9 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
     }
 
     if (isEmbeddingTarget) {
-      const embedding = target as Embedding;
-      selectedAgent.value = null;
-      selectedEmbedding.value = {
-        id: embedding.id || '',
-        name: embedding.name || '',
-        status: embedding.status || 'DRAFT',
-        providerId: embedding.providerId || '',
-        modelFamilyId: embedding.modelFamilyId || '',
-        parameters: embedding.parameters || {},
-      };
+      syncEmbeddingData(target as Embedding);
     } else {
-      const agent = target as Agent;
-      selectedEmbedding.value = null;
-      selectedAgent.value = {
-        id: agent.id || '',
-        name: agent.name || '',
-        status: agent.status || 'DRAFT',
-        providerId: agent.providerId || '',
-        modelFamilyId: agent.modelFamilyId || '',
-      };
+      syncAgentData(target as Agent);
     }
 
     adapter.onSelectTarget(target.id, targetType);
@@ -279,6 +336,9 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
 
   const handleSave = async () => {
     if (selectedEmbedding.value && adapter.onSaveEmbedding) {
+      const selectedModel = modelOptions.value.find(
+        (m) => m.value === selectedEmbedding.value?.modelFamilyId
+      );
       const payload: Partial<Embedding> = {
         ...selectedEmbedding.value,
         parameters: {
@@ -289,6 +349,8 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
           bm25Weight: embeddingConfigData.value.bm25Weight,
           topK: embeddingConfigData.value.topK,
           scoreCutoff: embeddingConfigData.value.scoreCutoff,
+          provider: selectedEmbedding.value?.providerId ?? '',
+          model: selectedModel?.name ?? '',
         },
       };
       await adapter.onSaveEmbedding(payload);
@@ -332,6 +394,7 @@ export function useAgentBench(adapter: AgentBenchAdapter) {
 
   return {
     // States & Ref Bindings
+    activeType,
     isDirty,
     isExecuting,
     isLoading,
