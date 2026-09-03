@@ -1,7 +1,7 @@
 import { MullEndpoints } from '@/api/endpoints';
 import type { Project } from '@/interfaces/project';
 import type { RepositoryFile, RepositoryFileUploadResult } from '@/interfaces/repository';
-import type { Agent } from '@auraflux/design-system/interfaces/agents';
+import type { Agent, Embedding } from '@auraflux/design-system/interfaces/agents';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { apiClient } from '@auraflux/shared-core/api/apiClient';
 import config from '@auraflux/shared-core/config';
@@ -34,6 +34,22 @@ export const apiService = {
         update: (projectId: ID, agentId: ID, payload: Partial<Agent>): Promise<AxiosResponse<Agent>> => {
           return apiClient.put(
             MullEndpoints.projects.agents.details.base(projectId, agentId),
+            payload,
+            {serviceScope: AURAFLUX_MULL_CLIENT_ID}
+          )
+        }
+      }
+    },
+    embeddings: {
+      get: (projectId: ID): Promise<AxiosResponse<Embedding[]>> => {
+        return apiClient.get(MullEndpoints.projects.embeddings.base(projectId), {
+          serviceScope: AURAFLUX_MULL_CLIENT_ID,
+        })
+      },
+      details: {
+        update: (projectId: ID, embeddingId: ID, payload: Partial<Embedding>): Promise<AxiosResponse<Embedding>> => {
+          return apiClient.put(
+            MullEndpoints.projects.embeddings.details.base(projectId, embeddingId),
             payload,
             {serviceScope: AURAFLUX_MULL_CLIENT_ID}
           )

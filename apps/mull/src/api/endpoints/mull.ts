@@ -14,6 +14,14 @@ const ProjectsEndpoints = {
         `${AURAFLUX_MULL_URL}/projects/${projectId}/agents/${agentId}/`,
     }
   },
+  embeddings: {
+    base: (projectId: ID) =>
+      `${AURAFLUX_MULL_URL}/projects/${projectId}/embeddings/`,
+    details: {
+      base: (projectId: ID, embeddingId: ID) =>
+        `${AURAFLUX_MULL_URL}/projects/${projectId}/embeddings/${embeddingId}/`,
+    }
+  },
   files: {
     base: (projectId: ID) =>
       `${AURAFLUX_MULL_URL}/projects/${projectId}/files/`,

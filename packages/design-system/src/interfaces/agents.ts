@@ -115,8 +115,51 @@ export interface Agent {
   outputSchema?: AgentOutputSchema;
 }
 
+/**
+ * Runtime execution parameters for the embedding model
+ */
+export interface EmbeddingParameters {
+  dimensions?: number;
+  chunkSize?: number;
+  chunkOverlap?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * Defines the embedding model configuration bound to a specific project
+ */
+export interface Embedding {
+  id: ID;
+  name: string;
+  role: string;
+  status: EntityStatus;
+  providerId: ID;
+  modelFamilyId: ID;
+  parameters?: EmbeddingParameters;
+  projectId: ID;
+  createdAt?: DateTimeString;
+  updatedAt?: DateTimeString;
+}
+
+/**
+ * Pure form content data for Embedding configuration & RRF parameters
+ */
+export interface EmbeddingFormData {
+  dimensions: number;
+  candidateTopN: number;
+  kFactor: number;
+  vectorWeight: number;
+  bm25Weight: number;
+  topK: number;
+  scoreCutoff: string;
+}
+
 export interface ProviderOption extends SelectOption {}
 export interface ModelOption extends SelectOption {
   providerId: ID;
   name: string;
+}
+export interface EmbeddingModelOption extends SelectOption {
+  providerId: ID;
+  dimensions: number;
 }

@@ -32,12 +32,20 @@ export const ATTENTION_PRESET_MAP: Record<AttentionToken, AttentionPreset> = {
   },
 };
 
-export const SHARED_ALIGN_CLASSES: Record<Alignment, string> = {
+export const SHARED_ITEM_ALIGN_CLASSES: Record<Alignment, string> = {
   start: 'items-start',
   center: 'items-center',
   end: 'items-end',
   baseline: 'items-baseline',
   stretch: 'items-stretch',
+};
+
+export const SHARED_TEXT_ALIGN_CLASS_MAP: Record<Alignment, string> = {
+  start: 'text-left',
+  center: 'text-center',
+  end: 'text-right',
+  baseline: 'text-left',
+  stretch: 'text-left',
 };
 
 export const SHARED_BORDER_CLASSES: Record<BorderToken, string> = {
@@ -70,6 +78,15 @@ export const SHARED_CONTAINER_SIZE_CLASSES: Record<ContainerSizeToken, string> =
 
   /** Full-screen container - Takes up near-viewport dimensions for immersive flows */
   full: 'max-w-[95vw] w-full h-[90vh]'
+};
+
+export const SHARED_DIVIDE_INTENT_MAP: Record<IntentToken, string> = {
+  neutral: 'divide-slate-200',
+  brand: 'divide-indigo-200',
+  success: 'divide-emerald-200',
+  warning: 'divide-amber-200',
+  danger: 'divide-rose-200',
+  info: 'divide-sky-200',
 };
 
 export const SHARED_FONT_WEIGHT_CLASSES: Record<FontWeightToken, string> = {
@@ -115,6 +132,21 @@ export const SHARED_ROUNDED_CLASSES: Record<RoundedToken, string> = {
   xl: 'rounded-xl',
   '2xl': 'rounded-2xl',
   full: 'rounded-full',
+};
+
+/**
+ * Shared CSS variables map for VSlider track and thumb dimensions.
+ */
+export const SHARED_SLIDER_SIZE_CLASSES: Record<
+  ComponentSizeToken,
+  { trackHeight: string; thumbSize: string; thumbMarginTop: string }
+> = {
+  xs: { trackHeight: '4px', thumbSize: '10px', thumbMarginTop: '-3px' },
+  sm: { trackHeight: '6px', thumbSize: '14px', thumbMarginTop: '-4px' },
+  md: { trackHeight: '8px', thumbSize: '16px', thumbMarginTop: '-4px' },
+  lg: { trackHeight: '12px', thumbSize: '20px', thumbMarginTop: '-4px' },
+  xl: { trackHeight: '16px', thumbSize: '24px', thumbMarginTop: '-4px' },
+  '2xl': { trackHeight: '20px', thumbSize: '28px', thumbMarginTop: '-4px' },
 };
 
 export const SHARED_COMPONENT_SIZE_CLASSES: Record<ComponentSizeToken, { badge: string; control: string; iconButton: string; icon: string; text: string; }> = {
