@@ -34,6 +34,28 @@ services:
     networks:
       - auraflux_network
 
+  chess:
+    build:
+      context: .
+      dockerfile: apps/chess/Dockerfile
+    image: auraflux-chess-frontend:latest
+    container_name: auraflux_chess_frontend
+    ports:
+      - "5175:5173"
+    # env_file:
+    #   - ./docker-var.env
+    volumes:
+      - ./tsconfig.base.json:/auraflux/tsconfig.base.json
+      - ./.env.development:/auraflux/.env.development
+      - ./apps:/auraflux/apps
+      - ./packages:/auraflux/packages
+      - /auraflux/node_modules
+      - /auraflux/apps/chess/node_modules
+      - /auraflux/packages/design-system/node_modules
+      - /auraflux/packages/shared-core/node_modules
+    networks:
+      - auraflux_network
+
   consultant:
     build:
       context: .
