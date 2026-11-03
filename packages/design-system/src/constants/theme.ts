@@ -134,6 +134,16 @@ export const SHARED_ROUNDED_CLASSES: Record<RoundedToken, string> = {
   full: 'rounded-full',
 };
 
+export const SHARED_ROUNDED_PIXEL_MAP: Record<RoundedToken, number> = {
+  none: 0,
+  sm: 4,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  '2xl': 24,
+  full: 9999,
+};
+
 /**
  * Shared CSS variables map for VSlider track and thumb dimensions.
  */
