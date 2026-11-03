@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+@import "@vue-flow/core/style.css";
+@import "@vue-flow/core/style/default-theme.css";
+
 @source "../../../../packages/design-system/src/**/*.vue";
 @source "../../../../packages/design-system/src/**/*.ts";
 
