@@ -24,10 +24,10 @@
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, useVueFlow } from '@vue-flow/core';
+import { VueFlow, useVueFlow, type Connection } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
 import { ref } from 'vue';
 
@@ -38,8 +38,8 @@ const nodes = ref<ConceptualNode[]>([
   { id: '2', type: 'CONCEPT', label: 'Sub Node (Analysis)', position: { x: 100, y: 250 } },
 ]);
 
-const edges = ref([
-  { id: 'e1-2', source: '1', target: '2', animated: true },
+const edges = ref<ConceptualEdge[]>([
+  { id: 'e1-2', source: '1', target: '2', type: 'LINK', weight: 1 },
 ]);
 
 const isAdding = ref(false);
@@ -69,11 +69,19 @@ const addNode = () => {
   }
 };
 
-const onConnect = (connection: any) => {
+const onConnect = (connection: Connection) => {
   if (connection.source === connection.target) {
     console.warn('Reject self-loop connection');
     return;
   }
+  const newEdge: ConceptualEdge = {
+    id: `e-${connection.source}-${connection.target}-${Date.now()}`,
+    source: connection.source,
+    target: connection.target,
+    type: 'LINK',
+    weight: 1,
+  };
+  edges.value.push(newEdge);
   addEdges([connection]);
 };
 </script>

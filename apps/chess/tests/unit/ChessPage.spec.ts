@@ -45,4 +45,34 @@ describe('ChessPage.vue', () => {
     expect(typeof newNode.position.x).toBe('number');
     expect(typeof newNode.position.y).toBe('number');
   });
+
+  it('handles onConnect with self-loop prevention and valid connections', () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+    const initialEdgesLength = vm.edges.length;
+
+    // Spy on console.warn
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    // Test self-loop connection (source === target)
+    vm.onConnect({ source: '1', target: '1', sourceHandle: null, targetHandle: null });
+    expect(consoleWarnSpy).toHaveBeenCalledWith('Reject self-loop connection');
+    expect(vm.edges.length).toBe(initialEdgesLength);
+
+    consoleWarnSpy.mockRestore();
+
+    // Test valid connection
+    vm.onConnect({ source: '1', target: '3', sourceHandle: null, targetHandle: null });
+    expect(vm.edges.length).toBe(initialEdgesLength + 1);
+  });
 });
