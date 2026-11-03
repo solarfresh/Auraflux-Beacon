@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
-import ChessPage from '../src/components/pages/ChessPage.vue';
+import ChessPage from '../../src/components/pages/ChessPage.vue';
 
 describe('ChessPage.vue', () => {
   it('renders knowledge graph canvas header and add button', () => {

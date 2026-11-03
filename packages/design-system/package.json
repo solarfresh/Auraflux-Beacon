@@ -30,6 +30,9 @@
     "vitest": "^4.1.9"
   },
   "exports": {
-    "./assets/*": "./assets/*"
+    ".": "./src/index.ts",
+    "./*": "./src/*",
+    "./assets/*": "./assets/*",
+    "./components/*": "./src/components/*"
   }
 }
