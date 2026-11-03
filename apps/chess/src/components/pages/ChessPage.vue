@@ -21,37 +21,52 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { VueFlow, useVueFlow } from '@vue-flow/core';
-import { Background } from '@vue-flow/background';
-import { Controls } from '@vue-flow/controls';
-import { MiniMap } from '@vue-flow/minimap';
-import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import { Background } from '@vue-flow/background';
+import { Controls } from '@vue-flow/controls';
+import { VueFlow, useVueFlow } from '@vue-flow/core';
+import { MiniMap } from '@vue-flow/minimap';
+import { ref } from 'vue';
 
 const { addEdges } = useVueFlow();
 
-const nodes = ref([
-  { id: '1', type: 'input', label: 'Root Node (Chess)', position: { x: 250, y: 100 } },
-  { id: '2', type: 'default', label: 'Sub Node (Analysis)', position: { x: 100, y: 250 } },
+const nodes = ref<ConceptualNode[]>([
+  { id: '1', type: 'CONCEPT', label: 'Root Node (Chess)', position: { x: 250, y: 100 } },
+  { id: '2', type: 'CONCEPT', label: 'Sub Node (Analysis)', position: { x: 100, y: 250 } },
 ]);
 
 const edges = ref([
   { id: 'e1-2', source: '1', target: '2', animated: true },
 ]);
 
+const isAdding = ref(false);
+
 const addNode = () => {
-  const id = `${nodes.value.length + 1}`;
-  const newNode = {
-    id,
-    label: `New Node ${id}`,
-    position: {
-      x: Math.random() * 400 + 50,
-      y: Math.random() * 300 + 50,
-    },
-  };
-  nodes.value.push(newNode);
+  if (isAdding.value) return;
+  isAdding.value = true;
+
+  try {
+    const timestamp = Date.now();
+    const id = `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+    const newNode: ConceptualNode = {
+      id,
+      label: `New Concept`,
+      type: 'CONCEPT',
+      position: {
+        x: Math.random() * 400 + 50,
+        y: Math.random() * 300 + 50,
+      },
+      status: 'DRAFT',
+    };
+    nodes.value.push(newNode);
+  } catch (error) {
+    console.error('NodeCreationError:', error);
+  } finally {
+    isAdding.value = false;
+  }
 };
 
 const onConnect = (connection: any) => {
