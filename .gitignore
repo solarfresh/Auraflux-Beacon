@@ -1,3 +1,5 @@
+.roomodes
+.roo/
 .vscode/*
 docker-compose.override.yml
 **/node_modules/**
