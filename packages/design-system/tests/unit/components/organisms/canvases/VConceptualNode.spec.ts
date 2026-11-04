@@ -4,29 +4,28 @@ import VConceptualNode from '@auraflux/design-system/components/organisms/canvas
 import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
 
 describe('VConceptualNode', () => {
-  it('should throw error when used without ConceptualMapContext', () => {
-    // Suppress console error
-    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+  it('should fallback and render correctly when used without ConceptualMapContext', () => {
+    // Suppress console warning/error if any
+    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    expect(() => {
-      mount(VConceptualNode as any, {
-        props: {
-          id: '1',
-          type: 'default',
-          selected: false,
-          connectable: true,
-          position: { x: 0, y: 0 },
-          dimensions: { width: 100, height: 100 },
-          data: {
-            label: 'Test Node',
-            type: 'EVENT',
-            status: 'DRAFT',
-            content: 'Node Content'
-          }
+    const wrapper = mount(VConceptualNode as any, {
+      props: {
+        id: '1',
+        type: 'default',
+        selected: false,
+        connectable: true,
+        position: { x: 0, y: 0 },
+        dimensions: { width: 100, height: 100 },
+        data: {
+          label: 'Test Node',
+          type: 'EVENT',
+          status: 'DRAFT',
+          content: 'Node Content'
         }
-      });
-    }).toThrowError('VConceptualNode must be used within a ConceptualMapContext provider');
+      }
+    });
 
+    expect(wrapper.exists()).toBe(true);
     spy.mockRestore();
   });
 

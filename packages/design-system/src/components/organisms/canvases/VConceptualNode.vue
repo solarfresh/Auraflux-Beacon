@@ -33,15 +33,12 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
-import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
+import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@auraflux/design-system/constants/injection-keys';
 import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeProps } from '@vue-flow/core';
 import { inject } from 'vue';
 
 const props = defineProps<NodeProps<ConceptualNode>>();
 
-const context = inject(ConceptualMapContextKey, null);
-if (!context) {
-  throw new Error('VConceptualNode must be used within a ConceptualMapContext provider');
-}
+const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
 </script>

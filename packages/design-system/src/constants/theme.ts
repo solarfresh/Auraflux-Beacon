@@ -1,18 +1,34 @@
+import type { NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type {
   Alignment,
-  AttentionToken,
   AttentionPreset,
+  AttentionToken,
   BorderToken,
+  ComponentSizeToken,
   ContainerSizeToken,
   FontWeightToken,
   GapSizeToken,
   IntentToken,
   Justification,
   RoundedToken,
-  ComponentSizeToken,
   SpacingToken,
-  SurfaceStyleMap
+  SurfaceStyleMap,
+  SurfaceToken
 } from '@auraflux/design-system/interfaces/theme';
+
+export const NODE_THEMES: Record<NodeType, { intent: IntentToken; surface: SurfaceToken }> = {
+  EVENT: { intent: 'brand', surface: 'solid' },
+  OUTCOME: { intent: 'success', surface: 'solid' },
+  BOUNDARY: { intent: 'warning', surface: 'solid' },
+  ENTITY: { intent: 'neutral', surface: 'solid' },
+  FOCUS: { intent: 'brand', surface: 'soft' },
+  RESOURCE: { intent: 'info', surface: 'solid' },
+  CONCEPT: { intent: 'neutral', surface: 'soft' },
+  INSIGHT: { intent: 'success', surface: 'soft' },
+  QUERY: { intent: 'warning', surface: 'soft' },
+  NAVIGATION: { intent: 'info', surface: 'soft' },
+  GROUP: { intent: 'neutral', surface: 'outline' },
+};
 
 /**
  * Maps Attention Tokens to their default Intent and Surface combinations.
