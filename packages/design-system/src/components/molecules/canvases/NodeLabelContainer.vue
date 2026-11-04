@@ -1,21 +1,32 @@
 <template>
-  <VStack class="node-label-container" :class="`node-type-${type}`" gap="xs">
-    <VBox class="header">
-      <slot name="header" />
-    </VBox>
-    <VStack class="content" gap="xs">
-      <VTypography variant="body1" weight="medium">{{ label }}</VTypography>
-      <slot />
-    </VStack>
-    <VStack v-if="rationale || status" class="footer" gap="xs">
-      <VTypography v-if="rationale" variant="caption" color="secondary">
-        {{ rationale }}
-      </VTypography>
-      <VBox v-if="status" class="status">
-        {{ status }}
+  <VBox
+    tag="div"
+    :padding="padding"
+    :rounded="rounded"
+    :border="border"
+    :intent="intent"
+    :surface="surface"
+    class="node-label-container"
+    :class="`node-type-${type}`"
+  >
+    <VStack gap="xs">
+      <VBox class="header">
+        <slot name="header" />
       </VBox>
+      <VStack class="content" gap="xs">
+        <VTypography variant="body1" weight="medium">{{ label }}</VTypography>
+        <slot />
+      </VStack>
+      <VStack v-if="rationale || status" class="footer" gap="xs">
+        <VTypography v-if="rationale" variant="caption" color="secondary">
+          {{ rationale }}
+        </VTypography>
+        <VBox v-if="status" class="status">
+          {{ status }}
+        </VBox>
+      </VStack>
     </VStack>
-  </VStack>
+  </VBox>
 </template>
 
 <script setup lang="ts">
@@ -24,8 +35,9 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import type { NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
-import { onMounted } from 'vue';
+import type { BorderToken, IntentToken, RoundedToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import type { PropType } from 'vue';
+import { onMounted } from 'vue';
 
 const props = defineProps({
   id: { type: String as PropType<ID>, required: true },
@@ -33,6 +45,11 @@ const props = defineProps({
   type: { type: String as PropType<NodeType>, required: true },
   rationale: { type: String, required: false },
   status: { type: String as PropType<EntityStatus>, required: false },
+  padding: { type: String as PropType<SpacingToken>, default: 'sm' },
+  rounded: { type: String as PropType<RoundedToken>, default: 'lg' },
+  border: { type: String as PropType<BorderToken>, default: 'all' },
+  intent: { type: String as PropType<IntentToken>, default: 'neutral' },
+  surface: { type: String as PropType<SurfaceToken>, default: 'solid' },
 });
 
 onMounted(() => {
@@ -44,9 +61,6 @@ onMounted(() => {
 
 <style scoped>
 .node-label-container {
-  padding: var(--spacing-sm);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: var(--radius-md);
-  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05));
 }
 </style>

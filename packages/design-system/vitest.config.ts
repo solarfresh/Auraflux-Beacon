@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@/tests': fileURLToPath(new URL('./tests', import.meta.url)),
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@auraflux/design-system': fileURLToPath(new URL('./src', import.meta.url)),
     }
   },
   test: {
@@ -22,7 +22,6 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     exclude: ['**/node_modules/**', '**/dist/**'],
     root: fileURLToPath(new URL('./', import.meta.url)),
-
     testTimeout: 120000,
     hookTimeout: 120000,
     teardownTimeout: 120000,
