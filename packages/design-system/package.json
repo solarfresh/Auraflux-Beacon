@@ -1,6 +1,11 @@
 {
   "name": "@auraflux/design-system",
   "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test:unit": "vitest --config vitest.config.ts",
+    "test:coverage": "vitest --config vitest.config.ts --coverage"
+  },
   "dependencies": {
     "@auraflux/design-system": "file:",
     "@headlessui/vue": "^1.7.23",

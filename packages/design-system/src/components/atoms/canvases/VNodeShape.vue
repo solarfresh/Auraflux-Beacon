@@ -62,5 +62,3 @@ const roundedValue = computed(() => SHARED_ROUNDED_PIXEL_MAP[props.rounded ?? 'm
   stroke-dasharray: none;
 }
 </style>
-
-
