@@ -1,4 +1,4 @@
-import type { EntityStatus, ID, Point2D } from './core';
+import type { EntityStatus, ID } from './core';
 import type { Connection } from '@vue-flow/core';
 
 export type NodeType =
@@ -26,6 +26,11 @@ export type RefType = 'LINK' | 'DOCUMENT' | 'NODE';
 export interface SourceReference {
   name: string;
   type: RefType;
+}
+
+export interface Point2D {
+  x: number;
+  y: number;
 }
 
 export interface ConceptualNode {
