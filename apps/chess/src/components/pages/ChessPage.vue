@@ -2,7 +2,7 @@
   <VBox tag="div" class="h-screen w-screen flex flex-col" intent="neutral" surface="soft">
     <VBox tag="header" class="h-14 border-b flex items-center px-6 justify-between" intent="neutral" border="bottom" surface="soft">
       <VTypography tag="h1" size="lg" weight="bold" intent="brand">Auraflux Chess - Knowledge Graph Canvas</VTypography>
-      <VButton variant="primary" size="sm" @click="addNode">
+      <VButton variant="primary" size="sm" :disabled="isAdding" @click="addNode">
         Add Node
       </VButton>
     </VBox>
@@ -12,6 +12,12 @@
         v-model:edges="edges"
         @connect="onConnect"
       >
+        <template #node-CONCEPT="nodeProps">
+          <VConceptualNode v-bind="nodeProps" />
+        </template>
+        <template #edge-LINK="edgeProps">
+          <VConceptualEdge v-bind="edgeProps" />
+        </template>
         <Background pattern-color="#aaa" :gap="16" />
         <Controls />
         <MiniMap />
@@ -24,23 +30,23 @@
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
+import VConceptualEdge from '@auraflux/design-system/components/organisms/canvases/VConceptualEdge.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { Background } from '@vue-flow/background';
 import { Controls } from '@vue-flow/controls';
-import { VueFlow, useVueFlow, type Connection } from '@vue-flow/core';
+import { VueFlow, type Connection } from '@vue-flow/core';
 import { MiniMap } from '@vue-flow/minimap';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
-const { addEdges } = useVueFlow();
+const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext } = useConceptualMapContext();
 
-const nodes = ref<ConceptualNode[]>([
-  { id: '1', type: 'CONCEPT', label: 'Root Node (Chess)', position: { x: 250, y: 100 } },
-  { id: '2', type: 'CONCEPT', label: 'Sub Node (Analysis)', position: { x: 100, y: 250 } },
-]);
-
-const edges = ref<ConceptualEdge[]>([
-  { id: 'e1-2', source: '1', target: '2', type: 'LINK', weight: 1 },
-]);
+const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
+  ...node,
+  position: node.position || { x: 0, y: 0 }
+})));
+const edges = computed(() => instance.conceptualEdges);
 
 const isAdding = ref(false);
 
@@ -59,9 +65,8 @@ const addNode = () => {
         x: Math.random() * 400 + 50,
         y: Math.random() * 300 + 50,
       },
-      status: 'DRAFT',
     };
-    nodes.value.push(newNode);
+    addNodeToContext(newNode);
   } catch (error) {
     console.error('NodeCreationError:', error);
   } finally {
@@ -81,7 +86,6 @@ const onConnect = (connection: Connection) => {
     type: 'LINK',
     weight: 1,
   };
-  edges.value.push(newEdge);
-  addEdges([connection]);
+  addEdgeToContext(newEdge);
 };
 </script>

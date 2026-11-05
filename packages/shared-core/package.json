@@ -21,10 +21,8 @@
     "vitest": "^5.1.0"
   },
   "exports": {
-    "./api/*": "./api/*",
-    "./config/*": "./config/*",
-    "./composables/*": "./composables/*",
-    "./constants/*": "./constants/*",
-    "./interfaces/*": "./interfaces/*"
+    "./composables/*": "./src/composables/*",
+    "./constants/*": "./src/constants/*",
+    "./interfaces/*": "./src/interfaces/*"
   }
 }

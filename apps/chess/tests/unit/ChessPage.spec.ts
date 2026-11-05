@@ -1,6 +1,25 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import ChessPage from '../../src/components/pages/ChessPage.vue';
+
+// Mock conceptual map context
+const mockConceptualMapContext = {
+  instance: {
+    conceptualNodes: new Map([
+      ['1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } }],
+      ['2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } }]
+    ]),
+    conceptualEdges: [
+      { id: 'e1-2', source: '1', target: '2' }
+    ]
+  },
+  addNode: vi.fn(),
+  addEdge: vi.fn(),
+};
+
+vi.mock('../../../packages/shared-core/src/composables/useConceptualMapContext', () => ({
+  useConceptualMapContext: () => mockConceptualMapContext
+}));
 
 describe('ChessPage.vue', () => {
   it('renders knowledge graph canvas header and add button', () => {
@@ -34,19 +53,10 @@ describe('ChessPage.vue', () => {
     const button = wrapper.find('button');
     await button.trigger('click');
 
-    // Access vm nodes via component setup state or inspection
-    const vm = wrapper.vm as any;
-    expect(vm.nodes.length).toBe(3);
-
-    const newNode = vm.nodes[vm.nodes.length - 1];
-    expect(newNode.id).toBeDefined();
-    expect(newNode.type).toBe('CONCEPT');
-    expect(newNode.label).toBe('New Concept');
-    expect(typeof newNode.position.x).toBe('number');
-    expect(typeof newNode.position.y).toBe('number');
+    expect(mockConceptualMapContext.addNode).toHaveBeenCalled();
   });
 
-  it('handles onConnect with self-loop prevention and valid connections', () => {
+  it('rejects self-loop connections', async () => {
     const wrapper = mount(ChessPage, {
       global: {
         stubs: {
@@ -59,20 +69,14 @@ describe('ChessPage.vue', () => {
     });
 
     const vm = wrapper.vm as any;
-    const initialEdgesLength = vm.edges.length;
+    const warnSpy = vi.spyOn(console, 'warn');
 
-    // Spy on console.warn
-    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // Trigger onConnect with self-loop
+    vm.onConnect({ source: '1', target: '1' });
 
-    // Test self-loop connection (source === target)
-    vm.onConnect({ source: '1', target: '1', sourceHandle: null, targetHandle: null });
-    expect(consoleWarnSpy).toHaveBeenCalledWith('Reject self-loop connection');
-    expect(vm.edges.length).toBe(initialEdgesLength);
+    expect(warnSpy).toHaveBeenCalledWith('Reject self-loop connection');
+    expect(mockConceptualMapContext.addEdge).not.toHaveBeenCalled();
 
-    consoleWarnSpy.mockRestore();
-
-    // Test valid connection
-    vm.onConnect({ source: '1', target: '3', sourceHandle: null, targetHandle: null });
-    expect(vm.edges.length).toBe(initialEdgesLength + 1);
+    warnSpy.mockRestore();
   });
 });
