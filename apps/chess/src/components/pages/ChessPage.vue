@@ -30,10 +30,14 @@ import VConceptualNode from '@auraflux/design-system/components/organisms/canvas
 import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
 import type { Connection } from '@vue-flow/core';
-import { ref, computed } from 'vue';
+import { ref, computed, provide } from 'vue';
 
-const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext } = useConceptualMapContext();
+const context = useConceptualMapContext();
+provide(ConceptualMapContextKey, context);
+
+const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext } = context;
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
   ...node,
