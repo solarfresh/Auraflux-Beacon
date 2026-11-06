@@ -26,18 +26,36 @@
         </VBox>
       </VStack>
     </VStack>
+
+    <!-- Render VNodeHandles if provided -->
+    <template v-if="handles && handles.length">
+      <VNodeHandle
+        v-for="handle in handles"
+        :key="handle.id"
+        :id="handle.id"
+        :type="handle.type"
+        :position="handle.position"
+        :intent="handle.intent"
+        :surface="handle.surface"
+        :attention="handle.attention"
+        :is-connectable="handle.isConnectable"
+      />
+    </template>
+    <slot name="handles" />
   </VBox>
 </template>
 
 <script setup lang="ts">
+import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import type { NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ConceptualNodeHandle, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 import type { BorderToken, IntentToken, RoundedToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import type { PropType } from 'vue';
 import { onMounted } from 'vue';
+
 
 const props = defineProps({
   id: { type: String as PropType<ID>, required: true },
@@ -50,6 +68,7 @@ const props = defineProps({
   border: { type: String as PropType<BorderToken>, default: 'all' },
   intent: { type: String as PropType<IntentToken>, default: 'neutral' },
   surface: { type: String as PropType<SurfaceToken>, default: 'solid' },
+  handles: { type: Array as PropType<ConceptualNodeHandle[]>, required: false, default: () => [] },
 });
 
 onMounted(() => {
