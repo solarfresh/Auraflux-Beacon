@@ -17,7 +17,7 @@ const mockConceptualMapContext = {
   addEdge: vi.fn(),
 };
 
-vi.mock('../../../packages/shared-core/src/composables/useConceptualMapContext', () => ({
+vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
   useConceptualMapContext: () => mockConceptualMapContext
 }));
 
