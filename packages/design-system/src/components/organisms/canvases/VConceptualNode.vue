@@ -12,6 +12,7 @@
     rounded="lg"
     border="all"
     padding="sm"
+    @update:label="handleLabelUpdate"
   >
     <template #header>
       <VCluster justify="between" align="center">
@@ -47,4 +48,19 @@ const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
 const nodeTheme = computed(() => {
   return NODE_THEMES[props.data.type] || { intent: 'neutral', surface: 'solid' };
 });
+
+const handleLabelUpdate = (newLabel: string) => {
+  if (context && typeof context.updateNode === 'function') {
+    context.updateNode(props.id, {
+      ...props.data,
+      label: newLabel
+    });
+  } else if (context && typeof (context as any).addNode === 'function') {
+    // Fallback if updateNode is not available
+    (context as any).addNode({
+      ...props.data,
+      label: newLabel
+    });
+  }
+};
 </script>

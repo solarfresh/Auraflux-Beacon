@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi } from 'vitest';
 import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
 import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 
 // Mocking @vue-flow/core Handle used by VNodeHandle
 vi.mock('@vue-flow/core', () => ({
@@ -74,5 +75,47 @@ describe('NodeLabelContainer', () => {
     expect(consoleSpy).toHaveBeenCalled();
     consoleSpy.mockRestore();
   });
-});
 
+  it('switches to edit mode on double-click', async () => {
+    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.findComponent(VInput).exists()).toBe(true);
+  });
+
+  it('cancels edit and reverts on Esc key', async () => {
+    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.setValue('Changed');
+    await input.trigger('keydown.esc');
+    expect(wrapper.findComponent(VInput).exists()).toBe(false);
+    expect(wrapper.text()).toContain('Test Node');
+  });
+
+  it('emits update:label on edit completion', async () => {
+    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.setValue('Updated Node');
+    await input.trigger('blur');
+    expect(wrapper.emitted()).toHaveProperty('update:label');
+    expect(wrapper.emitted()['update:label'][0]).toEqual(['Updated Node']);
+  });
+
+  it('does not emit update:label if input is empty', async () => {
+    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.setValue('');
+    await input.trigger('blur');
+    expect(wrapper.emitted()).not.toHaveProperty('update:label');
+  });
+
+  it('does not switch to edit mode when isEditable is false', async () => {
+    const wrapper = mount(NodeLabelContainer, {
+      props: { ...defaultProps, isEditable: false }
+    });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.findComponent(VInput).exists()).toBe(false);
+  });
+});

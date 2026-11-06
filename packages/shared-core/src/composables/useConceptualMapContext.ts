@@ -3,8 +3,9 @@
  * @description Encapsulates canvas state management and defensive interaction logic for shared-core.
  */
 
+import type { CanvasViewInstance, ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 import { reactive } from 'vue';
-import type { ConceptualNode, ConceptualEdge, CanvasViewInstance } from '@auraflux/design-system/interfaces/conceptual-map';
 
 export function useConceptualMapContext() {
   const instance = reactive<CanvasViewInstance>({
@@ -32,8 +33,15 @@ export function useConceptualMapContext() {
     instance.conceptualNodes.set(node.id, node);
   };
 
-  const removeNode = (nodeId: string) => {
+  const removeNode = (nodeId: ID) => {
     instance.conceptualNodes.delete(nodeId);
+  };
+
+  const updateNode = (nodeId: ID, updatedNode: ConceptualNode) => {
+    if (!nodeId || !updatedNode) return;
+    if (instance.conceptualNodes.has(nodeId)) {
+      instance.conceptualNodes.set(nodeId, updatedNode);
+    }
   };
 
   const addEdge = (edge: ConceptualEdge) => {
@@ -45,6 +53,7 @@ export function useConceptualMapContext() {
     instance,
     addNode,
     removeNode,
+    updateNode,
     addEdge,
   };
 }

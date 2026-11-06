@@ -31,6 +31,24 @@ describe('useConceptualMapContext', () => {
     expect(instance.conceptualNodes.size).toBe(0);
   });
 
+  it('should successfully update existing nodes', () => {
+    const { instance, addNode, updateNode } = useConceptualMapContext();
+    const testNode = {
+      id: 'node-1',
+      label: 'Original',
+      type: 'CONCEPT'
+    };
+    const updatedNode = {
+      id: 'node-1',
+      label: 'Updated',
+      type: 'CONCEPT'
+    };
+
+    addNode(testNode as any);
+    updateNode('node-1', updatedNode as any);
+    expect(instance.conceptualNodes.get('node-1')?.label).toBe('Updated');
+  });
+
   it('should successfully add edges', () => {
     const { instance, addEdge } = useConceptualMapContext();
     const testEdge = {
