@@ -6,6 +6,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@vue/compiler-sfc": "^3.5.44",
     "eslint": "^10.8.0",
     "eslint-plugin-tailwindcss": "^4.2.0"
   }

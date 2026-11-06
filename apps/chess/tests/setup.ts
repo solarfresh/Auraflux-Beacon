@@ -1,11 +1,11 @@
 import { config } from '@vue/test-utils'
-import { vi } from 'vitest'
+import { vi, afterEach } from 'vitest'
 
 /**
  * Polyfill for ResizeObserver which is essential for Vue Flow layouts
  * but absent in standard jsdom environments.
  */
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
+(window as any).ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
@@ -16,7 +16,7 @@ global.ResizeObserver = vi.fn().mockImplementation(() => ({
  * Must include both 2D (a-f) and 3D (m11-m44) properties to prevent
  * matrix-calculators inside UI libraries from falling into infinite loops.
  */
-global.DOMMatrix = vi.fn().mockImplementation(() => {
+(window as any).DOMMatrix = vi.fn().mockImplementation(() => {
   const matrix = {
     a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
     m11: 1, m12: 0, m13: 0, m14: 0,
@@ -36,18 +36,18 @@ global.DOMMatrix = vi.fn().mockImplementation(() => {
  * Avoids prototype pollution that triggers infinite recursions in jsdom.
  */
 if (typeof window !== 'undefined') {
-  SVGElement.prototype.getBBox = vi.fn().mockReturnValue({
+  (SVGElement.prototype as any).getBBox = vi.fn().mockReturnValue({
     x: 0,
     y: 0,
     width: 0,
     height: 0,
   })
 
-  SVGElement.prototype.getCTM = vi.fn().mockReturnValue({
+  (SVGElement.prototype as any).getCTM = vi.fn().mockReturnValue({
     a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
   })
 
-  SVGElement.prototype.getScreenCTM = vi.fn().mockReturnValue({
+  (SVGElement.prototype as any).getScreenCTM = vi.fn().mockReturnValue({
     a: 1, b: 0, c: 0, d: 1, e: 0, f: 0,
   })
 

@@ -1,5 +1,6 @@
-import type { EntityStatus, ID, Point2D } from './core';
-import type { Connection } from '@vue-flow/core';
+import type { AttentionToken, IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import type { Connection, Position } from '@vue-flow/core';
+import type { EntityStatus, ID } from './core';
 
 export type NodeType =
   | 'EVENT'
@@ -28,6 +29,21 @@ export interface SourceReference {
   type: RefType;
 }
 
+export interface Point2D {
+  x: number;
+  y: number;
+}
+
+export interface ConceptualNodeHandle {
+  id: ID;
+  type: 'source' | 'target';
+  position: Position;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
+  attention?: AttentionToken;
+  isConnectable?: boolean;
+}
+
 export interface ConceptualNode {
   id: ID;
   label: string;
@@ -37,6 +53,7 @@ export interface ConceptualNode {
   rationale?: string;
   position?: Point2D;
   status?: EntityStatus;
+  handles?: ConceptualNodeHandle[];
 }
 
 export interface ConceptualEdge {
