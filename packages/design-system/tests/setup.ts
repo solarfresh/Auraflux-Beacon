@@ -1,15 +1,19 @@
-import { config } from '@vue/test-utils'
-import { vi } from 'vitest'
+import { config } from '@vue/test-utils';
+import { afterEach, vi } from 'vitest';
+
+declare const global: any;
+declare const window: any;
+declare const SVGElement: any;
 
 /**
  * Polyfill for ResizeObserver which is essential for Vue Flow layouts
  * but absent in standard jsdom environments.
  */
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-}))
+global.ResizeObserver = class ResizeObserver {
+  observe = vi.fn()
+  unobserve = vi.fn()
+  disconnect = vi.fn()
+}
 
 /**
  * Safe Polyfill for DOMMatrix.

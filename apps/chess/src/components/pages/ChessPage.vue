@@ -7,21 +7,17 @@
       </VButton>
     </VBox>
     <VBox tag="div" class="flex-1 w-full relative">
-      <VueFlow
-        v-model:nodes="nodes"
-        v-model:edges="edges"
+      <VConceptualMapCanvas
+        :nodes="nodes"
+        :edges="edges"
+        intent="neutral"
+        surface="soft"
         @connect="onConnect"
       >
-        <template #node-CONCEPT="nodeProps">
-          <VConceptualNode v-bind="nodeProps" />
+        <template #node-default="{ node }">
+          <component :is="node.type === 'CONCEPT' ? VConceptualNode : 'div'" v-bind="node" />
         </template>
-        <template #edge-LINK="edgeProps">
-          <VConceptualEdge v-bind="edgeProps" />
-        </template>
-        <Background pattern-color="#aaa" :gap="16" />
-        <Controls />
-        <MiniMap />
-      </VueFlow>
+      </VConceptualMapCanvas>
     </VBox>
   </VBox>
 </template>
@@ -31,13 +27,10 @@ import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vu
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
-import VConceptualEdge from '@auraflux/design-system/components/organisms/canvases/VConceptualEdge.vue';
+import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
-import { Background } from '@vue-flow/background';
-import { Controls } from '@vue-flow/controls';
-import { VueFlow, type Connection } from '@vue-flow/core';
-import { MiniMap } from '@vue-flow/minimap';
+import type { Connection } from '@vue-flow/core';
 import { ref, computed } from 'vue';
 
 const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext } = useConceptualMapContext();

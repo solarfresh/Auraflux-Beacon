@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import ChessPage from '../../src/components/pages/ChessPage.vue';
+import ChessPage from '@/components/pages/ChessPage.vue';
 
 // Mock conceptual map context
 const mockConceptualMapContext = {
