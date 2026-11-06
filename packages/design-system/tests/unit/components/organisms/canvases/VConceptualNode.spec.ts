@@ -61,4 +61,39 @@ describe('VConceptualNode', () => {
     });
     expect(wrapper.exists()).toBe(true);
   });
+
+  it('should accept a node with handles property', () => {
+    const wrapper = mount(VConceptualNode as any, {
+      props: {
+        id: '2',
+        type: 'default',
+        selected: false,
+        connectable: true,
+        position: { x: 10, y: 10 },
+        dimensions: { width: 100, height: 100 },
+        data: {
+          label: 'Node with Handles',
+          type: 'CONCEPT',
+          status: 'ACTIVE',
+          handles: [
+            {
+              id: 'h1',
+              type: 'source',
+              position: { x: 0, y: 0 }
+            }
+          ]
+        }
+      },
+      global: {
+        provide: {
+          [ConceptualMapContextKey]: {}
+        },
+        stubs: {
+          NodeLabelContainer: true
+        }
+      }
+    });
+
+    expect(wrapper.exists()).toBe(true);
+  });
 });

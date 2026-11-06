@@ -5,9 +5,10 @@
     :type="props.data.type"
     :rationale="props.data.rationale"
     :status="props.data.status"
+    :handles="props.data.handles"
     class="v-conceptual-node group transition-all"
-    :intent="props.selected ? 'brand' : 'neutral'"
-    surface="solid"
+    :intent="props.selected ? 'brand' : nodeTheme.intent"
+    :surface="nodeTheme.surface"
     rounded="lg"
     border="all"
     padding="sm"
@@ -34,11 +35,16 @@ import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.v
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
 import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
 import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@auraflux/design-system/constants/injection-keys';
+import { NODE_THEMES } from '@auraflux/design-system/constants/theme';
 import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeProps } from '@vue-flow/core';
-import { inject } from 'vue';
+import { inject, computed } from 'vue';
 
 const props = defineProps<NodeProps<ConceptualNode>>();
 
 const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
+
+const nodeTheme = computed(() => {
+  return NODE_THEMES[props.data.type] || { intent: 'neutral', surface: 'solid' };
+});
 </script>

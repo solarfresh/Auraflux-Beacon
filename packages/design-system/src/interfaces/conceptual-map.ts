@@ -34,6 +34,16 @@ export interface Point2D {
   y: number;
 }
 
+export interface ConceptualNodeHandle {
+  id: ID;
+  type: 'source' | 'target';
+  position: Position;
+  intent?: IntentToken;
+  surface?: SurfaceToken;
+  attention?: AttentionToken;
+  isConnectable?: boolean;
+}
+
 export interface ConceptualNode {
   id: ID;
   label: string;
@@ -43,16 +53,7 @@ export interface ConceptualNode {
   rationale?: string;
   position?: Point2D;
   status?: EntityStatus;
-}
-
-export interface ConceptualNodeHandle {
-  id: ID;
-  type: 'source' | 'target';
-  position: Position;
-  intent?: IntentToken;
-  surface?: SurfaceToken;
-  attention?: AttentionToken;
-  isConnectable?: boolean;
+  handles?: ConceptualNodeHandle[];
 }
 
 export interface ConceptualEdge {

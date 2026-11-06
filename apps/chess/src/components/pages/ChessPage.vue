@@ -54,6 +54,18 @@ const addNode = () => {
       id,
       label: `New Concept`,
       type: 'CONCEPT',
+      handles: [
+        {
+          id: `h-source-${id}`,
+          type: 'source',
+          position: 'right' as any
+        },
+        {
+          id: `h-target-${id}`,
+          type: 'target',
+          position: 'left' as any
+        }
+      ],
       position: {
         x: Math.random() * 400 + 50,
         y: Math.random() * 300 + 50,
