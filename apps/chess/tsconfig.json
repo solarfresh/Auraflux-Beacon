@@ -13,6 +13,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "tests/**/*.ts",
     "vite.config.ts"
   ],
   "references": [
