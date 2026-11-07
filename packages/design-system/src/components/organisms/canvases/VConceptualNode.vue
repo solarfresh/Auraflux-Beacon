@@ -1,5 +1,5 @@
 <template>
-  <NodeLabelContainer
+  <VNodeLabelContainer
     :id="props.id"
     :label="props.data.label"
     :type="props.data.type"
@@ -27,19 +27,19 @@
         {{ props.data.content }}
       </VTypography>
     </VStack>
-  </NodeLabelContainer>
+  </VNodeLabelContainer>
 </template>
 
 <script setup lang="ts">
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
+import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
 import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@auraflux/design-system/constants/injection-keys';
 import { NODE_THEMES } from '@auraflux/design-system/constants/theme';
 import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeProps } from '@vue-flow/core';
-import { inject, computed } from 'vue';
+import { computed, inject } from 'vue';
 
 const props = defineProps<NodeProps<ConceptualNode>>();
 

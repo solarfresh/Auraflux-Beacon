@@ -13,11 +13,15 @@
         intent="neutral"
         surface="soft"
         @connect="onConnect"
+        @node-click="(node: any) => selectedNodeId = node.id"
       >
         <template #node-default="{ node }">
           <component :is="node.type === 'CONCEPT' ? VConceptualNode : 'div'" v-bind="node" />
         </template>
       </VConceptualMapCanvas>
+    </VBox>
+    <VBox tag="aside" class="w-80 border-l" intent="neutral" surface="soft">
+      <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => { if (selectedNodeId) updateNodeInContext(selectedNodeId, node); }" />
     </VBox>
   </VBox>
 </template>
@@ -28,6 +32,7 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
 import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
+import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
@@ -37,7 +42,10 @@ import { ref, computed, provide } from 'vue';
 const context = useConceptualMapContext();
 provide(ConceptualMapContextKey, context);
 
-const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext } = context;
+const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext, updateNode: updateNodeInContext } = context;
+
+const selectedNodeId = ref<string | null>(null);
+const selectedNode = computed(() => selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null);
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
   ...node,

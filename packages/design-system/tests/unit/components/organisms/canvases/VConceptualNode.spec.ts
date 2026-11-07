@@ -1,7 +1,23 @@
-import { describe, it, expect, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
 import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@vue-flow/core', async () => {
+  const actual = await vi.importActual<any>('@vue-flow/core');
+  return {
+    ...actual,
+    useVueFlow: () => ({
+      nodes: [],
+      edges: [],
+      dimensions: { width: 100, height: 100 }
+    }),
+    Handle: {
+      name: 'Handle',
+      template: '<div />'
+    }
+  };
+});
 
 describe('VConceptualNode', () => {
   it('should fallback and render correctly when used without ConceptualMapContext', () => {
@@ -52,7 +68,7 @@ describe('VConceptualNode', () => {
           }
         },
         stubs: {
-          NodeLabelContainer: true,
+          VNodeLabelContainer: true,
           VCluster: true,
           VTypography: true,
           VStack: true

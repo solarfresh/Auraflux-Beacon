@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi } from 'vitest';
-import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
+import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
 import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 
@@ -12,7 +12,7 @@ vi.mock('@vue-flow/core', () => ({
   }
 }));
 
-describe('NodeLabelContainer', () => {
+describe('VNodeLabelContainer', () => {
   const defaultProps = {
     id: 'node-1',
     label: 'Test Node',
@@ -21,17 +21,17 @@ describe('NodeLabelContainer', () => {
   };
 
   it('renders label and type correctly', () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     expect(wrapper.text()).toContain('Test Node');
   });
 
   it('renders rationale when provided', () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     expect(wrapper.text()).toContain('Test Rationale');
   });
 
   it('does not render rationale when not provided', () => {
-    const wrapper = mount(NodeLabelContainer, {
+    const wrapper = mount(VNodeLabelContainer, {
       props: { id: 'node-1', label: 'Test Node', type: 'CONCEPT' }
     });
     // Assuming rationale is rendered within a footer element in the component
@@ -40,7 +40,7 @@ describe('NodeLabelContainer', () => {
   });
 
   it('renders slots correctly', () => {
-    const wrapper = mount(NodeLabelContainer, {
+    const wrapper = mount(VNodeLabelContainer, {
       props: defaultProps,
       slots: {
         header: '<div class="header">Header</div>',
@@ -52,7 +52,7 @@ describe('NodeLabelContainer', () => {
   });
 
   it('renders VNodeHandles when handles prop is provided', () => {
-    const wrapper = mount(NodeLabelContainer, {
+    const wrapper = mount(VNodeLabelContainer, {
       props: {
         ...defaultProps,
         handles: [
@@ -69,7 +69,7 @@ describe('NodeLabelContainer', () => {
 
   it('warns when mandatory fields are missing', () => {
     const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    mount(NodeLabelContainer, {
+    mount(VNodeLabelContainer, {
       props: { id: '', label: '', type: 'CONCEPT' } as any
     });
     expect(consoleSpy).toHaveBeenCalled();
@@ -77,13 +77,13 @@ describe('NodeLabelContainer', () => {
   });
 
   it('switches to edit mode on double-click', async () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     expect(wrapper.findComponent(VInput).exists()).toBe(true);
   });
 
   it('cancels edit and reverts on Esc key', async () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     const input = wrapper.findComponent(VInput);
     await input.setValue('Changed');
@@ -93,7 +93,7 @@ describe('NodeLabelContainer', () => {
   });
 
   it('emits update:label on edit completion', async () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     const input = wrapper.findComponent(VInput);
     await input.setValue('Updated Node');
@@ -103,7 +103,7 @@ describe('NodeLabelContainer', () => {
   });
 
   it('does not emit update:label if input is empty', async () => {
-    const wrapper = mount(NodeLabelContainer, { props: defaultProps });
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     const input = wrapper.findComponent(VInput);
     await input.setValue('');
@@ -112,7 +112,7 @@ describe('NodeLabelContainer', () => {
   });
 
   it('does not switch to edit mode when isEditable is false', async () => {
-    const wrapper = mount(NodeLabelContainer, {
+    const wrapper = mount(VNodeLabelContainer, {
       props: { ...defaultProps, isEditable: false }
     });
     await wrapper.trigger('dblclick');

@@ -117,7 +117,7 @@ const cancelEdit = () => {
 
 onMounted(() => {
   if (!props.id || !props.label) {
-    console.warn(`[NodeLabelContainer] Missing mandatory fields for node: ${props.id || 'unknown'}`);
+    console.warn(`[VNodeLabelContainer] Missing mandatory fields for node: ${props.id || 'unknown'}`);
   }
 });
 </script>
