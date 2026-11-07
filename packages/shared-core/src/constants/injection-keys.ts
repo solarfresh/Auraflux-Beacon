@@ -1,6 +1,5 @@
-import type { CanvasViewInstance } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ConceptualMapContext } from '@auraflux/shared-core/interfaces/conceptual-map';
-import type { InjectionKey } from 'vue';
+import { type InjectionKey, ref } from 'vue';
 
 export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
   instance: {
@@ -16,10 +15,15 @@ export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
     localEdgeData: { id: '', source: '', target: '', type: 'LINK', weight: 1 },
     viewport: { x: 0, y: 0, zoom: 1 }
   },
+  selectedNodeId: ref(null),
+  isEditing: ref(false),
   addNode: () => {},
   removeNode: () => {},
   updateNode: () => {},
-  addEdge: () => {}
+  addEdge: () => {},
+  selectNode: () => {},
+  deselectAllNodes: () => {},
+  isSelected: () => false
 };
 
 export const ConceptualMapContextKey: InjectionKey<ConceptualMapContext> = Symbol('ConceptualMapContext');

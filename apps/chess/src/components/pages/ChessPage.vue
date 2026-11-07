@@ -17,7 +17,13 @@
         @pane-click="deselectAllNodes"
       >
         <template #node-default="{ node }">
-          <component :is="node.type === 'CONCEPT' ? VConceptualNode : 'div'" v-bind="node" />
+          <component
+            :is="node.type === 'CONCEPT' ? VConceptualNode : 'div'"
+            v-bind="node"
+            :isEditing="isEditing && selectedNodeId === node.id"
+            @update:isEditing="(val: boolean) => isEditing = val"
+            @update:label="(label: string) => updateNodeInContext(node.id, { ...node.data, label })"
+          />
         </template>
       </VConceptualMapCanvas>
     </VBox>
@@ -36,7 +42,7 @@ import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/c
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
-import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
+import { ConceptualMapContextKey } from '@auraflux/shared-core/constants/injection-keys';
 import type { Connection } from '@vue-flow/core';
 import { ref, computed, provide } from 'vue';
 
