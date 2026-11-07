@@ -1,22 +1,28 @@
-import { mount } from '@vue/test-utils';
-import { describe, it, expect, vi } from 'vitest';
-import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
 import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
+import type { NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import { Position } from '@vue-flow/core';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mocking @vue-flow/core Handle used by VNodeHandle
-vi.mock('@vue-flow/core', () => ({
-  Handle: {
-    name: 'Handle',
-    template: '<div class="mock-handle"></div>'
-  }
-}));
+vi.mock('@vue-flow/core', async () => {
+  const actual = await vi.importActual<any>('@vue-flow/core');
+  return {
+    ...actual,
+    Handle: {
+      name: 'Handle',
+      template: '<div class="mock-handle"></div>'
+    }
+  };
+});
 
 describe('VNodeLabelContainer', () => {
   const defaultProps = {
     id: 'node-1',
     label: 'Test Node',
-    type: 'CONCEPT',
+    type: 'CONCEPT' as NodeType,
     rationale: 'Test Rationale'
   };
 
@@ -56,8 +62,8 @@ describe('VNodeLabelContainer', () => {
       props: {
         ...defaultProps,
         handles: [
-          { id: 'handle-top', type: 'target', position: 'top' },
-          { id: 'handle-bottom', type: 'source', position: 'bottom' }
+          { id: 'handle-top', type: 'target', position: Position.Top },
+          { id: 'handle-bottom', type: 'source', position: Position.Bottom }
         ]
       }
     });
@@ -92,14 +98,29 @@ describe('VNodeLabelContainer', () => {
     expect(wrapper.text()).toContain('Test Node');
   });
 
-  it('emits update:label on edit completion', async () => {
+  it('emits update:isEditing when entering edit mode', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')![0]).toEqual([true]);
+  });
+
+  it('emits update:isEditing(false) when edit is finished (Enter)', async () => {
     const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     const input = wrapper.findComponent(VInput);
-    await input.setValue('Updated Node');
+    await input.trigger('keydown.enter');
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')!.slice(-1)[0]).toEqual([false]);
+  });
+
+  it('emits update:isEditing(false) when edit is finished (Blur)', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
     await input.trigger('blur');
-    expect(wrapper.emitted()).toHaveProperty('update:label');
-    expect(wrapper.emitted()['update:label'][0]).toEqual(['Updated Node']);
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')!.slice(-1)[0]).toEqual([false]);
   });
 
   it('does not emit update:label if input is empty', async () => {

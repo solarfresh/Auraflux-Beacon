@@ -12,6 +12,7 @@
     rounded="lg"
     border="all"
     padding="sm"
+    v-model:isEditing="isEditing"
     @update:label="handleLabelUpdate"
   >
     <template #header>
@@ -39,9 +40,11 @@ import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@aurafl
 import { NODE_THEMES } from '@auraflux/design-system/constants/theme';
 import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeProps } from '@vue-flow/core';
-import { computed, inject } from 'vue';
+import { computed, inject, ref } from 'vue';
 
 const props = defineProps<NodeProps<ConceptualNode>>();
+
+const isEditing = ref(false);
 
 const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
 
