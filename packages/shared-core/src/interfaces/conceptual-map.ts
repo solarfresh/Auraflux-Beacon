@@ -6,6 +6,7 @@ import type { ID } from '@auraflux/design-system/interfaces/core';
 export interface ConceptualMapContext {
   instance: CanvasViewInstance;
   selectedNodeId: Ref<ID | null>;
+  isEditing: Ref<boolean>;
   addNode: (node: ConceptualNode) => void;
   removeNode: (nodeId: ID) => void;
   updateNode: (nodeId: ID, updatedNode: ConceptualNode) => void;

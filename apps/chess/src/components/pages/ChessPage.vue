@@ -13,7 +13,7 @@
         intent="neutral"
         surface="soft"
         @connect="onConnect"
-        @node-click="(node: any) => selectNode(node.id)"
+        @node-click="(node: any) => { if (!isEditing) selectNode(node.id); }"
         @pane-click="deselectAllNodes"
       >
         <template #node-default="{ node }">
@@ -48,11 +48,16 @@ const {
   addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
+  isEditing,
   selectedNodeId,
   selectNode,
   deselectAllNodes,
   isSelected
 } = context;
+
+const toggleEditing = (editing: boolean) => {
+  isEditing.value = editing;
+};
 
 const selectedNode = computed(() => selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null);
 

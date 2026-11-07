@@ -62,4 +62,18 @@ describe('useConceptualMapContext', () => {
     expect(instance.conceptualEdges.length).toBe(1);
     expect(instance.conceptualEdges[0]).toEqual(testEdge);
   });
+
+  it('should manage node selection state correctly', () => {
+    const { selectedNodeId, selectNode, deselectAllNodes, isSelected } = useConceptualMapContext();
+    expect(selectedNodeId.value).toBeNull();
+
+    selectNode('node-1');
+    expect(selectedNodeId.value).toBe('node-1');
+    expect(isSelected('node-1')).toBe(true);
+    expect(isSelected('node-2')).toBe(false);
+
+    deselectAllNodes();
+    expect(selectedNodeId.value).toBeNull();
+    expect(isSelected('node-1')).toBe(false);
+  });
 });
