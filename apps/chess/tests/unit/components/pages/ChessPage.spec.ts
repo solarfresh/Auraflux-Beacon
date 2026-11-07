@@ -13,8 +13,13 @@ const mockConceptualMapContext = {
       { id: 'e1-2', source: '1', target: '2' }
     ]
   },
+  selectedNodeId: { value: null },
   addNode: vi.fn(),
   addEdge: vi.fn(),
+  updateNode: vi.fn(),
+  selectNode: vi.fn((id) => { mockConceptualMapContext.selectedNodeId.value = id; }),
+  deselectAllNodes: vi.fn(() => { mockConceptualMapContext.selectedNodeId.value = null; }),
+  isSelected: vi.fn((id) => mockConceptualMapContext.selectedNodeId.value === id),
 };
 
 vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
@@ -78,5 +83,30 @@ describe('ChessPage.vue', () => {
     expect(mockConceptualMapContext.addEdge).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
+  });
+
+  it('selects and deselects nodes correctly', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Select node
+    vm.selectNode('1');
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
+    expect(vm.isSelected('1')).toBe(true);
+
+    // Deselect node
+    vm.deselectAllNodes();
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
+    expect(vm.isSelected('1')).toBe(false);
   });
 });

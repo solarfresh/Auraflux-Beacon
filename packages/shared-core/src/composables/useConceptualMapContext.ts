@@ -5,9 +5,10 @@
 
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
+import type { ConceptualMapContext } from '../interfaces/conceptual-map';
 
-export function useConceptualMapContext() {
+export function useConceptualMapContext(): ConceptualMapContext {
   const instance = reactive<CanvasViewInstance>({
     conceptualNodes: new Map<string, ConceptualNode>(),
     conceptualEdges: [],
@@ -28,6 +29,8 @@ export function useConceptualMapContext() {
     viewport: { x: 0, y: 0, zoom: 1 },
   });
 
+  const selectedNodeId = ref<ID | null>(null);
+
   const addNode = (node: ConceptualNode) => {
     if (!node || !node.id) return;
     instance.conceptualNodes.set(node.id, node);
@@ -35,6 +38,9 @@ export function useConceptualMapContext() {
 
   const removeNode = (nodeId: ID) => {
     instance.conceptualNodes.delete(nodeId);
+    if (selectedNodeId.value === nodeId) {
+      selectedNodeId.value = null;
+    }
   };
 
   const updateNode = (nodeId: ID, updatedNode: ConceptualNode) => {
@@ -49,11 +55,27 @@ export function useConceptualMapContext() {
     instance.conceptualEdges.push(edge);
   };
 
+  const selectNode = (id: ID) => {
+    selectedNodeId.value = id;
+  };
+
+  const deselectAllNodes = () => {
+    selectedNodeId.value = null;
+  };
+
+  const isSelected = (nodeId: ID) => {
+    return selectedNodeId.value === nodeId;
+  };
+
   return {
     instance,
+    selectedNodeId,
     addNode,
     removeNode,
     updateNode,
     addEdge,
+    selectNode,
+    deselectAllNodes,
+    isSelected,
   };
 }

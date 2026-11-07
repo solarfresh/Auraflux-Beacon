@@ -13,7 +13,8 @@
         intent="neutral"
         surface="soft"
         @connect="onConnect"
-        @node-click="(node: any) => selectedNodeId = node.id"
+        @node-click="(node: any) => selectNode(node.id)"
+        @pane-click="deselectAllNodes"
       >
         <template #node-default="{ node }">
           <component :is="node.type === 'CONCEPT' ? VConceptualNode : 'div'" v-bind="node" />
@@ -42,9 +43,17 @@ import { ref, computed, provide } from 'vue';
 const context = useConceptualMapContext();
 provide(ConceptualMapContextKey, context);
 
-const { instance, addNode: addNodeToContext, addEdge: addEdgeToContext, updateNode: updateNodeInContext } = context;
+const {
+  instance,
+  addNode: addNodeToContext,
+  addEdge: addEdgeToContext,
+  updateNode: updateNodeInContext,
+  selectedNodeId,
+  selectNode,
+  deselectAllNodes,
+  isSelected
+} = context;
 
-const selectedNodeId = ref<string | null>(null);
 const selectedNode = computed(() => selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null);
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
