@@ -30,7 +30,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
   });
 
   const selectedNodeId = ref<ID | null>(null);
-  const isEditing = ref<boolean>(false);
 
   const addNode = (node: ConceptualNode) => {
     if (!node || !node.id) return;
@@ -57,7 +56,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
   };
 
   const selectNode = (id: ID) => {
-    if (isEditing.value) return;
     selectedNodeId.value = id;
   };
 
@@ -72,7 +70,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
   return {
     instance,
     selectedNodeId,
-    isEditing,
     addNode,
     removeNode,
     updateNode,

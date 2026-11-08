@@ -5,7 +5,7 @@
       :edges="(edges as any)"
       :node-types="nodeTypes"
       :edge-types="edgeTypes"
-      @node-click="$emit('node-click', $event)"
+      @node-click="onNodeClick"
       @connect="onConnect"
     >
       <template #node-default="nodeProps">
@@ -19,6 +19,7 @@
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import { edgeTypes, nodeTypes } from '@auraflux/design-system/constants/canvases';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import { VueFlow, type Connection, type Node } from '@vue-flow/core';
 import { computed } from 'vue';
@@ -26,6 +27,8 @@ import { computed } from 'vue';
 const props = defineProps<{
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
+  selectedNodeId?: ID | null;
+  isEditing?: boolean;
   intent?: IntentToken;
   surface?: SurfaceToken;
 }>();
@@ -35,6 +38,7 @@ const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
   type: node.type || 'CONCEPT',
   label: node.label,
   position: node.position || { x: 0, y: 0 },
+  selected: node.id === props.selectedNodeId,
   data: node
 })));
 
@@ -42,7 +46,13 @@ const emit = defineEmits<{
   (e: 'add-node'): void;
   (e: 'connect', connection: Connection): void;
   (e: 'node-click', event: any): void;
+  (e: 'update:selectedNodeId', id: ID | null): void;
 }>();
+
+const onNodeClick = (event: any) => {
+  emit('node-click', event);
+  emit('update:selectedNodeId', event.node.id);
+};
 
 const onConnect = (connection: Connection) => {
   if (connection.source !== connection.target) {

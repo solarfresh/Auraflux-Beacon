@@ -37,33 +37,29 @@
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
 import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
+import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
-import { ConceptualMapContextKey } from '@auraflux/shared-core/constants/injection-keys';
 import type { Connection } from '@vue-flow/core';
-import { ref, computed, provide } from 'vue';
+import { computed, ref } from 'vue';
 
 const context = useConceptualMapContext();
-provide(ConceptualMapContextKey, context);
+
+const isEditing = ref(false);
+const selectedNodeId = ref<ID | null>(null);
 
 const {
   instance,
   addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
-  isEditing,
-  selectedNodeId,
   selectNode,
   deselectAllNodes,
   isSelected
 } = context;
-
-const toggleEditing = (editing: boolean) => {
-  isEditing.value = editing;
-};
 
 const selectedNode = computed(() => selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null);
 
