@@ -6,10 +6,14 @@
       :node-types="nodeTypes"
       :edge-types="edgeTypes"
       @node-click="onNodeClick"
+      @pane-click="emit('pane-click')"
       @connect="onConnect"
     >
-      <template #node-default="nodeProps">
-        <slot name="node-default" :node="nodeProps" />
+      <template v-for="name in nodeSlotNames" :key="name" #[name]="nodeProps">
+        <slot
+          name="node-default"
+          :node="nodeProps"
+        />
       </template>
     </VueFlow>
   </VBox>
@@ -33,6 +37,8 @@ const props = defineProps<{
   surface?: SurfaceToken;
 }>();
 
+const nodeSlotNames = Object.keys(nodeTypes).map(t => `node-${t}`);
+
 const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
   id: node.id,
   type: node.type || 'CONCEPT',
@@ -45,13 +51,14 @@ const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
 const emit = defineEmits<{
   (e: 'add-node'): void;
   (e: 'connect', connection: Connection): void;
-  (e: 'node-click', event: any): void;
+  (e: 'node-click', node: { id: ID }): void;
+  (e: 'pane-click'): void;
   (e: 'update:selectedNodeId', id: ID | null): void;
 }>();
 
-const onNodeClick = (event: any) => {
-  emit('node-click', event);
-  emit('update:selectedNodeId', event.node.id);
+const onNodeClick = ({ node }: { node: { id: ID } }) => {
+  emit('node-click', node);
+  emit('update:selectedNodeId', node.id);
 };
 
 const onConnect = (connection: Connection) => {

@@ -11,7 +11,9 @@
       </VFormField>
 
       <VFormField label="Node Type">
-        <VSelect v-model="localNode.type" :options="nodeTypes" />
+        <VSelect v-model="localNode.type">
+          <option v-for="t in nodeTypes" :key="t" :value="t">{{ t }}</option>
+        </VSelect>
       </VFormField>
 
       <VFormField label="Rationale">
@@ -25,13 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import type { ConceptualNode, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
+import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
-
-import type { IntentToken, SurfaceToken, SpacingToken, BorderToken } from '@auraflux/design-system/interfaces/theme';
+import type { ConceptualNode, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import { ref, watch } from 'vue';
+import type { BorderToken, IntentToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 
 const props = withDefaults(defineProps<{
   node: ConceptualNode | null;
