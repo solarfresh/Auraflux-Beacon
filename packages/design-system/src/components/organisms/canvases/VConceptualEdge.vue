@@ -26,14 +26,11 @@
 <script setup lang="ts">
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
-import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@auraflux/design-system/constants/injection-keys';
 import type { ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
 import { BaseEdge, EdgeLabelRenderer, getBezierPath, type EdgeProps } from '@vue-flow/core';
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 const props = defineProps<EdgeProps<ConceptualEdge>>();
-
-const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
 
 const pathData = computed(() => {
   return getBezierPath({
