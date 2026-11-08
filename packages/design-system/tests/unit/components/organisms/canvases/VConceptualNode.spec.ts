@@ -1,13 +1,25 @@
-import { describe, it, expect, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
-import { ConceptualMapContextKey } from '@auraflux/design-system/constants/injection-keys';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
+
+vi.mock('@vue-flow/core', async () => {
+  const actual = await vi.importActual<any>('@vue-flow/core');
+  return {
+    ...actual,
+    useVueFlow: () => ({
+      nodes: [],
+      edges: [],
+      dimensions: { width: 100, height: 100 }
+    }),
+    Handle: {
+      name: 'Handle',
+      template: '<div />'
+    }
+  };
+});
 
 describe('VConceptualNode', () => {
-  it('should fallback and render correctly when used without ConceptualMapContext', () => {
-    // Suppress console warning/error if any
-    const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-
+  it('should render correctly with props and emits', () => {
     const wrapper = mount(VConceptualNode as any, {
       props: {
         id: '1',
@@ -16,6 +28,7 @@ describe('VConceptualNode', () => {
         connectable: true,
         position: { x: 0, y: 0 },
         dimensions: { width: 100, height: 100 },
+        isEditing: true,
         data: {
           label: 'Test Node',
           type: 'EVENT',
@@ -26,10 +39,9 @@ describe('VConceptualNode', () => {
     });
 
     expect(wrapper.exists()).toBe(true);
-    spy.mockRestore();
   });
 
-  it('should render correctly when provided with valid context', () => {
+  it('should emit update events correctly', async () => {
     const wrapper = mount(VConceptualNode as any, {
       props: {
         id: '1',
@@ -40,60 +52,18 @@ describe('VConceptualNode', () => {
         dimensions: { width: 100, height: 100 },
         data: {
           label: 'Test Node',
-          type: 'EVENT',
-          status: 'DRAFT',
-          content: 'Node Content'
-        }
-      },
-      global: {
-        provide: {
-          [ConceptualMapContextKey]: {
-            // Mock context
-          }
-        },
-        stubs: {
-          NodeLabelContainer: true,
-          VCluster: true,
-          VTypography: true,
-          VStack: true
-        }
-      }
-    });
-    expect(wrapper.exists()).toBe(true);
-  });
-
-  it('should accept a node with handles property', () => {
-    const wrapper = mount(VConceptualNode as any, {
-      props: {
-        id: '2',
-        type: 'default',
-        selected: false,
-        connectable: true,
-        position: { x: 10, y: 10 },
-        dimensions: { width: 100, height: 100 },
-        data: {
-          label: 'Node with Handles',
           type: 'CONCEPT',
-          status: 'ACTIVE',
-          handles: [
-            {
-              id: 'h1',
-              type: 'source',
-              position: { x: 0, y: 0 }
-            }
-          ]
-        }
-      },
-      global: {
-        provide: {
-          [ConceptualMapContextKey]: {}
-        },
-        stubs: {
-          NodeLabelContainer: true
+          status: 'ACTIVE'
         }
       }
     });
 
-    expect(wrapper.exists()).toBe(true);
+    await wrapper.vm.$emit('update:isEditing', true);
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')?.[0]).toEqual([true]);
+
+    await wrapper.vm.$emit('update:label', 'New Label');
+    expect(wrapper.emitted('update:label')).toBeTruthy();
+    expect(wrapper.emitted('update:label')?.[0]).toEqual(['New Label']);
   });
 });

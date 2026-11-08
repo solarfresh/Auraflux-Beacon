@@ -31,6 +31,24 @@ describe('useConceptualMapContext', () => {
     expect(instance.conceptualNodes.size).toBe(0);
   });
 
+  it('should successfully update existing nodes', () => {
+    const { instance, addNode, updateNode } = useConceptualMapContext();
+    const testNode = {
+      id: 'node-1',
+      label: 'Original',
+      type: 'CONCEPT'
+    };
+    const updatedNode = {
+      id: 'node-1',
+      label: 'Updated',
+      type: 'CONCEPT'
+    };
+
+    addNode(testNode as any);
+    updateNode('node-1', updatedNode as any);
+    expect(instance.conceptualNodes.get('node-1')?.label).toBe('Updated');
+  });
+
   it('should successfully add edges', () => {
     const { instance, addEdge } = useConceptualMapContext();
     const testEdge = {
@@ -43,5 +61,19 @@ describe('useConceptualMapContext', () => {
     addEdge(testEdge as any);
     expect(instance.conceptualEdges.length).toBe(1);
     expect(instance.conceptualEdges[0]).toEqual(testEdge);
+  });
+
+  it('should manage node selection state correctly', () => {
+    const { selectedNodeId, selectNode, deselectAllNodes, isSelected } = useConceptualMapContext();
+    expect(selectedNodeId.value).toBeNull();
+
+    selectNode('node-1');
+    expect(selectedNodeId.value).toBe('node-1');
+    expect(isSelected('node-1')).toBe(true);
+    expect(isSelected('node-2')).toBe(false);
+
+    deselectAllNodes();
+    expect(selectedNodeId.value).toBeNull();
+    expect(isSelected('node-1')).toBe(false);
   });
 });

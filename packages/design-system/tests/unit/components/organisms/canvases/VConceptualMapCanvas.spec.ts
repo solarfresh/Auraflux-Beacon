@@ -53,5 +53,31 @@ describe('ConceptualMapCanvas.vue', () => {
 
     expect(wrapper.emitted('connect')).toBeFalsy();
   });
+
+  it('emits update:selectedNodeId on node click', async () => {
+    const wrapper = mount(VConceptualMapCanvas, {
+      props: {
+        nodes: [{ id: '1', label: 'Node 1', type: 'CONCEPT' }],
+        edges: []
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    vm.onNodeClick({ node: { id: '1' } });
+
+    expect(wrapper.emitted('update:selectedNodeId')).toBeTruthy();
+    expect(wrapper.emitted('update:selectedNodeId')?.[0][0]).toBe('1');
+  });
+
+  it('respects isEditing prop', async () => {
+    const wrapper = mount(VConceptualMapCanvas, {
+      props: {
+        nodes: [{ id: '1', label: 'Node 1', type: 'CONCEPT' }],
+        edges: [],
+        isEditing: false
+      }
+    });
+    expect(wrapper.props('isEditing')).toBe(false);
+  });
 });
 

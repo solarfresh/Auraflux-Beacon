@@ -76,7 +76,7 @@ export interface VFormFieldProps {
   /** Brief description shown below the input */
   description?: string;
   /** Error message that replaces description when present */
-  error?: string;
+  error?: string | null;
   /** Whether the field is mandatory */
   required?: boolean;
   /** Propagates disabled state to visual layers */

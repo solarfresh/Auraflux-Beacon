@@ -1,5 +1,5 @@
 <template>
-  <NodeLabelContainer
+  <VNodeLabelContainer
     :id="props.id"
     :label="props.data.label"
     :type="props.data.type"
@@ -12,6 +12,9 @@
     rounded="lg"
     border="all"
     padding="sm"
+    :is-editing="props.isEditing"
+    @update:is-editing="$emit('update:isEditing', $event)"
+    @update:label="handleLabelUpdate"
   >
     <template #header>
       <VCluster justify="between" align="center">
@@ -26,25 +29,33 @@
         {{ props.data.content }}
       </VTypography>
     </VStack>
-  </NodeLabelContainer>
+  </VNodeLabelContainer>
 </template>
 
 <script setup lang="ts">
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
-import NodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/NodeLabelContainer.vue';
-import { ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT } from '@auraflux/design-system/constants/injection-keys';
+import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
 import { NODE_THEMES } from '@auraflux/design-system/constants/theme';
 import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeProps } from '@vue-flow/core';
-import { inject, computed } from 'vue';
+import { computed } from 'vue';
 
-const props = defineProps<NodeProps<ConceptualNode>>();
+const props = defineProps<NodeProps<ConceptualNode> & {
+  isEditing?: boolean;
+}>();
 
-const context = inject(ConceptualMapContextKey, DEFAULT_CONCEPTUAL_MAP_CONTEXT);
+const emit = defineEmits<{
+  (e: 'update:isEditing', value: boolean): void;
+  (e: 'update:label', label: string): void;
+}>();
 
 const nodeTheme = computed(() => {
   return NODE_THEMES[props.data.type] || { intent: 'neutral', surface: 'solid' };
 });
+
+const handleLabelUpdate = (newLabel: string) => {
+  emit('update:label', newLabel);
+};
 </script>

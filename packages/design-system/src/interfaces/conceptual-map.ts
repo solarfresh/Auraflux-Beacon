@@ -95,4 +95,5 @@ export interface CanvasViewInstance {
   pendingConnection: Connection | null;
   localEdgeData: ConceptualEdge;
   viewport: ViewPort;
+  updateNode?: (nodeId: string, updatedNode: ConceptualNode) => void;
 }

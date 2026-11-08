@@ -1,0 +1,29 @@
+import type { ConceptualMapContext } from '@auraflux/shared-core/interfaces/conceptual-map';
+import { type InjectionKey, ref } from 'vue';
+
+export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
+  instance: {
+    conceptualNodes: new Map(),
+    conceptualEdges: [],
+    isDragging: false,
+    isDragOver: false,
+    draggedNode: null,
+    isInterceptionActive: false,
+    interceptorAction: '',
+    interceptorPosition: { x: 0, y: 0 },
+    pendingConnection: null,
+    localEdgeData: { id: '', source: '', target: '', type: 'LINK', weight: 1 },
+    viewport: { x: 0, y: 0, zoom: 1 }
+  },
+  selectedNodeId: ref(null),
+  isEditing: ref(false),
+  addNode: () => {},
+  removeNode: () => {},
+  updateNode: () => {},
+  addEdge: () => {},
+  selectNode: () => {},
+  deselectAllNodes: () => {},
+  isSelected: () => false
+};
+
+export const ConceptualMapContextKey: InjectionKey<ConceptualMapContext> = Symbol('ConceptualMapContext');

@@ -1,0 +1,142 @@
+import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
+import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VNodeLabelContainer from '@auraflux/design-system/components/molecules/canvases/VNodeLabelContainer.vue';
+import type { NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import { Position } from '@vue-flow/core';
+import { mount } from '@vue/test-utils';
+import { describe, expect, it, vi } from 'vitest';
+
+// Mocking @vue-flow/core Handle used by VNodeHandle
+vi.mock('@vue-flow/core', async () => {
+  const actual = await vi.importActual<any>('@vue-flow/core');
+  return {
+    ...actual,
+    Handle: {
+      name: 'Handle',
+      template: '<div class="mock-handle"></div>'
+    }
+  };
+});
+
+describe('VNodeLabelContainer', () => {
+  const defaultProps = {
+    id: 'node-1',
+    label: 'Test Node',
+    type: 'CONCEPT' as NodeType,
+    rationale: 'Test Rationale'
+  };
+
+  it('renders label and type correctly', () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    expect(wrapper.text()).toContain('Test Node');
+  });
+
+  it('renders rationale when provided', () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    expect(wrapper.text()).toContain('Test Rationale');
+  });
+
+  it('does not render rationale when not provided', () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: { id: 'node-1', label: 'Test Node', type: 'CONCEPT' }
+    });
+    // Assuming rationale is rendered within a footer element in the component
+    const rationale = wrapper.find('.footer');
+    expect(rationale.exists()).toBe(false);
+  });
+
+  it('renders slots correctly', () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: defaultProps,
+      slots: {
+        header: '<div class="header">Header</div>',
+        default: '<div class="content">Content</div>'
+      }
+    });
+    expect(wrapper.find('.header').exists()).toBe(true);
+    expect(wrapper.find('.content').exists()).toBe(true);
+  });
+
+  it('renders VNodeHandles when handles prop is provided', () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: {
+        ...defaultProps,
+        handles: [
+          { id: 'handle-top', type: 'target', position: Position.Top },
+          { id: 'handle-bottom', type: 'source', position: Position.Bottom }
+        ]
+      }
+    });
+    const handles = wrapper.findAllComponents(VNodeHandle);
+    expect(handles.length).toBe(2);
+    expect(handles.at(0)?.props('id')).toBe('handle-top');
+    expect(handles.at(1)?.props('id')).toBe('handle-bottom');
+  });
+
+  it('warns when mandatory fields are missing', () => {
+    const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    mount(VNodeLabelContainer, {
+      props: { id: '', label: '', type: 'CONCEPT' } as any
+    });
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+
+  it('switches to edit mode on double-click', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.findComponent(VInput).exists()).toBe(true);
+  });
+
+  it('cancels edit and reverts on Esc key', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.setValue('Changed');
+    await input.trigger('keydown.esc');
+    expect(wrapper.findComponent(VInput).exists()).toBe(false);
+    expect(wrapper.text()).toContain('Test Node');
+  });
+
+  it('emits update:isEditing when entering edit mode', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')![0]).toEqual([true]);
+  });
+
+  it('emits update:isEditing(false) when edit is finished (Enter)', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.trigger('keydown.enter');
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')!.slice(-1)[0]).toEqual([false]);
+  });
+
+  it('emits update:isEditing(false) when edit is finished (Blur)', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.trigger('blur');
+    expect(wrapper.emitted('update:isEditing')).toBeTruthy();
+    expect(wrapper.emitted('update:isEditing')!.slice(-1)[0]).toEqual([false]);
+  });
+
+  it('does not emit update:label if input is empty', async () => {
+    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
+    await wrapper.trigger('dblclick');
+    const input = wrapper.findComponent(VInput);
+    await input.setValue('');
+    await input.trigger('blur');
+    expect(wrapper.emitted()).not.toHaveProperty('update:label');
+  });
+
+  it('does not switch to edit mode when isEditable is false', async () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: { ...defaultProps, isEditable: false }
+    });
+    await wrapper.trigger('dblclick');
+    expect(wrapper.findComponent(VInput).exists()).toBe(false);
+  });
+});
