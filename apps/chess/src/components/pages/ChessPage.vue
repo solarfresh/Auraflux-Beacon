@@ -12,11 +12,13 @@
           :nodes="nodes"
           :edges="edges"
           :selected-node-id="selectedNodeId"
+          :selected-edge-id="selectedEdgeId"
           intent="neutral"
           surface="soft"
           @connect="onConnect"
           @node-click="selectNode"
-          @pane-click="deselectAllNodes"
+          @edge-click="selectEdge"
+          @pane-click="deselectAll"
         >
           <template #node-default="{ node }">
             <VConceptualNode
@@ -31,6 +33,9 @@
        <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
          <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => { if (selectedNodeId) updateNodeInContext(selectedNodeId, node); }" />
        </VBox>
+       <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
+         <VEdgeInspectorPanel :edge="selectedEdge as ConceptualEdge" @update:edge="(edge: ConceptualEdge) => { if (selectedEdgeId) updateEdgeInContext(selectedEdgeId, edge); }" />
+       </VBox>
     </VBox>
   </VBox>
 </template>
@@ -41,6 +46,7 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
+import VEdgeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VEdgeInspectorPanel.vue';
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
@@ -51,12 +57,14 @@ import { computed, ref } from 'vue';
 const context = useConceptualMapContext();
 const {
   selectedNodeId,
+  selectedEdgeId,
   selectNode: selectNodeInContext,
-  deselectAllNodes: deselectAllNodesInContext,
+  selectEdge: selectEdgeInContext,
+  deselectAllNodes,
+  deselectAllEdges,
   instance, addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
-  isSelected
 } = context;
 
 const isEditing = ref(false);
@@ -66,13 +74,30 @@ const selectNode = (node: { id: ID }) => {
   selectNodeInContext(node.id);
 };
 
-const deselectAllNodes = () => {
-  deselectAllNodesInContext();
+const selectEdge = (edge: { id: ID }) => {
+  if (isEditing.value) return;
+  selectEdgeInContext(edge.id);
+};
+
+const deselectAll = () => {
+  deselectAllNodes();
+  deselectAllEdges();
 };
 
 const selectedNode = computed(() => {
   return selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null;
 });
+
+const selectedEdge = computed(() => {
+  return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
+});
+
+const updateEdgeInContext = (edgeId: ID, updatedEdge: ConceptualEdge) => {
+  const index = instance.conceptualEdges.findIndex(e => e.id === edgeId);
+  if (index !== -1) {
+    instance.conceptualEdges[index] = updatedEdge;
+  }
+};
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
   ...node,

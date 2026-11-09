@@ -16,14 +16,17 @@ export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
     viewport: { x: 0, y: 0, zoom: 1 }
   },
   selectedNodeId: ref(null),
-  isEditing: ref(false),
+  selectedEdgeId: ref(null),
   addNode: () => {},
   removeNode: () => {},
   updateNode: () => {},
   addEdge: () => {},
   selectNode: () => {},
+  selectEdge: () => {},
   deselectAllNodes: () => {},
-  isSelected: () => false
+  deselectAllEdges: () => {},
+  isNodeSelected: () => false,
+  isEdgeSelected: () => false
 };
 
 export const ConceptualMapContextKey: InjectionKey<ConceptualMapContext> = Symbol('ConceptualMapContext');

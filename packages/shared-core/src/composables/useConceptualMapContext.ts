@@ -30,6 +30,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
   });
 
   const selectedNodeId = ref<ID | null>(null);
+  const selectedEdgeId = ref<ID | null>(null);
 
   const addNode = (node: ConceptualNode) => {
     if (!node || !node.id) return;
@@ -57,25 +58,43 @@ export function useConceptualMapContext(): ConceptualMapContext {
 
   const selectNode = (id: ID) => {
     selectedNodeId.value = id;
+    selectedEdgeId.value = null;
+  };
+
+  const selectEdge = (id: ID) => {
+    selectedEdgeId.value = id;
+    selectedNodeId.value = null;
   };
 
   const deselectAllNodes = () => {
     selectedNodeId.value = null;
   };
 
-  const isSelected = (nodeId: ID) => {
+  const deselectAllEdges = () => {
+    selectedEdgeId.value = null;
+  };
+
+  const isNodeSelected = (nodeId: ID) => {
     return selectedNodeId.value === nodeId;
+  };
+
+  const isEdgeSelected = (edgeId: ID) => {
+    return selectedEdgeId.value === edgeId;
   };
 
   return {
     instance,
     selectedNodeId,
+    selectedEdgeId,
     addNode,
     removeNode,
     updateNode,
     addEdge,
     selectNode,
+    selectEdge,
     deselectAllNodes,
-    isSelected,
+    deselectAllEdges,
+    isNodeSelected,
+    isEdgeSelected,
   };
 }

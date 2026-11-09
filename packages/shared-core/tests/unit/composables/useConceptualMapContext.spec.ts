@@ -64,16 +64,16 @@ describe('useConceptualMapContext', () => {
   });
 
   it('should manage node selection state correctly', () => {
-    const { selectedNodeId, selectNode, deselectAllNodes, isSelected } = useConceptualMapContext();
+    const { selectedNodeId, selectNode, deselectAllNodes, isNodeSelected } = useConceptualMapContext();
     expect(selectedNodeId.value).toBeNull();
 
     selectNode('node-1');
     expect(selectedNodeId.value).toBe('node-1');
-    expect(isSelected('node-1')).toBe(true);
-    expect(isSelected('node-2')).toBe(false);
+    expect(isNodeSelected('node-1')).toBe(true);
+    expect(isNodeSelected('node-2')).toBe(false);
 
     deselectAllNodes();
     expect(selectedNodeId.value).toBeNull();
-    expect(isSelected('node-1')).toBe(false);
+    expect(isNodeSelected('node-1')).toBe(false);
   });
 });

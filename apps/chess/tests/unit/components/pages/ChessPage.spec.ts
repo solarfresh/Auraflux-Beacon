@@ -23,7 +23,7 @@ const mockConceptualMapContext = {
   updateNode: vi.fn(),
   selectNode: vi.fn((id: string) => { mockConceptualMapContext.selectedNodeId.value = id; }),
   deselectAllNodes: vi.fn(() => { mockConceptualMapContext.selectedNodeId.value = null; }),
-  isSelected: vi.fn((id: string) => mockConceptualMapContext.selectedNodeId.value === id),
+  isNodeSelected: vi.fn((id: string) => mockConceptualMapContext.selectedNodeId.value === id),
 };
 
 vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
@@ -106,12 +106,12 @@ describe('ChessPage.vue', () => {
     // Select node
     vm.selectNode({ id: '1' });
     expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
-    expect(vm.isSelected('1')).toBe(true);
+    expect(vm.isNodeSelected('1')).toBe(true);
 
     // Deselect node
     vm.deselectAllNodes();
     expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
-    expect(vm.isSelected('1')).toBe(false);
+    expect(vm.isNodeSelected('1')).toBe(false);
   });
 
   it('handles non-existent node selection gracefully', async () => {
