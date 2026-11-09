@@ -28,6 +28,18 @@ describe('ConceptualMapCanvas.vue', () => {
     warnSpy.mockRestore();
   });
 
+  it('handles null or undefined selectedEdgeId edge case correctly', () => {
+    const wrapper = mount(VConceptualMapCanvas, {
+      props: {
+        nodes: [],
+        edges: [{ id: 'e1', source: '1', target: '2', type: 'VALIDATES', weight: 1 }],
+        selectedEdgeId: null
+      }
+    });
+    const vm = wrapper.vm as any;
+    expect(vm.mappedEdges[0].selected).toBe(false);
+  });
+
   it('emits connect event when valid connection occurs', async () => {
     const wrapper = mount(VConceptualMapCanvas, {
       props: {
@@ -75,6 +87,23 @@ describe('ConceptualMapCanvas.vue', () => {
 
     expect(wrapper.emitted('update:selectedNodeId')).toBeTruthy();
     expect(wrapper.emitted('update:selectedNodeId')?.[0][0]).toBe('1');
+  });
+
+  it('emits update:selectedEdgeId and edge-click on edge click', async () => {
+    const wrapper = mount(VConceptualMapCanvas, {
+      props: {
+        nodes: [],
+        edges: [{ id: 'e1-2', source: '1', target: '2', type: 'VALIDATES', weight: 1 }]
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    vm.onEdgeClick({ edge: { id: 'e1-2' } });
+
+    expect(wrapper.emitted('edge-click')).toBeTruthy();
+    expect(wrapper.emitted('edge-click')?.[0][0]).toEqual({ id: 'e1-2' });
+    expect(wrapper.emitted('update:selectedEdgeId')).toBeTruthy();
+    expect(wrapper.emitted('update:selectedEdgeId')?.[0][0]).toBe('e1-2');
   });
 
   it('respects isEditing prop', async () => {
