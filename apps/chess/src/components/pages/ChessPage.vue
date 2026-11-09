@@ -31,10 +31,10 @@
         </VConceptualMapCanvas>
       </VBox>
        <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-         <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => { if (selectedNodeId) updateNodeInContext(selectedNodeId, node); }" />
+         <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => updateNodeInContext(node.id, node)" />
        </VBox>
        <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-         <VEdgeInspectorPanel :edge="selectedEdge as ConceptualEdge" @update:edge="(edge: ConceptualEdge) => { if (selectedEdgeId) updateEdgeInContext(selectedEdgeId, edge); }" />
+         <VEdgeInspectorPanel :edge="selectedEdge" @update:edge="(edge: ConceptualEdge) => updateEdgeInContext(edge.id, edge)" />
        </VBox>
     </VBox>
   </VBox>
@@ -64,6 +64,7 @@ const {
   instance, addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
+  updateEdge: updateEdgeInContext,
 } = context;
 
 const isEditing = ref(false);
@@ -85,13 +86,6 @@ const selectedNode = computed(() => {
 const selectedEdge = computed(() => {
   return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
 });
-
-const updateEdgeInContext = (edgeId: ID, updatedEdge: ConceptualEdge) => {
-  const index = instance.conceptualEdges.findIndex(e => e.id === edgeId);
-  if (index !== -1) {
-    instance.conceptualEdges[index] = updatedEdge;
-  }
-};
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
   ...node,

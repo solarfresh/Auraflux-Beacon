@@ -51,6 +51,18 @@ export function useConceptualMapContext(): ConceptualMapContext {
     }
   };
 
+  const updateEdge = (edgeId: ID, updatedEdge: ConceptualEdge) => {
+    if (!edgeId || !updatedEdge) return;
+    // Defensive design: constrain weight between 1 and 5
+    const validWeight = Math.max(1, Math.min(5, updatedEdge.weight || 1));
+    const normalizedEdge = { ...updatedEdge, weight: validWeight };
+
+    const index = instance.conceptualEdges.findIndex(e => e.id === edgeId);
+    if (index !== -1) {
+      instance.conceptualEdges[index] = normalizedEdge;
+    }
+  };
+
   const addEdge = (edge: ConceptualEdge) => {
     if (!edge || !edge.id) return;
     instance.conceptualEdges.push(edge);
@@ -95,6 +107,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
     removeNode,
     updateNode,
     addEdge,
+    updateEdge,
     selectNode,
     selectEdge,
     deselectAllNodes,

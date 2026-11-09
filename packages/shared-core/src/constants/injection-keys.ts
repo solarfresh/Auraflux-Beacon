@@ -21,6 +21,7 @@ export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
   removeNode: () => {},
   updateNode: () => {},
   addEdge: () => {},
+  updateEdge: () => {},
   selectNode: () => {},
   selectEdge: () => {},
   deselectAllNodes: () => {},

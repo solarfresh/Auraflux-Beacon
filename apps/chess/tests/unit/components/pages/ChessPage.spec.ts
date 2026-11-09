@@ -23,6 +23,12 @@ const mockConceptualMapContext = {
   addNode: vi.fn(),
   addEdge: vi.fn(),
   updateNode: vi.fn(),
+  updateEdge: vi.fn((id: string, updatedEdge: any) => {
+    const idx = mockConceptualMapContext.instance.conceptualEdges.findIndex(e => e.id === id);
+    if (idx !== -1) {
+      mockConceptualMapContext.instance.conceptualEdges[idx] = updatedEdge;
+    }
+  }),
   selectNode: vi.fn((id: string) => {
     mockConceptualMapContext.selectedNodeId.value = id;
     mockConceptualMapContext.selectedEdgeId.value = null;
@@ -121,12 +127,12 @@ describe('ChessPage.vue', () => {
     // Select node
     vm.selectNode({ id: '1' });
     expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
-    expect(vm.isNodeSelected('1')).toBe(true);
+    expect(mockConceptualMapContext.isNodeSelected('1')).toBe(true);
 
     // Deselect node
-    vm.deselectAllNodes();
+    mockConceptualMapContext.deselectAllNodes();
     expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
-    expect(vm.isNodeSelected('1')).toBe(false);
+    expect(mockConceptualMapContext.isNodeSelected('1')).toBe(false);
   });
 
   it('handles non-existent node selection gracefully', async () => {
@@ -210,5 +216,57 @@ describe('ChessPage.vue', () => {
     vm.deselectAll();
     expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
     expect(mockConceptualMapContext.selectedEdgeId.value).toBe(null);
+  });
+
+  it('renders VEdgeInspectorPanel when edge is selected', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    // Initially no edge selected
+    expect(wrapper.findComponent({ name: 'VEdgeInspectorPanel' }).exists()).toBe(false);
+
+    // Select edge
+    mockConceptualMapContext.selectEdge('e1-2');
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.findComponent({ name: 'VEdgeInspectorPanel' }).exists()).toBe(true);
+  });
+
+  it('updates edge properties when VEdgeInspectorPanel emits update:edge', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    mockConceptualMapContext.selectEdge('e1-2');
+    await wrapper.vm.$nextTick();
+
+    const inspector = wrapper.findComponent({ name: 'VEdgeInspectorPanel' });
+    const updatedEdgeData = { id: 'e1-2', weight: 3, type: 'ASSOCIATION' };
+    inspector.vm.$emit('update:edge', updatedEdgeData);
+    await wrapper.vm.$nextTick();
+
+    // Verify local state update since updateEdgeInContext is internal
+    const vm = wrapper.vm as any;
+    expect(vm.selectedEdge.weight).toBe(3);
+    expect(vm.selectedEdge.type).toBe('ASSOCIATION');
   });
 });

@@ -5,25 +5,28 @@
     :padding="padding"
     :border="border"
   >
-    <VFormField label="Label">
-      <VInput v-model="localEdgeData.label" placeholder="Optional" />
-    </VFormField>
+    <template v-if="localEdgeData">
+      <VFormField label="Label">
+        <VInput v-model="localEdgeData.label" placeholder="Optional" />
+      </VFormField>
 
-    <VFormField label="Type">
-      <VSelect v-model="localEdgeData.type">
-        <option v-for="t in edgeTypes" :key="t" :value="t">{{ t }}</option>
-      </VSelect>
-    </VFormField>
+      <VFormField label="Type">
+        <VSelect v-model="localEdgeData.type">
+          <option v-for="t in edgeTypes" :key="t" :value="t">{{ t }}</option>
+        </VSelect>
+      </VFormField>
 
-    <VFormField :label="'Weight: ' + localEdgeData.weight">
-      <VSlider v-model.number="localEdgeData.weight" :min="1" :max="5" :step="1" />
-    </VFormField>
+      <VFormField :label="'Weight: ' + localEdgeData.weight">
+        <VSlider v-model.number="localEdgeData.weight" :min="1" :max="5" :step="1" />
+      </VFormField>
 
-    <VFormField label="Evidence">
-      <VTextarea v-model="localEdgeData.evidence" placeholder="Optional" />
-    </VFormField>
+      <VFormField label="Evidence">
+        <VTextarea v-model="localEdgeData.evidence" placeholder="Optional" />
+      </VFormField>
 
-    <VButton @click="save">Update Edge</VButton>
+      <VButton @click="save">Update Edge</VButton>
+    </template>
+    <VEmptyState v-else title="No Edge Selected" description="Select an edge to inspect" icon="CursorArrowRays" />
   </VBox>
 </template>
 
@@ -35,12 +38,13 @@ import VSlider from '@auraflux/design-system/components/atoms/forms/VSlider.vue'
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
+import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 import type { ConceptualEdge, EdgeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { BorderToken, IntentToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import { ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
-  edge: ConceptualEdge;
+  edge: ConceptualEdge | null;
   intent?: IntentToken;
   surface?: SurfaceToken;
   padding?: SpacingToken;
@@ -58,13 +62,15 @@ const emit = defineEmits<{
 
 const edgeTypes: EdgeType[] = ['VALIDATES', 'CONSTRAINS', 'TRIGGERS', 'REF', 'LINK'];
 
-const localEdgeData = ref<ConceptualEdge>({ ...props.edge });
+const localEdgeData = ref<ConceptualEdge | null>(null);
 
 watch(() => props.edge, (newEdge) => {
-  localEdgeData.value = { ...newEdge };
-}, { deep: true });
+  localEdgeData.value = newEdge ? { ...newEdge } : null;
+}, { immediate: true, deep: true });
 
 const save = () => {
+  if (!localEdgeData.value) return;
+
   // Defensive validation: weight restriction 1-5
   let weight = Math.max(1, Math.min(5, localEdgeData.value.weight));
 
