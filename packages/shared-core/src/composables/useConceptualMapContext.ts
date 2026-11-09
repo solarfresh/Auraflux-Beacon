@@ -74,6 +74,11 @@ export function useConceptualMapContext(): ConceptualMapContext {
     selectedEdgeId.value = null;
   };
 
+  const deselectAll = () => {
+    selectedNodeId.value = null;
+    selectedEdgeId.value = null;
+  };
+
   const isNodeSelected = (nodeId: ID) => {
     return selectedNodeId.value === nodeId;
   };
@@ -94,6 +99,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
     selectEdge,
     deselectAllNodes,
     deselectAllEdges,
+    deselectAll,
     isNodeSelected,
     isEdgeSelected,
   };

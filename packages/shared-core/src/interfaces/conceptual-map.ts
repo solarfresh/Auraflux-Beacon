@@ -15,6 +15,7 @@ export interface ConceptualMapContext {
   selectEdge: (id: ID) => void;
   deselectAllNodes: () => void;
   deselectAllEdges: () => void;
+  deselectAll: () => void;
   isNodeSelected: (nodeId: ID) => boolean;
   isEdgeSelected: (edgeId: ID) => boolean;
 }

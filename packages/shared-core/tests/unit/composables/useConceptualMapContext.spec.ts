@@ -76,4 +76,34 @@ describe('useConceptualMapContext', () => {
     expect(selectedNodeId.value).toBeNull();
     expect(isNodeSelected('node-1')).toBe(false);
   });
+
+  it('should manage edge selection and mutual exclusion with node selection', () => {
+    const {
+      selectedNodeId,
+      selectedEdgeId,
+      selectNode,
+      selectEdge,
+      deselectAll
+    } = useConceptualMapContext();
+
+    // 1. Select node -> clears edge
+    selectNode('node-1');
+    expect(selectedNodeId.value).toBe('node-1');
+    expect(selectedEdgeId.value).toBeNull();
+
+    // 2. Select edge -> clears node (mutual exclusion)
+    selectEdge('edge-1');
+    expect(selectedEdgeId.value).toBe('edge-1');
+    expect(selectedNodeId.value).toBeNull();
+
+    // 3. Select node again -> clears edge
+    selectNode('node-2');
+    expect(selectedNodeId.value).toBe('node-2');
+    expect(selectedEdgeId.value).toBeNull();
+
+    // 4. Deselect all clears both
+    deselectAll();
+    expect(selectedNodeId.value).toBeNull();
+    expect(selectedEdgeId.value).toBeNull();
+  });
 });

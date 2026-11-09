@@ -6,6 +6,7 @@ import { reactive, ref } from 'vue';
 beforeEach(() => {
   vi.clearAllMocks();
   mockConceptualMapContext.selectedNodeId.value = null;
+  mockConceptualMapContext.selectedEdgeId.value = null;
 });
 
 // Mock conceptual map context
@@ -18,12 +19,26 @@ const mockConceptualMapContext = {
     conceptualEdges: [{ id: 'e1-2', source: '1', target: '2' }],
   }),
   selectedNodeId: ref<string | null>(null),
+  selectedEdgeId: ref<string | null>(null),
   addNode: vi.fn(),
   addEdge: vi.fn(),
   updateNode: vi.fn(),
-  selectNode: vi.fn((id: string) => { mockConceptualMapContext.selectedNodeId.value = id; }),
+  selectNode: vi.fn((id: string) => {
+    mockConceptualMapContext.selectedNodeId.value = id;
+    mockConceptualMapContext.selectedEdgeId.value = null;
+  }),
+  selectEdge: vi.fn((id: string) => {
+    mockConceptualMapContext.selectedEdgeId.value = id;
+    mockConceptualMapContext.selectedNodeId.value = null;
+  }),
   deselectAllNodes: vi.fn(() => { mockConceptualMapContext.selectedNodeId.value = null; }),
+  deselectAllEdges: vi.fn(() => { mockConceptualMapContext.selectedEdgeId.value = null; }),
+  deselectAll: vi.fn(() => {
+    mockConceptualMapContext.selectedNodeId.value = null;
+    mockConceptualMapContext.selectedEdgeId.value = null;
+  }),
   isNodeSelected: vi.fn((id: string) => mockConceptualMapContext.selectedNodeId.value === id),
+  isEdgeSelected: vi.fn((id: string) => mockConceptualMapContext.selectedEdgeId.value === id),
 };
 
 vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
@@ -143,6 +158,7 @@ describe('ChessPage.vue', () => {
           Controls: true,
           MiniMap: true,
           VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
         },
       },
     });
@@ -158,5 +174,41 @@ describe('ChessPage.vue', () => {
     mockConceptualMapContext.selectNode('1');
     await wrapper.vm.$nextTick();
     expect(wrapper.find('aside').exists()).toBe(true);
+  });
+
+  it('handles edge selection and mutual exclusion with node selection in ChessPage', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Select node
+    vm.selectNode({ id: '1' });
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
+
+    // Select edge -> should clear node and set edge
+    vm.selectEdge({ id: 'e1-2' });
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe('e1-2');
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
+
+    // Select node again -> should clear edge and set node
+    vm.selectNode({ id: '2' });
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe('2');
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe(null);
+
+    // Deselect all
+    vm.deselectAll();
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe(null);
   });
 });

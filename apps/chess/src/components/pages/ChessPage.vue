@@ -60,8 +60,7 @@ const {
   selectedEdgeId,
   selectNode: selectNodeInContext,
   selectEdge: selectEdgeInContext,
-  deselectAllNodes,
-  deselectAllEdges,
+  deselectAll,
   instance, addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
@@ -77,11 +76,6 @@ const selectNode = (node: { id: ID }) => {
 const selectEdge = (edge: { id: ID }) => {
   if (isEditing.value) return;
   selectEdgeInContext(edge.id);
-};
-
-const deselectAll = () => {
-  deselectAllNodes();
-  deselectAllEdges();
 };
 
 const selectedNode = computed(() => {

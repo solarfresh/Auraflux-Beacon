@@ -25,6 +25,7 @@ export const DEFAULT_CONCEPTUAL_MAP_CONTEXT: ConceptualMapContext = {
   selectEdge: () => {},
   deselectAllNodes: () => {},
   deselectAllEdges: () => {},
+  deselectAll: () => {},
   isNodeSelected: () => false,
   isEdgeSelected: () => false
 };
