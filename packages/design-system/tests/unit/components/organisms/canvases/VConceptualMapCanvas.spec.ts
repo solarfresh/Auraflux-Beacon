@@ -9,14 +9,22 @@ describe('ConceptualMapCanvas.vue', () => {
       props: {
         nodes: [{ id: '1', label: 'Test', type: 'CONCEPT' }],
         edges: []
+      },
+      global: {
+        provide: {
+          'vue-flow': {
+            viewport: { x: 0, y: 0, zoom: 1 },
+            dimensions: { width: 1000, height: 1000 }
+          }
+        }
       }
     });
     expect(wrapper.find('.conceptual-map-canvas').exists()).toBe(true);
 
     const warningCalls = warnSpy.mock.calls.filter(call =>
-      call[0].toString().includes('The Vue Flow parent container needs a width and a height')
+      !call.toString().includes('The Vue Flow parent container needs a width and a height')
     );
-    expect(warningCalls.length).toBe(1);
+    expect(warningCalls.length).toBe(0);
     warnSpy.mockRestore();
   });
 
