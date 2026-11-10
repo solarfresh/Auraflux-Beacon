@@ -42,6 +42,14 @@ const mockConceptualMapContext = {
       mockConceptualMapContext.selectedNodeId.value = null;
     }
   }),
+  removeEdge: vi.fn((id: string) => {
+    mockConceptualMapContext.instance.conceptualEdges = mockConceptualMapContext.instance.conceptualEdges.filter(
+      (e: any) => e.id !== id
+    );
+    if (mockConceptualMapContext.selectedEdgeId.value === id) {
+      mockConceptualMapContext.selectedEdgeId.value = null;
+    }
+  }),
   selectEdge: vi.fn((id: string) => {
     mockConceptualMapContext.selectedEdgeId.value = id;
     mockConceptualMapContext.selectedNodeId.value = null;
@@ -312,6 +320,41 @@ describe('ChessPage.vue', () => {
     expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(false);
     expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);
     expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
+  });
+
+  it('removes selected edge via keyboard shortcut without affecting nodes', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    // Ensure edge 'e1-2' exists between '1' and '2'
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
+    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } });
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+
+    mockConceptualMapContext.selectEdge('e1-2');
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe('e1-2');
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(1);
+
+    // Simulate pressing Delete key on window
+    const deleteEvent = new KeyboardEvent('keydown', { key: 'Delete' });
+    window.dispatchEvent(deleteEvent);
+    await wrapper.vm.$nextTick();
+
+    // Verify edge 'e1-2' is removed but nodes '1' and '2' remain
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(true);
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('2')).toBe(true);
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe(null);
   });
 
   it('guards against node deletion when typing inside input or textarea', async () => {

@@ -133,6 +133,30 @@ describe('useConceptualMapContext', () => {
     expect(selectedEdgeId.value).toBeNull();
   });
 
+  it('should successfully remove an edge', () => {
+    const { instance, addEdge, removeEdge } = useConceptualMapContext();
+    addEdge({ id: 'edge-1', source: 'n1', target: 'n2', type: 'LINK' } as any);
+    addEdge({ id: 'edge-2', source: 'n2', target: 'n3', type: 'LINK' } as any);
+    expect(instance.conceptualEdges.length).toBe(2);
+
+    removeEdge('edge-1');
+    expect(instance.conceptualEdges.length).toBe(1);
+    expect(instance.conceptualEdges[0].id).toBe('edge-2');
+  });
+
+  it('should reset selectedEdgeId if the removed edge was selected', () => {
+    const { selectedEdgeId, selectEdge, removeEdge } = useConceptualMapContext();
+    selectEdge('edge-1');
+    expect(selectedEdgeId.value).toBe('edge-1');
+    removeEdge('edge-1');
+    expect(selectedEdgeId.value).toBeNull();
+  });
+
+  it('should not throw if removing a non-existent edge', () => {
+    const { removeEdge } = useConceptualMapContext();
+    expect(() => removeEdge('non-existent')).not.toThrow();
+  });
+
   it('should cascade remove edges connected to deleted node', () => {
     const { instance, addNode, addEdge, removeNode } = useConceptualMapContext();
     addNode({ id: 'node-1', label: 'Node 1', type: 'CONCEPT', position: { x: 0, y: 0 } });
