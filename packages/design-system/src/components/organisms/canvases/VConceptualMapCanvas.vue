@@ -2,10 +2,11 @@
   <VBox tag="div" class="conceptual-map-canvas h-full w-full" :intent="intent" :surface="surface">
     <VueFlow
       :nodes="mappedNodes"
-      :edges="(edges as any)"
+      :edges="mappedEdges"
       :node-types="nodeTypes"
       :edge-types="edgeTypes"
       @node-click="onNodeClick"
+      @edge-click="onEdgeClick"
       @pane-click="emit('pane-click')"
       @connect="onConnect"
     >
@@ -25,13 +26,14 @@ import { edgeTypes, nodeTypes } from '@auraflux/design-system/constants/canvases
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
-import { VueFlow, type Connection, type Node } from '@vue-flow/core';
+import { VueFlow, type Connection, type Edge, type Node } from '@vue-flow/core';
 import { computed } from 'vue';
 
 const props = defineProps<{
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
   selectedNodeId?: ID | null;
+  selectedEdgeId?: ID | null;
   isEditing?: boolean;
   intent?: IntentToken;
   surface?: SurfaceToken;
@@ -48,17 +50,29 @@ const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
   data: node
 })));
 
+const mappedEdges = computed<Edge[]>(() => props.edges.map(edge => ({
+  ...edge,
+  selected: edge.id === props.selectedEdgeId
+})));
+
 const emit = defineEmits<{
   (e: 'add-node'): void;
   (e: 'connect', connection: Connection): void;
   (e: 'node-click', node: { id: ID }): void;
+  (e: 'edge-click', edge: { id: ID }): void;
   (e: 'pane-click'): void;
   (e: 'update:selectedNodeId', id: ID | null): void;
+  (e: 'update:selectedEdgeId', id: ID | null): void;
 }>();
 
 const onNodeClick = ({ node }: { node: { id: ID } }) => {
   emit('node-click', node);
   emit('update:selectedNodeId', node.id);
+};
+
+const onEdgeClick = ({ edge }: { edge: { id: ID } }) => {
+  emit('edge-click', edge);
+  emit('update:selectedEdgeId', edge.id);
 };
 
 const onConnect = (connection: Connection) => {

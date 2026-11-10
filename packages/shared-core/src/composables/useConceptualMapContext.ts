@@ -30,23 +30,69 @@ export function useConceptualMapContext(): ConceptualMapContext {
   });
 
   const selectedNodeId = ref<ID | null>(null);
+  const selectedEdgeId = ref<ID | null>(null);
 
-  const addNode = (node: ConceptualNode) => {
-    if (!node || !node.id) return;
-    instance.conceptualNodes.set(node.id, node);
+  const addNode = (node?: Partial<ConceptualNode>) => {
+    const timestamp = Date.now();
+    const id = node?.id || `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+    const newNode: ConceptualNode = {
+      id,
+      label: node?.label || 'New Concept',
+      type: node?.type || 'CONCEPT',
+      handles: node?.handles || [
+        {
+          id: `h-source-${id}`,
+          type: 'source',
+          position: 'right' as any
+        },
+        {
+          id: `h-target-${id}`,
+          type: 'target',
+          position: 'left' as any
+        }
+      ],
+      position: node?.position || {
+        x: Math.random() * 400 + 50,
+        y: Math.random() * 300 + 50,
+      },
+    };
+    instance.conceptualNodes.set(id, newNode);
   };
 
   const removeNode = (nodeId: ID) => {
+    instance.conceptualEdges = instance.conceptualEdges.filter(
+      edge => edge.source !== nodeId && edge.target !== nodeId
+    );
     instance.conceptualNodes.delete(nodeId);
     if (selectedNodeId.value === nodeId) {
       selectedNodeId.value = null;
     }
   };
 
-  const updateNode = (nodeId: ID, updatedNode: ConceptualNode) => {
+  const updateNode = (nodeId: ID, updatedNode: Partial<ConceptualNode>) => {
     if (!nodeId || !updatedNode) return;
-    if (instance.conceptualNodes.has(nodeId)) {
-      instance.conceptualNodes.set(nodeId, updatedNode);
+    const existing = instance.conceptualNodes.get(nodeId);
+    if (!existing) {
+      console.warn(`[useConceptualMapContext] Attempted to update non-existent node with id: ${nodeId}`);
+      return;
+    }
+    const merged = {
+      ...existing,
+      ...updatedNode,
+      position: updatedNode.position || existing.position,
+    };
+    instance.conceptualNodes.set(nodeId, merged);
+  };
+
+  const updateEdge = (edgeId: ID, updatedEdge: ConceptualEdge) => {
+    if (!edgeId || !updatedEdge) return;
+    // Defensive design: constrain weight between 1 and 5
+    const validWeight = Math.max(1, Math.min(5, updatedEdge.weight || 1));
+    const normalizedEdge = { ...updatedEdge, weight: validWeight };
+
+    const index = instance.conceptualEdges.findIndex(e => e.id === edgeId);
+    if (index !== -1) {
+      instance.conceptualEdges[index] = normalizedEdge;
     }
   };
 
@@ -57,25 +103,50 @@ export function useConceptualMapContext(): ConceptualMapContext {
 
   const selectNode = (id: ID) => {
     selectedNodeId.value = id;
+    selectedEdgeId.value = null;
+  };
+
+  const selectEdge = (id: ID) => {
+    selectedEdgeId.value = id;
+    selectedNodeId.value = null;
   };
 
   const deselectAllNodes = () => {
     selectedNodeId.value = null;
   };
 
-  const isSelected = (nodeId: ID) => {
+  const deselectAllEdges = () => {
+    selectedEdgeId.value = null;
+  };
+
+  const deselectAll = () => {
+    selectedNodeId.value = null;
+    selectedEdgeId.value = null;
+  };
+
+  const isNodeSelected = (nodeId: ID) => {
     return selectedNodeId.value === nodeId;
+  };
+
+  const isEdgeSelected = (edgeId: ID) => {
+    return selectedEdgeId.value === edgeId;
   };
 
   return {
     instance,
     selectedNodeId,
+    selectedEdgeId,
     addNode,
     removeNode,
     updateNode,
     addEdge,
+    updateEdge,
     selectNode,
+    selectEdge,
     deselectAllNodes,
-    isSelected,
+    deselectAllEdges,
+    deselectAll,
+    isNodeSelected,
+    isEdgeSelected,
   };
 }

@@ -12,11 +12,13 @@
           :nodes="nodes"
           :edges="edges"
           :selected-node-id="selectedNodeId"
+          :selected-edge-id="selectedEdgeId"
           intent="neutral"
           surface="soft"
           @connect="onConnect"
           @node-click="selectNode"
-          @pane-click="deselectAllNodes"
+          @edge-click="selectEdge"
+          @pane-click="deselectAll"
         >
           <template #node-default="{ node }">
             <VConceptualNode
@@ -28,9 +30,12 @@
           </template>
         </VConceptualMapCanvas>
       </VBox>
-       <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-         <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => { if (selectedNodeId) updateNodeInContext(selectedNodeId, node); }" />
-       </VBox>
+      <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
+        <VNodeInspectorPanel :node="selectedNode" @update:node="onUpdateNode" />
+      </VBox>
+      <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
+        <VEdgeInspectorPanel :edge="selectedEdge" @update:edge="onUpdateEdge" />
+      </VBox>
     </VBox>
   </VBox>
 </template>
@@ -41,43 +46,55 @@ import VTypography from '@auraflux/design-system/components/atoms/indicators/VTy
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
+import VEdgeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VEdgeInspectorPanel.vue';
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import type { Connection } from '@vue-flow/core';
 import { computed, ref } from 'vue';
 
 const context = useConceptualMapContext();
 const {
   selectedNodeId,
+  selectedEdgeId,
   selectNode: selectNodeInContext,
-  deselectAllNodes: deselectAllNodesInContext,
+  selectEdge: selectEdgeInContext,
+  deselectAll,
   instance, addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
-  isSelected
+  updateEdge: updateEdgeInContext,
+  removeNode: removeNodeInContext,
 } = context;
 
 const isEditing = ref(false);
+
+useCanvasKeyboardShortcuts({
+  selectedNodeId,
+  removeNode: removeNodeInContext,
+});
 
 const selectNode = (node: { id: ID }) => {
   if (isEditing.value) return;
   selectNodeInContext(node.id);
 };
 
-const deselectAllNodes = () => {
-  deselectAllNodesInContext();
+const selectEdge = (edge: { id: ID }) => {
+  if (isEditing.value) return;
+  selectEdgeInContext(edge.id);
 };
 
 const selectedNode = computed(() => {
   return selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null;
 });
 
-const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
-  ...node,
-  position: node.position || { x: 0, y: 0 }
-})));
+const selectedEdge = computed(() => {
+  return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
+});
+
+const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
 const isAdding = ref(false);
@@ -87,30 +104,7 @@ const addNode = () => {
   isAdding.value = true;
 
   try {
-    const timestamp = Date.now();
-    const id = `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
-    const newNode: ConceptualNode = {
-      id,
-      label: `New Concept`,
-      type: 'CONCEPT',
-      handles: [
-        {
-          id: `h-source-${id}`,
-          type: 'source',
-          position: 'right' as any
-        },
-        {
-          id: `h-target-${id}`,
-          type: 'target',
-          position: 'left' as any
-        }
-      ],
-      position: {
-        x: Math.random() * 400 + 50,
-        y: Math.random() * 300 + 50,
-      },
-    };
-    addNodeToContext(newNode);
+    addNodeToContext();
   } catch (error) {
     console.error('NodeCreationError:', error);
   } finally {
@@ -131,5 +125,13 @@ const onConnect = (connection: Connection) => {
     weight: 1,
   };
   addEdgeToContext(newEdge);
+};
+
+const onUpdateNode = (node: ConceptualNode) => {
+  updateNodeInContext(node.id, node);
+}
+
+const onUpdateEdge = (edge: ConceptualEdge) => {
+  updateEdgeInContext(edge.id, edge);
 };
 </script>
