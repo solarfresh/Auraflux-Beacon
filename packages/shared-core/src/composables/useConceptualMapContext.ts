@@ -32,14 +32,14 @@ export function useConceptualMapContext(): ConceptualMapContext {
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
 
-  const addNode = (nodeData?: { label?: string, position?: { x: number, y: number } }) => {
+  const addNode = (nodeData?: Partial<ConceptualNode> & { label?: string, position?: { x: number, y: number } }) => {
     const timestamp = Date.now();
-    const id = `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+    const id = nodeData?.id || `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
     const newNode: ConceptualNode = {
       id,
       label: nodeData?.label || 'New Concept',
-      type: 'CONCEPT',
-      handles: [
+      type: nodeData?.type || 'CONCEPT',
+      handles: nodeData?.handles || [
         {
           id: `h-source-${id}`,
           type: 'source',
@@ -66,11 +66,19 @@ export function useConceptualMapContext(): ConceptualMapContext {
     }
   };
 
-  const updateNode = (nodeId: ID, updatedNode: ConceptualNode) => {
+  const updateNode = (nodeId: ID, updatedNode: Partial<ConceptualNode>) => {
     if (!nodeId || !updatedNode) return;
-    if (instance.conceptualNodes.has(nodeId)) {
-      instance.conceptualNodes.set(nodeId, updatedNode);
+    const existing = instance.conceptualNodes.get(nodeId);
+    if (!existing) {
+      console.warn(`[useConceptualMapContext] Attempted to update non-existent node with id: ${nodeId}`);
+      return;
     }
+    const merged = {
+      ...existing,
+      ...updatedNode,
+      position: updatedNode.position || existing.position,
+    };
+    instance.conceptualNodes.set(nodeId, merged);
   };
 
   const updateEdge = (edgeId: ID, updatedEdge: ConceptualEdge) => {

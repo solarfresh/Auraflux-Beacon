@@ -5,6 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 
 describe('useConceptualMapContext', () => {
   it('should initialize with default empty or base state', () => {
@@ -18,12 +19,24 @@ describe('useConceptualMapContext', () => {
     const { instance, addNode, removeNode } = useConceptualMapContext();
     const testNode = {
       id: 'node-1',
-      type: 'CONCEPT',
+      type: 'CONCEPT' as const,
       position: { x: 100, y: 200 },
-      data: { label: 'Test Node', state: 'DRAFT' as const },
+      label: 'Test Node',
+      handles: [
+        {
+          id: 'h-source-node-1',
+          type: 'source' as const,
+          position: 'right' as const,
+        },
+        {
+          id: 'h-target-node-1',
+          type: 'target' as const,
+          position: 'left' as const,
+        },
+      ],
     };
 
-    addNode(testNode as any);
+    addNode(testNode);
     expect(instance.conceptualNodes.size).toBe(1);
     expect(instance.conceptualNodes.get('node-1')).toEqual(testNode);
 
@@ -31,22 +44,35 @@ describe('useConceptualMapContext', () => {
     expect(instance.conceptualNodes.size).toBe(0);
   });
 
-  it('should successfully update existing nodes', () => {
+  it('should successfully update existing nodes with partial data and preserve position defensively', () => {
     const { instance, addNode, updateNode } = useConceptualMapContext();
     const testNode = {
       id: 'node-1',
       label: 'Original',
-      type: 'CONCEPT'
-    };
-    const updatedNode = {
-      id: 'node-1',
-      label: 'Updated',
-      type: 'CONCEPT'
+      type: 'CONCEPT',
+      position: { x: 150, y: 250 },
     };
 
     addNode(testNode as any);
-    updateNode('node-1', updatedNode as any);
-    expect(instance.conceptualNodes.get('node-1')?.label).toBe('Updated');
+
+    // Update only label, position should remain unchanged
+    updateNode('node-1', { label: 'Updated Label' } as any);
+    const node = instance.conceptualNodes.get('node-1');
+    expect(node?.label).toBe('Updated Label');
+    expect(node?.position).toEqual({ x: 150, y: 250 });
+
+    // Update with new position
+    updateNode('node-1', { position: { x: 300, y: 400 } } as any);
+    const nodeMoved = instance.conceptualNodes.get('node-1');
+    expect(nodeMoved?.position).toEqual({ x: 300, y: 400 });
+  });
+
+  it('should handle updating non-existent nodes safely without throwing errors', () => {
+    const { instance, updateNode } = useConceptualMapContext();
+    expect(() => {
+      updateNode('non-existent-id', { label: 'Should Not Crash' } as any);
+    }).not.toThrow();
+    expect(instance.conceptualNodes.size).toBe(0);
   });
 
   it('should successfully add edges', () => {
@@ -107,3 +133,4 @@ describe('useConceptualMapContext', () => {
     expect(selectedEdgeId.value).toBeNull();
   });
 });
+
