@@ -67,13 +67,16 @@ const {
   updateNode: updateNodeInContext,
   updateEdge: updateEdgeInContext,
   removeNode: removeNodeInContext,
+  removeEdge: removeEdgeInContext,
 } = context;
 
 const isEditing = ref(false);
 
 useCanvasKeyboardShortcuts({
   selectedNodeId,
+  selectedEdgeId,
   removeNode: removeNodeInContext,
+  removeEdge: removeEdgeInContext,
 });
 
 const selectNode = (node: { id: ID }) => {

@@ -69,6 +69,15 @@ export function useConceptualMapContext(): ConceptualMapContext {
     }
   };
 
+  const removeEdge = (edgeId: ID) => {
+    instance.conceptualEdges = instance.conceptualEdges.filter(
+      edge => edge.id !== edgeId
+    );
+    if (selectedEdgeId.value === edgeId) {
+      selectedEdgeId.value = null;
+    }
+  };
+
   const updateNode = (nodeId: ID, updatedNode: Partial<ConceptualNode>) => {
     if (!nodeId || !updatedNode) return;
     const existing = instance.conceptualNodes.get(nodeId);
@@ -138,6 +147,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
     selectedEdgeId,
     addNode,
     removeNode,
+    removeEdge,
     updateNode,
     addEdge,
     updateEdge,
