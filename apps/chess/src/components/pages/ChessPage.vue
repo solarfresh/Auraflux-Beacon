@@ -51,6 +51,7 @@ import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/ca
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import type { Connection } from '@vue-flow/core';
 import { computed, ref } from 'vue';
 
@@ -65,9 +66,15 @@ const {
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
   updateEdge: updateEdgeInContext,
+  removeNode: removeNodeInContext,
 } = context;
 
 const isEditing = ref(false);
+
+useCanvasKeyboardShortcuts({
+  selectedNodeId,
+  removeNode: removeNodeInContext,
+});
 
 const selectNode = (node: { id: ID }) => {
   if (isEditing.value) return;
@@ -87,10 +94,7 @@ const selectedEdge = computed(() => {
   return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
 });
 
-const nodes = computed(() => Array.from(instance.conceptualNodes.values()).map(node => ({
-  ...node,
-  position: node.position || { x: 0, y: 0 }
-})));
+const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
 const isAdding = ref(false);

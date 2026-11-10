@@ -5,7 +5,7 @@
 
 import { describe, it, expect } from 'vitest';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
-import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { Position } from '@vue-flow/core';
 
 describe('useConceptualMapContext', () => {
   it('should initialize with default empty or base state', () => {
@@ -26,12 +26,12 @@ describe('useConceptualMapContext', () => {
         {
           id: 'h-source-node-1',
           type: 'source' as const,
-          position: 'right' as const,
+          position: 'right' as Position,
         },
         {
           id: 'h-target-node-1',
           type: 'target' as const,
-          position: 'left' as const,
+          position: 'left' as Position,
         },
       ],
     };
@@ -131,6 +131,22 @@ describe('useConceptualMapContext', () => {
     deselectAll();
     expect(selectedNodeId.value).toBeNull();
     expect(selectedEdgeId.value).toBeNull();
+  });
+
+  it('should cascade remove edges connected to deleted node', () => {
+    const { instance, addNode, addEdge, removeNode } = useConceptualMapContext();
+    addNode({ id: 'node-1', label: 'Node 1', type: 'CONCEPT', position: { x: 0, y: 0 } });
+    addNode({ id: 'node-2', label: 'Node 2', type: 'CONCEPT', position: { x: 10, y: 10 } });
+    addEdge({ id: 'edge-1', source: 'node-1', target: 'node-2', type: 'LINK', weight: 1 });
+    addEdge({ id: 'edge-2', source: 'node-2', target: 'node-3', type: 'LINK', weight: 1 });
+
+    expect(instance.conceptualEdges.length).toBe(2);
+
+    removeNode('node-1');
+    expect(instance.conceptualNodes.has('node-1')).toBe(false);
+    // edge-1 connected to node-1 should be removed, edge-2 should remain
+    expect(instance.conceptualEdges.length).toBe(1);
+    expect(instance.conceptualEdges[0].id).toBe('edge-2');
   });
 });
 

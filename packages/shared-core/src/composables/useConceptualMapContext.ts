@@ -32,14 +32,14 @@ export function useConceptualMapContext(): ConceptualMapContext {
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
 
-  const addNode = (nodeData?: Partial<ConceptualNode> & { label?: string, position?: { x: number, y: number } }) => {
+  const addNode = (node?: Partial<ConceptualNode>) => {
     const timestamp = Date.now();
-    const id = nodeData?.id || `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+    const id = node?.id || `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
     const newNode: ConceptualNode = {
       id,
-      label: nodeData?.label || 'New Concept',
-      type: nodeData?.type || 'CONCEPT',
-      handles: nodeData?.handles || [
+      label: node?.label || 'New Concept',
+      type: node?.type || 'CONCEPT',
+      handles: node?.handles || [
         {
           id: `h-source-${id}`,
           type: 'source',
@@ -51,7 +51,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
           position: 'left' as any
         }
       ],
-      position: nodeData?.position || {
+      position: node?.position || {
         x: Math.random() * 400 + 50,
         y: Math.random() * 300 + 50,
       },
@@ -60,6 +60,9 @@ export function useConceptualMapContext(): ConceptualMapContext {
   };
 
   const removeNode = (nodeId: ID) => {
+    instance.conceptualEdges = instance.conceptualEdges.filter(
+      edge => edge.source !== nodeId && edge.target !== nodeId
+    );
     instance.conceptualNodes.delete(nodeId);
     if (selectedNodeId.value === nodeId) {
       selectedNodeId.value = null;

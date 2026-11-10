@@ -33,6 +33,15 @@ const mockConceptualMapContext = {
     mockConceptualMapContext.selectedNodeId.value = id;
     mockConceptualMapContext.selectedEdgeId.value = null;
   }),
+  removeNode: vi.fn((id: string) => {
+    mockConceptualMapContext.instance.conceptualNodes.delete(id);
+    mockConceptualMapContext.instance.conceptualEdges = mockConceptualMapContext.instance.conceptualEdges.filter(
+      (e: any) => e.source !== id && e.target !== id
+    );
+    if (mockConceptualMapContext.selectedNodeId.value === id) {
+      mockConceptualMapContext.selectedNodeId.value = null;
+    }
+  }),
   selectEdge: vi.fn((id: string) => {
     mockConceptualMapContext.selectedEdgeId.value = id;
     mockConceptualMapContext.selectedNodeId.value = null;
@@ -268,5 +277,73 @@ describe('ChessPage.vue', () => {
     const vm = wrapper.vm as any;
     expect(vm.selectedEdge.weight).toBe(3);
     expect(vm.selectedEdge.type).toBe('ASSOCIATION');
+  });
+
+  it('removes selected node and cascades edge removal via keyboard shortcut', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    // Ensure node '1' and edge 'e1-2' exist
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
+    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } });
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+
+    mockConceptualMapContext.selectNode('1');
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(true);
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(1);
+
+    // Simulate pressing Delete key on window
+    const deleteEvent = new KeyboardEvent('keydown', { key: 'Delete' });
+    window.dispatchEvent(deleteEvent);
+    await wrapper.vm.$nextTick();
+
+    // Verify node '1' is deleted and edge 'e1-2' is cascaded/removed
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(false);
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
+  });
+
+  it('guards against node deletion when typing inside input or textarea', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
+    mockConceptualMapContext.selectNode('1');
+
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+
+    const deleteEvent = new KeyboardEvent('keydown', { key: 'Delete' });
+    Object.defineProperty(deleteEvent, 'target', { value: input, enumerable: true });
+
+    window.dispatchEvent(deleteEvent);
+    await wrapper.vm.$nextTick();
+
+    // Node '1' should still exist because deletion was guarded
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(true);
+    expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
+
+    document.body.removeChild(input);
   });
 });
