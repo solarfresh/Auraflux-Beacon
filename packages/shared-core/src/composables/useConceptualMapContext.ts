@@ -32,9 +32,31 @@ export function useConceptualMapContext(): ConceptualMapContext {
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
 
-  const addNode = (node: ConceptualNode) => {
-    if (!node || !node.id) return;
-    instance.conceptualNodes.set(node.id, node);
+  const addNode = (nodeData?: { label?: string, position?: { x: number, y: number } }) => {
+    const timestamp = Date.now();
+    const id = `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
+    const newNode: ConceptualNode = {
+      id,
+      label: nodeData?.label || 'New Concept',
+      type: 'CONCEPT',
+      handles: [
+        {
+          id: `h-source-${id}`,
+          type: 'source',
+          position: 'right' as any
+        },
+        {
+          id: `h-target-${id}`,
+          type: 'target',
+          position: 'left' as any
+        }
+      ],
+      position: nodeData?.position || {
+        x: Math.random() * 400 + 50,
+        y: Math.random() * 300 + 50,
+      },
+    };
+    instance.conceptualNodes.set(id, newNode);
   };
 
   const removeNode = (nodeId: ID) => {

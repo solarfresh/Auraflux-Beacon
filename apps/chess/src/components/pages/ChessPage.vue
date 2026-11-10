@@ -30,12 +30,12 @@
           </template>
         </VConceptualMapCanvas>
       </VBox>
-       <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-         <VNodeInspectorPanel :node="selectedNode" @update:node="(node: ConceptualNode) => updateNodeInContext(node.id, node)" />
-       </VBox>
-       <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-         <VEdgeInspectorPanel :edge="selectedEdge" @update:edge="(edge: ConceptualEdge) => updateEdgeInContext(edge.id, edge)" />
-       </VBox>
+      <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
+        <VNodeInspectorPanel :node="selectedNode" @update:node="onUpdateNode" />
+      </VBox>
+      <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
+        <VEdgeInspectorPanel :edge="selectedEdge" @update:edge="onUpdateEdge" />
+      </VBox>
     </VBox>
   </VBox>
 </template>
@@ -100,30 +100,7 @@ const addNode = () => {
   isAdding.value = true;
 
   try {
-    const timestamp = Date.now();
-    const id = `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
-    const newNode: ConceptualNode = {
-      id,
-      label: `New Concept`,
-      type: 'CONCEPT',
-      handles: [
-        {
-          id: `h-source-${id}`,
-          type: 'source',
-          position: 'right' as any
-        },
-        {
-          id: `h-target-${id}`,
-          type: 'target',
-          position: 'left' as any
-        }
-      ],
-      position: {
-        x: Math.random() * 400 + 50,
-        y: Math.random() * 300 + 50,
-      },
-    };
-    addNodeToContext(newNode);
+    addNodeToContext();
   } catch (error) {
     console.error('NodeCreationError:', error);
   } finally {
@@ -144,5 +121,13 @@ const onConnect = (connection: Connection) => {
     weight: 1,
   };
   addEdgeToContext(newEdge);
+};
+
+const onUpdateNode = (node: ConceptualNode) => {
+  updateNodeInContext(node.id, node);
+}
+
+const onUpdateEdge = (edge: ConceptualEdge) => {
+  updateEdgeInContext(edge.id, edge);
 };
 </script>

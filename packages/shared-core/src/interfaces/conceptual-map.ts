@@ -7,7 +7,7 @@ export interface ConceptualMapContext {
   instance: CanvasViewInstance;
   selectedNodeId: Ref<ID | null>;
   selectedEdgeId: Ref<ID | null>;
-  addNode: (node: ConceptualNode) => void;
+  addNode: (nodeData?: { label?: string, position?: { x: number, y: number } }) => void;
   removeNode: (nodeId: ID) => void;
   updateNode: (nodeId: ID, updatedNode: ConceptualNode) => void;
   addEdge: (edge: ConceptualEdge) => void;
