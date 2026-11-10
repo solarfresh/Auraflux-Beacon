@@ -144,6 +144,21 @@ describe('useConceptualMapContext', () => {
     expect(instance.conceptualEdges[0].id).toBe('edge-2');
   });
 
+  it('should not change the number of nodes when an edge is removed', () => {
+    const { instance, addNode, addEdge, removeEdge } = useConceptualMapContext();
+    addNode({ id: 'node-1', label: 'Node 1', type: 'CONCEPT', position: { x: 0, y: 0 } });
+    addNode({ id: 'node-2', label: 'Node 2', type: 'CONCEPT', position: { x: 10, y: 10 } });
+    addEdge({ id: 'edge-1', source: 'node-1', target: 'node-2', type: 'LINK', weight: 1 });
+
+    expect(instance.conceptualNodes.size).toBe(2);
+    expect(instance.conceptualEdges.length).toBe(1);
+
+    removeEdge('edge-1');
+
+    expect(instance.conceptualNodes.size).toBe(2); // Nodes should remain unchanged
+    expect(instance.conceptualEdges.length).toBe(0);
+  });
+
   it('should reset selectedEdgeId if the removed edge was selected', () => {
     const { selectedEdgeId, selectEdge, removeEdge } = useConceptualMapContext();
     selectEdge('edge-1');

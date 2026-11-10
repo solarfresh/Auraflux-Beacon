@@ -70,6 +70,10 @@ export function useConceptualMapContext(): ConceptualMapContext {
   };
 
   const removeEdge = (edgeId: ID) => {
+    if (!edgeId) return;
+    const exists = instance.conceptualEdges.some(e => e.id === edgeId);
+    if (!exists) return;
+
     instance.conceptualEdges = instance.conceptualEdges.filter(
       edge => edge.id !== edgeId
     );
