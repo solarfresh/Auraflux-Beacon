@@ -9,6 +9,7 @@
       @edge-click="onEdgeClick"
       @pane-click="emit('pane-click')"
       @connect="onConnect"
+      @node-drag-stop="onNodeDragStop"
     >
       <template v-for="name in nodeSlotNames" :key="name" #[name]="nodeProps">
         <slot
@@ -59,6 +60,7 @@ const emit = defineEmits<{
   (e: 'add-node'): void;
   (e: 'connect', connection: Connection): void;
   (e: 'node-click', node: { id: ID }): void;
+  (e: 'node-drag-stop', node: { id: ID; position: { x: number; y: number } }): void;
   (e: 'edge-click', edge: { id: ID }): void;
   (e: 'pane-click'): void;
   (e: 'update:selectedNodeId', id: ID | null): void;
@@ -79,6 +81,13 @@ const onConnect = (connection: Connection) => {
   if (connection.source !== connection.target) {
     emit('connect', connection);
   }
+};
+
+const onNodeDragStop = ({ node }: { node: Node }) => {
+  emit('node-drag-stop', {
+    id: node.id,
+    position: node.position || { x: 0, y: 0 }
+  });
 };
 </script>
 

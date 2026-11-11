@@ -10,7 +10,7 @@ export interface ConceptualMapContext {
   addNode: (nodeData?: Partial<ConceptualNode>) => void;
   removeNode: (nodeId: ID) => void;
   removeEdge: (edgeId: ID) => void;
-  updateNode: (nodeId: ID, updatedNode: ConceptualNode) => void;
+  updateNode: (nodeId: ID, updatedNode: Partial<ConceptualNode>) => void;
   addEdge: (edge: ConceptualEdge) => void;
   updateEdge: (edgeId: ID, updatedEdge: ConceptualEdge) => void;
   selectNode: (id: ID) => void;

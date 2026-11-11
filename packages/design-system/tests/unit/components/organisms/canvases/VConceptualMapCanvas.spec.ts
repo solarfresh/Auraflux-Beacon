@@ -106,6 +106,24 @@ describe('ConceptualMapCanvas.vue', () => {
     expect(wrapper.emitted('update:selectedEdgeId')?.[0][0]).toBe('e1-2');
   });
 
+  it('emits node-drag-stop event on node drag stop', async () => {
+    const wrapper = mount(VConceptualMapCanvas, {
+      props: {
+        nodes: [{ id: '1', label: 'Node 1', type: 'CONCEPT', position: { x: 10, y: 20 } }],
+        edges: []
+      }
+    });
+
+    const vm = wrapper.vm as any;
+    vm.onNodeDragStop({ node: { id: '1', position: { x: 100, y: 200 } } });
+
+    expect(wrapper.emitted('node-drag-stop')).toBeTruthy();
+    expect(wrapper.emitted('node-drag-stop')?.[0][0]).toEqual({
+      id: '1',
+      position: { x: 100, y: 200 }
+    });
+  });
+
   it('respects isEditing prop', async () => {
     const wrapper = mount(VConceptualMapCanvas, {
       props: {

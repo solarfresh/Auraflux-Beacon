@@ -69,6 +69,51 @@ vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
 }));
 
 describe('ChessPage.vue', () => {
+  it('updates node position when node-drag-stop event is triggered', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+    const newPosition = { x: 150, y: 250 };
+
+    // Trigger node-drag-stop event
+    vm.onNodeDragStop({ id: '1', position: newPosition });
+
+    await wrapper.vm.$nextTick();
+
+    expect(mockConceptualMapContext.updateNode).toHaveBeenCalledWith('1', { position: newPosition });
+  });
+
+  it('updates node position with default {x:0, y:0} when drag event has invalid position', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Trigger node-drag-stop event with invalid position
+    vm.onNodeDragStop({ id: '1', position: null });
+
+    await wrapper.vm.$nextTick();
+
+    expect(mockConceptualMapContext.updateNode).toHaveBeenCalledWith('1', { position: { x: 0, y: 0 } });
+  });
+
   it('renders knowledge graph canvas header and add button', () => {
     const wrapper = mount(ChessPage, {
       global: {

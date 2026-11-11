@@ -17,6 +17,7 @@
           surface="soft"
           @connect="onConnect"
           @node-click="selectNode"
+          @node-drag-stop="onNodeDragStop"
           @edge-click="selectEdge"
           @pane-click="deselectAllAndClosePanel"
         >
@@ -163,6 +164,10 @@ const onUpdateNode = (node: ConceptualNode) => {
 
 const onUpdateEdge = (edge: ConceptualEdge) => {
   updateEdgeInContext(edge.id, edge);
+};
+
+const onNodeDragStop = (node: { id: ID; position: { x: number; y: number } }) => {
+  updateNodeInContext(node.id, { position: node.position || { x: 0, y: 0 } });
 };
 
 const onDuplicateNode = (node: ConceptualNode) => {
