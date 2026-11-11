@@ -32,8 +32,6 @@
       </VBox>
       <VInspectorPanel
         v-model:is-expanded="isPanelExpanded"
-        title="Inspector"
-        class="w-80 h-full shrink-0 flex flex-col"
         intent="neutral"
         surface="soft"
         border="left"
