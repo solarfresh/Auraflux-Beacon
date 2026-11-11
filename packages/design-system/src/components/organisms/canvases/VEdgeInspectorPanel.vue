@@ -24,7 +24,10 @@
         <VTextarea v-model="localEdgeData.evidence" placeholder="Optional" />
       </VFormField>
 
-      <VButton @click="save">Update Edge</VButton>
+      <VCluster spacing="xs" class="mt-4">
+        <VButton @click="save" attention="primary" size="sm" class="flex-1">Update</VButton>
+        <VButton @click="deleteEdge" attention="secondary" intent="danger" size="sm">Del</VButton>
+      </VCluster>
     </template>
     <VEmptyState v-else title="No Edge Selected" description="Select an edge to inspect" icon="CursorArrowRays" />
   </VBox>
@@ -37,6 +40,7 @@ import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue'
 import VSlider from '@auraflux/design-system/components/atoms/forms/VSlider.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 import type { ConceptualEdge, EdgeType } from '@auraflux/design-system/interfaces/conceptual-map';
@@ -58,6 +62,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:edge', edge: ConceptualEdge): void;
+  (e: 'delete:edge', id: string): void;
 }>();
 
 const edgeTypes: EdgeType[] = ['VALIDATES', 'CONSTRAINS', 'TRIGGERS', 'REF', 'LINK'];
@@ -81,5 +86,11 @@ const save = () => {
   }));
 
   emit('update:edge', updatedEdge);
+};
+
+const deleteEdge = () => {
+  if (localEdgeData.value) {
+    emit('delete:edge', localEdgeData.value.id);
+  }
 };
 </script>

@@ -36,8 +36,19 @@
         surface="soft"
         border="left"
       >
-        <VNodeInspectorPanel v-if="selectedNodeId" :node="selectedNode" @update:node="onUpdateNode" />
-        <VEdgeInspectorPanel v-else-if="selectedEdgeId" :edge="selectedEdge" @update:edge="onUpdateEdge" />
+        <VNodeInspectorPanel
+          v-if="selectedNodeId"
+          :node="selectedNode"
+          @update:node="onUpdateNode"
+          @duplicate:node="onDuplicateNode"
+          @delete:node="onDeleteNode"
+        />
+        <VEdgeInspectorPanel
+          v-else-if="selectedEdgeId"
+          :edge="selectedEdge"
+          @update:edge="onUpdateEdge"
+          @delete:edge="onDeleteEdge"
+        />
       </VInspectorPanel>
     </VBox>
   </VBox>
@@ -152,5 +163,26 @@ const onUpdateNode = (node: ConceptualNode) => {
 
 const onUpdateEdge = (edge: ConceptualEdge) => {
   updateEdgeInContext(edge.id, edge);
+};
+
+const onDuplicateNode = (node: ConceptualNode) => {
+  const duplicated: ConceptualNode = {
+    ...node,
+    id: `node-${Date.now()}`,
+    label: `${node.label} (Copy)`,
+    position: {
+      x: (node.position?.x || 0) + 50,
+      y: (node.position?.y || 0) + 50
+    }
+  };
+  addNodeToContext(duplicated);
+};
+
+const onDeleteNode = (id: string) => {
+  removeNodeInContext(id);
+};
+
+const onDeleteEdge = (id: string) => {
+  removeEdgeInContext(id);
 };
 </script>

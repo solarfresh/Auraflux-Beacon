@@ -442,4 +442,44 @@ describe('ChessPage.vue', () => {
     await wrapper.vm.$nextTick();
     expect(vm.isPanelExpanded).toBe(true);
   });
+
+  it('duplicates node and deletes node/edge via inspector panel events', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: {
+            template: '<div><button class="dup-btn" @click="$emit(\'duplicate:node\', node)"></button><button class="del-btn" @click="$emit(\'delete:node\', node.id)"></button></div>',
+            props: ['node']
+          },
+          VEdgeInspectorPanel: {
+            template: '<div><button class="del-edge-btn" @click="$emit(\'delete:edge\', edge.id)"></button></div>',
+            props: ['edge']
+          },
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Test node duplicate
+    mockConceptualMapContext.selectNode('1');
+    await wrapper.vm.$nextTick();
+    await wrapper.find('.dup-btn').trigger('click');
+    expect(mockConceptualMapContext.addNode).toHaveBeenCalled();
+
+    // Test node delete
+    await wrapper.find('.del-btn').trigger('click');
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(false);
+
+    // Test edge delete
+    mockConceptualMapContext.selectEdge('e1-2');
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '2', target: '2' }];
+    await wrapper.vm.$nextTick();
+    await wrapper.find('.del-edge-btn').trigger('click');
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);
+  });
 });
