@@ -16,6 +16,16 @@
         </VSelect>
       </VFormField>
 
+      <VFormField label="Status">
+        <VSelect v-model="localNode.status">
+          <option v-for="s in entityStatuses" :key="s" :value="s">{{ s }}</option>
+        </VSelect>
+      </VFormField>
+
+      <VFormField label="Content">
+        <VTextarea v-model="localNode.content" />
+      </VFormField>
+
       <VFormField label="Rationale">
         <VTextarea v-model="localNode.rationale" />
       </VFormField>
@@ -35,6 +45,7 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 import type { ConceptualNode, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { EntityStatus } from '@auraflux/design-system/interfaces/core';
 import { ref, watch } from 'vue';
 import type { BorderToken, IntentToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 
@@ -61,6 +72,12 @@ const labelError = ref<string | null>(null);
 const nodeTypes: NodeType[] = [
   'EVENT', 'OUTCOME', 'BOUNDARY', 'ENTITY', 'FOCUS',
   'RESOURCE', 'CONCEPT', 'INSIGHT', 'QUERY', 'NAVIGATION', 'GROUP'
+];
+
+const entityStatuses: EntityStatus[] = [
+  'DRAFT', 'REVIEW', 'LOCKED', 'ON_HOLD', 'ARCHIVED',
+  'PENDING', 'APPROVED', 'REJECTED', 'PUBLISHED', 'ACTIVE',
+  'INACTIVE', 'DELETED'
 ];
 
 watch(() => props.node, (newNode) => {
