@@ -58,4 +58,21 @@ describe('VEdgeInspectorPanel', () => {
     const emitted2 = wrapper.emitted('update:edge')![1][0] as ConceptualEdge;
     expect(emitted2.weight).toBe(5);
   });
+
+  it('emits delete:edge when delete button is clicked', async () => {
+    const wrapper = mount(VEdgeInspectorPanel, {
+      props: { edge: mockEdge },
+      global: {
+        stubs: {
+          VButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
+          VCluster: { template: '<div><slot /></div>' }
+        }
+      }
+    });
+
+    const buttons = wrapper.findAll('button');
+    await buttons[1].trigger('click');
+    expect(wrapper.emitted('delete:edge')).toBeTruthy();
+    expect(wrapper.emitted('delete:edge')![0][0]).toEqual('test-edge');
+  });
 });

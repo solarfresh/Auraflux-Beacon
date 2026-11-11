@@ -119,4 +119,32 @@ describe('VNodeInspectorPanel', () => {
 
     expect(wrapper.emitted('update:node')).toBeFalsy();
   });
+
+  it('emits duplicate:node and delete:node when buttons are clicked', async () => {
+    const node = { id: '1', label: 'Test Node', type: 'CONCEPT' as const, status: 'DRAFT' as const };
+    const wrapper = mount(VNodeInspectorPanel, {
+      props: { node },
+      global: {
+        stubs: {
+          VFormField: { template: '<div><slot /></div>' },
+          VInput: true,
+          VSelect: true,
+          VTextarea: true,
+          VButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
+          VBox: { template: '<div><slot /></div>' },
+          VCluster: { template: '<div><slot /></div>' },
+          VEmptyState: true
+        }
+      }
+    });
+
+    const buttons = wrapper.findAll('button');
+    await buttons[1].trigger('click');
+    expect(wrapper.emitted('duplicate:node')).toBeTruthy();
+    expect(wrapper.emitted('duplicate:node')![0][0]).toEqual(node);
+
+    await buttons[2].trigger('click');
+    expect(wrapper.emitted('delete:node')).toBeTruthy();
+    expect(wrapper.emitted('delete:node')![0][0]).toEqual('1');
+  });
 });

@@ -30,7 +30,11 @@
         <VTextarea v-model="localNode.rationale" />
       </VFormField>
 
-      <VButton @click="submitUpdate" :disabled="!!labelError">Update Node</VButton>
+      <VCluster spacing="xs" class="mt-4">
+        <VButton @click="submitUpdate" :disabled="!!labelError" attention="primary" size="sm" class="flex-1">Update</VButton>
+        <VButton @click="duplicateNode" attention="secondary" intent="neutral" size="sm">Dup</VButton>
+        <VButton @click="deleteNode" attention="secondary" intent="danger" size="sm">Del</VButton>
+      </VCluster>
     </template>
     <VEmptyState v-else title="No Node Selected" description="Select a node to inspect" icon="CursorArrowRays" />
   </VBox>
@@ -42,6 +46,7 @@ import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
 import type { ConceptualNode, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
@@ -64,6 +69,8 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:node', node: ConceptualNode): void;
+  (e: 'duplicate:node', node: ConceptualNode): void;
+  (e: 'delete:node', id: string): void;
 }>();
 
 const localNode = ref<ConceptualNode | null>(null);
@@ -96,6 +103,18 @@ const validateLabel = () => {
 const submitUpdate = () => {
   if (localNode.value && !labelError.value) {
     emit('update:node', { ...localNode.value });
+  }
+};
+
+const duplicateNode = () => {
+  if (localNode.value) {
+    emit('duplicate:node', { ...localNode.value });
+  }
+};
+
+const deleteNode = () => {
+  if (localNode.value) {
+    emit('delete:node', localNode.value.id);
   }
 };
 </script>
