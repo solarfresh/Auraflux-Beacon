@@ -171,8 +171,8 @@ describe('ChessPage.vue', () => {
     expect(vm.selectedNode).toBe(null);
   });
 
-  it('renders horizontal dual-pane layout and conditionally toggles sidebar inspector when node is selected', async () => {
-    mockConceptualMapContext.selectedNodeId.value = null;
+  it('renders horizontal dual-pane layout and renders VInspectorPanel', async () => {
+    mockConceptualMapContext.selectedNodeId.value = '1';
     const wrapper = mount(ChessPage, {
       global: {
         stubs: {
@@ -182,21 +182,17 @@ describe('ChessPage.vue', () => {
           MiniMap: true,
           VNodeInspectorPanel: true,
           VEdgeInspectorPanel: true,
+          VInspectorPanel: {
+            template: '<aside class="inspector-panel"><slot /></aside>',
+            props: ['isExpanded']
+          }
         },
       },
     });
 
     const mainContainer = wrapper.find('.flex-row');
     expect(mainContainer.exists()).toBe(true);
-
-    // Initially no node selected -> sidebar should not exist
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('aside').exists()).toBe(false);
-
-    // Select a node -> sidebar should appear
-    mockConceptualMapContext.selectNode('1');
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('aside').exists()).toBe(true);
+    expect(wrapper.find('aside.inspector-panel').exists()).toBe(true);
   });
 
   it('handles edge selection and mutual exclusion with node selection in ChessPage', async () => {
@@ -388,5 +384,62 @@ describe('ChessPage.vue', () => {
     expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
 
     document.body.removeChild(input);
+  });
+
+  it('controls panel expansion based on node selection and pane clicks', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Initially expanded
+    expect(vm.isPanelExpanded).toBe(true);
+
+    // Click pane -> should collapse
+    vm.deselectAllAndClosePanel();
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(false);
+
+    // Select node -> should expand
+    mockConceptualMapContext.selectNode('1');
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(true);
+  });
+
+  it('toggles panel expansion via collapse button', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Toggle collapse
+    vm.isPanelExpanded = false;
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(false);
+
+    // Toggle expand
+    vm.isPanelExpanded = true;
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(true);
   });
 });
