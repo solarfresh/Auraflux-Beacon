@@ -18,7 +18,7 @@
           @connect="onConnect"
           @node-click="selectNode"
           @edge-click="selectEdge"
-          @pane-click="deselectAll"
+          @pane-click="deselectAllAndClosePanel"
         >
           <template #node-default="{ node }">
             <VConceptualNode
@@ -30,12 +30,15 @@
           </template>
         </VConceptualMapCanvas>
       </VBox>
-      <VBox v-if="selectedNodeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-        <VNodeInspectorPanel :node="selectedNode" @update:node="onUpdateNode" />
-      </VBox>
-      <VBox v-if="selectedEdgeId" tag="aside" class="w-80 h-full border-l shrink-0 flex flex-col" intent="neutral" surface="soft">
-        <VEdgeInspectorPanel :edge="selectedEdge" @update:edge="onUpdateEdge" />
-      </VBox>
+      <VInspectorPanel
+        v-model:is-expanded="isPanelExpanded"
+        intent="neutral"
+        surface="soft"
+        border="left"
+      >
+        <VNodeInspectorPanel v-if="selectedNodeId" :node="selectedNode" @update:node="onUpdateNode" />
+        <VEdgeInspectorPanel v-else-if="selectedEdgeId" :edge="selectedEdge" @update:edge="onUpdateEdge" />
+      </VInspectorPanel>
     </VBox>
   </VBox>
 </template>
@@ -48,12 +51,13 @@ import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/c
 import VConceptualNode from '@auraflux/design-system/components/organisms/canvases/VConceptualNode.vue';
 import VEdgeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VEdgeInspectorPanel.vue';
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
+import VInspectorPanel from '@auraflux/design-system/components/organisms/layout/VInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const context = useConceptualMapContext();
 const {
@@ -67,13 +71,28 @@ const {
   updateNode: updateNodeInContext,
   updateEdge: updateEdgeInContext,
   removeNode: removeNodeInContext,
+  removeEdge: removeEdgeInContext,
 } = context;
 
 const isEditing = ref(false);
+const isPanelExpanded = ref(true);
+
+const deselectAllAndClosePanel = () => {
+  deselectAll();
+  isPanelExpanded.value = false;
+};
+
+watch([selectedNodeId, selectedEdgeId], ([newNodeId, newEdgeId]) => {
+  if (newNodeId || newEdgeId) {
+    isPanelExpanded.value = true;
+  }
+});
 
 useCanvasKeyboardShortcuts({
   selectedNodeId,
+  selectedEdgeId,
   removeNode: removeNodeInContext,
+  removeEdge: removeEdgeInContext,
 });
 
 const selectNode = (node: { id: ID }) => {

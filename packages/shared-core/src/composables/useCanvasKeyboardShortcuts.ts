@@ -3,11 +3,13 @@ import type { ID } from '@auraflux/design-system/interfaces/core';
 
 interface UseCanvasKeyboardShortcutsOptions {
   selectedNodeId: { value: ID | null };
+  selectedEdgeId: { value: ID | null };
   removeNode: (nodeId: ID) => void;
+  removeEdge: (edgeId: ID) => void;
 }
 
 export function useCanvasKeyboardShortcuts(options: UseCanvasKeyboardShortcutsOptions) {
-  const { selectedNodeId, removeNode } = options;
+  const { selectedNodeId, selectedEdgeId, removeNode, removeEdge } = options;
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Delete' || event.key === 'Backspace') {
@@ -17,6 +19,8 @@ export function useCanvasKeyboardShortcuts(options: UseCanvasKeyboardShortcutsOp
       }
       if (selectedNodeId.value) {
         removeNode(selectedNodeId.value);
+      } else if (selectedEdgeId.value) {
+        removeEdge(selectedEdgeId.value);
       }
     }
   };

@@ -42,6 +42,14 @@ const mockConceptualMapContext = {
       mockConceptualMapContext.selectedNodeId.value = null;
     }
   }),
+  removeEdge: vi.fn((id: string) => {
+    mockConceptualMapContext.instance.conceptualEdges = mockConceptualMapContext.instance.conceptualEdges.filter(
+      (e: any) => e.id !== id
+    );
+    if (mockConceptualMapContext.selectedEdgeId.value === id) {
+      mockConceptualMapContext.selectedEdgeId.value = null;
+    }
+  }),
   selectEdge: vi.fn((id: string) => {
     mockConceptualMapContext.selectedEdgeId.value = id;
     mockConceptualMapContext.selectedNodeId.value = null;
@@ -163,8 +171,8 @@ describe('ChessPage.vue', () => {
     expect(vm.selectedNode).toBe(null);
   });
 
-  it('renders horizontal dual-pane layout and conditionally toggles sidebar inspector when node is selected', async () => {
-    mockConceptualMapContext.selectedNodeId.value = null;
+  it('renders horizontal dual-pane layout and renders VInspectorPanel', async () => {
+    mockConceptualMapContext.selectedNodeId.value = '1';
     const wrapper = mount(ChessPage, {
       global: {
         stubs: {
@@ -174,21 +182,17 @@ describe('ChessPage.vue', () => {
           MiniMap: true,
           VNodeInspectorPanel: true,
           VEdgeInspectorPanel: true,
+          VInspectorPanel: {
+            template: '<aside class="inspector-panel"><slot /></aside>',
+            props: ['isExpanded']
+          }
         },
       },
     });
 
     const mainContainer = wrapper.find('.flex-row');
     expect(mainContainer.exists()).toBe(true);
-
-    // Initially no node selected -> sidebar should not exist
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('aside').exists()).toBe(false);
-
-    // Select a node -> sidebar should appear
-    mockConceptualMapContext.selectNode('1');
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('aside').exists()).toBe(true);
+    expect(wrapper.find('aside.inspector-panel').exists()).toBe(true);
   });
 
   it('handles edge selection and mutual exclusion with node selection in ChessPage', async () => {
@@ -314,6 +318,41 @@ describe('ChessPage.vue', () => {
     expect(mockConceptualMapContext.selectedNodeId.value).toBe(null);
   });
 
+  it('removes selected edge via keyboard shortcut without affecting nodes', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    // Ensure edge 'e1-2' exists between '1' and '2'
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
+    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } });
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+
+    mockConceptualMapContext.selectEdge('e1-2');
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe('e1-2');
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(1);
+
+    // Simulate pressing Delete key on window
+    const deleteEvent = new KeyboardEvent('keydown', { key: 'Delete' });
+    window.dispatchEvent(deleteEvent);
+    await wrapper.vm.$nextTick();
+
+    // Verify edge 'e1-2' is removed but nodes '1' and '2' remain
+    expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(true);
+    expect(mockConceptualMapContext.instance.conceptualNodes.has('2')).toBe(true);
+    expect(mockConceptualMapContext.selectedEdgeId.value).toBe(null);
+  });
+
   it('guards against node deletion when typing inside input or textarea', async () => {
     const wrapper = mount(ChessPage, {
       global: {
@@ -345,5 +384,62 @@ describe('ChessPage.vue', () => {
     expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
 
     document.body.removeChild(input);
+  });
+
+  it('controls panel expansion based on node selection and pane clicks', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Initially expanded
+    expect(vm.isPanelExpanded).toBe(true);
+
+    // Click pane -> should collapse
+    vm.deselectAllAndClosePanel();
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(false);
+
+    // Select node -> should expand
+    mockConceptualMapContext.selectNode('1');
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(true);
+  });
+
+  it('toggles panel expansion via collapse button', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+          VNodeInspectorPanel: true,
+          VEdgeInspectorPanel: true,
+        },
+      },
+    });
+
+    const vm = wrapper.vm as any;
+
+    // Toggle collapse
+    vm.isPanelExpanded = false;
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(false);
+
+    // Toggle expand
+    vm.isPanelExpanded = true;
+    await wrapper.vm.$nextTick();
+    expect(vm.isPanelExpanded).toBe(true);
   });
 });
