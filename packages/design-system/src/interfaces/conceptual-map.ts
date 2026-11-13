@@ -84,6 +84,7 @@ export interface ViewPort {
 }
 
 export interface CanvasViewInstance {
+  id: ID;
   conceptualNodes: Map<string, ConceptualNode>;
   conceptualEdges: ConceptualEdge[];
   isDragging: boolean;

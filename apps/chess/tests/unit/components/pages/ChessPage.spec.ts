@@ -1,7 +1,25 @@
+import { apiService } from '@/api/apiService';
 import ChessPage from '@/components/pages/ChessPage.vue';
+import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { reactive, ref } from 'vue';
+
+vi.mock('@/api/apiService', () => ({
+  apiService: {
+    canvases: {
+      createNode: vi.fn().mockResolvedValue({
+        data: {
+          id: 'server-node-1',
+          label: 'New Node',
+          type: 'CONCEPT',
+          position: { x: 100, y: 100 },
+          status: 'DRAFT'
+        }
+      })
+    }
+  }
+}));
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -12,15 +30,25 @@ beforeEach(() => {
 // Mock conceptual map context
 const mockConceptualMapContext = {
   instance: reactive({
+    canvasId: 'canvas-1',
     conceptualNodes: new Map([
-      ['1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } }],
-      ['2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } }],
+      ['1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode],
+      ['2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 }, status: 'ACTIVE' } as ConceptualNode],
     ]),
-    conceptualEdges: [{ id: 'e1-2', source: '1', target: '2' }],
+    conceptualEdges: [{ id: 'e1-2', source: '1', target: '2', type: 'LINK', weight: 1 }],
   }),
   selectedNodeId: ref<string | null>(null),
   selectedEdgeId: ref<string | null>(null),
-  addNode: vi.fn(),
+  addNode: vi.fn((node: Partial<ConceptualNode>) => {
+    const id = node?.id || `node-${Date.now()}`;
+    mockConceptualMapContext.instance.conceptualNodes.set(id, {
+      id,
+      label: node?.label || 'New Node',
+      type: node?.type || 'CONCEPT',
+      position: node?.position || { x: 0, y: 0 },
+      status: node?.status || 'DRAFT'
+    } as ConceptualNode);
+  }),
   addEdge: vi.fn(),
   updateNode: vi.fn(),
   updateEdge: vi.fn((id: string, updatedEdge: any) => {
@@ -130,7 +158,7 @@ describe('ChessPage.vue', () => {
     expect(wrapper.find('button').text()).toBe('Add Node');
   });
 
-  it('adds a new conceptual node when clicking Add Node button', async () => {
+  it('adds a new conceptual node via API and context when clicking Add Node button', async () => {
     const wrapper = mount(ChessPage, {
       global: {
         stubs: {
@@ -145,6 +173,11 @@ describe('ChessPage.vue', () => {
     const button = wrapper.find('button');
     await button.trigger('click');
 
+    expect(apiService.canvases.createNode).toHaveBeenCalledWith('canvas-1', {
+      label: 'New Node',
+      type: 'CONCEPT',
+      position: { x: 100, y: 100 }
+    });
     expect(mockConceptualMapContext.addNode).toHaveBeenCalled();
   });
 
@@ -343,9 +376,9 @@ describe('ChessPage.vue', () => {
     });
 
     // Ensure node '1' and edge 'e1-2' exist
-    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
-    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } });
-    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode);
+    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 }, status: 'ACTIVE' } as ConceptualNode);
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2', type: 'LINK', weight: 1 }];
 
     mockConceptualMapContext.selectNode('1');
     expect(mockConceptualMapContext.selectedNodeId.value).toBe('1');
@@ -378,9 +411,9 @@ describe('ChessPage.vue', () => {
     });
 
     // Ensure edge 'e1-2' exists between '1' and '2'
-    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
-    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 } });
-    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode);
+    mockConceptualMapContext.instance.conceptualNodes.set('2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 }, status: 'ACTIVE' } as ConceptualNode);
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '1', target: '2', type: 'LINK', weight: 1 }];
 
     mockConceptualMapContext.selectEdge('e1-2');
     expect(mockConceptualMapContext.selectedEdgeId.value).toBe('e1-2');
@@ -412,7 +445,7 @@ describe('ChessPage.vue', () => {
       },
     });
 
-    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 } });
+    mockConceptualMapContext.instance.conceptualNodes.set('1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode);
     mockConceptualMapContext.selectNode('1');
 
     const input = document.createElement('input');
@@ -522,7 +555,7 @@ describe('ChessPage.vue', () => {
 
     // Test edge delete
     mockConceptualMapContext.selectEdge('e1-2');
-    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '2', target: '2' }];
+    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '2', target: '2', type: 'LINK', weight: 1 }];
     await wrapper.vm.$nextTick();
     await wrapper.find('.del-edge-btn').trigger('click');
     expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);

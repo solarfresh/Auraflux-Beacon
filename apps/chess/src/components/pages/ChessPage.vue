@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { apiService } from '@/api/apiService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -66,8 +67,8 @@ import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/ca
 import VInspectorPanel from '@auraflux/design-system/components/organisms/layout/VInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
-import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
+import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import type { Connection } from '@vue-flow/core';
 import { computed, ref, watch } from 'vue';
 
@@ -130,14 +131,44 @@ const edges = computed(() => instance.conceptualEdges);
 
 const isAdding = ref(false);
 
-const addNode = () => {
+const addNode = async () => {
   if (isAdding.value) return;
   isAdding.value = true;
 
+  const tempId = `temp-${Date.now()}`;
+  const newNode: ConceptualNode = {
+    id: tempId,
+    label: 'New Node',
+    type: 'CONCEPT',
+    position: { x: 100, y: 100 },
+    status: 'DRAFT'
+  };
+
+  addNodeToContext(newNode);
+
   try {
-    addNodeToContext();
+    const canvasId = instance.id || 'default-canvas';
+    const response = await apiService.canvases.createNode(canvasId, {
+      label: newNode.label,
+      type: newNode.type,
+      position: newNode.position!
+    });
+
+    // Replace temp node with server response if needed
+    if (response && response.data) {
+      removeNodeInContext(tempId);
+      addNodeToContext({
+        id: response.data.id,
+        label: response.data.label,
+        type: response.data.type,
+        position: response.data.position,
+        status: response.data.status
+      });
+    }
   } catch (error) {
     console.error('NodeCreationError:', error);
+    // Rollback temp node
+    removeNodeInContext(tempId);
   } finally {
     isAdding.value = false;
   }

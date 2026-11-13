@@ -3,6 +3,7 @@ interface RuntimeConfig {
   AURAFLUX_AUTH_URL: string;
   AURAFLUX_MULL_URL: string;
   AURAFLUX_MULL_CLIENT_ID: string;
+  AURAFLUX_CHESS_URL: string;
   AURAFLUX_NEXUS_URL: string;
   AURAFLUX_WS_URL: string;
   DEBOUNCE_TIME: number;
