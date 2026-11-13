@@ -9,6 +9,12 @@ export interface CreateNodeRequest {
   content?: string;
 }
 
+export interface UpdateNodeRequest {
+  label?: string;
+  type?: NodeType;
+  content?: string;
+}
+
 export interface CreateEdgeRequest {
   source: string;
   target: string;

@@ -179,8 +179,20 @@ const onConnect = async (connection: Connection) => {
   }
 };
 
-const onUpdateNode = (node: ConceptualNode) => {
-  updateNodeInContext(node.id, node);
+const onUpdateNode = async (node: ConceptualNode) => {
+  const oldNode = selectedNode.value;
+  if (!oldNode) return;
+
+  const success = await canvasService.updateNode(
+    node.id,
+    node,
+    oldNode,
+    updateNodeInContext
+  );
+
+  if (!success) {
+    console.error('Failed to update node label');
+  }
 }
 
 const onUpdateEdge = (edge: ConceptualEdge) => {

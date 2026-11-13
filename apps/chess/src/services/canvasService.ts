@@ -1,8 +1,8 @@
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
+import { UpdateNodeRequest } from '@/interfaces/canvases';
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode, EdgeType, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
-import type { CanvasGraphResponse } from '@/interfaces/canvases';
 
 export class CanvasService {
   private canvasId: string;
@@ -134,11 +134,25 @@ export class CanvasService {
     }
   }
 
-  public async updateNode(_nodeId: ID, _nodeData: Partial<ConceptualNode>): Promise<boolean> {
+  public async updateNode(
+    nodeId: ID,
+    nodeData: UpdateNodeRequest,
+    oldNodeData: ConceptualNode,
+    updateNodeInContext: (id: ID, node: Partial<ConceptualNode>) => void
+  ): Promise<boolean> {
+
     try {
-      return true;
+      updateNodeInContext(nodeId, nodeData);
+
+      const response = await apiService.canvases.updateNode(this.canvasId as ID, nodeId, nodeData);
+
+      if (response && response.data) {
+        return true;
+      }
+      throw new Error('Update failed');
     } catch (error) {
       console.error('CanvasService.updateNode error:', error);
+      updateNodeInContext(nodeId, oldNodeData);
       return false;
     }
   }
