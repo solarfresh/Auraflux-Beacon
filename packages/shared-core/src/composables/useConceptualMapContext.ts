@@ -11,14 +11,9 @@ import type { ConceptualMapContext } from '../interfaces/conceptual-map';
 export function useConceptualMapContext(): ConceptualMapContext {
   const instance = reactive<CanvasViewInstance>({
     id: '',
+    title: '',
     conceptualNodes: new Map<string, ConceptualNode>(),
     conceptualEdges: [],
-    isDragging: false,
-    isDragOver: false,
-    draggedNode: null,
-    isInterceptionActive: false,
-    interceptorAction: '',
-    interceptorPosition: { x: 0, y: 0 },
     pendingConnection: null,
     localEdgeData: {
       id: '',
@@ -146,6 +141,10 @@ export function useConceptualMapContext(): ConceptualMapContext {
     return selectedEdgeId.value === edgeId;
   };
 
+  const setGraph = (newGraph: CanvasViewInstance) => {
+    Object.assign(instance, newGraph);
+  };
+
   return {
     instance,
     selectedNodeId,
@@ -163,5 +162,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
     deselectAll,
     isNodeSelected,
     isEdgeSelected,
+    setGraph,
   };
 }

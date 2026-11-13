@@ -1,10 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CanvasService } from '@/services/canvasService';
 import { apiService } from '@/api/apiService';
+import { CanvasLoadError } from '@/errors/canvases';
 
 vi.mock('@/api/apiService', () => ({
   apiService: {
     canvases: {
+      getGraph: vi.fn(),
       createNode: vi.fn(),
       createEdge: vi.fn()
     }
@@ -197,6 +199,49 @@ describe('CanvasService', () => {
         'Duplicate edge is not allowed'
       );
       expect(apiService.canvases.createEdge).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getCanvasGraph', () => {
+    it('should successfully fetch and map canvas graph', async () => {
+      const mockResponse = {
+        data: {
+          id: 'test-canvas',
+          title: 'Test Canvas',
+          nodes: [{ id: 'n1', label: 'Node 1', type: 'CONCEPT', position: { x: 0, y: 0 }, status: 'DRAFT' }],
+          edges: [{ id: 'e1', source: 'n1', target: 'n2', type: 'LINK' }]
+        }
+      };
+
+      vi.mocked(apiService.canvases.getGraph).mockResolvedValueOnce(mockResponse as any);
+
+      const result = await canvasService.getCanvasGraph('test-canvas');
+
+      expect(apiService.canvases.getGraph).toHaveBeenCalledWith('test-canvas');
+      expect(result).toEqual({
+        id: 'test-canvas',
+        title: 'Test Canvas',
+        conceptualNodes: new Map([['n1', { id: 'n1', label: 'Node 1', type: 'CONCEPT', position: { x: 0, y: 0 }, status: 'DRAFT', content: undefined, sourceRef: undefined, rationale: undefined, handles: undefined }]]),
+        conceptualEdges: [{
+          id: 'e1', source: 'n1', target: 'n2', type: 'LINK',
+          weight: undefined, label: undefined, status: undefined, evidence: undefined, rationale: undefined,
+          metadata: undefined, sourceHandle: undefined, targetHandle: undefined
+        }],
+        pendingConnection: null,
+        localEdgeData: {
+          id: '',
+          source: '',
+          target: '',
+          type: 'LINK',
+          weight: 1,
+        },
+        viewport: { x: 0, y: 0, zoom: 1 },
+      });
+    });
+
+    it('should throw CanvasLoadError when API fails', async () => {
+      vi.mocked(apiService.canvases.getGraph).mockRejectedValueOnce(new CanvasLoadError('Network error'));
+      await expect(canvasService.getCanvasGraph('test-canvas')).rejects.toThrow(CanvasLoadError);
     });
   });
 });

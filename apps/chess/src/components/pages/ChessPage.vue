@@ -9,6 +9,7 @@
     <VBox tag="div" class="flex-1 w-full flex flex-row overflow-hidden">
       <VBox tag="div" class="flex-1 h-full relative overflow-hidden">
         <VConceptualMapCanvas
+          v-if="!loadError"
           :nodes="nodes"
           :edges="edges"
           :selected-node-id="selectedNodeId"
@@ -70,7 +71,7 @@ import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 
 const context = useConceptualMapContext();
 const {
@@ -87,20 +88,6 @@ const {
   removeEdge: removeEdgeInContext,
 } = context;
 
-const isEditing = ref(false);
-const isPanelExpanded = ref(true);
-
-const deselectAllAndClosePanel = () => {
-  deselectAll();
-  isPanelExpanded.value = false;
-};
-
-watch([selectedNodeId, selectedEdgeId], ([newNodeId, newEdgeId]) => {
-  if (newNodeId || newEdgeId) {
-    isPanelExpanded.value = true;
-  }
-});
-
 useCanvasKeyboardShortcuts({
   selectedNodeId,
   selectedEdgeId,
@@ -108,15 +95,18 @@ useCanvasKeyboardShortcuts({
   removeEdge: removeEdgeInContext,
 });
 
-const selectNode = (node: { id: ID }) => {
-  if (isEditing.value) return;
-  selectNodeInContext(node.id);
-};
+const isAdding = ref(false);
+const isDuplicating = ref(false);
+const isEditing = ref(false);
+const isLoading = ref(false);
+const isPanelExpanded = ref(true);
+const loadError = ref<string | null>(null);
 
-const selectEdge = (edge: { id: ID }) => {
-  if (isEditing.value) return;
-  selectEdgeInContext(edge.id);
-};
+watch([selectedNodeId, selectedEdgeId], ([newNodeId, newEdgeId]) => {
+  if (newNodeId || newEdgeId) {
+    isPanelExpanded.value = true;
+  }
+});
 
 const selectedNode = computed(() => {
   return selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null;
@@ -129,8 +119,40 @@ const selectedEdge = computed(() => {
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
-const isAdding = ref(false);
-const isDuplicating = ref(false);
+onMounted(() => {
+  loadCanvas('default-canvas');
+});
+
+const selectNode = (node: { id: ID }) => {
+  if (isEditing.value) return;
+  selectNodeInContext(node.id);
+};
+
+const selectEdge = (edge: { id: ID }) => {
+  if (isEditing.value) return;
+  selectEdgeInContext(edge.id);
+};
+
+const loadCanvas = async (canvasId: string) => {
+  isLoading.value = true;
+  loadError.value = null;
+  try {
+    const graphInstance = await canvasService.getCanvasGraph(canvasId);
+    if (graphInstance) {
+      context.setGraph(graphInstance);
+    }
+  } catch (error) {
+    console.error('Failed to load canvas graph:', error);
+    loadError.value = 'Error loading canvas';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const deselectAllAndClosePanel = () => {
+  deselectAll();
+  isPanelExpanded.value = false;
+};
 
 const addNode = async () => {
   if (isAdding.value) return;

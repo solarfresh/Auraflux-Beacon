@@ -85,14 +85,9 @@ export interface ViewPort {
 
 export interface CanvasViewInstance {
   id: ID;
+  title: string;
   conceptualNodes: Map<string, ConceptualNode>;
   conceptualEdges: ConceptualEdge[];
-  isDragging: boolean;
-  isDragOver: boolean;
-  draggedNode: any | null;
-  isInterceptionActive: boolean;
-  interceptorAction: string;
-  interceptorPosition: Point2D;
   pendingConnection: Connection | null;
   localEdgeData: ConceptualEdge;
   viewport: ViewPort;

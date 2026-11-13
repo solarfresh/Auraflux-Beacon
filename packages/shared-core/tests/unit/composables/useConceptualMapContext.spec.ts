@@ -12,7 +12,6 @@ describe('useConceptualMapContext', () => {
     const { instance } = useConceptualMapContext();
     expect(instance.conceptualNodes).toBeDefined();
     expect(instance.conceptualEdges).toEqual([]);
-    expect(instance.isDragging).toBe(false);
   });
 
   it('should successfully add and remove nodes', () => {

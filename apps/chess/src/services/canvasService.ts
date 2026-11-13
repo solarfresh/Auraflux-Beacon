@@ -1,6 +1,8 @@
 import { apiService } from '@/api/apiService';
-import type { ConceptualEdge, ConceptualNode, NodeType, EdgeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import { CanvasLoadError } from '@/errors/canvases';
+import type { CanvasViewInstance, ConceptualEdge, ConceptualNode, EdgeType, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
+import type { CanvasGraphResponse } from '@/interfaces/canvases';
 
 export class CanvasService {
   private canvasId: string;
@@ -11,6 +13,33 @@ export class CanvasService {
 
   public setCanvasId(id: string) {
     this.canvasId = id;
+  }
+
+  public async getCanvasGraph(canvasId: string): Promise<CanvasViewInstance | null> {
+    try {
+      const response = await apiService.canvases.getGraph(canvasId as ID);
+      if (response && response.data) {
+        return {
+          id: response.data.id,
+          title: response.data.title,
+          conceptualNodes: new Map(response.data.nodes.map(n => [n.id, n])),
+          conceptualEdges: response.data.edges,
+          pendingConnection: null,
+          localEdgeData: {
+            id: '',
+            source: '',
+            target: '',
+            type: 'LINK',
+            weight: 1,
+          },
+          viewport: { x: 0, y: 0, zoom: 1 },
+        } as CanvasViewInstance;
+      }
+      return null;
+    } catch (error) {
+      console.error('CanvasService.getCanvasGraph error:', error);
+      throw new CanvasLoadError('Failed to load canvas graph');
+    }
   }
 
   public async createNode(nodeData: Partial<ConceptualNode>): Promise<ConceptualNode | null> {

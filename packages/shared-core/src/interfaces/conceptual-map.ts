@@ -20,6 +20,7 @@ export interface ConceptualMapContext {
   deselectAll: () => void;
   isNodeSelected: (nodeId: ID) => boolean;
   isEdgeSelected: (edgeId: ID) => boolean;
+  setGraph: (newGraph: CanvasViewInstance) => void;
 }
 
 

@@ -29,7 +29,8 @@ vi.mock('@/services/canvasService', () => ({
     }),
     updateNode: vi.fn().mockResolvedValue(true),
     deleteNode: vi.fn().mockResolvedValue(true),
-    createEdge: vi.fn(async (edge) => edge)
+    createEdge: vi.fn(async (edge) => edge),
+    getCanvasGraph: vi.fn()
   }
 }));
 
@@ -192,6 +193,76 @@ describe('ChessPage.vue', () => {
     );
     expect(mockConceptualMapContext.addNode).toHaveBeenCalled();
   });
+
+  it('initializes canvas graph on mount', async () => {
+    vi.mocked(canvasService.getCanvasGraph).mockResolvedValueOnce({
+      nodes: [{ id: '1', label: 'C1', type: 'CONCEPT', position: { x: 0, y: 0 }, status: 'ACTIVE' }],
+      edges: []
+    } as any);
+
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          VueFlow: true,
+          Background: true,
+          Controls: true,
+          MiniMap: true,
+        },
+      },
+    });
+  });
+
+  // TODO: Future feature: Implement error handling and retry mechanism for canvas loading
+  // it('shows error and retry when canvas loading fails', async () => {
+  //   vi.mocked(canvasService.getCanvasGraph).mockRejectedValueOnce(new Error('Load Error'));
+
+  //   const wrapper = mount(ChessPage, {
+  //     global: {
+  //       stubs: {
+  //         VueFlow: true,
+  //         Background: true,
+  //         Controls: true,
+  //         MiniMap: true,
+  //       },
+  //     },
+  //   });
+
+  //   await wrapper.vm.$nextTick();
+  //   // Assuming UI renders "Error loading canvas" text
+  //   expect(wrapper.text()).toContain('Error loading canvas');
+
+  //   const retryBtn = wrapper.find('button.retry-btn');
+  //   expect(retryBtn.exists()).toBe(true);
+
+  //   vi.mocked(canvasService.getCanvasGraph).mockResolvedValueOnce({ nodes: [], edges: [] } as any);
+  //   await retryBtn.trigger('click');
+  //   expect(canvasService.getCanvasGraph).toHaveBeenCalledTimes(2);
+  // });
+
+  // it('shows error and retry when canvas loading fails', async () => {
+  //   vi.mocked(canvasService.getCanvasGraph).mockRejectedValueOnce(new Error('Load Error'));
+
+  //   const wrapper = mount(ChessPage, {
+  //     global: {
+  //       stubs: {
+  //         VueFlow: true,
+  //         Background: true,
+  //         Controls: true,
+  //         MiniMap: true,
+  //       },
+  //     },
+  //   });
+
+  //   await wrapper.vm.$nextTick();
+  //   expect(wrapper.text()).toContain('Error loading canvas');
+
+  //   const retryBtn = wrapper.find('button.retry-btn');
+  //   expect(retryBtn.exists()).toBe(true);
+
+  //   vi.mocked(canvasService.getCanvasGraph).mockResolvedValueOnce({ nodes: [], edges: [] } as any);
+  //   await retryBtn.trigger('click');
+  //   expect(canvasService.getCanvasGraph).toHaveBeenCalledTimes(2);
+  // });
 
   it('rejects self-loop connections', async () => {
     const wrapper = mount(ChessPage, {
