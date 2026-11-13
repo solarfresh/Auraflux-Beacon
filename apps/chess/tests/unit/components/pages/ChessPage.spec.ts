@@ -1,23 +1,24 @@
-import { apiService } from '@/api/apiService';
+import { canvasService } from '@/services/canvasService';
 import ChessPage from '@/components/pages/ChessPage.vue';
 import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { mount } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { reactive, ref } from 'vue';
 
-vi.mock('@/api/apiService', () => ({
-  apiService: {
-    canvases: {
-      createNode: vi.fn().mockResolvedValue({
-        data: {
-          id: 'server-node-1',
-          label: 'New Node',
-          type: 'CONCEPT',
-          position: { x: 100, y: 100 },
-          status: 'DRAFT'
-        }
-      })
-    }
+vi.mock('@/services/canvasService', () => ({
+  canvasService: {
+    addNode: vi.fn(async (instanceId, addNodeToContext) => {
+      addNodeToContext({
+        id: 'server-node-1',
+        label: 'New Node',
+        type: 'CONCEPT',
+        position: { x: 100, y: 100 },
+        status: 'DRAFT'
+      });
+    }),
+    updateNode: vi.fn().mockResolvedValue(true),
+    deleteNode: vi.fn().mockResolvedValue(true),
+    createEdge: vi.fn(async (edge) => edge)
   }
 }));
 
@@ -30,7 +31,7 @@ beforeEach(() => {
 // Mock conceptual map context
 const mockConceptualMapContext = {
   instance: reactive({
-    canvasId: 'canvas-1',
+    id: 'canvas-1',
     conceptualNodes: new Map([
       ['1', { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode],
       ['2', { id: '2', type: 'CONCEPT', label: 'C2', position: { x: 10, y: 10 }, status: 'ACTIVE' } as ConceptualNode],
@@ -173,11 +174,11 @@ describe('ChessPage.vue', () => {
     const button = wrapper.find('button');
     await button.trigger('click');
 
-    expect(apiService.canvases.createNode).toHaveBeenCalledWith('canvas-1', {
-      label: 'New Node',
-      type: 'CONCEPT',
-      position: { x: 100, y: 100 }
-    });
+    expect(canvasService.addNode).toHaveBeenCalledWith(
+      'canvas-1',
+      expect.any(Function),
+      expect.any(Function)
+    );
     expect(mockConceptualMapContext.addNode).toHaveBeenCalled();
   });
 

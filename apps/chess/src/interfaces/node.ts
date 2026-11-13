@@ -1,4 +1,4 @@
-import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
+export { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { NodeType, Point2D } from '@auraflux/design-system/interfaces/conceptual-map';
 
 export interface CreateNodeRequest {
@@ -7,5 +7,3 @@ export interface CreateNodeRequest {
   position: Point2D;
   content?: string;
 }
-
-export type NodeEntity = ConceptualNode;

@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { apiService } from '@/api/apiService';
+import { canvasService } from '@/services/canvasService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -134,41 +134,8 @@ const isAdding = ref(false);
 const addNode = async () => {
   if (isAdding.value) return;
   isAdding.value = true;
-
-  const tempId = `temp-${Date.now()}`;
-  const newNode: ConceptualNode = {
-    id: tempId,
-    label: 'New Node',
-    type: 'CONCEPT',
-    position: { x: 100, y: 100 },
-    status: 'DRAFT'
-  };
-
-  addNodeToContext(newNode);
-
   try {
-    const canvasId = instance.id || 'default-canvas';
-    const response = await apiService.canvases.createNode(canvasId, {
-      label: newNode.label,
-      type: newNode.type,
-      position: newNode.position!
-    });
-
-    // Replace temp node with server response if needed
-    if (response && response.data) {
-      removeNodeInContext(tempId);
-      addNodeToContext({
-        id: response.data.id,
-        label: response.data.label,
-        type: response.data.type,
-        position: response.data.position,
-        status: response.data.status
-      });
-    }
-  } catch (error) {
-    console.error('NodeCreationError:', error);
-    // Rollback temp node
-    removeNodeInContext(tempId);
+    await canvasService.addNode(instance.id, addNodeToContext, removeNodeInContext);
   } finally {
     isAdding.value = false;
   }

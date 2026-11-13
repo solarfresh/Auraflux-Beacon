@@ -10,6 +10,7 @@ import type { ConceptualMapContext } from '../interfaces/conceptual-map';
 
 export function useConceptualMapContext(): ConceptualMapContext {
   const instance = reactive<CanvasViewInstance>({
+    id: '',
     conceptualNodes: new Map<string, ConceptualNode>(),
     conceptualEdges: [],
     isDragging: false,
