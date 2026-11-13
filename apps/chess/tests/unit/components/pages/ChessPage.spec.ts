@@ -16,6 +16,17 @@ vi.mock('@/services/canvasService', () => ({
         status: 'DRAFT'
       });
     }),
+    duplicateNode: vi.fn(async (node, instanceId, addNodeToContext) => {
+      if (typeof addNodeToContext === 'function') {
+        addNodeToContext({
+          id: 'server-node-dup',
+          label: `${node.label} (Copy)`,
+          type: node.type,
+          position: { x: node.position.x + 20, y: node.position.y + 20 },
+          status: 'DRAFT'
+        });
+      }
+    }),
     updateNode: vi.fn().mockResolvedValue(true),
     deleteNode: vi.fn().mockResolvedValue(true),
     createEdge: vi.fn(async (edge) => edge)

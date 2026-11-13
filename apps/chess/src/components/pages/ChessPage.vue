@@ -130,6 +130,7 @@ const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
 const isAdding = ref(false);
+const isDuplicating = ref(false);
 
 const addNode = async () => {
   if (isAdding.value) return;
@@ -141,19 +142,19 @@ const addNode = async () => {
   }
 };
 
-const onConnect = (connection: Connection) => {
-  if (connection.source === connection.target) {
-    console.warn('Reject self-loop connection');
-    return;
+const onConnect = async (connection: Connection) => {
+  try {
+    if (connection.source === connection.target) {
+      console.warn('Reject self-loop connection');
+      return;
+    }
+    const newEdge = await canvasService.createEdge(connection.source, connection.target, edges.value);
+    if (newEdge) {
+      addEdgeToContext(newEdge);
+    }
+  } catch (error) {
+    console.error('Failed to create edge:', error);
   }
-  const newEdge: ConceptualEdge = {
-    id: `e-${connection.source}-${connection.target}-${Date.now()}`,
-    source: connection.source,
-    target: connection.target,
-    type: 'LINK',
-    weight: 1,
-  };
-  addEdgeToContext(newEdge);
 };
 
 const onUpdateNode = (node: ConceptualNode) => {
@@ -168,17 +169,14 @@ const onNodeDragStop = (node: { id: ID; position: { x: number; y: number } }) =>
   updateNodeInContext(node.id, { position: node.position || { x: 0, y: 0 } });
 };
 
-const onDuplicateNode = (node: ConceptualNode) => {
-  const duplicated: ConceptualNode = {
-    ...node,
-    id: `node-${Date.now()}`,
-    label: `${node.label} (Copy)`,
-    position: {
-      x: (node.position?.x || 0) + 50,
-      y: (node.position?.y || 0) + 50
-    }
-  };
-  addNodeToContext(duplicated);
+const onDuplicateNode = async (node: ConceptualNode) => {
+  if (isDuplicating.value) return;
+  isDuplicating.value = true;
+  try {
+    await canvasService.duplicateNode(node, instance.id, addNodeToContext, removeNodeInContext);
+  } finally {
+    isDuplicating.value = false;
+  }
 };
 
 const onDeleteNode = (id: string) => {

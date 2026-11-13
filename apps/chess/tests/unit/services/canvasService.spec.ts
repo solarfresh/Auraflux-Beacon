@@ -5,7 +5,8 @@ import { apiService } from '@/api/apiService';
 vi.mock('@/api/apiService', () => ({
   apiService: {
     canvases: {
-      createNode: vi.fn()
+      createNode: vi.fn(),
+      createEdge: vi.fn()
     }
   }
 }));
@@ -103,7 +104,36 @@ describe('CanvasService', () => {
     });
   });
 
-  describe('updateNode, deleteNode, createEdge placeholders', () => {
+  describe('updateNode, deleteNode', () => {
+    it('should successfully duplicate a node', async () => {
+      const addNodeToContext = vi.fn();
+      const removeNodeFromContext = vi.fn();
+      const node = {
+        id: 'node-1',
+        label: 'Original',
+        type: 'CONCEPT',
+        position: { x: 10, y: 10 },
+        status: 'ACTIVE'
+      } as any;
+
+      const mockResponse = {
+        data: {
+          id: 'node-2',
+          label: 'Original (Copy)',
+          type: 'CONCEPT',
+          position: { x: 60, y: 60 },
+          status: 'DRAFT'
+        }
+      };
+
+      vi.mocked(apiService.canvases.createNode).mockResolvedValueOnce(mockResponse as any);
+
+      await canvasService.duplicateNode(node, 'custom-canvas', addNodeToContext, removeNodeFromContext);
+
+      expect(addNodeToContext).toHaveBeenCalledTimes(2);
+      expect(removeNodeFromContext).toHaveBeenCalledTimes(1);
+    });
+
     it('should return true for updateNode', async () => {
       const res = await canvasService.updateNode('1', { label: 'updated' });
       expect(res).toBe(true);
@@ -113,11 +143,60 @@ describe('CanvasService', () => {
       const res = await canvasService.deleteNode('1');
       expect(res).toBe(true);
     });
+  });
 
-    it('should return edgeData for createEdge', async () => {
-      const edge = { id: 'edge-1', source: '1', target: '2' };
-      const res = await canvasService.createEdge(edge);
-      expect(res).toEqual(edge);
+  describe('createEdge', () => {
+    it('should successfully create an edge when valid and not duplicate/self-loop', async () => {
+      const mockResponse = {
+        data: {
+          id: 'edge-1',
+          source: 'node-1',
+          target: 'node-2',
+          type: 'LINK',
+          weight: 1
+        }
+      };
+
+      vi.mocked(apiService.canvases.createEdge).mockResolvedValueOnce(mockResponse as any);
+
+      const result = await canvasService.createEdge('node-1', 'node-2', []);
+
+      expect(apiService.canvases.createEdge).toHaveBeenCalledWith('test-canvas', {
+        source: 'node-1',
+        target: 'node-2',
+        type: 'LINK',
+        weight: 1
+      });
+      expect(result).toEqual({
+        id: 'edge-1',
+        source: 'node-1',
+        target: 'node-2',
+        type: 'LINK',
+        weight: 1,
+        label: undefined,
+        status: undefined,
+        evidence: undefined,
+        rationale: undefined,
+        metadata: undefined,
+        sourceHandle: undefined,
+        targetHandle: undefined
+      });
+    });
+
+    it('should throw error on self-loop connection', async () => {
+      await expect(canvasService.createEdge('node-1', 'node-1', [])).rejects.toThrow(
+        'Self-loop connection is not allowed'
+      );
+      expect(apiService.canvases.createEdge).not.toHaveBeenCalled();
+    });
+
+    it('should throw error on duplicate edge connection', async () => {
+      const existingEdges = [{ id: 'edge-1', source: 'node-1', target: 'node-2' }] as any;
+
+      await expect(canvasService.createEdge('node-1', 'node-2', existingEdges)).rejects.toThrow(
+        'Duplicate edge is not allowed'
+      );
+      expect(apiService.canvases.createEdge).not.toHaveBeenCalled();
     });
   });
 });
