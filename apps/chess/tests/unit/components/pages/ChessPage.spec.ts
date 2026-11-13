@@ -29,7 +29,19 @@ vi.mock('@/services/canvasService', () => ({
     }),
     updateNode: vi.fn().mockResolvedValue(true),
     deleteNode: vi.fn().mockResolvedValue(true),
-    createEdge: vi.fn(async (edge) => edge),
+    updateEdge: vi.fn(async (id, data, oldEdge, updateEdgeInContext) => {
+      updateEdgeInContext(id, data);
+      return true;
+    }),
+    createEdge: vi.fn(async (sourceId, targetId, edges, sourceHandle, targetHandle) => ({
+      id: 'edge-new',
+      source: sourceId,
+      target: targetId,
+      type: 'LINK',
+      weight: 1,
+      sourceHandle,
+      targetHandle
+    })),
     getCanvasGraph: vi.fn()
   }
 }));
@@ -67,7 +79,7 @@ const mockConceptualMapContext = {
   updateEdge: vi.fn((id: string, updatedEdge: any) => {
     const idx = mockConceptualMapContext.instance.conceptualEdges.findIndex(e => e.id === id);
     if (idx !== -1) {
-      mockConceptualMapContext.instance.conceptualEdges[idx] = updatedEdge;
+      mockConceptualMapContext.instance.conceptualEdges.splice(idx, 1, updatedEdge);
     }
   }),
   selectNode: vi.fn((id: string) => {
@@ -430,6 +442,15 @@ describe('ChessPage.vue', () => {
       },
     });
 
+    const vm = wrapper.vm as any;
+    vm.instance.conceptualEdges.push({
+      id: 'e1-2',
+      source: '1',
+      target: '2',
+      weight: 1,
+      type: 'LINK'
+    });
+
     mockConceptualMapContext.selectEdge('e1-2');
     await wrapper.vm.$nextTick();
 
@@ -439,7 +460,6 @@ describe('ChessPage.vue', () => {
     await wrapper.vm.$nextTick();
 
     // Verify local state update since updateEdgeInContext is internal
-    const vm = wrapper.vm as any;
     expect(vm.selectedEdge.weight).toBe(3);
     expect(vm.selectedEdge.type).toBe('ASSOCIATION');
   });

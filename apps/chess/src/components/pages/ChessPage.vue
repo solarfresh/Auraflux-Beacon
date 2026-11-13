@@ -187,20 +187,31 @@ const onConnect = async (connection: Connection) => {
   }
 };
 
+const onUpdateNode = async (node: ConceptualNode) => {
+  const oldNode = selectedNode.value;
+  if (!oldNode) return;
+
+  const success = await canvasService.updateNode(
+    node.id,
+    node,
+    oldNode,
+    updateNodeInContext
+  );
+
+  if (!success) {
+    console.error('Failed to update node');
+  }
+}
+
 const onUpdateEdge = async (edge: ConceptualEdge) => {
   const oldEdge = edges.value.find(e => e.id === edge.id);
   if (!oldEdge) return;
 
   const success = await canvasService.updateEdge(
     edge.id,
-    {
-      type: edge.type,
-      weight: edge.weight,
-      sourceHandle: edge.sourceHandle,
-      targetHandle: edge.targetHandle
-    },
+    edge,
     oldEdge,
-    updateEdgeInContext
+    (id, updatedEdge) => updateEdgeInContext(id, updatedEdge as ConceptualEdge)
   );
 
   if (!success) {

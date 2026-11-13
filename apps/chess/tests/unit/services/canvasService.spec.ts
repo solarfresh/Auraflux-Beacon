@@ -2,13 +2,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { CanvasService } from '@/services/canvasService';
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
+import { ConceptualNode } from '@/interfaces/canvases';
 
 vi.mock('@/api/apiService', () => ({
   apiService: {
     canvases: {
       getGraph: vi.fn(),
       createNode: vi.fn(),
-      createEdge: vi.fn()
+      updateNode: vi.fn(),
+      createEdge: vi.fn(),
+      updateEdge: vi.fn()
     }
   }
 }));
@@ -30,10 +33,12 @@ describe('CanvasService', () => {
           type: 'CONCEPT',
           position: { x: 10, y: 20 },
           status: 'DRAFT'
-        }
+        } as ConceptualNode
       };
 
-      vi.mocked(apiService.canvases.createNode).mockResolvedValueOnce(mockResponse as any);
+      vi.mocked(apiService.canvases.createNode).mockResolvedValueOnce({
+        data: mockResponse.data,
+      } as any);
 
       const result = await canvasService.createNode({ label: 'Test Node' });
 
@@ -137,7 +142,20 @@ describe('CanvasService', () => {
     });
 
     it('should return true for updateNode', async () => {
-      const res = await canvasService.updateNode('1', { label: 'updated' });
+      const oldNode: ConceptualNode = { id: '1', label: 'old', type: 'CONCEPT', position: { x: 0, y: 0 }, status: 'ACTIVE', content: undefined, sourceRef: undefined, rationale: undefined, handles: undefined };
+
+      const mockResponse = {
+        data: {
+          id: '1',
+          label: 'updated',
+          type: 'CONCEPT',
+          position: { x: 0, y: 0 },
+          status: 'ACTIVE'
+        }
+      };
+      vi.mocked(apiService.canvases.updateNode).mockResolvedValueOnce(mockResponse as any);
+
+      const res = await canvasService.updateNode('1', { label: 'updated' }, oldNode, vi.fn());
       expect(res).toBe(true);
     });
 
@@ -167,7 +185,9 @@ describe('CanvasService', () => {
         source: 'node-1',
         target: 'node-2',
         type: 'LINK',
-        weight: 1
+        weight: 1,
+        sourceHandle: null,
+        targetHandle: null
       });
       expect(result).toEqual({
         id: 'edge-1',
@@ -199,6 +219,80 @@ describe('CanvasService', () => {
         'Duplicate edge is not allowed'
       );
       expect(apiService.canvases.createEdge).not.toHaveBeenCalled();
+    });
+
+    it('should successfully create an edge with handles when valid', async () => {
+      const mockResponse = {
+        data: {
+          id: 'edge-1',
+          source: 'node-1',
+          target: 'node-2',
+          sourceHandle: 'handle-s1',
+          targetHandle: 'handle-t1',
+          type: 'LINK',
+          weight: 1
+        }
+      };
+
+      vi.mocked(apiService.canvases.createEdge).mockResolvedValueOnce(mockResponse as any);
+
+      const result = await canvasService.createEdge('node-1', 'node-2', [], 'handle-s1', 'handle-t1');
+
+      expect(apiService.canvases.createEdge).toHaveBeenCalledWith('test-canvas', {
+        source: 'node-1',
+        target: 'node-2',
+        sourceHandle: 'handle-s1',
+        targetHandle: 'handle-t1',
+        type: 'LINK',
+        weight: 1
+      });
+      expect(result).toEqual({
+        id: 'edge-1',
+        source: 'node-1',
+        target: 'node-2',
+        sourceHandle: 'handle-s1',
+        targetHandle: 'handle-t1',
+        type: 'LINK',
+        weight: 1,
+        label: undefined,
+        status: undefined,
+        evidence: undefined,
+        rationale: undefined,
+        metadata: undefined
+      });
+    });
+
+    it('should throw error on duplicate edge connection with same handles', async () => {
+      const existingEdges = [{ id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'handle-s1', targetHandle: 'handle-t1' }] as any;
+
+      await expect(canvasService.createEdge('node-1', 'node-2', existingEdges, 'handle-s1', 'handle-t1')).rejects.toThrow(
+        'Duplicate edge is not allowed'
+      );
+      expect(apiService.canvases.createEdge).not.toHaveBeenCalled();
+    });
+
+    it('should allow multiple edges with different handles', async () => {
+      const existingEdges = [{ id: 'edge-1', source: 'node-1', target: 'node-2', sourceHandle: 'handle-s1', targetHandle: 'handle-t1' }] as any;
+      const mockResponse = {
+        data: {
+          id: 'edge-2',
+          source: 'node-1',
+          target: 'node-2',
+          sourceHandle: 'handle-s2',
+          targetHandle: 'handle-t2',
+          type: 'LINK',
+          weight: 1
+        }
+      };
+
+      vi.mocked(apiService.canvases.createEdge).mockResolvedValueOnce(mockResponse as any);
+
+      await canvasService.createEdge('node-1', 'node-2', existingEdges, 'handle-s2', 'handle-t2');
+
+      expect(apiService.canvases.createEdge).toHaveBeenCalledWith('test-canvas', expect.objectContaining({
+        sourceHandle: 'handle-s2',
+        targetHandle: 'handle-t2'
+      }));
     });
   });
 

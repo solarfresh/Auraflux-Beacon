@@ -159,7 +159,7 @@ describe('useConceptualMapContext', () => {
   });
 
   it('should reset selectedEdgeId if the removed edge was selected', () => {
-    const { selectedEdgeId, selectEdge, removeEdge } = useConceptualMapContext();
+    const { selectedEdgeId, selectEdge, removeEdge, instance } = useConceptualMapContext();
     selectEdge('edge-1');
     expect(selectedEdgeId.value).toBe('edge-1');
     removeEdge('edge-1');
