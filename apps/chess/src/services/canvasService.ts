@@ -1,6 +1,6 @@
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
-import { UpdateNodeRequest } from '@/interfaces/canvases';
+import { UpdateNodeRequest, UpdateEdgeRequest } from '@/interfaces/canvases';
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode, EdgeType, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 
@@ -169,7 +169,9 @@ export class CanvasService {
   public async createEdge(
     sourceId: ID,
     targetId: ID,
-    edges: ConceptualEdge[]
+    edges: ConceptualEdge[],
+    sourceHandle?: string | null,
+    targetHandle?: string | null
   ): Promise<ConceptualEdge | null> {
     try {
       if (sourceId === targetId) {
@@ -177,7 +179,7 @@ export class CanvasService {
       }
 
       const isDuplicate = edges.some(
-        (e) => e.source === sourceId && e.target === targetId
+        (e) => e.source === sourceId && e.target === targetId && e.sourceHandle === sourceHandle && e.targetHandle === targetHandle
       );
       if (isDuplicate) {
         throw new Error('Duplicate edge is not allowed');
@@ -187,7 +189,9 @@ export class CanvasService {
         source: sourceId as ID,
         target: targetId as ID,
         type: 'LINK',
-        weight: 1
+        weight: 1,
+        sourceHandle: sourceHandle ?? null,
+        targetHandle: targetHandle ?? null
       });
 
       if (response && response.data) {
@@ -210,6 +214,28 @@ export class CanvasService {
     } catch (error) {
       console.error('CanvasService.createEdge error:', error);
       throw error;
+    }
+  }
+
+  public async updateEdge(
+    edgeId: ID,
+    edgeData: UpdateEdgeRequest,
+    oldEdgeData: ConceptualEdge,
+    updateEdgeInContext: (id: ID, edge: Partial<ConceptualEdge>) => void
+  ): Promise<boolean> {
+    try {
+      updateEdgeInContext(edgeId, edgeData as Partial<ConceptualEdge>);
+
+      const response = await apiService.canvases.updateEdge(this.canvasId as ID, edgeId, edgeData);
+
+      if (response && response.data) {
+        return true;
+      }
+      throw new Error('Edge update failed');
+    } catch (error) {
+      console.error('CanvasService.updateEdge error:', error);
+      updateEdgeInContext(edgeId, oldEdgeData);
+      return false;
     }
   }
 }

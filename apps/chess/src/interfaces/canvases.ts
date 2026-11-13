@@ -20,6 +20,17 @@ export interface CreateEdgeRequest {
   target: string;
   type: string;
   weight: number;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+}
+
+export interface UpdateEdgeRequest {
+  source: string;
+  target: string;
+  type?: string;
+  weight?: number;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
 }
 
 export interface CanvasGraphResponse {

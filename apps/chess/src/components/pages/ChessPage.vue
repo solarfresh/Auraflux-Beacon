@@ -80,7 +80,8 @@ const {
   selectNode: selectNodeInContext,
   selectEdge: selectEdgeInContext,
   deselectAll,
-  instance, addNode: addNodeToContext,
+  instance,
+  addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
   updateEdge: updateEdgeInContext,
@@ -120,7 +121,8 @@ const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
 onMounted(() => {
-  loadCanvas('default-canvas');
+  // TODO: Replace with dynamic canvas ID based on user selection or route parameter
+  loadCanvas('56439646-a564-4bbf-8dff-578ca9016f94');
 });
 
 const selectNode = (node: { id: ID }) => {
@@ -170,7 +172,13 @@ const onConnect = async (connection: Connection) => {
       console.warn('Reject self-loop connection');
       return;
     }
-    const newEdge = await canvasService.createEdge(connection.source, connection.target, edges.value);
+    const newEdge = await canvasService.createEdge(
+      connection.source,
+      connection.target,
+      edges.value,
+      connection.sourceHandle,
+      connection.targetHandle
+    );
     if (newEdge) {
       addEdgeToContext(newEdge);
     }
@@ -179,24 +187,25 @@ const onConnect = async (connection: Connection) => {
   }
 };
 
-const onUpdateNode = async (node: ConceptualNode) => {
-  const oldNode = selectedNode.value;
-  if (!oldNode) return;
+const onUpdateEdge = async (edge: ConceptualEdge) => {
+  const oldEdge = edges.value.find(e => e.id === edge.id);
+  if (!oldEdge) return;
 
-  const success = await canvasService.updateNode(
-    node.id,
-    node,
-    oldNode,
-    updateNodeInContext
+  const success = await canvasService.updateEdge(
+    edge.id,
+    {
+      type: edge.type,
+      weight: edge.weight,
+      sourceHandle: edge.sourceHandle,
+      targetHandle: edge.targetHandle
+    },
+    oldEdge,
+    updateEdgeInContext
   );
 
   if (!success) {
-    console.error('Failed to update node label');
+    console.error('Failed to update edge');
   }
-}
-
-const onUpdateEdge = (edge: ConceptualEdge) => {
-  updateEdgeInContext(edge.id, edge);
 };
 
 const onNodeDragStop = (node: { id: ID; position: { x: number; y: number } }) => {
