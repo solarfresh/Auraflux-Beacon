@@ -140,6 +140,13 @@ export class CanvasService {
     oldNodeData: ConceptualNode,
     updateNodeInContext: (id: ID, node: Partial<ConceptualNode>) => void
   ): Promise<boolean> {
+    if (
+      (nodeData.label !== undefined && nodeData.label.trim() === '') ||
+      (nodeData.type !== undefined && nodeData.type.trim() === '')
+    ) {
+      console.warn('Empty fields detected, skipping update');
+      return false;
+    }
 
     try {
       updateNodeInContext(nodeId, nodeData);
