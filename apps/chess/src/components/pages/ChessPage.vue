@@ -191,15 +191,20 @@ const onUpdateNode = async (node: ConceptualNode) => {
   const oldNode = selectedNode.value;
   if (!oldNode) return;
 
-  const success = await canvasService.updateNode(
-    node.id,
-    node,
-    oldNode,
-    updateNodeInContext
-  );
+  try {
+    const success = await canvasService.updateNode(
+      node.id,
+      node,
+      oldNode,
+      updateNodeInContext
+    );
 
-  if (!success) {
-    console.error('Failed to update node');
+    if (!success) {
+      console.error('Failed to update node');
+    }
+  } catch (error) {
+    console.error('Error in onUpdateNode:', error);
+    updateNodeInContext(node.id, oldNode);
   }
 }
 
