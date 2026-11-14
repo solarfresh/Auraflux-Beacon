@@ -159,6 +159,16 @@ describe('CanvasService', () => {
       expect(res).toBe(true);
     });
 
+    it('should return false for updateNode when label is empty or whitespace', async () => {
+      const oldNode: ConceptualNode = { id: '1', label: 'old', type: 'CONCEPT', position: { x: 0, y: 0 }, status: 'ACTIVE' } as any;
+
+      const res1 = await canvasService.updateNode('1', { label: '' }, oldNode, vi.fn());
+      expect(res1).toBe(false);
+
+      const res2 = await canvasService.updateNode('1', { label: '   ' }, oldNode, vi.fn());
+      expect(res2).toBe(false);
+    });
+
     it('should return true for deleteNode', async () => {
       const res = await canvasService.deleteNode('1');
       expect(res).toBe(true);
