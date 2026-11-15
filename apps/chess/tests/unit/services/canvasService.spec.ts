@@ -11,7 +11,8 @@ vi.mock('@/api/apiService', () => ({
       createNode: vi.fn(),
       updateNode: vi.fn(),
       createEdge: vi.fn(),
-      updateEdge: vi.fn()
+      updateEdge: vi.fn(),
+      batchUpdateNodePositions: vi.fn()
     }
   }
 }));
@@ -346,6 +347,48 @@ describe('CanvasService', () => {
     it('should throw CanvasLoadError when API fails', async () => {
       vi.mocked(apiService.canvases.getGraph).mockRejectedValueOnce(new CanvasLoadError('Network error'));
       await expect(canvasService.getCanvasGraph('test-canvas')).rejects.toThrow(CanvasLoadError);
+    });
+  });
+
+  describe('batchUpdateNodePositions', () => {
+    it('should successfully update positions', async () => {
+      const payload = { nodes: [{ id: '1', position: { x: 20, y: 30 } }] };
+      const oldPositions = [{ id: '1', position: { x: 10, y: 20 } }];
+      const updateNodesInContext = vi.fn();
+      const restorePositionsInContext = vi.fn();
+
+      vi.mocked(apiService.canvases.batchUpdateNodePositions).mockResolvedValueOnce({ data: true } as any);
+
+      const result = await canvasService.batchUpdateNodePositions(
+        payload,
+        oldPositions,
+        updateNodesInContext,
+        restorePositionsInContext
+      );
+
+      expect(updateNodesInContext).toHaveBeenCalledWith(payload.nodes);
+      expect(result).toBe(true);
+      expect(restorePositionsInContext).not.toHaveBeenCalled();
+    });
+
+    it('should restore positions on API failure', async () => {
+      const payload = { nodes: [{ id: '1', position: { x: 20, y: 30 } }] };
+      const oldPositions = [{ id: '1', position: { x: 10, y: 20 } }];
+      const updateNodesInContext = vi.fn();
+      const restorePositionsInContext = vi.fn();
+
+      vi.mocked(apiService.canvases.batchUpdateNodePositions).mockRejectedValueOnce(new Error('API Error'));
+
+      const result = await canvasService.batchUpdateNodePositions(
+        payload,
+        oldPositions,
+        updateNodesInContext,
+        restorePositionsInContext
+      );
+
+      expect(updateNodesInContext).toHaveBeenCalledWith(payload.nodes);
+      expect(restorePositionsInContext).toHaveBeenCalledWith(oldPositions);
+      expect(result).toBe(false);
     });
   });
 });

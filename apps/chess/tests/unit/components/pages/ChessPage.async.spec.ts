@@ -12,12 +12,21 @@
 
 import { defaultStubs } from './ChessPage.setup';
 
-import { canvasService } from '@/services/canvasService';
 import ChessPage from '@/components/pages/ChessPage.vue';
-import { mount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { canvasService } from '@/services/canvasService';
+import VConceptualMapCanvas from '@auraflux/design-system/components/organisms/canvases/VConceptualMapCanvas.vue';
+import { flushPromises, mount } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 describe('ChessPage.async.spec.ts', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it('rolls back label on API failure (Edge Case)', async () => {
     vi.mocked(canvasService.updateNode).mockRejectedValueOnce(new Error('API Failure'));
 
@@ -48,9 +57,42 @@ describe('ChessPage.async.spec.ts', () => {
 
     await input.trigger('blur');
     await wrapper.vm.$nextTick();
-    await new Promise(resolve => setTimeout(resolve, 50));
 
     expect(vm.selectedNode.label).toBe('C1');
     consoleErrorSpy.mockRestore();
   });
+
+  it('should debounce node drag stop events and trigger batch update', async () => {
+    vi.mocked(canvasService.batchUpdateNodePositions).mockResolvedValueOnce(true);
+
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: {
+          ...defaultStubs,
+          VConceptualMapCanvas: {
+            template: '<div @node-drag-stop="$emit(\'node-drag-stop\', { id: \'1\', position: { x: 50, y: 50 } })"></div>'
+          }
+        }
+      }
+    });
+
+    await wrapper.vm.$nextTick();
+
+    const canvas = wrapper.findComponent(VConceptualMapCanvas);
+    expect(canvas.exists()).toBe(true);
+
+    canvas.vm.$emit('node-drag-stop', { id: '1', position: { x: 10, y: 10 } });
+    canvas.vm.$emit('node-drag-stop', { id: '1', position: { x: 20, y: 20 } });
+    canvas.vm.$emit('node-drag-stop', { id: '1', position: { x: 50, y: 50 } });
+
+    expect(canvasService.batchUpdateNodePositions).not.toHaveBeenCalled();
+
+    // Use explicit advance timers and trigger flush
+    vi.runAllTimers();
+    await flushPromises();
+    await wrapper.vm.$nextTick();
+
+    expect(canvasService.batchUpdateNodePositions).toHaveBeenCalledTimes(1);
+  });
 });
+

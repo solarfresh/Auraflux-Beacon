@@ -24,6 +24,7 @@ export const canvasServiceMock = {
     }
   }),
   updateNode: vi.fn().mockResolvedValue(true),
+  batchUpdateNodePositions: vi.fn().mockResolvedValue(true),
   deleteNode: vi.fn().mockResolvedValue(true),
   updateEdge: vi.fn(async (id, data, oldEdge, updateEdgeInContext) => {
     updateEdgeInContext(id, data);
@@ -56,6 +57,7 @@ export const mockConceptualMapContext = {
   }),
   selectedNodeId: ref<string | null>(null),
   selectedEdgeId: ref<string | null>(null),
+  pendingPositions: new Map<string, { x: number; y: number }>(),
   addNode: vi.fn((node: Partial<ConceptualNode>) => {
     const id = node?.id || `node-${Date.now()}`;
     mockConceptualMapContext.instance.conceptualNodes.set(id, {
@@ -107,6 +109,12 @@ export const mockConceptualMapContext = {
   }),
   isNodeSelected: vi.fn((id: string) => mockConceptualMapContext.selectedNodeId.value === id),
   isEdgeSelected: vi.fn((id: string) => mockConceptualMapContext.selectedEdgeId.value === id),
+  queueNodePosition: vi.fn((id: string, position: { x: number; y: number }) => {
+    if (!mockConceptualMapContext.instance.conceptualNodes.has(id)) return;
+    const node = mockConceptualMapContext.instance.conceptualNodes.get(id)!;
+    node.position = position;
+    mockConceptualMapContext.pendingPositions.set(id, position);
+  }),
 };
 
 vi.mock('@auraflux/shared-core/composables/useConceptualMapContext', () => ({
@@ -118,6 +126,7 @@ export const defaultStubs = {
   Background: true,
   Controls: true,
   MiniMap: true,
+  VConceptualMapCanvas: true,
   VNodeInspectorPanel: true,
   VEdgeInspectorPanel: true,
 };

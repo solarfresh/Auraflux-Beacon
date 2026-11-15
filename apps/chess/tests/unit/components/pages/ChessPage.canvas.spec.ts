@@ -7,7 +7,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 describe('ChessPage.canvas.spec.ts', () => {
 
-  it('updates node position with default {x:0, y:0} when drag event has invalid position', async () => {
+  it('queues node position on drag stop', async () => {
     const wrapper = mount(ChessPage, {
       global: {
         stubs: defaultStubs,
@@ -15,11 +15,10 @@ describe('ChessPage.canvas.spec.ts', () => {
     });
 
     const vm = wrapper.vm as any;
+    const node = { id: '1', position: { x: 100, y: 100 } };
 
-    vm.onNodeDragStop({ id: '1', position: null });
+    vm.onNodeDragStop(node);
 
-    await wrapper.vm.$nextTick();
-
-    expect(mockConceptualMapContext.updateNode).toHaveBeenCalledWith('1', { position: { x: 0, y: 0 } });
+    expect(mockConceptualMapContext.queueNodePosition).toHaveBeenCalledWith('1', { x: 100, y: 100 });
   });
 });

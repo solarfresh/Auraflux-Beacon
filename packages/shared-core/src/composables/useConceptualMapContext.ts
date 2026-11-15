@@ -5,8 +5,8 @@
 
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
+import type { ConceptualMapContext } from '@auraflux/shared-core/interfaces/conceptual-map';
 import { reactive, ref } from 'vue';
-import type { ConceptualMapContext } from '../interfaces/conceptual-map';
 
 export function useConceptualMapContext(): ConceptualMapContext {
   const instance = reactive<CanvasViewInstance>({
@@ -28,7 +28,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
   const pendingPositions = new Map<ID, { x: number; y: number }>();
-
 
   const addNode = (node?: Partial<ConceptualNode>) => {
     const timestamp = Date.now();
