@@ -2,7 +2,7 @@ import { ChessEndpoints } from '@/api/endpoints';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { apiClient } from '@auraflux/shared-core/api/apiClient';
 import { AxiosResponse } from 'axios';
-import type { CreateNodeRequest, UpdateNodeRequest, UpdateEdgeRequest, ConceptualNode, CreateEdgeRequest, ConceptualEdge, CanvasGraphResponse } from '@/interfaces/canvases';
+import type { CreateNodeRequest, UpdateNodeRequest, UpdateEdgeRequest, ConceptualNode, CreateEdgeRequest, ConceptualEdge, CanvasGraphResponse, BatchUpdateNodePositionRequest } from '@/interfaces/canvases';
 
 
 export const apiService = {
@@ -15,6 +15,9 @@ export const apiService = {
     },
     async updateNode(canvasId: ID, nodeId: ID, payload: UpdateNodeRequest): Promise<AxiosResponse<ConceptualNode>> {
       return apiClient.put<ConceptualNode>(ChessEndpoints.canvases.nodeDetail(canvasId, nodeId), payload);
+    },
+    async batchUpdateNodePositions(canvasId: ID, payload: BatchUpdateNodePositionRequest): Promise<AxiosResponse<void>> {
+      return apiClient.patch<void>(ChessEndpoints.canvases.batchUpdateNodePositions(canvasId), payload);
     },
     async createEdge(canvasId: ID, payload: CreateEdgeRequest): Promise<AxiosResponse<ConceptualEdge>> {
       return apiClient.post(ChessEndpoints.canvases.getEdges(canvasId), payload);

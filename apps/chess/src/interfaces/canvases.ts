@@ -39,3 +39,10 @@ export interface CanvasGraphResponse {
   nodes: ConceptualNode[];
   edges: ConceptualEdge[];
 }
+
+export interface BatchUpdateNodePositionRequest {
+  nodes: {
+    id: ID;
+    position: Point2D;
+  }[];
+}

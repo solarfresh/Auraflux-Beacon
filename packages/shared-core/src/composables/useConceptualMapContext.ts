@@ -27,6 +27,8 @@ export function useConceptualMapContext(): ConceptualMapContext {
 
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
+  const pendingPositions = new Map<ID, { x: number; y: number }>();
+
 
   const addNode = (node?: Partial<ConceptualNode>) => {
     const timestamp = Date.now();
@@ -96,6 +98,16 @@ export function useConceptualMapContext(): ConceptualMapContext {
     instance.conceptualNodes.set(nodeId, merged);
   };
 
+  const batchUpdateNodePositions = (nodes: { id: ID; position: { x: number; y: number } }[]) => {
+    nodes.forEach(item => {
+      updateNode(item.id, { position: item.position });
+    });
+  };
+
+  const queueNodePosition = (nodeId: ID, position: { x: number; y: number }) => {
+    pendingPositions.set(nodeId, position);
+  };
+
   const updateEdge = (edgeId: ID, updatedEdge: ConceptualEdge) => {
     if (!edgeId || !updatedEdge) return;
     // Defensive design: constrain weight between 1 and 5
@@ -152,10 +164,13 @@ export function useConceptualMapContext(): ConceptualMapContext {
     instance,
     selectedNodeId,
     selectedEdgeId,
+    pendingPositions,
     addNode,
     removeNode,
     removeEdge,
     updateNode,
+    batchUpdateNodePositions,
+    queueNodePosition,
     addEdge,
     updateEdge,
     selectNode,

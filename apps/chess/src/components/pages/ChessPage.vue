@@ -72,11 +72,13 @@ import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/us
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import type { Connection } from '@vue-flow/core';
 import { computed, ref, watch, onMounted } from 'vue';
+import { debounce } from 'lodash-es';
 
 const context = useConceptualMapContext();
 const {
   selectedNodeId,
   selectedEdgeId,
+  pendingPositions,
   selectNode: selectNodeInContext,
   selectEdge: selectEdgeInContext,
   deselectAll,
@@ -87,6 +89,8 @@ const {
   updateEdge: updateEdgeInContext,
   removeNode: removeNodeInContext,
   removeEdge: removeEdgeInContext,
+  batchUpdateNodePositions: updateNodesInContext,
+  queueNodePosition
 } = context;
 
 useCanvasKeyboardShortcuts({
@@ -224,8 +228,30 @@ const onUpdateEdge = async (edge: ConceptualEdge) => {
   }
 };
 
+const debouncedBatchUpdate = debounce(async () => {
+  const nodesToUpdate = Array.from(pendingPositions?.entries() || []).map(([id, position]) => ({ id, position }));
+  if (nodesToUpdate.length === 0) return;
+
+  const oldPositions = nodesToUpdate.map(item => {
+    const oldNode = instance.conceptualNodes.get(item.id);
+    const pos = oldNode?.position ? { x: oldNode.position.x, y: oldNode.position.y } : { x: 0, y: 0 };
+    return { id: item.id, position: pos };
+  });
+
+  pendingPositions?.clear();
+
+  await canvasService.batchUpdateNodePositions(
+    { nodes: nodesToUpdate },
+    oldPositions,
+    (updatedNodes) => updateNodesInContext(updatedNodes),
+    (restoredPositions) => updateNodesInContext(restoredPositions)
+  );
+}, 300);
+
 const onNodeDragStop = (node: { id: ID; position: { x: number; y: number } }) => {
-  updateNodeInContext(node.id, { position: node.position || { x: 0, y: 0 } });
+  const pos = node.position || { x: 0, y: 0 };
+  queueNodePosition(node.id, pos);
+  debouncedBatchUpdate();
 };
 
 const onDuplicateNode = async (node: ConceptualNode) => {
@@ -238,11 +264,11 @@ const onDuplicateNode = async (node: ConceptualNode) => {
   }
 };
 
-const onDeleteNode = (id: string) => {
+const onDeleteNode = (id: ID) => {
   removeNodeInContext(id);
 };
 
-const onDeleteEdge = (id: string) => {
+const onDeleteEdge = (id: ID) => {
   removeEdgeInContext(id);
 };
 </script>

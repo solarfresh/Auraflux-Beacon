@@ -1,6 +1,6 @@
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
-import { UpdateNodeRequest, UpdateEdgeRequest } from '@/interfaces/canvases';
+import { UpdateNodeRequest, UpdateEdgeRequest, BatchUpdateNodePositionRequest } from '@/interfaces/canvases';
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode, EdgeType, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 
@@ -131,6 +131,23 @@ export class CanvasService {
     } catch (error) {
       console.error('NodeDuplicationError:', error);
       removeNodeFromContext(tempId);
+    }
+  }
+
+  public async batchUpdateNodePositions(
+    payload: BatchUpdateNodePositionRequest,
+    oldPositions: { id: ID; position: { x: number; y: number } }[],
+    updateNodesInContext: (nodes: { id: ID; position: { x: number; y: number } }[]) => void,
+    restorePositionsInContext: (positions: { id: ID; position: { x: number; y: number } }[]) => void
+  ): Promise<boolean> {
+    try {
+      updateNodesInContext(payload.nodes);
+      await apiService.canvases.batchUpdateNodePositions(this.canvasId as ID, payload);
+      return true;
+    } catch (error) {
+      console.error('CanvasService.batchUpdateNodePositions error:', error);
+      restorePositionsInContext(oldPositions);
+      return false;
     }
   }
 
