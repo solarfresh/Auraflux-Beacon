@@ -5,19 +5,15 @@
 
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
+import type { ConceptualMapContext } from '@auraflux/shared-core/interfaces/conceptual-map';
 import { reactive, ref } from 'vue';
-import type { ConceptualMapContext } from '../interfaces/conceptual-map';
 
 export function useConceptualMapContext(): ConceptualMapContext {
   const instance = reactive<CanvasViewInstance>({
+    id: '',
+    title: '',
     conceptualNodes: new Map<string, ConceptualNode>(),
     conceptualEdges: [],
-    isDragging: false,
-    isDragOver: false,
-    draggedNode: null,
-    isInterceptionActive: false,
-    interceptorAction: '',
-    interceptorPosition: { x: 0, y: 0 },
     pendingConnection: null,
     localEdgeData: {
       id: '',
@@ -31,6 +27,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
 
   const selectedNodeId = ref<ID | null>(null);
   const selectedEdgeId = ref<ID | null>(null);
+  const pendingPositions = new Map<ID, { x: number; y: number }>();
 
   const addNode = (node?: Partial<ConceptualNode>) => {
     const timestamp = Date.now();
@@ -71,6 +68,9 @@ export function useConceptualMapContext(): ConceptualMapContext {
 
   const removeEdge = (edgeId: ID) => {
     if (!edgeId) return;
+    if (selectedEdgeId.value === edgeId) {
+      selectedEdgeId.value = null;
+    }
     const exists = instance.conceptualEdges.some(e => e.id === edgeId);
     if (!exists) return;
 
@@ -97,15 +97,25 @@ export function useConceptualMapContext(): ConceptualMapContext {
     instance.conceptualNodes.set(nodeId, merged);
   };
 
+  const batchUpdateNodePositions = (nodes: { id: ID; position: { x: number; y: number } }[]) => {
+    nodes.forEach(item => {
+      updateNode(item.id, { position: item.position });
+    });
+  };
+
+  const queueNodePosition = (nodeId: ID, position: { x: number; y: number }) => {
+    pendingPositions.set(nodeId, position);
+  };
+
   const updateEdge = (edgeId: ID, updatedEdge: ConceptualEdge) => {
     if (!edgeId || !updatedEdge) return;
     // Defensive design: constrain weight between 1 and 5
     const validWeight = Math.max(1, Math.min(5, updatedEdge.weight || 1));
-    const normalizedEdge = { ...updatedEdge, weight: validWeight };
+    const normalizedEdge = { ...updatedEdge, id: edgeId, weight: validWeight };
 
     const index = instance.conceptualEdges.findIndex(e => e.id === edgeId);
     if (index !== -1) {
-      instance.conceptualEdges[index] = normalizedEdge;
+      instance.conceptualEdges.splice(index, 1, normalizedEdge);
     }
   };
 
@@ -145,14 +155,21 @@ export function useConceptualMapContext(): ConceptualMapContext {
     return selectedEdgeId.value === edgeId;
   };
 
+  const setGraph = (newGraph: CanvasViewInstance) => {
+    Object.assign(instance, newGraph);
+  };
+
   return {
     instance,
     selectedNodeId,
     selectedEdgeId,
+    pendingPositions,
     addNode,
     removeNode,
     removeEdge,
     updateNode,
+    batchUpdateNodePositions,
+    queueNodePosition,
     addEdge,
     updateEdge,
     selectNode,
@@ -162,5 +179,6 @@ export function useConceptualMapContext(): ConceptualMapContext {
     deselectAll,
     isNodeSelected,
     isEdgeSelected,
+    setGraph,
   };
 }

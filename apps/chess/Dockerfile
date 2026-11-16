@@ -2,7 +2,7 @@
 FROM node:24-alpine
 
 # Install the specific version of npm
-RUN npm install -g npm@11.9.0
+RUN npm install -g npm@v12.2.2
 
 RUN mkdir -p /auraflux/apps/chess /auraflux/packages/shared-core /auraflux/packages/design-system
 

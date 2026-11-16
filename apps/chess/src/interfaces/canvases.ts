@@ -1,0 +1,48 @@
+export { ConceptualNode, ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { NodeType, Point2D, ConceptualNode, ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ID } from '@auraflux/design-system/interfaces/core';
+
+export interface CreateNodeRequest {
+  label: string;
+  type: NodeType;
+  position: Point2D;
+  content?: string;
+}
+
+export interface UpdateNodeRequest {
+  label?: string;
+  type?: NodeType;
+  content?: string;
+}
+
+export interface CreateEdgeRequest {
+  source: string;
+  target: string;
+  type: string;
+  weight: number;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+}
+
+export interface UpdateEdgeRequest {
+  source: string;
+  target: string;
+  type?: string;
+  weight?: number;
+  sourceHandle?: string | null;
+  targetHandle?: string | null;
+}
+
+export interface CanvasGraphResponse {
+  id: ID;
+  title: string;
+  nodes: ConceptualNode[];
+  edges: ConceptualEdge[];
+}
+
+export interface BatchUpdateNodePositionRequest {
+  nodes: {
+    id: ID;
+    position: Point2D;
+  }[];
+}

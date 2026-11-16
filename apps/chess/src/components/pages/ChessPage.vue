@@ -9,6 +9,7 @@
     <VBox tag="div" class="flex-1 w-full flex flex-row overflow-hidden">
       <VBox tag="div" class="flex-1 h-full relative overflow-hidden">
         <VConceptualMapCanvas
+          v-if="!loadError"
           :nodes="nodes"
           :edges="edges"
           :selected-node-id="selectedNodeId"
@@ -56,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { canvasService } from '@/services/canvasService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -66,39 +68,30 @@ import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/ca
 import VInspectorPanel from '@auraflux/design-system/components/organisms/layout/VInspectorPanel.vue';
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
-import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
+import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
+import { debounce } from 'lodash-es';
 
 const context = useConceptualMapContext();
 const {
   selectedNodeId,
   selectedEdgeId,
+  pendingPositions,
   selectNode: selectNodeInContext,
   selectEdge: selectEdgeInContext,
   deselectAll,
-  instance, addNode: addNodeToContext,
+  instance,
+  addNode: addNodeToContext,
   addEdge: addEdgeToContext,
   updateNode: updateNodeInContext,
   updateEdge: updateEdgeInContext,
   removeNode: removeNodeInContext,
   removeEdge: removeEdgeInContext,
+  batchUpdateNodePositions: updateNodesInContext,
+  queueNodePosition
 } = context;
-
-const isEditing = ref(false);
-const isPanelExpanded = ref(true);
-
-const deselectAllAndClosePanel = () => {
-  deselectAll();
-  isPanelExpanded.value = false;
-};
-
-watch([selectedNodeId, selectedEdgeId], ([newNodeId, newEdgeId]) => {
-  if (newNodeId || newEdgeId) {
-    isPanelExpanded.value = true;
-  }
-});
 
 useCanvasKeyboardShortcuts({
   selectedNodeId,
@@ -107,15 +100,18 @@ useCanvasKeyboardShortcuts({
   removeEdge: removeEdgeInContext,
 });
 
-const selectNode = (node: { id: ID }) => {
-  if (isEditing.value) return;
-  selectNodeInContext(node.id);
-};
+const isAdding = ref(false);
+const isDuplicating = ref(false);
+const isEditing = ref(false);
+const isLoading = ref(false);
+const isPanelExpanded = ref(true);
+const loadError = ref<string | null>(null);
 
-const selectEdge = (edge: { id: ID }) => {
-  if (isEditing.value) return;
-  selectEdgeInContext(edge.id);
-};
+watch([selectedNodeId, selectedEdgeId], ([newNodeId, newEdgeId]) => {
+  if (newNodeId || newEdgeId) {
+    isPanelExpanded.value = true;
+  }
+});
 
 const selectedNode = computed(() => {
   return selectedNodeId.value ? instance.conceptualNodes.get(selectedNodeId.value) || null : null;
@@ -128,66 +124,151 @@ const selectedEdge = computed(() => {
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
-const isAdding = ref(false);
+onMounted(() => {
+  // TODO: Replace with dynamic canvas ID based on user selection or route parameter
+  loadCanvas('56439646-a564-4bbf-8dff-578ca9016f94');
+});
 
-const addNode = () => {
+const selectNode = (node: { id: ID }) => {
+  if (isEditing.value) return;
+  selectNodeInContext(node.id);
+};
+
+const selectEdge = (edge: { id: ID }) => {
+  if (isEditing.value) return;
+  selectEdgeInContext(edge.id);
+};
+
+const loadCanvas = async (canvasId: string) => {
+  isLoading.value = true;
+  loadError.value = null;
+  try {
+    const graphInstance = await canvasService.getCanvasGraph(canvasId);
+    if (graphInstance) {
+      context.setGraph(graphInstance);
+    }
+  } catch (error) {
+    console.error('Failed to load canvas graph:', error);
+    loadError.value = 'Error loading canvas';
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const deselectAllAndClosePanel = () => {
+  deselectAll();
+  isPanelExpanded.value = false;
+};
+
+const addNode = async () => {
   if (isAdding.value) return;
   isAdding.value = true;
-
   try {
-    addNodeToContext();
-  } catch (error) {
-    console.error('NodeCreationError:', error);
+    await canvasService.addNode(instance.id, addNodeToContext, removeNodeInContext);
   } finally {
     isAdding.value = false;
   }
 };
 
-const onConnect = (connection: Connection) => {
-  if (connection.source === connection.target) {
-    console.warn('Reject self-loop connection');
-    return;
+const onConnect = async (connection: Connection) => {
+  try {
+    if (connection.source === connection.target) {
+      console.warn('Reject self-loop connection');
+      return;
+    }
+    const newEdge = await canvasService.createEdge(
+      connection.source,
+      connection.target,
+      edges.value,
+      connection.sourceHandle,
+      connection.targetHandle
+    );
+    if (newEdge) {
+      addEdgeToContext(newEdge);
+    }
+  } catch (error) {
+    console.error('Failed to create edge:', error);
   }
-  const newEdge: ConceptualEdge = {
-    id: `e-${connection.source}-${connection.target}-${Date.now()}`,
-    source: connection.source,
-    target: connection.target,
-    type: 'LINK',
-    weight: 1,
-  };
-  addEdgeToContext(newEdge);
 };
 
-const onUpdateNode = (node: ConceptualNode) => {
-  updateNodeInContext(node.id, node);
+const onUpdateNode = async (node: ConceptualNode) => {
+  const oldNode = selectedNode.value;
+  if (!oldNode) return;
+
+  try {
+    const success = await canvasService.updateNode(
+      node.id,
+      node,
+      oldNode,
+      updateNodeInContext
+    );
+
+    if (!success) {
+      console.error('Failed to update node');
+    }
+  } catch (error) {
+    console.error('Error in onUpdateNode:', error);
+    updateNodeInContext(node.id, oldNode);
+  }
 }
 
-const onUpdateEdge = (edge: ConceptualEdge) => {
-  updateEdgeInContext(edge.id, edge);
+const onUpdateEdge = async (edge: ConceptualEdge) => {
+  const oldEdge = edges.value.find(e => e.id === edge.id);
+  if (!oldEdge) return;
+
+  const success = await canvasService.updateEdge(
+    edge.id,
+    edge,
+    oldEdge,
+    (id, updatedEdge) => updateEdgeInContext(id, updatedEdge as ConceptualEdge)
+  );
+
+  if (!success) {
+    console.error('Failed to update edge');
+  }
 };
+
+const debouncedBatchUpdate = debounce(async () => {
+  const nodesToUpdate = Array.from(pendingPositions?.entries() || []).map(([id, position]) => ({ id, position }));
+  if (nodesToUpdate.length === 0) return;
+
+  const oldPositions = nodesToUpdate.map(item => {
+    const oldNode = instance.conceptualNodes.get(item.id);
+    const pos = oldNode?.position ? { x: oldNode.position.x, y: oldNode.position.y } : { x: 0, y: 0 };
+    return { id: item.id, position: pos };
+  });
+
+  pendingPositions?.clear();
+
+  await canvasService.batchUpdateNodePositions(
+    { nodes: nodesToUpdate },
+    oldPositions,
+    (updatedNodes) => updateNodesInContext(updatedNodes),
+    (restoredPositions) => updateNodesInContext(restoredPositions)
+  );
+}, 300);
 
 const onNodeDragStop = (node: { id: ID; position: { x: number; y: number } }) => {
-  updateNodeInContext(node.id, { position: node.position || { x: 0, y: 0 } });
+  const pos = node.position || { x: 0, y: 0 };
+  queueNodePosition(node.id, pos);
+  debouncedBatchUpdate();
 };
 
-const onDuplicateNode = (node: ConceptualNode) => {
-  const duplicated: ConceptualNode = {
-    ...node,
-    id: `node-${Date.now()}`,
-    label: `${node.label} (Copy)`,
-    position: {
-      x: (node.position?.x || 0) + 50,
-      y: (node.position?.y || 0) + 50
-    }
-  };
-  addNodeToContext(duplicated);
+const onDuplicateNode = async (node: ConceptualNode) => {
+  if (isDuplicating.value) return;
+  isDuplicating.value = true;
+  try {
+    await canvasService.duplicateNode(node, instance.id, addNodeToContext, removeNodeInContext);
+  } finally {
+    isDuplicating.value = false;
+  }
 };
 
-const onDeleteNode = (id: string) => {
-  removeNodeInContext(id);
+const onDeleteNode = async (id: ID) => {
+  await canvasService.deleteNode(id, instance.conceptualNodes, removeNodeInContext, addNodeToContext);
 };
 
-const onDeleteEdge = (id: string) => {
-  removeEdgeInContext(id);
+const onDeleteEdge = async (id: ID) => {
+  await canvasService.deleteEdge(id, edges.value, removeEdgeInContext, addEdgeToContext);
 };
 </script>
