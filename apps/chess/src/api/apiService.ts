@@ -25,5 +25,8 @@ export const apiService = {
     async updateEdge(canvasId: ID, edgeId: ID, payload: UpdateEdgeRequest): Promise<AxiosResponse<ConceptualEdge>> {
       return apiClient.put(ChessEndpoints.canvases.edgeDetail(canvasId, edgeId), payload);
     },
+    async deleteNode(canvasId: ID, nodeId: ID): Promise<AxiosResponse<void>> {
+      return apiClient.delete<void>(ChessEndpoints.canvases.deleteNode(canvasId, nodeId));
+    },
   },
 };

@@ -181,9 +181,10 @@ export class CanvasService {
     }
   }
 
-  public async deleteNode(_nodeId: ID): Promise<boolean> {
+  public async deleteNode(nodeId: ID): Promise<boolean> {
     try {
-      return true;
+      const response = await apiService.canvases.deleteNode(this.canvasId as ID, nodeId);
+      return response && (response.status === 200 || response.status === 204);
     } catch (error) {
       console.error('CanvasService.deleteNode error:', error);
       return false;

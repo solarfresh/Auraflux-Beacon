@@ -264,8 +264,17 @@ const onDuplicateNode = async (node: ConceptualNode) => {
   }
 };
 
-const onDeleteNode = (id: ID) => {
+const onDeleteNode = async (id: ID) => {
+  const node = instance.conceptualNodes.get(id);
+  if (!node) return;
+
   removeNodeInContext(id);
+
+  const success = await canvasService.deleteNode(id);
+  if (!success) {
+    console.error('Failed to delete node, rolling back');
+    addNodeToContext(node);
+  }
 };
 
 const onDeleteEdge = (id: ID) => {
