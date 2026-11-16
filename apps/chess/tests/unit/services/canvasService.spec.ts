@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { CanvasService } from '@/services/canvasService';
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
 import { ConceptualNode } from '@/interfaces/canvases';
-import vuePlugin from '@vitejs/plugin-vue';
+import { CanvasService } from '@/services/canvasService';
+import type { ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ID } from '@auraflux/design-system/interfaces/core';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/api/apiService', () => ({
   apiService: {
@@ -14,6 +15,7 @@ vi.mock('@/api/apiService', () => ({
       deleteNode: vi.fn(),
       createEdge: vi.fn(),
       updateEdge: vi.fn(),
+      deleteEdge: vi.fn(),
       batchUpdateNodePositions: vi.fn()
     }
   }
@@ -173,15 +175,32 @@ describe('CanvasService', () => {
     });
 
     it('should successfully delete a node', async () => {
+      const mockNodes: Map<ID, ConceptualNode> = new Map([['1', { id: '1' } as ConceptualNode]]);
       vi.mocked(apiService.canvases.deleteNode).mockResolvedValueOnce({ status: 200 } as any);
-      const res = await canvasService.deleteNode('1');
+      const res = await canvasService.deleteNode('1', mockNodes, vi.fn(), vi.fn());
       expect(apiService.canvases.deleteNode).toHaveBeenCalledWith('test-canvas', '1');
       expect(res).toBe(true);
     });
 
     it('should return false when deleteNode fails', async () => {
+      const mockNodes: Map<ID, ConceptualNode> = new Map([['1', { id: '1' } as ConceptualNode]]);
       vi.mocked(apiService.canvases.deleteNode).mockRejectedValueOnce(new Error('Fail'));
-      const res = await canvasService.deleteNode('1');
+      const res = await canvasService.deleteNode('1', mockNodes, vi.fn(), vi.fn());
+      expect(res).toBe(false);
+    });
+
+    it('should successfully delete an edge', async () => {
+      const mockEdges: ConceptualEdge[] = [{ id: 'edge-1' } as ConceptualEdge];
+      vi.mocked(apiService.canvases.deleteEdge).mockResolvedValueOnce({ status: 200 } as any);
+      const res = await canvasService.deleteEdge('edge-1', mockEdges, vi.fn(), vi.fn());
+      expect(apiService.canvases.deleteEdge).toHaveBeenCalledWith('test-canvas', 'edge-1');
+      expect(res).toBe(true);
+    });
+
+    it('should return false when deleteEdge fails', async () => {
+      const mockEdges: ConceptualEdge[] = [{ id: 'edge-1' } as ConceptualEdge];
+      vi.mocked(apiService.canvases.deleteEdge).mockRejectedValueOnce(new Error('Fail'));
+      const res = await canvasService.deleteEdge('edge-1', mockEdges, vi.fn(), vi.fn());
       expect(res).toBe(false);
     });
   });

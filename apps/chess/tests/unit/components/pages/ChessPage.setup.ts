@@ -25,7 +25,10 @@ export const canvasServiceMock = {
   }),
   updateNode: vi.fn().mockResolvedValue(true),
   batchUpdateNodePositions: vi.fn().mockResolvedValue(true),
-  deleteNode: vi.fn().mockResolvedValue(true),
+  deleteNode: vi.fn(async (id, nodes, removeNodeInContext, addNodeToContext) => {
+    removeNodeInContext(id);
+    return true;
+  }),
   updateEdge: vi.fn(async (id, data, oldEdge, updateEdgeInContext) => {
     updateEdgeInContext(id, data);
     return true;
@@ -39,6 +42,9 @@ export const canvasServiceMock = {
     sourceHandle,
     targetHandle
   })),
+  deleteEdge: vi.fn(async (id, edges, removeEdgeInContext, addEdgeToContext) => {
+    return true;
+  }),
   getCanvasGraph: vi.fn()
 };
 

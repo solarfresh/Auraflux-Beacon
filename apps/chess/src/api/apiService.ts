@@ -11,7 +11,7 @@ export const apiService = {
       return apiClient.get<CanvasGraphResponse>(ChessEndpoints.canvases.getGraph(canvasId));
     },
     async createNode(canvasId: ID, payload: CreateNodeRequest): Promise<AxiosResponse<ConceptualNode>> {
-      return apiClient.post<ConceptualNode>(ChessEndpoints.canvases.createNode(canvasId), payload);
+      return apiClient.post<ConceptualNode>(ChessEndpoints.canvases.nodeList(canvasId), payload);
     },
     async updateNode(canvasId: ID, nodeId: ID, payload: UpdateNodeRequest): Promise<AxiosResponse<ConceptualNode>> {
       return apiClient.put<ConceptualNode>(ChessEndpoints.canvases.nodeDetail(canvasId, nodeId), payload);
@@ -26,7 +26,10 @@ export const apiService = {
       return apiClient.put(ChessEndpoints.canvases.edgeDetail(canvasId, edgeId), payload);
     },
     async deleteNode(canvasId: ID, nodeId: ID): Promise<AxiosResponse<void>> {
-      return apiClient.delete<void>(ChessEndpoints.canvases.deleteNode(canvasId, nodeId));
+      return apiClient.delete<void>(ChessEndpoints.canvases.nodeDetail(canvasId, nodeId));
+    },
+    async deleteEdge(canvasId: ID, edgeId: ID): Promise<AxiosResponse<void>> {
+      return apiClient.delete<void>(ChessEndpoints.canvases.edgeDetail(canvasId, edgeId));
     },
   },
 };

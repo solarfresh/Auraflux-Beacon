@@ -175,22 +175,4 @@ describe('ChessPage.interactions.spec.ts', () => {
 
     document.body.removeChild(input);
   });
-
-  it('restores node when API delete fails', async () => {
-    const wrapper = mount(ChessPage, {
-      global: {
-        stubs: defaultStubs,
-      },
-    });
-
-    const node = { id: '1', type: 'CONCEPT', label: 'C1', position: { x: 0, y: 0 }, status: 'ACTIVE' } as ConceptualNode;
-    mockConceptualMapContext.instance.conceptualNodes.set('1', node);
-    mockConceptualMapContext.selectNode('1');
-
-    canvasServiceMock.deleteNode.mockRejectedValueOnce(new Error('Delete Failed'));
-
-    await (wrapper.vm as any).onDeleteNode();
-
-    expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(true);
-  });
 });

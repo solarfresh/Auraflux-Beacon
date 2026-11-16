@@ -181,12 +181,50 @@ export class CanvasService {
     }
   }
 
-  public async deleteNode(nodeId: ID): Promise<boolean> {
+  public async deleteNode(
+    nodeId: ID,
+    nodes: Map<ID, ConceptualNode>,
+    removeNodeFromContext: (id: ID) => void,
+    addNodeToContext: (node: ConceptualNode) => void
+  ): Promise<boolean> {
+    const node = nodes.get(nodeId);
+    if (!node) return false;
+
+    removeNodeFromContext(nodeId);
+
     try {
       const response = await apiService.canvases.deleteNode(this.canvasId as ID, nodeId);
-      return response && (response.status === 200 || response.status === 204);
+      if (response && (response.status === 200 || response.status === 204)) {
+        return true;
+      }
+      throw new Error('Deletion failed');
     } catch (error) {
       console.error('CanvasService.deleteNode error:', error);
+      addNodeToContext(node);
+      return false;
+    }
+  }
+
+  public async deleteEdge(
+    edgeId: ID,
+    edges: ConceptualEdge[],
+    removeEdgeFromContext: (id: ID) => void,
+    addEdgeToContext: (edge: ConceptualEdge) => void
+  ): Promise<boolean> {
+    const edge = edges.find(e => e.id === edgeId);
+    if (!edge) return false;
+
+    removeEdgeFromContext(edgeId);
+
+    try {
+      const response = await apiService.canvases.deleteEdge(this.canvasId as ID, edgeId);
+      if (response && (response.status === 200 || response.status === 204)) {
+        return true;
+      }
+      throw new Error('Deletion failed');
+    } catch (error) {
+      console.error('CanvasService.deleteEdge error:', error);
+      addEdgeToContext(edge);
       return false;
     }
   }
