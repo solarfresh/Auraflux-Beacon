@@ -3,6 +3,7 @@ import { CanvasService } from '@/services/canvasService';
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
 import { ConceptualNode } from '@/interfaces/canvases';
+import vuePlugin from '@vitejs/plugin-vue';
 
 vi.mock('@/api/apiService', () => ({
   apiService: {
@@ -10,6 +11,7 @@ vi.mock('@/api/apiService', () => ({
       getGraph: vi.fn(),
       createNode: vi.fn(),
       updateNode: vi.fn(),
+      deleteNode: vi.fn(),
       createEdge: vi.fn(),
       updateEdge: vi.fn(),
       batchUpdateNodePositions: vi.fn()
@@ -170,9 +172,17 @@ describe('CanvasService', () => {
       expect(res2).toBe(false);
     });
 
-    it('should return true for deleteNode', async () => {
+    it('should successfully delete a node', async () => {
+      vi.mocked(apiService.canvases.deleteNode).mockResolvedValueOnce({ status: 200 } as any);
       const res = await canvasService.deleteNode('1');
+      expect(apiService.canvases.deleteNode).toHaveBeenCalledWith('test-canvas', '1');
       expect(res).toBe(true);
+    });
+
+    it('should return false when deleteNode fails', async () => {
+      vi.mocked(apiService.canvases.deleteNode).mockRejectedValueOnce(new Error('Fail'));
+      const res = await canvasService.deleteNode('1');
+      expect(res).toBe(false);
     });
   });
 
