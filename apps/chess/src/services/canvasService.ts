@@ -19,6 +19,8 @@ export class CanvasService {
     try {
       const response = await apiService.canvases.getGraph(canvasId as ID);
       if (response && response.data) {
+        this.canvasId = canvasId;
+
         return {
           id: response.data.id,
           title: response.data.title,
