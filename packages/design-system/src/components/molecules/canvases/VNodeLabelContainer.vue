@@ -133,5 +133,10 @@ onMounted(() => {
 .node-label-container {
   box-shadow: var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05));
   cursor: pointer;
+  max-width: 320px;
+  min-width: 140px;
+  max-height: 400px;
+  overflow-y: auto;
+  word-break: break-word;
 }
 </style>
