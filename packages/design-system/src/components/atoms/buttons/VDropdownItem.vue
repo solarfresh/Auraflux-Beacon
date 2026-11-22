@@ -25,7 +25,7 @@
       tag="span"
       size="sm"
       weight="medium"
-      class="truncate flex-1"
+      :class="[isTruncated ? 'truncate' : '', 'flex-1']"
     >
       <slot />
     </VTypography>
@@ -51,6 +51,7 @@ export interface VDropdownItemProps {
   iconName?: string;
   to?: string | object;
   disabled?: boolean;
+  isTruncated?: boolean;
 }
 
 const props = withDefaults(defineProps<VDropdownItemProps>(), {
@@ -58,6 +59,7 @@ const props = withDefaults(defineProps<VDropdownItemProps>(), {
   iconName: undefined,
   to: undefined,
   disabled: false,
+  isTruncated: true,
 });
 
 defineEmits(['click']);
