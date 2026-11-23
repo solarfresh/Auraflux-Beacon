@@ -4,3 +4,11 @@ export interface LinkItem {
   route?: string;
   [key: string]: any;
 }
+
+export interface ActionDefinition {
+  id: string;
+  label: string;
+  iconName: string;
+  disabled?: boolean;
+  onClick?: () => void;
+}
