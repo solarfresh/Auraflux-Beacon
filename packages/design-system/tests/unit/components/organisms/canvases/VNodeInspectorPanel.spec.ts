@@ -1,4 +1,5 @@
 import VNodeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VNodeInspectorPanel.vue';
+import VActionGroup from '@auraflux/design-system/components/organisms/navs/VActionGroup.vue';
 import { mount } from '@vue/test-utils';
 import { describe, expect, it } from 'vitest';
 
@@ -146,5 +147,63 @@ describe('VNodeInspectorPanel', () => {
     await buttons[2].trigger('click');
     expect(wrapper.emitted('delete:node')).toBeTruthy();
     expect(wrapper.emitted('delete:node')![0][0]).toEqual('1');
+  });
+
+  it('renders VActionGroup and supports action events correctly', async () => {
+    const node = { id: '1', label: 'Action Node', type: 'CONCEPT' as const, status: 'DRAFT' as const };
+    const wrapper = mount(VNodeInspectorPanel, {
+      props: { node },
+      global: {
+        stubs: {
+          VFormField: { template: '<div><slot /></div>' },
+          VInput: true,
+          VSelect: true,
+          VTextarea: true,
+          VBox: { template: '<div><slot /></div>' },
+          VCluster: { template: '<div><slot /></div>' },
+          VEmptyState: true
+        }
+      }
+    });
+
+    const actionGroup = wrapper.findComponent(VActionGroup);
+    expect(actionGroup.exists()).toBe(true);
+    const actionsProp = actionGroup.props('actions') as any[];
+    expect(actionsProp.length).toBe(3);
+    expect(actionsProp[0].id).toBe('update');
+    expect(actionsProp[1].id).toBe('duplicate');
+    expect(actionsProp[2].id).toBe('delete');
+
+    await actionGroup.vm.$emit('action', 'update');
+    expect(wrapper.emitted('update:node')).toBeTruthy();
+  });
+
+  it('disables update action when label becomes empty (Edge Case)', async () => {
+    const node = { id: '1', label: 'Valid Label', type: 'CONCEPT' as const, status: 'DRAFT' as const };
+    const wrapper = mount(VNodeInspectorPanel, {
+      props: { node },
+      global: {
+        stubs: {
+          VFormField: { template: '<div><slot /></div>' },
+          VInput: {
+            template: '<input :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" />',
+            props: ['modelValue']
+          },
+          VSelect: true,
+          VTextarea: true,
+          VBox: { template: '<div><slot /></div>' },
+          VCluster: { template: '<div><slot /></div>' },
+          VEmptyState: true
+        }
+      }
+    });
+
+    const input = wrapper.find('input');
+    await input.setValue('');
+
+    const actionGroup = wrapper.findComponent(VActionGroup);
+    const actionsProp = actionGroup.props('actions') as any[];
+    const updateAction = actionsProp.find(a => a.id === 'update');
+    expect(updateAction.disabled).toBe(true);
   });
 });

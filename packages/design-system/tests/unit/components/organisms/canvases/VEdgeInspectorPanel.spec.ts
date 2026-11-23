@@ -1,5 +1,6 @@
+import VActionGroup from '@auraflux/design-system/components/organisms/navs/VActionGroup.vue';
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import VEdgeInspectorPanel from '@auraflux/design-system/components/organisms/canvases/VEdgeInspectorPanel.vue';
 import type { ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
 
@@ -25,14 +26,16 @@ describe('VEdgeInspectorPanel', () => {
     expect(wrapper.findComponent({ name: 'VTextarea' }).props('modelValue')).toBe('Some evidence');
   });
 
-  it('emits update:edge with updated data when save is clicked', async () => {
+  it('emits update:edge with updated data when save action is triggered', async () => {
     const wrapper = mount(VEdgeInspectorPanel, {
       props: { edge: mockEdge }
     });
 
     // Simulate editing
     await wrapper.findComponent({ name: 'VInput' }).setValue('New Label');
-    await wrapper.findComponent({ name: 'VButton' }).trigger('click');
+
+    const actionGroup = wrapper.findComponent(VActionGroup);
+    await actionGroup.vm.$emit('action', 'update');
 
     expect(wrapper.emitted('update:edge')).toBeTruthy();
     const emittedData = wrapper.emitted('update:edge')![0][0] as ConceptualEdge;
@@ -47,31 +50,27 @@ describe('VEdgeInspectorPanel', () => {
       props: { edge: { ...mockEdge, weight: 0 } }
     });
 
-    await wrapper.findComponent({ name: 'VButton' }).trigger('click');
+    const actionGroup = wrapper.findComponent(VActionGroup);
+    await actionGroup.vm.$emit('action', 'update');
 
     const emitted1 = wrapper.emitted('update:edge')![0][0] as ConceptualEdge;
     expect(emitted1.weight).toBe(1);
 
     await wrapper.findComponent({ name: 'VSlider' }).setValue(6);
-    await wrapper.findComponent({ name: 'VButton' }).trigger('click');
+    await actionGroup.vm.$emit('action', 'update');
 
     const emitted2 = wrapper.emitted('update:edge')![1][0] as ConceptualEdge;
     expect(emitted2.weight).toBe(5);
   });
 
-  it('emits delete:edge when delete button is clicked', async () => {
+  it('emits delete:edge when delete action is triggered', async () => {
     const wrapper = mount(VEdgeInspectorPanel, {
-      props: { edge: mockEdge },
-      global: {
-        stubs: {
-          VButton: { template: '<button @click="$emit(\'click\')"><slot /></button>' },
-          VCluster: { template: '<div><slot /></div>' }
-        }
-      }
+      props: { edge: mockEdge }
     });
 
-    const buttons = wrapper.findAll('button');
-    await buttons[1].trigger('click');
+    const actionGroup = wrapper.findComponent(VActionGroup);
+    await actionGroup.vm.$emit('action', 'delete');
+
     expect(wrapper.emitted('delete:edge')).toBeTruthy();
     expect(wrapper.emitted('delete:edge')![0][0]).toEqual('test-edge');
   });

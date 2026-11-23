@@ -31,9 +31,7 @@
       </VFormField>
 
       <VCluster spacing="xs" class="mt-4">
-        <VButton @click="submitUpdate" :disabled="!!labelError" attention="primary" size="sm" class="flex-1">Update</VButton>
-        <VButton @click="duplicateNode" attention="secondary" intent="neutral" size="sm">Dup</VButton>
-        <VButton @click="deleteNode" attention="secondary" intent="danger" size="sm">Del</VButton>
+        <VActionGroup :actions="nodeActions" @action="handleAction" />
       </VCluster>
     </template>
     <VEmptyState v-else title="No Node Selected" description="Select a node to inspect" icon="CursorArrowRays" />
@@ -41,7 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VTextarea from '@auraflux/design-system/components/atoms/forms/VTextarea.vue';
@@ -49,10 +46,12 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
+import VActionGroup from '@auraflux/design-system/components/organisms/navs/VActionGroup.vue';
 import type { ConceptualNode, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus } from '@auraflux/design-system/interfaces/core';
-import { ref, watch } from 'vue';
+import type { ActionDefinition } from '@auraflux/design-system/interfaces/navs';
 import type { BorderToken, IntentToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
   node: ConceptualNode | null;
@@ -115,6 +114,45 @@ const duplicateNode = () => {
 const deleteNode = () => {
   if (localNode.value) {
     emit('delete:node', localNode.value.id);
+  }
+};
+
+const nodeActions = computed<ActionDefinition[]>(() => {
+  return [
+    {
+      id: 'update',
+      label: 'Update',
+      iconName: 'Check',
+      tooltip: 'Save node changes',
+      disabled: !!labelError.value,
+      onClick: submitUpdate
+    },
+    {
+      id: 'duplicate',
+      label: 'Dup',
+      iconName: 'DocumentDuplicate',
+      tooltip: 'Duplicate this node',
+      disabled: false,
+      onClick: duplicateNode
+    },
+    {
+      id: 'delete',
+      label: 'Del',
+      iconName: 'Trash',
+      tooltip: 'Delete this node',
+      disabled: false,
+      onClick: deleteNode
+    }
+  ];
+});
+
+const handleAction = (actionId: string) => {
+  if (actionId === 'update') {
+    submitUpdate();
+  } else if (actionId === 'duplicate') {
+    duplicateNode();
+  } else if (actionId === 'delete') {
+    deleteNode();
   }
 };
 </script>
