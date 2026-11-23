@@ -43,6 +43,7 @@ export const canvasServiceMock = {
     targetHandle
   })),
   deleteEdge: vi.fn(async (id, edges, removeEdgeInContext, addEdgeToContext) => {
+    removeEdgeInContext?.(id);
     return true;
   }),
   getCanvasGraph: vi.fn()
