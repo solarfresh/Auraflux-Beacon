@@ -1,7 +1,21 @@
 <template>
   <VCluster class="v-action-group" :class="{ 'is-disabled': disabled }">
     <template v-for="action in visibleActions" :key="action.id">
+      <VTooltip v-if="action.tooltip" :content="action.tooltip">
+        <VButton
+          :intent="intent"
+          :surface="surface"
+          :disabled="disabled || action.disabled"
+          @click="handleAction(action)"
+        >
+          <template #icon>
+            <VIcon :name="action.iconName" />
+          </template>
+          {{ action.label }}
+        </VButton>
+      </VTooltip>
       <VButton
+        v-else
         :intent="intent"
         :surface="surface"
         :disabled="disabled || action.disabled"
@@ -31,8 +45,16 @@
         :disabled="disabled || action.disabled"
         @click="handleAction(action)"
       >
-        <VIcon :name="action.iconName" />
-        {{ action.label }}
+        <VTooltip v-if="action.tooltip" :content="action.tooltip">
+          <VCluster>
+            <VIcon :name="action.iconName" />
+            {{ action.label }}
+          </VCluster>
+        </VTooltip>
+        <template v-else>
+          <VIcon :name="action.iconName" />
+          {{ action.label }}
+        </template>
       </VDropdownItem>
     </VDropdownMenu>
   </VCluster>
@@ -44,6 +66,7 @@ import VDropdownItem from '@auraflux/design-system/components/atoms/buttons/VDro
 import VIcon from '@auraflux/design-system/components/atoms/indicators/VIcon.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VDropdownMenu from '@auraflux/design-system/components/molecules/layout/VDropdownMenu.vue';
+import VTooltip from '@auraflux/design-system/components/molecules/indicators/VTooltip.vue';
 import type { ActionDefinition } from '@auraflux/design-system/interfaces/navs';
 import type { IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
 import { computed, ref } from 'vue';

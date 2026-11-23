@@ -38,4 +38,17 @@ describe('VActionGroup', () => {
     const button = wrapper.findComponent(VButton);
     expect(button.props('disabled')).toBe(true);
   });
+
+  it('renders tooltips when provided', () => {
+    const actionsWithTooltips: ActionDefinition[] = [
+      { id: '1', label: 'Action 1', iconName: 'icon1', tooltip: 'Test Tooltip', onClick: vi.fn() },
+    ];
+    const wrapper = mount(VActionGroup, {
+      props: { actions: actionsWithTooltips }
+    });
+
+    const tooltip = wrapper.findComponent({ name: 'VTooltip' });
+    expect(tooltip.exists()).toBe(true);
+    expect(tooltip.props('content')).toBe('Test Tooltip');
+  });
 });

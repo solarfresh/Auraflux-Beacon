@@ -9,6 +9,7 @@ export interface ActionDefinition {
   id: string;
   label: string;
   iconName: string;
+  tooltip?: string;
   disabled?: boolean;
   onClick?: () => void;
 }
