@@ -41,6 +41,7 @@
         <VNodeInspectorPanel
           v-if="selectedNodeId"
           :node="selectedNode"
+          :node-actions="nodeActions"
           @update:node="onUpdateNode"
           @duplicate:node="onDuplicateNode"
           @delete:node="onDeleteNode"
@@ -58,6 +59,7 @@
 
 <script setup lang="ts">
 import { canvasService } from '@/services/canvasService';
+import { computeAvailableNodeActions } from '@/services/nodeOperatorService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -119,6 +121,16 @@ const selectedNode = computed(() => {
 
 const selectedEdge = computed(() => {
   return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
+});
+
+const nodeActions = computed(() => {
+  if (!selectedNode.value) return [];
+  try {
+    return computeAvailableNodeActions(selectedNode.value);
+  } catch (e) {
+    console.error('Failed to compute node actions:', e);
+    return [];
+  }
 });
 
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));

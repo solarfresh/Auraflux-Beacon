@@ -55,6 +55,7 @@ import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
   node: ConceptualNode | null;
+  nodeActions?: ActionDefinition[];
   intent?: IntentToken;
   surface?: SurfaceToken;
   padding?: SpacingToken;
@@ -63,7 +64,8 @@ const props = withDefaults(defineProps<{
   intent: 'neutral',
   surface: 'soft',
   padding: 'md',
-  border: 'none'
+  border: 'none',
+  nodeActions: () => []
 });
 
 const emit = defineEmits<{
@@ -118,7 +120,8 @@ const deleteNode = () => {
 };
 
 const nodeActions = computed<ActionDefinition[]>(() => {
-  return [
+  const customActions = props.nodeActions || [];
+  const baseActions: ActionDefinition[] = [
     {
       id: 'update',
       label: 'Update',
@@ -144,6 +147,8 @@ const nodeActions = computed<ActionDefinition[]>(() => {
       onClick: deleteNode
     }
   ];
+
+  return [...customActions, ...baseActions];
 });
 
 const handleAction = (actionId: string) => {
