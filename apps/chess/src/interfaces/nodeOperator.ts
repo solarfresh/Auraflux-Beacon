@@ -1,9 +1,16 @@
-import type { ActionDefinition } from '@auraflux/design-system/interfaces/navs';
+export type ActionType =
+  | 'DecompositionAgent'
+  | 'HypothesisAnalysisAgent'
+  | 'BoundaryAgent'
+  | 'LogicCritiqueAgent';
 
-export type NodeActionDefinition = ActionDefinition;
+export interface NodeOperatorRequest {
+  nodeId: string;
+  actionType: ActionType;
+}
 
-export interface NodeOperatorAction {
-  actionType: 'DecompositionAgent' | 'HypothesisAnalysisAgent' | 'BoundaryAgent' | 'LogicCritiqueAgent'
-  nodeType: string
-  payload: Record<string, any>
+export interface NodeOperatorResponse {
+  status: string;
+  data: Record<string, any>;
+  timestamp: string;
 }

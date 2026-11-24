@@ -1,3 +1,9 @@
+export interface NodeOperatorError {
+  error: string;
+  message: string;
+  code: number;
+}
+
 export class InvalidNodeSelectionError extends Error {
   public errorType = 'InvalidNodeSelectionError'
   public timestamp: string

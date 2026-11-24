@@ -126,7 +126,7 @@ const selectedEdge = computed(() => {
 const nodeActions = computed(() => {
   if (!selectedNode.value) return [];
   try {
-    return computeAvailableNodeActions(selectedNode.value);
+    return computeAvailableNodeActions(selectedNode.value, instance.id);
   } catch (e) {
     console.error('Failed to compute node actions:', e);
     return [];

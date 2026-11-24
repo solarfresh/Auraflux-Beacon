@@ -1,3 +1,5 @@
+import '@/tests/mocks/apiService';
+
 import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { beforeEach, vi } from 'vitest';
 import { reactive, ref } from 'vue';

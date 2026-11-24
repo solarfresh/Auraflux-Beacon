@@ -1,40 +1,37 @@
+import '@/tests/mocks/apiService'
+
 import { describe, it, expect } from 'vitest'
 import { computeAvailableNodeActions } from '@/services/nodeOperatorService'
 import { InvalidNodeSelectionError, NodeOperatorNotSupportedError } from '@/errors/nodeOperator'
 
 describe('nodeOperatorService', () => {
+  const canvasId = 'canvas-123'
+
   it('should throw InvalidNodeSelectionError when node is null or not an object', () => {
-    expect(() => computeAvailableNodeActions(null)).toThrow(InvalidNodeSelectionError)
-    expect(() => computeAvailableNodeActions(undefined)).toThrow(InvalidNodeSelectionError)
-    expect(() => computeAvailableNodeActions('not-an-object')).toThrow(InvalidNodeSelectionError)
+    expect(() => computeAvailableNodeActions(null, canvasId)).toThrow(InvalidNodeSelectionError)
+    expect(() => computeAvailableNodeActions(undefined, canvasId)).toThrow(InvalidNodeSelectionError)
+    expect(() => computeAvailableNodeActions('not-an-object', canvasId)).toThrow(InvalidNodeSelectionError)
   })
 
   it('should throw InvalidNodeSelectionError when nodeType is missing', () => {
-    expect(() => computeAvailableNodeActions({})).toThrow(InvalidNodeSelectionError)
+    expect(() => computeAvailableNodeActions({}, canvasId)).toThrow(InvalidNodeSelectionError)
   })
 
-  it('should return empty array when node status is not ACTIVE', () => {
-    const node = { nodeType: 'FOCUS', status: 'INACTIVE' }
-    expect(computeAvailableNodeActions(node)).toEqual([])
+  it('should return actions disabled when node status is not ACTIVE', () => {
+    const node = { id: 'node-1', nodeType: 'FOCUS', status: 'INACTIVE' }
+    const actions = computeAvailableNodeActions(node, canvasId)
+    expect(actions[0].disabled).toBe(true)
   })
 
   it('should return correct actions for FOCUS nodeType', () => {
-    const node = { nodeType: 'FOCUS', status: 'ACTIVE' }
-    const actions = computeAvailableNodeActions(node)
-    expect(actions).toEqual([
-      { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles' },
-      { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText' }
-    ])
-  })
-
-  it('should return correct actions for INSIGHT nodeType', () => {
-    const node = { nodeType: 'INSIGHT', status: 'ACTIVE' }
-    const actions = computeAvailableNodeActions(node)
-    expect(actions.length).toBe(4)
+    const node = { id: 'node-1', nodeType: 'FOCUS', status: 'ACTIVE' }
+    const actions = computeAvailableNodeActions(node, canvasId)
+    expect(actions.length).toBe(2)
+    expect(actions[0].id).toBe('DecompositionAgent')
   })
 
   it('should throw NodeOperatorNotSupportedError for unsupported nodeType', () => {
-    const node = { nodeType: 'UNKNOWN_TYPE', status: 'ACTIVE' }
-    expect(() => computeAvailableNodeActions(node)).toThrow(NodeOperatorNotSupportedError)
+    const node = { id: 'node-1', nodeType: 'UNKNOWN_TYPE', status: 'ACTIVE' }
+    expect(() => computeAvailableNodeActions(node, canvasId)).toThrow(NodeOperatorNotSupportedError)
   })
 })

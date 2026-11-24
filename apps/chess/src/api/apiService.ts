@@ -3,6 +3,7 @@ import type { ID } from '@auraflux/design-system/interfaces/core';
 import { apiClient } from '@auraflux/shared-core/api/apiClient';
 import { AxiosResponse } from 'axios';
 import type { CreateNodeRequest, UpdateNodeRequest, UpdateEdgeRequest, ConceptualNode, CreateEdgeRequest, ConceptualEdge, CanvasGraphResponse, BatchUpdateNodePositionRequest } from '@/interfaces/canvases';
+import type { NodeOperatorRequest, NodeOperatorResponse } from '@/interfaces/nodeOperator';
 
 
 export const apiService = {
@@ -30,6 +31,9 @@ export const apiService = {
     },
     async deleteEdge(canvasId: ID, edgeId: ID): Promise<AxiosResponse<void>> {
       return apiClient.delete<void>(ChessEndpoints.canvases.edgeDetail(canvasId, edgeId));
+    },
+    async triggerNodeOperator(canvasId: ID, nodeId: ID, payload: NodeOperatorRequest): Promise<AxiosResponse<NodeOperatorResponse>> {
+      return apiClient.post<NodeOperatorResponse>(ChessEndpoints.canvases.nodeActions(canvasId, nodeId), payload);
     },
   },
 };
