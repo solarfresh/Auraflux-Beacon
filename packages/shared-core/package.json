@@ -23,6 +23,7 @@
   "exports": {
     "./composables/*": "./src/composables/*",
     "./constants/*": "./src/constants/*",
-    "./interfaces/*": "./src/interfaces/*"
+    "./interfaces/*": "./src/interfaces/*",
+    "./services/*": "./src/services/*"
   }
 }

@@ -1,4 +1,5 @@
 import '@/tests/mocks/apiService';
+import '@/tests/mocks/webSocketManager';
 
 import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { beforeEach, vi } from 'vitest';

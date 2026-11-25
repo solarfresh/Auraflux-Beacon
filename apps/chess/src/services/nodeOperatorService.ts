@@ -1,19 +1,20 @@
-import { InvalidNodeSelectionError, NodeOperatorNotSupportedError } from '@/errors/nodeOperator'
-import { ActionDefinition } from '@auraflux/design-system/interfaces/navs'
 import { apiService } from '@/api/apiService'
-import type { ID } from '@auraflux/design-system/interfaces/core'
+import { InvalidNodeSelectionError, NodeOperatorNotSupportedError } from '@/errors/nodeOperator'
 import { ActionType } from '@/interfaces/nodeOperator'
+import type { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map'
+import type { ID } from '@auraflux/design-system/interfaces/core'
+import { ActionDefinition } from '@auraflux/design-system/interfaces/navs'
 
 export function computeAvailableNodeActions(
-  node: any,
+  node: ConceptualNode,
   canvasId: ID
 ): ActionDefinition[] {
   if (!node || typeof node !== 'object') {
     throw new InvalidNodeSelectionError('Invalid node selection: node must be a valid object')
   }
 
-  if (!node.nodeType) {
-    throw new InvalidNodeSelectionError('Invalid node selection: missing nodeType')
+  if (!node.type) {
+    throw new InvalidNodeSelectionError('Invalid node selection: missing type')
   }
 
   const isActive = node.status === 'ACTIVE';
@@ -33,7 +34,7 @@ export function computeAvailableNodeActions(
 
   let actions: ActionDefinition[] = [];
 
-  switch (node.nodeType) {
+  switch (node.type) {
     case 'FOCUS':
     case 'CONCEPT':
       actions = [
@@ -59,7 +60,7 @@ export function computeAvailableNodeActions(
       ]
       break
     default:
-      throw new NodeOperatorNotSupportedError(`Node operator not supported for type: ${node.nodeType}`)
+      throw new NodeOperatorNotSupportedError(`Node operator not supported for type: ${node.type}`)
   }
 
   return actions.map(action => ({

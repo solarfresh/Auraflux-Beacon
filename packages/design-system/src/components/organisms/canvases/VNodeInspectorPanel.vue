@@ -148,7 +148,7 @@ const nodeActions = computed<ActionDefinition[]>(() => {
     }
   ];
 
-  return [...customActions, ...baseActions];
+  return [...baseActions, ...customActions];
 });
 
 const handleAction = (actionId: string) => {

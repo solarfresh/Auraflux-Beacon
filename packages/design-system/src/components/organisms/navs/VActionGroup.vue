@@ -92,12 +92,18 @@ const isOpen = ref(false);
 
 const visibleActions = computed(() => {
   const limit = Math.max(0, props.maxVisible);
-  return props.actions.slice(0, limit);
+  if (props.actions.length <= limit) {
+    return props.actions;
+  }
+  return props.actions.slice(0, Math.max(0, limit - 1));
 });
 
 const overflowActions = computed(() => {
   const limit = Math.max(0, props.maxVisible);
-  return props.actions.slice(limit);
+  if (props.actions.length <= limit) {
+    return [];
+  }
+  return props.actions.slice(Math.max(0, limit - 1));
 });
 
 const handleAction = (action: ActionDefinition) => {

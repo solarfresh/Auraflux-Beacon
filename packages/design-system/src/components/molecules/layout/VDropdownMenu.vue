@@ -1,4 +1,7 @@
 <template>
+  <VTypography v-if="$slots.trigger" ref="triggerRef" tag="span" @click="emit('update:modelValue', !modelValue)">
+    <slot name="trigger" />
+  </VTypography>
   <Teleport to="body">
     <VBox
       v-if="modelValue"
@@ -9,6 +12,7 @@
     />
     <VBox
       v-if="modelValue"
+      ref="menuRef"
       tag="div"
       :padding="padding"
       :rounded="rounded"
@@ -16,7 +20,7 @@
       :attention="attention"
       :intent="intent"
       :surface="surface"
-      :style="{ width }"
+      :style="{ width, top: `${menuPos.top}px`, left: `${menuPos.left}px` }"
       :class="[
         // Positioning & Z-Index
         'z-60 fixed',
@@ -40,6 +44,7 @@
  * Following the Layout Principles, it utilizes Level 3 Elevation (shadow-lg)
  * and maintains Flow Independence through absolute positioning.
  */
+import { ref, watch, nextTick } from 'vue';
 import type {
   SpacingToken,
   RoundedToken,
@@ -50,7 +55,8 @@ import type {
   PositionToken
 } from '@auraflux/design-system/interfaces/theme';
 
- import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
+import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 
 export interface VDropdownMenuProps {
   /** Internal spacing token */
@@ -81,15 +87,73 @@ const props = withDefaults(defineProps<VDropdownMenuProps>(), {
   padding: 'none',
   rounded: 'md',
   border: 'all',
+  intent: 'neutral',
+  surface: 'solid',
   position: 'bottom-start',
   width: 'auto',
 });
 const emit = defineEmits<VDropdownMenuEmits>();
 
+const triggerRef = ref<any>(null);
+const menuRef = ref<any>(null);
+const menuPos = ref({ top: 0, left: 0 });
+
+const GAP = 4;
+const VIEWPORT_PADDING = 8;
+
+watch(
+  () => props.modelValue,
+  async (open) => {
+    if (!open) return;
+    await updatePosition();
+  }
+);
+
 // Provide select event
 const handleSelect = (value: string | number) => {
   emit('select', value);
   emit('update:modelValue', false);
+};
+
+const updatePosition = async () => {
+  await nextTick();
+  await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+  const rawTrigger: any = triggerRef.value?.$el ?? triggerRef.value;
+  const triggerEl: HTMLElement | undefined =
+    rawTrigger?.firstElementChild instanceof HTMLElement
+      ? rawTrigger.firstElementChild
+      : rawTrigger;
+
+  const rawMenu: any = menuRef.value?.$el ?? menuRef.value;
+  const menuEl: HTMLElement | undefined =
+    rawMenu instanceof HTMLElement ? rawMenu : rawMenu?.firstElementChild;
+
+  if (!triggerEl?.getBoundingClientRect) return;
+
+  const tRect = triggerEl.getBoundingClientRect();
+  if (tRect.width === 0 && tRect.height === 0) return;
+
+  const mRect = menuEl?.getBoundingClientRect();
+  const menuWidth = mRect?.width || 160;
+  const menuHeight = mRect?.height || 160;
+
+  let left = tRect.right - menuWidth;
+  if (left < VIEWPORT_PADDING) {
+    left = Math.min(tRect.left, window.innerWidth - VIEWPORT_PADDING - menuWidth);
+  }
+  left = Math.max(VIEWPORT_PADDING, left);
+
+  let top = tRect.bottom + GAP;
+  if (top + menuHeight > window.innerHeight - VIEWPORT_PADDING) {
+    top = tRect.top - menuHeight - GAP;
+  }
+  top = Math.max(VIEWPORT_PADDING, Math.min(top, window.innerHeight - VIEWPORT_PADDING - menuHeight));
+
+  menuPos.value = {
+    top: Math.round(top),
+    left: Math.round(left),
+  };
 };
 
 defineExpose({
