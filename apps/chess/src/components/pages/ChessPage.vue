@@ -72,8 +72,9 @@ import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/int
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { webSocketManager } from '@auraflux/shared-core/services/webSocketManager';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { debounce } from 'lodash-es';
 
 const context = useConceptualMapContext();
@@ -136,9 +137,17 @@ const nodeActions = computed(() => {
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
+const handleWebSocketMessage = (message: any) => {
+  canvasService.handleWebSocketMessage(message, instance.id, addNodeToContext, addEdgeToContext);
+};
+
 onMounted(() => {
-  // TODO: Replace with dynamic canvas ID based on user selection or route parameter
   loadCanvas('56439646-a564-4bbf-8dff-578ca9016f94');
+  webSocketManager.subscribe('node_action_persisted', handleWebSocketMessage);
+});
+
+onUnmounted(() => {
+  webSocketManager.unsubscribe('node_action_persisted', handleWebSocketMessage);
 });
 
 const selectNode = (node: { id: ID }) => {
