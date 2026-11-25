@@ -11,6 +11,7 @@ export interface WebSocketServiceOptions {
 	initialBackoffTimeMs?: number;
 	maxBackoffTimeMs?: number;
 	maxReconnectAttempts?: number;
+    serviceScope?: string;
 	onMessage?: (message: WebSocketMessage) => void;
 	onError?: (error: Event) => void;
 	onStatusChange?: (status: 'connected' | 'disconnected' | 'reconnecting' | 'failed') => void;

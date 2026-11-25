@@ -1,4 +1,4 @@
-import type { WebSocketMessage } from '@auraflux/shared-core/interfaces/notification';
+import type { WebSocketMessage, WebSocketServiceOptions } from '@auraflux/shared-core/interfaces/notification';
 import { WebSocketService } from '@auraflux/shared-core/services/webSocketService';
 
 type MessageHandler = (message: WebSocketMessage) => void;
@@ -7,10 +7,11 @@ class WebSocketManager {
   private service: WebSocketService | null = null;
   private handlers = new Map<string, Set<MessageHandler>>();
 
-  public init(url: string) {
+  public init(url: string, options?: WebSocketServiceOptions) {
     if (this.service) return;
 
     this.service = new WebSocketService(url, {
+      ...options,
       onMessage: (message) => this.handleMessage(message),
       onStatusChange: (status) => console.log(`WebSocket Status: ${status}`),
       onError: (error) => console.error('WebSocket Error:', error),

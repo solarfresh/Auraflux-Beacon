@@ -1,3 +1,4 @@
+import { useAuthStore } from '@auraflux/shared-core/stores/auth';
 import type { WebSocketMessage, WebSocketServiceOptions } from '@auraflux/shared-core/interfaces/notification';
 
 
@@ -12,6 +13,7 @@ export class WebSocketService {
 	private isExplicitClose = false;
 
 	private url: string;
+	private serviceScope?: string;
 	private initialBackoffTimeMs: number;
 	private maxBackoffTimeMs: number;
 	private maxReconnectAttempts: number;
@@ -21,12 +23,40 @@ export class WebSocketService {
 
 	constructor(url: string, options?: WebSocketServiceOptions) {
 		this.url = url;
+		this.serviceScope = options?.serviceScope;
 		this.initialBackoffTimeMs = options?.initialBackoffTimeMs ?? 1000;
 		this.maxBackoffTimeMs = options?.maxBackoffTimeMs ?? 30000;
 		this.maxReconnectAttempts = options?.maxReconnectAttempts ?? 5;
 		this.onMessageCallback = options?.onMessage;
 		this.onErrorCallback = options?.onError;
 		this.onStatusChangeCallback = options?.onStatusChange;
+	}
+
+	private async resolveToken(): Promise<string | null> {
+		if (!this.serviceScope) {
+			return null;
+		}
+
+		try {
+			const authStore = useAuthStore();
+			if (await authStore.isServiceTokenExpired(this.serviceScope)) {
+				await authStore.fetchServiceToken(this.serviceScope);
+			}
+			return authStore.accessTokens[this.serviceScope]?.token ?? null;
+		} catch (error) {
+			console.warn('⚠️ Failed to resolve WebSocket token:', error);
+			return null;
+		}
+	}
+
+	private buildConnectionUrl(token: string | null): string {
+		const targetUrl = new URL(this.url, window.location.origin);
+		if (token) {
+			targetUrl.searchParams.set('token', token);
+		} else {
+			targetUrl.searchParams.delete('token');
+		}
+		return targetUrl.toString();
 	}
 
 	private setStatus(status: 'connected' | 'disconnected' | 'reconnecting' | 'failed') {
@@ -58,14 +88,17 @@ export class WebSocketService {
 		}, delay);
 	};
 
-	public connect = () => {
+	public connect = async () => {
 		if (this.reconnectTimer) {
 			clearTimeout(this.reconnectTimer);
 			this.reconnectTimer = null;
 		}
 		this.isExplicitClose = false;
 
-		this.socket = new WebSocket(this.url);
+		const token = await this.resolveToken();
+		const connectionUrl = this.buildConnectionUrl(token);
+
+		this.socket = new WebSocket(connectionUrl);
 
 		this.socket.onopen = () => {
 			this.isConnected = true;
