@@ -19,6 +19,7 @@
           @connect="onConnect"
           @node-click="selectNode"
           @node-drag-stop="onNodeDragStop"
+          @edge-update="onEdgeUpdate"
           @edge-click="selectEdge"
           @pane-click="deselectAllAndClosePanel"
         >
@@ -211,6 +212,32 @@ const onConnect = async (connection: Connection) => {
     }
   } catch (error) {
     console.error('Failed to create edge:', error);
+  }
+};
+
+const onEdgeUpdate = async (vueFlowEdge: any, connection: Connection) => {
+  try {
+    if (connection.source === connection.target) {
+      console.warn('Reject self-loop connection');
+      return;
+    }
+    const edge = edges.value.find(e => e.id === vueFlowEdge.id);
+    if (!edge) return;
+    const updatedEdgeData = {
+      ...edge,
+      source: connection.source,
+      target: connection.target,
+      sourceHandle: connection.sourceHandle,
+      targetHandle: connection.targetHandle
+    };
+    await canvasService.updateEdge(
+      edge.id,
+      updatedEdgeData as any,
+      edge,
+      updateEdgeInContext as any
+    );
+  } catch (error) {
+    console.error('Failed to update edge:', error);
   }
 };
 

@@ -27,7 +27,7 @@ describe('nodeOperatorService', () => {
     const node = { id: 'node-1', label: 'Node 1', type: 'FOCUS', status: 'ACTIVE' } as any
     const actions = computeAvailableNodeActions(node, canvasId)
     expect(actions.length).toBe(2)
-    expect(actions[0].id).toBe('DecompositionAgent')
+    expect(actions[0].id).toBe('HypothesisAnalysisAgent')
   })
 
   it('should throw NodeOperatorNotSupportedError for unsupported type', () => {
