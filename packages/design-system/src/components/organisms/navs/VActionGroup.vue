@@ -103,7 +103,7 @@ const overflowActions = computed(() => {
   if (props.actions.length <= limit) {
     return [];
   }
-  return props.actions.slice(Math.max(0, limit - 1));
+  return props.actions.slice(Math.max(0, limit - 1)).reverse();
 });
 
 const handleAction = (action: ActionDefinition) => {

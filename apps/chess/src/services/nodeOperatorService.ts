@@ -38,26 +38,29 @@ export function computeAvailableNodeActions(
     case 'FOCUS':
     case 'CONCEPT':
       actions = [
-        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') },
-        { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText', onClick: () => triggerAction('HypothesisAnalysisAgent') }
+        { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText', onClick: () => triggerAction('HypothesisAnalysisAgent') },
+        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') }
       ]
       break
     case 'INSIGHT':
     case 'EVENT':
       actions = [
-        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') },
-        { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText', onClick: () => triggerAction('HypothesisAnalysisAgent') },
+        { id: 'LogicCritiqueAgent', label: 'Logic Critique', iconName: 'LightBulb', onClick: () => triggerAction('LogicCritiqueAgent') },
         { id: 'BoundaryAgent', label: 'Boundary Check', iconName: 'ShieldExclamation', onClick: () => triggerAction('BoundaryAgent') },
-        { id: 'LogicCritiqueAgent', label: 'Logic Critique', iconName: 'LightBulb', onClick: () => triggerAction('LogicCritiqueAgent') }
+        { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText', onClick: () => triggerAction('HypothesisAnalysisAgent') },
+        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') }
       ]
       break
     case 'QUERY':
     case 'ENTITY':
       actions = [
-        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') },
+        { id: 'BoundaryAgent', label: 'Boundary Check', iconName: 'ShieldExclamation', onClick: () => triggerAction('BoundaryAgent') },
         { id: 'HypothesisAnalysisAgent', label: 'Hypothesis Analysis', iconName: 'DocumentText', onClick: () => triggerAction('HypothesisAnalysisAgent') },
-        { id: 'BoundaryAgent', label: 'Boundary Check', iconName: 'ShieldExclamation', onClick: () => triggerAction('BoundaryAgent') }
+        { id: 'DecompositionAgent', label: 'Decomposition', iconName: 'Sparkles', onClick: () => triggerAction('DecompositionAgent') }
       ]
+      break
+    case 'OUTCOME':
+      actions = []
       break
     default:
       throw new NodeOperatorNotSupportedError(`Node operator not supported for type: ${node.type}`)

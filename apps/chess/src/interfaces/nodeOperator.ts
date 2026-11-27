@@ -1,5 +1,6 @@
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { ID, ProcessStatus } from '@auraflux/design-system/interfaces/core';
+import type { MessageType } from '@auraflux/shared-core/interfaces/notification';
 
 export type ActionType =
   | 'DecompositionAgent'
@@ -21,7 +22,7 @@ export interface NodeOperatorResponse {
 export type NodeOperatorWebSocketEventType = 'node_action_persisted' | 'broadcast_event';
 
 export interface NodeOperatorWebSocketEvent {
-  type: 'send_notification';
+  type: MessageType;
   event_type: NodeOperatorWebSocketEventType;
   payload: {
     status: ProcessStatus;
@@ -36,7 +37,7 @@ export interface NodeOperatorWebSocketEvent {
 }
 
 export interface ErrorWebSocketPayload {
-  type: 'send_notification';
+  type: 'broadcast_event';
   event_type: NodeOperatorWebSocketEventType;
   payload: {
     status: ProcessStatus;

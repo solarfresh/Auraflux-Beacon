@@ -58,6 +58,8 @@
 </template>
 
 <script setup lang="ts">
+import { NodeOperatorWebSocketEvent } from '@/interfaces/nodeOperator';
+import type { WebSocketMessage } from '@auraflux/shared-core/interfaces/notification';
 import { canvasService } from '@/services/canvasService';
 import { computeAvailableNodeActions } from '@/services/nodeOperatorService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
@@ -74,8 +76,8 @@ import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/us
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
 import { webSocketManager } from '@auraflux/shared-core/services/webSocketManager';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref, watch, onMounted, onUnmounted } from 'vue';
 import { debounce } from 'lodash-es';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const context = useConceptualMapContext();
 const {
@@ -137,8 +139,8 @@ const nodeActions = computed(() => {
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
-const handleWebSocketMessage = (message: any) => {
-  canvasService.handleWebSocketMessage(message, instance.id, addNodeToContext, addEdgeToContext);
+const handleWebSocketMessage = (message: WebSocketMessage) => {
+  canvasService.handleWebSocketMessage(message as unknown as NodeOperatorWebSocketEvent, instance.id, addNodeToContext, addEdgeToContext);
 };
 
 onMounted(() => {

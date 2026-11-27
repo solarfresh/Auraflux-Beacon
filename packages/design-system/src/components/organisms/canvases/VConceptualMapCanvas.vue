@@ -53,6 +53,7 @@ const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
 
 const mappedEdges = computed<Edge[]>(() => props.edges.map(edge => ({
   ...edge,
+  updatable: true,
   selected: edge.id === props.selectedEdgeId
 })));
 

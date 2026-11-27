@@ -39,7 +39,7 @@ class WebSocketManager {
   }
 
   private handleMessage(message: WebSocketMessage) {
-    const eventType = message.type;
+    const eventType = message.event_type;
     const eventHandlers = this.handlers.get(eventType);
     if (eventHandlers) {
       eventHandlers.forEach((handler) => {
