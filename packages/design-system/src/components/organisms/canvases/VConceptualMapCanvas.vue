@@ -10,6 +10,7 @@
       @pane-click="emit('pane-click')"
       @connect="onConnect"
       @node-drag-stop="onNodeDragStop"
+      @edge-update="onEdgeUpdate"
     >
       <template v-for="name in nodeSlotNames" :key="name" #[name]="nodeProps">
         <slot
@@ -60,6 +61,7 @@ const mappedEdges = computed<Edge[]>(() => props.edges.map(edge => ({
 const emit = defineEmits<{
   (e: 'add-node'): void;
   (e: 'connect', connection: Connection): void;
+  (e: 'edge-update', edge: Edge, connection: Connection): void;
   (e: 'node-click', node: { id: ID }): void;
   (e: 'node-drag-stop', node: { id: ID; position: { x: number; y: number } }): void;
   (e: 'edge-click', edge: { id: ID }): void;
@@ -89,6 +91,10 @@ const onNodeDragStop = ({ node }: { node: Node }) => {
     id: node.id,
     position: node.position || { x: 0, y: 0 }
   });
+};
+
+const onEdgeUpdate = ({ edge, connection }: { edge: Edge; connection: Connection }) => {
+  emit('edge-update', edge, connection);
 };
 </script>
 

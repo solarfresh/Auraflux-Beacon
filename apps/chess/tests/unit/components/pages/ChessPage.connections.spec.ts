@@ -22,4 +22,20 @@ describe('ChessPage.connections.spec.ts', () => {
 
     warnSpy.mockRestore();
   });
+
+  it('rejects self-loop edge updates', async () => {
+    const wrapper = mount(ChessPage, {
+      global: {
+        stubs: defaultStubs,
+      },
+    });
+
+    const vm = wrapper.vm as any;
+    const warnSpy = vi.spyOn(console, 'warn');
+
+    vm.onEdgeUpdate({ id: 'edge-1' }, { source: '1', target: '1' });
+
+    expect(warnSpy).toHaveBeenCalledWith('Reject self-loop connection');
+    warnSpy.mockRestore();
+  });
 });
