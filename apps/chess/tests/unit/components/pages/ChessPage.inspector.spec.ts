@@ -116,7 +116,7 @@ describe('ChessPage.inspector.spec.ts', () => {
     expect(mockConceptualMapContext.instance.conceptualNodes.has('1')).toBe(false);
 
     mockConceptualMapContext.selectEdge('e1-2');
-    mockConceptualMapContext.instance.conceptualEdges = [{ id: 'e1-2', source: '2', target: '2', type: 'LINK', weight: 1 }];
+    mockConceptualMapContext.instance.conceptualEdges.push({ id: 'e1-2', source: '2', target: '2', type: 'LINK', weight: 1 });
     await wrapper.vm.$nextTick();
     await wrapper.find('.del-edge-btn').trigger('click');
     expect(mockConceptualMapContext.instance.conceptualEdges.length).toBe(0);

@@ -1,3 +1,6 @@
+import '@/tests/mocks/apiService';
+import '@/tests/mocks/webSocketManager';
+
 import { ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import { beforeEach, vi } from 'vitest';
 import { reactive, ref } from 'vue';
@@ -43,6 +46,7 @@ export const canvasServiceMock = {
     targetHandle
   })),
   deleteEdge: vi.fn(async (id, edges, removeEdgeInContext, addEdgeToContext) => {
+    removeEdgeInContext?.(id);
     return true;
   }),
   getCanvasGraph: vi.fn()

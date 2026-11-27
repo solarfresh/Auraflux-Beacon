@@ -41,6 +41,7 @@
         <VNodeInspectorPanel
           v-if="selectedNodeId"
           :node="selectedNode"
+          :node-actions="nodeActions"
           @update:node="onUpdateNode"
           @duplicate:node="onDuplicateNode"
           @delete:node="onDeleteNode"
@@ -57,7 +58,10 @@
 </template>
 
 <script setup lang="ts">
+import { NodeOperatorWebSocketEvent } from '@/interfaces/nodeOperator';
+import type { WebSocketMessage } from '@auraflux/shared-core/interfaces/notification';
 import { canvasService } from '@/services/canvasService';
+import { computeAvailableNodeActions } from '@/services/nodeOperatorService';
 import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
@@ -70,9 +74,10 @@ import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/int
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { useCanvasKeyboardShortcuts } from '@auraflux/shared-core/composables/useCanvasKeyboardShortcuts';
 import { useConceptualMapContext } from '@auraflux/shared-core/composables/useConceptualMapContext';
+import { webSocketManager } from '@auraflux/shared-core/services/webSocketManager';
 import type { Connection } from '@vue-flow/core';
-import { computed, ref, watch, onMounted } from 'vue';
 import { debounce } from 'lodash-es';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const context = useConceptualMapContext();
 const {
@@ -121,12 +126,30 @@ const selectedEdge = computed(() => {
   return selectedEdgeId.value ? instance.conceptualEdges.find(e => e.id === selectedEdgeId.value) || null : null;
 });
 
+const nodeActions = computed(() => {
+  if (!selectedNode.value) return [];
+  try {
+    return computeAvailableNodeActions(selectedNode.value, instance.id);
+  } catch (e) {
+    console.error('Failed to compute node actions:', e);
+    return [];
+  }
+});
+
 const nodes = computed(() => Array.from(instance.conceptualNodes.values()));
 const edges = computed(() => instance.conceptualEdges);
 
+const handleWebSocketMessage = (message: WebSocketMessage) => {
+  canvasService.handleWebSocketMessage(message as unknown as NodeOperatorWebSocketEvent, instance.id, addNodeToContext, addEdgeToContext);
+};
+
 onMounted(() => {
-  // TODO: Replace with dynamic canvas ID based on user selection or route parameter
   loadCanvas('56439646-a564-4bbf-8dff-578ca9016f94');
+  webSocketManager.subscribe('node_action_persisted', handleWebSocketMessage);
+});
+
+onUnmounted(() => {
+  webSocketManager.unsubscribe('node_action_persisted', handleWebSocketMessage);
 });
 
 const selectNode = (node: { id: ID }) => {

@@ -1,3 +1,5 @@
+import '@/tests/mocks/apiService';
+
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
 import { ConceptualNode } from '@/interfaces/canvases';
@@ -5,21 +7,6 @@ import { CanvasService } from '@/services/canvasService';
 import type { ConceptualEdge } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-
-vi.mock('@/api/apiService', () => ({
-  apiService: {
-    canvases: {
-      getGraph: vi.fn(),
-      createNode: vi.fn(),
-      updateNode: vi.fn(),
-      deleteNode: vi.fn(),
-      createEdge: vi.fn(),
-      updateEdge: vi.fn(),
-      deleteEdge: vi.fn(),
-      batchUpdateNodePositions: vi.fn()
-    }
-  }
-}));
 
 describe('CanvasService', () => {
   let canvasService: CanvasService;

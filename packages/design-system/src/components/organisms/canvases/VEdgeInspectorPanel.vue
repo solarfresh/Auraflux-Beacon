@@ -25,8 +25,7 @@
       </VFormField>
 
       <VCluster spacing="xs" class="mt-4">
-        <VButton @click="save" attention="primary" size="sm" class="flex-1">Update</VButton>
-        <VButton @click="deleteEdge" attention="secondary" intent="danger" size="sm">Del</VButton>
+        <VActionGroup :actions="edgeActions" @action="handleAction" />
       </VCluster>
     </template>
     <VEmptyState v-else title="No Edge Selected" description="Select an edge to inspect" icon="CursorArrowRays" />
@@ -34,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import VButton from '@auraflux/design-system/components/atoms/buttons/VButton.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
 import VSelect from '@auraflux/design-system/components/atoms/forms/VSelect.vue';
 import VSlider from '@auraflux/design-system/components/atoms/forms/VSlider.vue';
@@ -43,9 +41,11 @@ import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VCluster from '@auraflux/design-system/components/atoms/layout/VCluster.vue';
 import VFormField from '@auraflux/design-system/components/molecules/forms/VFormField.vue';
 import VEmptyState from '@auraflux/design-system/components/molecules/indicators/VEmptyState.vue';
+import VActionGroup from '@auraflux/design-system/components/organisms/navs/VActionGroup.vue';
 import type { ConceptualEdge, EdgeType } from '@auraflux/design-system/interfaces/conceptual-map';
+import type { ActionDefinition } from '@auraflux/design-system/interfaces/navs';
 import type { BorderToken, IntentToken, SpacingToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
   edge: ConceptualEdge | null;
@@ -91,6 +91,35 @@ const save = () => {
 const deleteEdge = () => {
   if (localEdgeData.value) {
     emit('delete:edge', localEdgeData.value.id);
+  }
+};
+
+const edgeActions = computed<ActionDefinition[]>(() => {
+  return [
+    {
+      id: 'update',
+      label: 'Update',
+      iconName: 'Check',
+      tooltip: 'Save edge changes',
+      disabled: false,
+      onClick: save
+    },
+    {
+      id: 'delete',
+      label: 'Del',
+      iconName: 'Trash',
+      tooltip: 'Delete this edge',
+      disabled: false,
+      onClick: deleteEdge
+    }
+  ];
+});
+
+const handleAction = (actionId: string) => {
+  if (actionId === 'update') {
+    save();
+  } else if (actionId === 'delete') {
+    deleteEdge();
   }
 };
 </script>

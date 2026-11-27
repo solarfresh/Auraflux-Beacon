@@ -29,13 +29,11 @@
         <VTypography v-else variant="body1" weight="medium">{{ label }}</VTypography>
         <slot />
       </VStack>
-      <VStack v-if="rationale || status" class="footer" gap="xs">
-        <VTypography v-if="rationale" variant="caption" color="secondary">
-          {{ rationale }}
-        </VTypography>
-        <VBox v-if="status" class="status">
+      <VStack v-if="content || status" class="footer" gap="xs">
+        <VMarkdown v-if="content" :content="content" class="v-markdown" />
+        <VBadge v-if="status" size="sm" intent="neutral" surface="soft" class="v-badge">
           {{ status }}
-        </VBox>
+        </VBadge>
       </VStack>
     </VStack>
 
@@ -60,6 +58,8 @@
 <script setup lang="ts">
 import VNodeHandle from '@auraflux/design-system/components/atoms/canvases/VNodeHandle.vue';
 import VInput from '@auraflux/design-system/components/atoms/forms/VInput.vue';
+import VBadge from '@auraflux/design-system/components/atoms/indicators/VBadge.vue';
+import VMarkdown from '@auraflux/design-system/components/atoms/indicators/VMarkdown.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VStack from '@auraflux/design-system/components/atoms/layout/VStack.vue';
@@ -72,13 +72,13 @@ const props = defineProps({
   id: { type: String as PropType<ID>, required: true },
   label: { type: String, required: true },
   type: { type: String as PropType<NodeType>, required: true },
-  rationale: { type: String, required: false },
   status: { type: String as PropType<EntityStatus>, required: false },
+  content: { type: String, required: false },
   padding: { type: String as PropType<SpacingToken>, default: 'sm' },
   rounded: { type: String as PropType<RoundedToken>, default: 'lg' },
   border: { type: String as PropType<BorderToken>, default: 'all' },
   intent: { type: String as PropType<IntentToken>, default: 'neutral' },
-  surface: { type: String as PropType<SurfaceToken>, default: 'solid' },
+  surface: { type: String as PropType<SurfaceToken>, default: 'base' },
   handles: { type: Array as PropType<ConceptualNodeHandle[]>, required: false, default: () => [] },
   isEditable: { type: Boolean, default: true },
   isEditing: { type: Boolean, default: false },
@@ -133,5 +133,10 @@ onMounted(() => {
 .node-label-container {
   box-shadow: var(--shadow-sm, 0 1px 2px 0 rgb(0 0 0 / 0.05));
   cursor: pointer;
+  max-width: 320px;
+  min-width: 140px;
+  max-height: 400px;
+  overflow-y: auto;
+  word-break: break-word;
 }
 </style>

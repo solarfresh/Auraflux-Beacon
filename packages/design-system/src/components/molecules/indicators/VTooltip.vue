@@ -40,17 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import type { IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
+import type { IntentToken, SurfaceToken, PositionToken } from '@auraflux/design-system/interfaces/theme';
 import VBox from '@auraflux/design-system/components/atoms/layout/VBox.vue';
 import VTypography from '@auraflux/design-system/components/atoms/indicators/VTypography.vue';
-
-type TooltipPosition = 'top-center' | 'bottom-center' | 'bottom-right' | 'left-center';
 
 export interface VTooltipProps {
   /** The content string displayed inside the tooltip */
   content: string;
   /** Dynamic alignment position for the tooltip popup */
-  position?: TooltipPosition;
+  position?: PositionToken;
   /** Semantic intent color token */
   intent?: IntentToken;
   /** Surface color/contrast token */
@@ -63,17 +61,25 @@ withDefaults(defineProps<VTooltipProps>(), {
   surface: 'solid',
 });
 
-const positionClasses: Record<TooltipPosition, string> = {
+const positionClasses: Record<PositionToken, string> = {
   'top-center': 'bottom-full left-1/2 -translate-x-1/2 mb-2',
   'bottom-center': 'top-full left-1/2 -translate-x-1/2 mt-2',
   'bottom-right': 'top-full right-0 mt-2 origin-top-right',
   'left-center': 'right-full top-1/2 -translate-y-1/2 mr-2',
+  'bottom-start': '', // Placeholder implementation for additional positions
+  'bottom-end': '',
+  'top-start': '',
+  'top-end': '',
 };
 
-const arrowClasses: Record<TooltipPosition, string> = {
+const arrowClasses: Record<PositionToken, string> = {
   'top-center': 'top-full left-1/2 -translate-x-1/2 -mt-0.5',
   'bottom-center': 'bottom-full left-1/2 -translate-x-1/2 -mb-0.5',
   'bottom-right': 'bottom-full right-3 -mb-0.5',
   'left-center': 'left-full top-1/2 -translate-y-1/2 -ml-0.5',
+  'bottom-start': '',
+  'bottom-end': '',
+  'top-start': '',
+  'top-end': '',
 };
 </script>

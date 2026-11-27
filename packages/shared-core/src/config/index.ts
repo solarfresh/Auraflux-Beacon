@@ -4,6 +4,8 @@ interface RuntimeConfig {
   AURAFLUX_MULL_URL: string;
   AURAFLUX_MULL_CLIENT_ID: string;
   AURAFLUX_CHESS_URL: string;
+  AURAFLUX_CHESS_WS_URL: string;
+  AURAFLUX_CHESS_CLIENT_ID: string;
   AURAFLUX_NEXUS_URL: string;
   AURAFLUX_WS_URL: string;
   DEBOUNCE_TIME: number;
@@ -19,6 +21,8 @@ const config: RuntimeConfig = {
   AURAFLUX_MULL_URL: import.meta.env.VITE_AURAFLUX_MULL_URL as string,
   AURAFLUX_MULL_CLIENT_ID: import.meta.env.VITE_AURAFLUX_MULL_CLIENT_ID as string,
   AURAFLUX_CHESS_URL: import.meta.env.VITE_AURAFLUX_CHESS_URL as string,
+  AURAFLUX_CHESS_WS_URL: import.meta.env.VITE_AURAFLUX_CHESS_WS_URL as string,
+  AURAFLUX_CHESS_CLIENT_ID: import.meta.env.VITE_AURAFLUX_CHESS_CLIENT_ID as string,
   AURAFLUX_NEXUS_URL: import.meta.env.VITE_AURAFLUX_NEXUS_URL as string,
   AURAFLUX_WS_URL: import.meta.env.VITE_AURAFLUX_WS_URL as string,
   DEBOUNCE_TIME: import.meta.env.VITE_DEBOUNCE_TIME as number,

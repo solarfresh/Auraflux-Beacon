@@ -48,7 +48,6 @@ const { embeddings, currentEmbedding, isLoading: isEmbeddingLoading } = storeToR
 
 const isPageLoading = computed(() => isAgentLoading.value || isEmbeddingLoading.value);
 
-// 2. 透過 useAgentBench 整合狀態與事件
 const {
   selectedAgent,
   selectedEmbedding,

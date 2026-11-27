@@ -22,27 +22,12 @@ describe('VNodeLabelContainer', () => {
   const defaultProps = {
     id: 'node-1',
     label: 'Test Node',
-    type: 'CONCEPT' as NodeType,
-    rationale: 'Test Rationale'
+    type: 'CONCEPT' as NodeType
   };
 
   it('renders label and type correctly', () => {
     const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     expect(wrapper.text()).toContain('Test Node');
-  });
-
-  it('renders rationale when provided', () => {
-    const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
-    expect(wrapper.text()).toContain('Test Rationale');
-  });
-
-  it('does not render rationale when not provided', () => {
-    const wrapper = mount(VNodeLabelContainer, {
-      props: { id: 'node-1', label: 'Test Node', type: 'CONCEPT' }
-    });
-    // Assuming rationale is rendered within a footer element in the component
-    const rationale = wrapper.find('.footer');
-    expect(rationale.exists()).toBe(false);
   });
 
   it('renders slots correctly', () => {
@@ -86,6 +71,23 @@ describe('VNodeLabelContainer', () => {
     const wrapper = mount(VNodeLabelContainer, { props: defaultProps });
     await wrapper.trigger('dblclick');
     expect(wrapper.findComponent(VInput).exists()).toBe(true);
+  });
+
+  it('renders VBadge when status is provided', () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: { ...defaultProps, status: 'ACTIVE' }
+    });
+    // Assuming VBadge is rendered
+    expect(wrapper.find('.v-badge').exists()).toBe(true);
+    expect(wrapper.find('.v-badge').text()).toContain('ACTIVE');
+  });
+
+  it('renders VMarkdown when content is provided', () => {
+    const wrapper = mount(VNodeLabelContainer, {
+      props: { ...defaultProps, content: '# Markdown Content' }
+    });
+    expect(wrapper.find('.v-markdown').exists()).toBe(true);
+    expect(wrapper.find('.v-markdown').text()).toContain('Markdown Content');
   });
 
   it('cancels edit and reverts on Esc key', async () => {

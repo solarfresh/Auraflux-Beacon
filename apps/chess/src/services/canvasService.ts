@@ -1,24 +1,27 @@
 import { apiService } from '@/api/apiService';
 import { CanvasLoadError } from '@/errors/canvases';
-import { UpdateNodeRequest, UpdateEdgeRequest, BatchUpdateNodePositionRequest } from '@/interfaces/canvases';
+import { BatchUpdateNodePositionRequest, UpdateEdgeRequest, UpdateNodeRequest } from '@/interfaces/canvases';
+import { NodeOperatorWebSocketEvent } from '@/interfaces/nodeOperator';
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode, EdgeType, NodeType } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { EntityStatus, ID } from '@auraflux/design-system/interfaces/core';
 
 export class CanvasService {
-  private canvasId: string;
+  private canvasId: ID;
 
   constructor(canvasId: string = 'default-canvas') {
     this.canvasId = canvasId;
   }
 
-  public setCanvasId(id: string) {
+  public setCanvasId(id: ID) {
     this.canvasId = id;
   }
 
-  public async getCanvasGraph(canvasId: string): Promise<CanvasViewInstance | null> {
+  public async getCanvasGraph(canvasId: ID): Promise<CanvasViewInstance | null> {
     try {
       const response = await apiService.canvases.getGraph(canvasId as ID);
       if (response && response.data) {
+        this.canvasId = canvasId;
+
         return {
           id: response.data.id,
           title: response.data.title,
@@ -299,6 +302,33 @@ export class CanvasService {
       console.error('CanvasService.updateEdge error:', error);
       updateEdgeInContext(edgeId, oldEdgeData);
       return false;
+    }
+  }
+
+  public handleWebSocketMessage(
+    message: NodeOperatorWebSocketEvent,
+    instanceId: ID,
+    addNodeToContext: (node: ConceptualNode) => void,
+    addEdgeToContext: (edge: ConceptualEdge) => void
+  ) {
+    try {
+      if (message && message.event_type === 'node_action_persisted' && message.payload) {
+        const eventPayload = message.payload.payload;
+        if (eventPayload && eventPayload.canvas_id === instanceId) {
+          if (eventPayload.persisted_nodes) {
+            eventPayload.persisted_nodes.forEach((node: ConceptualNode) => {
+              addNodeToContext(node);
+            });
+          }
+          if (eventPayload.persisted_edges) {
+            eventPayload.persisted_edges.forEach((edge: ConceptualEdge) => {
+              addEdgeToContext(edge);
+            });
+          }
+        }
+      }
+    } catch (e) {
+      console.error('Error processing WebSocket message in CanvasService:', e);
     }
   }
 }

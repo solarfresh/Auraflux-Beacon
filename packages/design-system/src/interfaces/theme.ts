@@ -74,3 +74,8 @@ export type GapSizeToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type RoundedToken = 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
 export type SpacingToken = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type TagToken = 'p' | 'span' | 'strong' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'article' | 'aside' | 'blockquote' | 'fieldset' | 'footer' | 'header' | 'label' | 'li' | 'main' | 'nav' | 'section';
+
+/**
+ * Common positioning tokens for floating components (Tooltips, Dropdowns, etc.)
+ */
+export type PositionToken = 'top-center' | 'bottom-center' | 'bottom-start' | 'bottom-end' | 'top-start' | 'top-end' | 'bottom-right' | 'left-center';
