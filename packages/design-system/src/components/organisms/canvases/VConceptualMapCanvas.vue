@@ -28,7 +28,7 @@ import { edgeTypes, nodeTypes } from '@auraflux/design-system/constants/canvases
 import type { ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { IntentToken, SurfaceToken } from '@auraflux/design-system/interfaces/theme';
-import { VueFlow, type Connection, type Edge, type Node } from '@vue-flow/core';
+import { VueFlow, type Connection, type Edge, type Node, MarkerType } from '@vue-flow/core';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -55,7 +55,13 @@ const mappedNodes = computed<Node[]>(() => props.nodes.map(node => ({
 const mappedEdges = computed<Edge[]>(() => props.edges.map(edge => ({
   ...edge,
   updatable: true,
-  selected: edge.id === props.selectedEdgeId
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    width: 20,
+    height: 20,
+  },
+  selected: edge.id === props.selectedEdgeId,
+  data: edge
 })));
 
 const emit = defineEmits<{

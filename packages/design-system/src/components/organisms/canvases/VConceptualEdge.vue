@@ -3,6 +3,7 @@
     :id="props.id"
     :path="edgePath"
     :style="edgeStyle"
+    :marker-end="props.markerEnd"
   />
   <EdgeLabelRenderer>
     <VBox
