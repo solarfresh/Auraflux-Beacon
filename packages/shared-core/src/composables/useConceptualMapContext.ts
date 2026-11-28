@@ -6,6 +6,7 @@
 import type { CanvasViewInstance, ConceptualEdge, ConceptualNode } from '@auraflux/design-system/interfaces/conceptual-map';
 import type { ID } from '@auraflux/design-system/interfaces/core';
 import type { ConceptualMapContext } from '@auraflux/shared-core/interfaces/conceptual-map';
+import { Position } from '@vue-flow/core';
 import { reactive, ref } from 'vue';
 
 export function useConceptualMapContext(): ConceptualMapContext {
@@ -29,10 +30,11 @@ export function useConceptualMapContext(): ConceptualMapContext {
   const selectedEdgeId = ref<ID | null>(null);
   const pendingPositions = new Map<ID, { x: number; y: number }>();
 
-  const addNode = (node?: Partial<ConceptualNode>) => {
+  const addNode = (node?: Partial<ConceptualNode>): ConceptualNode => {
     const timestamp = Date.now();
     const id = node?.id || `node-${timestamp}-${Math.floor(Math.random() * 1000)}`;
     const newNode: ConceptualNode = {
+      ...node,
       id,
       label: node?.label || 'New Concept',
       type: node?.type || 'CONCEPT',
@@ -40,12 +42,12 @@ export function useConceptualMapContext(): ConceptualMapContext {
         {
           id: `h-source-${id}`,
           type: 'source',
-          position: 'right' as any
+          position: Position.Right
         },
         {
           id: `h-target-${id}`,
           type: 'target',
-          position: 'left' as any
+          position: Position.Left
         }
       ],
       position: node?.position || {
@@ -54,6 +56,7 @@ export function useConceptualMapContext(): ConceptualMapContext {
       },
     };
     instance.conceptualNodes.set(id, newNode);
+    return newNode;
   };
 
   const removeNode = (nodeId: ID) => {

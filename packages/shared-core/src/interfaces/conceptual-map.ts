@@ -8,7 +8,7 @@ export interface ConceptualMapContext {
   selectedNodeId: Ref<ID | null>;
   selectedEdgeId: Ref<ID | null>;
   pendingPositions: Map<ID, { x: number; y: number }>;
-  addNode: (nodeData?: Partial<ConceptualNode>) => void;
+  addNode: (nodeData?: Partial<ConceptualNode>) => ConceptualNode;
   removeNode: (nodeId: ID) => void;
   removeEdge: (edgeId: ID) => void;
   updateNode: (nodeId: ID, updatedNode: Partial<ConceptualNode>) => void;
